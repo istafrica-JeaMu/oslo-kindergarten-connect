@@ -44,19 +44,19 @@ const AdminDashboard = () => {
     {
       id: 1,
       type: 'warning',
-      message: 'Høy belastning på databaseserveren - responstid økt',
+      message: 'High load on database server - response time increased',
       timestamp: '2024-03-20 14:30'
     },
     {
       id: 2,
       type: 'info',
-      message: 'Planlagt vedlikehold av FREG-integrasjon 25. mars',
+      message: 'Scheduled maintenance of FREG integration on March 25',
       timestamp: '2024-03-19 09:15'
     },
     {
       id: 3,
       type: 'success',
-      message: 'Sikkerhetsoppdatering installert på alle servere',
+      message: 'Security update installed on all servers',
       timestamp: '2024-03-18 22:00'
     }
   ];
@@ -88,20 +88,20 @@ const AdminDashboard = () => {
             Administrator Dashboard
           </h1>
           <p className="text-gray-600 mt-2">
-            Velkommen tilbake, {user?.name} • Systemovervåking og administrasjon
+            Welcome back, {user?.name} • System monitoring and administration
           </p>
         </div>
         <div className="flex gap-3">
           <Link to="/admin/reports">
             <Button className="bg-oslo-blue hover:bg-blue-700">
               <BarChart3 className="h-4 w-4 mr-2" />
-              Rapporter
+              Reports
             </Button>
           </Link>
           <Link to="/admin/settings">
             <Button variant="outline">
               <Settings className="h-4 w-4 mr-2" />
-              Innstillinger
+              Settings
             </Button>
           </Link>
         </div>
@@ -113,9 +113,9 @@ const AdminDashboard = () => {
           <CardContent className="flex items-center p-6">
             <Activity className="h-8 w-8 text-green-600 mr-4" />
             <div>
-              <h3 className="font-semibold">Systemstatus</h3>
+              <h3 className="font-semibold">System Status</h3>
               <p className="text-2xl font-bold text-green-600">{systemStats.systemUptime}%</p>
-              <p className="text-xs text-gray-600">Oppetid siste 30 dager</p>
+              <p className="text-xs text-gray-600">Uptime last 30 days</p>
             </div>
           </CardContent>
         </Card>
@@ -124,9 +124,9 @@ const AdminDashboard = () => {
           <CardContent className="flex items-center p-6">
             <Users className="h-8 w-8 text-blue-600 mr-4" />
             <div>
-              <h3 className="font-semibold">Aktive brukere</h3>
+              <h3 className="font-semibold">Active Users</h3>
               <p className="text-2xl font-bold text-blue-600">{systemStats.activeUsers}</p>
-              <p className="text-xs text-gray-600">Pålogget nå</p>
+              <p className="text-xs text-gray-600">Currently logged in</p>
             </div>
           </CardContent>
         </Card>
@@ -135,9 +135,9 @@ const AdminDashboard = () => {
           <CardContent className="flex items-center p-6">
             <FileText className="h-8 w-8 text-purple-600 mr-4" />
             <div>
-              <h3 className="font-semibold">Totale søknader</h3>
+              <h3 className="font-semibold">Total Applications</h3>
               <p className="text-2xl font-bold text-purple-600">{systemStats.totalApplications.toLocaleString()}</p>
-              <p className="text-xs text-gray-600">I år</p>
+              <p className="text-xs text-gray-600">This year</p>
             </div>
           </CardContent>
         </Card>
@@ -146,9 +146,9 @@ const AdminDashboard = () => {
           <CardContent className="flex items-center p-6">
             <Database className="h-8 w-8 text-orange-600 mr-4" />
             <div>
-              <h3 className="font-semibold">Responstid</h3>
+              <h3 className="font-semibold">Response Time</h3>
               <p className="text-2xl font-bold text-orange-600">{systemStats.avgResponseTime}ms</p>
-              <p className="text-xs text-gray-600">Gjennomsnitt</p>
+              <p className="text-xs text-gray-600">Average</p>
             </div>
           </CardContent>
         </Card>
@@ -159,10 +159,10 @@ const AdminDashboard = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <AlertCircle className="h-5 w-5 text-yellow-600" />
-            Systemvarsler
+            System Alerts
           </CardTitle>
           <CardDescription>
-            Viktige meldinger og systemoppdateringer
+            Important messages and system updates
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -185,10 +185,10 @@ const AdminDashboard = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Building className="h-5 w-5" />
-            Distriktsoversikt
+            District Overview
           </CardTitle>
           <CardDescription>
-            Ytelse og kapasitet per distrikt
+            Performance and capacity per district
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -198,14 +198,14 @@ const AdminDashboard = () => {
                 <div>
                   <h4 className="font-semibold">{district.name}</h4>
                   <p className="text-sm text-gray-600">
-                    {district.applications} søknader • {district.waitingList} på venteliste
+                    {district.applications} applications • {district.waitingList} on waiting list
                   </p>
                 </div>
                 <div className="text-right">
                   <p className={`text-lg font-bold ${getCapacityColor(district.capacity)}`}>
                     {district.capacity}%
                   </p>
-                  <p className="text-xs text-gray-600">Kapasitetsutnyttelse</p>
+                  <p className="text-xs text-gray-600">Capacity utilization</p>
                 </div>
               </div>
             ))}
@@ -219,40 +219,40 @@ const AdminDashboard = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Settings className="h-5 w-5" />
-              Hurtighandlinger
+              Quick Actions
             </CardTitle>
             <CardDescription>
-              Vanlige administrative oppgaver
+              Common administrative tasks
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <Link to="/admin/reports">
               <Button variant="outline" className="w-full justify-start">
                 <BarChart3 className="h-4 w-4 mr-2" />
-                Generer månedlig rapport
+                Generate Monthly Report
               </Button>
             </Link>
             
             <Button variant="outline" className="w-full justify-start">
               <Users className="h-4 w-4 mr-2" />
-              Administrer brukerroller
+              Manage User Roles
             </Button>
 
             <Button variant="outline" className="w-full justify-start">
               <Database className="h-4 w-4 mr-2" />
-              Sikkerhetskopi database
+              Backup Database
             </Button>
 
             <Link to="/admin/settings">
               <Button variant="outline" className="w-full justify-start">
                 <Settings className="h-4 w-4 mr-2" />
-                Systemkonfigurasjon
+                System Configuration
               </Button>
             </Link>
 
             <Button variant="outline" className="w-full justify-start">
               <Shield className="h-4 w-4 mr-2" />
-              Sikkerhetstilgang
+              Security Access
             </Button>
           </CardContent>
         </Card>
@@ -261,31 +261,31 @@ const AdminDashboard = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <TrendingUp className="h-5 w-5" />
-              Systemstatistikk
+              System Statistics
             </CardTitle>
             <CardDescription>
-              Oversikt over systembruk og ytelse
+              Overview of system usage and performance
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-blue-50 p-3 rounded-lg">
-                <h4 className="font-semibold text-blue-900">Totale brukere</h4>
+                <h4 className="font-semibold text-blue-900">Total Users</h4>
                 <p className="text-xl font-bold text-blue-600">{systemStats.totalUsers.toLocaleString()}</p>
               </div>
               
               <div className="bg-green-50 p-3 rounded-lg">
-                <h4 className="font-semibold text-green-900">Barnehager</h4>
+                <h4 className="font-semibold text-green-900">Kindergartens</h4>
                 <p className="text-xl font-bold text-green-600">{systemStats.totalKindergartens}</p>
               </div>
               
               <div className="bg-purple-50 p-3 rounded-lg">
-                <h4 className="font-semibold text-purple-900">Distrikter</h4>
+                <h4 className="font-semibold text-purple-900">Districts</h4>
                 <p className="text-xl font-bold text-purple-600">{systemStats.totalDistricts}</p>
               </div>
               
               <div className="bg-orange-50 p-3 rounded-lg">
-                <h4 className="font-semibold text-orange-900">Venter godkjennelse</h4>
+                <h4 className="font-semibold text-orange-900">Pending Approval</h4>
                 <p className="text-xl font-bold text-orange-600">{systemStats.pendingApprovals}</p>
               </div>
             </div>
@@ -298,30 +298,30 @@ const AdminDashboard = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Shield className="h-5 w-5" />
-            Sikkerhet og etterlevelse
+            Security and Compliance
           </CardTitle>
           <CardDescription>
-            Status for sikkerhet og regeletterlevelse
+            Status for security and regulatory compliance
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid md:grid-cols-3 gap-4">
             <div className="text-center p-4 border rounded-lg">
               <Shield className="h-8 w-8 text-green-600 mx-auto mb-2" />
-              <h4 className="font-semibold">GDPR-status</h4>
-              <Badge className="bg-green-100 text-green-800 mt-1">Etterlevd</Badge>
+              <h4 className="font-semibold">GDPR Status</h4>
+              <Badge className="bg-green-100 text-green-800 mt-1">Compliant</Badge>
             </div>
             
             <div className="text-center p-4 border rounded-lg">
               <Database className="h-8 w-8 text-green-600 mx-auto mb-2" />
-              <h4 className="font-semibold">Datasikkerhet</h4>
-              <Badge className="bg-green-100 text-green-800 mt-1">Sikret</Badge>
+              <h4 className="font-semibold">Data Security</h4>
+              <Badge className="bg-green-100 text-green-800 mt-1">Secured</Badge>
             </div>
             
             <div className="text-center p-4 border rounded-lg">
               <FileText className="h-8 w-8 text-green-600 mx-auto mb-2" />
               <h4 className="font-semibold">NOARK 5</h4>
-              <Badge className="bg-green-100 text-green-800 mt-1">Kompatibel</Badge>
+              <Badge className="bg-green-100 text-green-800 mt-1">Compatible</Badge>
             </div>
           </div>
         </CardContent>

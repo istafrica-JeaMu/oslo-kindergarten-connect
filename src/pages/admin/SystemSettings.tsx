@@ -42,11 +42,11 @@ const SystemSettings = () => {
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="system-name">System Name</Label>
-                  <Input id="system-name" defaultValue="Barnehage Oslo" />
+                  <Input id="system-name" defaultValue="Kindergarten Oslo" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="default-language">Default Language</Label>
-                  <Select defaultValue="nb">
+                  <Select defaultValue="en">
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -186,7 +186,7 @@ const SystemSettings = () => {
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
                     <Label>Application Received Notifications</Label>
-                    <p className="text-sm text-gray-600">Send confirmation when applications are submitted</p>
+                    <p className="text-sm text-gray-600">Send emails when applications are received</p>
                   </div>
                   <Switch defaultChecked />
                 </div>
@@ -201,8 +201,8 @@ const SystemSettings = () => {
                 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label>Payment Due Reminders</Label>
-                    <p className="text-sm text-gray-600">Send reminders for upcoming payments</p>
+                    <Label>Document Request Notifications</Label>
+                    <p className="text-sm text-gray-600">Request missing documents from applicants</p>
                   </div>
                   <Switch defaultChecked />
                 </div>
@@ -215,10 +215,16 @@ const SystemSettings = () => {
                   <Switch />
                 </div>
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="smtp-server">SMTP Server</Label>
-                <Input id="smtp-server" placeholder="smtp.oslo.kommune.no" />
+              
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="email-from">From Email Address</Label>
+                  <Input id="email-from" defaultValue="noreply@kindergarten.oslo.no" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email-reply">Reply-To Address</Label>
+                  <Input id="email-reply" defaultValue="support@kindergarten.oslo.no" />
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -232,44 +238,44 @@ const SystemSettings = () => {
                 Security Settings
               </CardTitle>
               <CardDescription>
-                Configure authentication and security parameters
+                Configure security and authentication settings
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label>Two-Factor Authentication</Label>
+                    <p className="text-sm text-gray-600">Require 2FA for all admin users</p>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label>Session Timeout</Label>
+                    <p className="text-sm text-gray-600">Automatically log out inactive users</p>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label>IP Whitelist</Label>
+                    <p className="text-sm text-gray-600">Restrict access to specific IP addresses</p>
+                  </div>
+                  <Switch />
+                </div>
+              </div>
+              
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="session-timeout">Session Timeout (minutes)</Label>
-                  <Input id="session-timeout" type="number" defaultValue="30" />
+                  <Label htmlFor="session-duration">Session Duration (hours)</Label>
+                  <Input id="session-duration" type="number" defaultValue="8" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="max-login-attempts">Max Login Attempts</Label>
                   <Input id="max-login-attempts" type="number" defaultValue="5" />
-                </div>
-              </div>
-              
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label>Require MFA for Administrators</Label>
-                    <p className="text-sm text-gray-600">Multi-factor authentication for admin accounts</p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label>Enable Audit Logging</Label>
-                    <p className="text-sm text-gray-600">Log all user actions for compliance</p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label>Data Encryption at Rest</Label>
-                    <p className="text-sm text-gray-600">Encrypt sensitive data in database</p>
-                  </div>
-                  <Switch defaultChecked />
                 </div>
               </div>
             </CardContent>
@@ -280,7 +286,7 @@ const SystemSettings = () => {
       <div className="flex justify-end">
         <Button className="bg-oslo-blue hover:bg-blue-700">
           <Save className="h-4 w-4 mr-2" />
-          Save All Settings
+          Save Changes
         </Button>
       </div>
     </div>

@@ -10,7 +10,7 @@ const PlacementManagement = () => {
   const kindergartens = [
     {
       id: 'k1',
-      name: 'Vårtun Barnehage',
+      name: 'Vårtun Kindergarten',
       district: 'Søndre Nordstrand',
       type: 'Private',
       capacity: {
@@ -27,7 +27,7 @@ const PlacementManagement = () => {
     },
     {
       id: 'k2',
-      name: 'Solbakken Barnehage',
+      name: 'Solbakken Kindergarten',
       district: 'Søndre Nordstrand',
       type: 'Municipal',
       capacity: {
@@ -44,7 +44,7 @@ const PlacementManagement = () => {
     },
     {
       id: 'k3',
-      name: 'Blomstereng Barnehage',
+      name: 'Blomstereng Kindergarten',
       district: 'Søndre Nordstrand',
       type: 'Municipal',
       capacity: {
@@ -65,7 +65,7 @@ const PlacementManagement = () => {
     {
       id: 1,
       childName: 'Emma Larsen',
-      kindergarten: 'Vårtun Barnehage',
+      kindergarten: 'Vårtun Kindergarten',
       placedDate: '2024-03-20',
       startDate: '2024-08-15',
       status: 'confirmed'
@@ -73,7 +73,7 @@ const PlacementManagement = () => {
     {
       id: 2,
       childName: 'Noah Hansen',
-      kindergarten: 'Solbakken Barnehage',
+      kindergarten: 'Solbakken Kindergarten',
       placedDate: '2024-03-19',
       startDate: '2024-08-15',
       status: 'pending_acceptance'
@@ -81,7 +81,7 @@ const PlacementManagement = () => {
     {
       id: 3,
       childName: 'Lise Andersen',
-      kindergarten: 'Vårtun Barnehage',
+      kindergarten: 'Vårtun Kindergarten',
       placedDate: '2024-03-18',
       startDate: '2024-08-15',
       status: 'confirmed'
@@ -97,11 +97,11 @@ const PlacementManagement = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'confirmed':
-        return <Badge className="bg-green-100 text-green-800">Bekreftet</Badge>;
+        return <Badge className="bg-green-100 text-green-800">Confirmed</Badge>;
       case 'pending_acceptance':
-        return <Badge className="bg-yellow-100 text-yellow-800">Venter svar</Badge>;
+        return <Badge className="bg-yellow-100 text-yellow-800">Awaiting Response</Badge>;
       case 'declined':
-        return <Badge className="bg-red-100 text-red-800">Avslått</Badge>;
+        return <Badge className="bg-red-100 text-red-800">Declined</Badge>;
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
@@ -115,9 +115,9 @@ const PlacementManagement = () => {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Plasshåndtering</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Placement Management</h1>
         <p className="text-gray-600 mt-2">
-          Oversikt over kapasitet og plasseringer i ditt distrikt
+          Overview of capacity and placements in your district
         </p>
       </div>
 
@@ -127,9 +127,9 @@ const PlacementManagement = () => {
           <CardContent className="flex items-center p-6">
             <Users className="h-8 w-8 text-blue-600 mr-4" />
             <div>
-              <h3 className="font-semibold">Total kapasitet</h3>
+              <h3 className="font-semibold">Total Capacity</h3>
               <p className="text-2xl font-bold text-blue-600">{totalCapacity}</p>
-              <p className="text-xs text-gray-600">{totalOccupied} opptatt</p>
+              <p className="text-xs text-gray-600">{totalOccupied} occupied</p>
             </div>
           </CardContent>
         </Card>
@@ -138,9 +138,9 @@ const PlacementManagement = () => {
           <CardContent className="flex items-center p-6">
             <CheckCircle className="h-8 w-8 text-green-600 mr-4" />
             <div>
-              <h3 className="font-semibold">Ledige plasser</h3>
+              <h3 className="font-semibold">Available Spots</h3>
               <p className="text-2xl font-bold text-green-600">{totalAvailable}</p>
-              <p className="text-xs text-gray-600">Tilgjengelig nå</p>
+              <p className="text-xs text-gray-600">Available now</p>
             </div>
           </CardContent>
         </Card>
@@ -149,9 +149,9 @@ const PlacementManagement = () => {
           <CardContent className="flex items-center p-6">
             <AlertCircle className="h-8 w-8 text-orange-600 mr-4" />
             <div>
-              <h3 className="font-semibold">Venteliste</h3>
+              <h3 className="font-semibold">Waiting List</h3>
               <p className="text-2xl font-bold text-orange-600">{totalWaitingList}</p>
-              <p className="text-xs text-gray-600">Aktive søkere</p>
+              <p className="text-xs text-gray-600">Active applicants</p>
             </div>
           </CardContent>
         </Card>
@@ -160,11 +160,11 @@ const PlacementManagement = () => {
           <CardContent className="flex items-center p-6">
             <TrendingUp className="h-8 w-8 text-purple-600 mr-4" />
             <div>
-              <h3 className="font-semibold">Utnyttelsesgrad</h3>
+              <h3 className="font-semibold">Utilization Rate</h3>
               <p className="text-2xl font-bold text-purple-600">
                 {Math.round((totalOccupied / totalCapacity) * 100)}%
               </p>
-              <p className="text-xs text-gray-600">Gjennomsnitt</p>
+              <p className="text-xs text-gray-600">Average</p>
             </div>
           </CardContent>
         </Card>
@@ -175,10 +175,10 @@ const PlacementManagement = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <MapPin className="h-5 w-5" />
-            Kapasitetsoversikt - Søndre Nordstrand
+            Capacity Overview - Søndre Nordstrand
           </CardTitle>
           <CardDescription>
-            Detaljert oversikt over ledige plasser per barnehage
+            Detailed overview of available spots per kindergarten
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -190,55 +190,55 @@ const PlacementManagement = () => {
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h3 className="text-lg font-semibold">{kg.name}</h3>
-                    <p className="text-sm text-gray-600">{kg.type} barnehage</p>
+                    <p className="text-sm text-gray-600">{kg.type} kindergarten</p>
                   </div>
                   <div className="text-right">
                     <p className={`text-2xl font-bold ${getCapacityColor(occupancyPercentage)}`}>
                       {kg.capacity.available}
                     </p>
-                    <p className="text-sm text-gray-600">ledige plasser</p>
+                    <p className="text-sm text-gray-600">available spots</p>
                   </div>
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-6 mb-4">
                   <div>
-                    <h4 className="font-medium mb-2">Total kapasitet</h4>
+                    <h4 className="font-medium mb-2">Total Capacity</h4>
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
-                        <span>Opptatt</span>
+                        <span>Occupied</span>
                         <span>{kg.capacity.occupied}/{kg.capacity.total}</span>
                       </div>
                       <Progress value={occupancyPercentage} className="h-2" />
                       <p className="text-xs text-gray-600">
-                        {occupancyPercentage.toFixed(1)}% utnyttelse
+                        {occupancyPercentage.toFixed(1)}% utilization
                       </p>
                     </div>
                   </div>
 
                   <div>
-                    <h4 className="font-medium mb-2">Aldersgrupper</h4>
+                    <h4 className="font-medium mb-2">Age Groups</h4>
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
-                        <span>1-2 år:</span>
-                        <span>{kg.ageGroups['1-2'].available} ledige</span>
+                        <span>1-2 years:</span>
+                        <span>{kg.ageGroups['1-2'].available} available</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span>3-5 år:</span>
-                        <span>{kg.ageGroups['3-5'].available} ledige</span>
+                        <span>3-5 years:</span>
+                        <span>{kg.ageGroups['3-5'].available} available</span>
                       </div>
                     </div>
                   </div>
 
                   <div>
-                    <h4 className="font-medium mb-2">Venteliste</h4>
+                    <h4 className="font-medium mb-2">Waiting List</h4>
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
-                        <span>Venter plass:</span>
-                        <span>{kg.waitingList} barn</span>
+                        <span>Awaiting placement:</span>
+                        <span>{kg.waitingList} children</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span>Avventer svar:</span>
-                        <span>{kg.pendingPlacements} tilbud</span>
+                        <span>Pending response:</span>
+                        <span>{kg.pendingPlacements} offers</span>
                       </div>
                     </div>
                   </div>
@@ -246,14 +246,14 @@ const PlacementManagement = () => {
 
                 <div className="flex gap-2 pt-4 border-t">
                   <Button variant="outline" size="sm">
-                    Se detaljer
+                    View Details
                   </Button>
                   <Button variant="outline" size="sm">
-                    Rediger kapasitet
+                    Edit Capacity
                   </Button>
                   {kg.capacity.available > 0 && (
                     <Button size="sm" className="bg-oslo-blue hover:bg-blue-700">
-                      Tildel plass
+                      Assign Placement
                     </Button>
                   )}
                 </div>
@@ -268,10 +268,10 @@ const PlacementManagement = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Calendar className="h-5 w-5" />
-            Siste plasseringer
+            Recent Placements
           </CardTitle>
           <CardDescription>
-            Nylige plasseringstilbud og deres status
+            Recent placement offers and their status
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -282,7 +282,7 @@ const PlacementManagement = () => {
                   <h4 className="font-semibold">{placement.childName}</h4>
                   <p className="text-sm text-gray-600">{placement.kindergarten}</p>
                   <p className="text-xs text-gray-500">
-                    Plassert: {placement.placedDate} • Start: {placement.startDate}
+                    Placed: {placement.placedDate} • Start: {placement.startDate}
                   </p>
                 </div>
                 <div className="text-right">
@@ -299,16 +299,16 @@ const PlacementManagement = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <AlertCircle className="h-5 w-5 text-yellow-600" />
-            Kapasitetsvarsel
+            Capacity Alerts
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
             <p className="text-sm">
-              <strong>Blomstereng Barnehage:</strong> Full kapasitet. 25 barn på venteliste.
+              <strong>Blomstereng Kindergarten:</strong> At full capacity. 25 children on waiting list.
             </p>
             <p className="text-sm">
-              <strong>Vårtun Barnehage:</strong> Kun 6 ledige plasser igjen for høsten 2024.
+              <strong>Vårtun Kindergarten:</strong> Only 6 available spots remaining for fall 2024.
             </p>
           </div>
         </CardContent>
