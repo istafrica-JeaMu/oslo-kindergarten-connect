@@ -1,0 +1,257 @@
+
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "newApplication": "Ny søknad",
+    "applicationStatus": "Søknadsstatus",
+    "messages": "Meldinger", 
+    "payments": "Betalinger",
+    "reviewQueue": "Behandlingskø",
+    "placementManagement": "Plasshåndtering",
+    "reports": "Rapporter",
+    "settings": "Innstillinger"
+  },
+  "auth": {
+    "login": "Logg inn",
+    "email": "E-post",
+    "password": "Passord",
+    "loginButton": "Logg inn",
+    "logout": "Logg ut",
+    "welcome": "Velkommen til Oslo Barnehageportal",
+    "description": "Administrer dine barnehagesøknader og informasjon"
+  },
+  "guardian": {
+    "dashboard": {
+      "title": "Min oversikt",
+      "welcome": "Velkommen",
+      "overview": "Oversikt over dine barnehagesøknader og informasjon",
+      "newApplication": "Ny søknad",
+      "newApplicationDesc": "Start ny barnehagesøknad",
+      "applicationStatus": "Søknadsstatus",
+      "applicationStatusDesc": "Se søknadsfremdrift",
+      "messages": "Meldinger",
+      "messagesDesc": "uleste meldinger",
+      "payments": "Betalinger",
+      "paymentsDesc": "Fakturaer og avgifter",
+      "myApplications": "Mine søknader",
+      "applicationsOverview": "Oversikt over alle dine barnehagesøknader",
+      "recentMessages": "Siste meldinger",
+      "paymentOverview": "Betalingsoversikt"
+    },
+    "newApplication": {
+      "title": "Ny barnehagesøknad",
+      "description": "Fyll ut informasjonen nedenfor for å søke om barnehageplass",
+      "steps": {
+        "childInfo": "Barnets info",
+        "guardianInfo": "Foresatt info",
+        "preferences": "Ønsker",
+        "additional": "Tillegg"
+      },
+      "childInformation": {
+        "title": "Informasjon om barnet",
+        "description": "Vennligst oppgi detaljer om ditt barn",
+        "childName": "Barnets fulle navn",
+        "childNamePlaceholder": "Skriv inn barnets fulle navn",
+        "birthDate": "Fødselsdato",
+        "nationalId": "Fødselsnummer",
+        "nationalIdPlaceholder": "11 siffer",
+        "nationalIdNote": "Informasjon hentes fra Folkeregisteret"
+      },
+      "guardianInformation": {
+        "title": "Informasjon om foresatt",
+        "description": "Din kontaktinformasjon",
+        "fullName": "Fullt navn",
+        "email": "E-postadresse",
+        "phone": "Telefonnummer",
+        "phonePlaceholder": "+47 xxx xx xxx",
+        "autoFilled": "Fylles automatisk ut fra din profil"
+      },
+      "kindergartenPreferences": {
+        "title": "Barnehageønsker",
+        "description": "Velg dine foretrukne barnehager",
+        "startDate": "Ønsket oppstartsdato",
+        "preferences": "Foretrukne barnehager (maks 5)",
+        "preferencesDesc": "Velg inntil 5 barnehager i prioritert rekkefølge",
+        "selected": "Valgte barnehager:",
+        "available": "Tilgjengelige barnehager:",
+        "select": "Velg",
+        "remove": "Fjern"
+      },
+      "additionalInformation": {
+        "title": "Tilleggsinformasjon",
+        "description": "Valgfrie detaljer om ditt barn",
+        "specialNeeds": "Mitt barn har spesielle behov",
+        "specialNeedsDesc": "Kryss av hvis barnet ditt trenger spesiell omsorg eller oppmerksomhet",
+        "specialNeedsPlaceholder": "Vennligst beskriv barnets spesielle behov...",
+        "sibling": "Søsken i barnehage",
+        "siblingDesc": "Kryss av hvis barnet ditt har søsken som for tiden går i barnehage",
+        "siblingKindergarten": "Hvilken barnehage?",
+        "siblingSelect": "Velg barnehage"
+      }
+    },
+    "applicationStatus": {
+      "title": "Søknadsstatus",
+      "description": "Følg statusen til dine barnehagesøknader",
+      "timeline": "Behandlingstidslinje",
+      "preferences": "Barnehageønsker",
+      "congratulations": "🎉 Gratulerer! Plass tildelt",
+      "placementMessage": "har fått tildelt plass ved",
+      "startDate": "Oppstartsdato:",
+      "acceptPlacement": "Takk ja til plass",
+      "downloadContract": "Last ned kontrakt",
+      "caseWorker": "Saksbehandler:",
+      "lastUpdated": "Sist oppdatert:",
+      "importantInfo": "Viktig informasjon",
+      "notifications": "Du vil motta e-postvarsel når søknadsstatusen endres",
+      "acceptDeadline": "Når du tilbys plass, må du takke ja innen 14 dager",
+      "updatePreferences": "Du kan oppdatere ønsker frem til behandlingsfristen",
+      "contactCaseWorker": "Kontakt din saksbehandler hvis du har spørsmål"
+    },
+    "payments": {
+      "title": "Betalinger og avgifter",
+      "description": "Oversikt over fakturaer, betalinger og søknader om redusert betaling",
+      "totalPaid": "Totalt betalt i år",
+      "savedReduction": "Spart med reduksjon",
+      "openInvoices": "Åpne fakturaer",
+      "reducedPayment": "Redusert betaling godkjent",
+      "applicationApproved": "Din søknad om inntektsbasert reduksjon er godkjent",
+      "invoices": "Fakturaer",
+      "invoicesDesc": "Oversikt over alle fakturaer for barnehageavgift",
+      "originalAmount": "Opprinnelig beløp",
+      "reduction": "Reduksjon",
+      "amountDue": "Beløp å betale",
+      "dueDate": "Forfallsdato",
+      "view": "Vis",
+      "downloadPdf": "Last ned PDF",
+      "paymentInfo": "Viktig betalingsinformasjon"
+    },
+    "messages": {
+      "title": "Meldinger",
+      "description": "Kommunikasjon med barnehager og Oslo kommune",
+      "inbox": "Innboks",
+      "unread": "uleste",
+      "searchPlaceholder": "Søk i meldinger...",
+      "archived": "Arkivert",
+      "reply": "Svar på melding",
+      "replyPlaceholder": "Skriv ditt svar her...",
+      "attachFile": "Legg ved fil",
+      "sendReply": "Send svar",
+      "selectMessage": "Velg en melding for å lese innholdet",
+      "archive": "Arkiver",
+      "addStar": "Legg til stjerne",
+      "removeStar": "Fjern stjerne",
+      "attachments": "Vedlegg"
+    }
+  },
+  "caseworker": {
+    "dashboard": {
+      "title": "Saksbehandleroversikt",
+      "description": "Administrer søknader og kommuniser med familier",
+      "newApplications": "Nye søknader",
+      "urgentTasks": "Oppgaver som haster",
+      "averageProcessing": "Gjennomsnittlig behandlingstid",
+      "completionRate": "Fullføringsrate",
+      "recentActivity": "Nylig aktivitet",
+      "quickActions": "Hurtighandlinger",
+      "reviewApplications": "Behandle søknader",
+      "managePlacements": "Administrer plasser",
+      "sendMessages": "Send meldinger",
+      "generateReports": "Generer rapporter"
+    },
+    "reviewQueue": {
+      "title": "Behandlingskø for søknader",
+      "description": "Behandle og prosessere barnehagesøknader",
+      "totalApplications": "Totalt søknader",
+      "new": "Nye",
+      "underReview": "Under behandling",
+      "missingDocs": "Mangler dok.",
+      "avgProcessing": "Gj.snitt behandling",
+      "filterApplications": "Filtrer søknader",
+      "searchPlaceholder": "Søk etter navn eller ID...",
+      "allStatuses": "Alle statuser",
+      "allPriorities": "Alle prioriteter",
+      "highPriority": "Høy prioritet",
+      "normalPriority": "Normal prioritet",
+      "lowPriority": "Lav prioritet",
+      "clearFilters": "Tøm filtre",
+      "applications": "Søknader",
+      "clickToView": "Klikk på en søknad for å se detaljer og handle",
+      "applicationId": "Søknads-ID",
+      "child": "Barn",
+      "guardian": "Foresatt",
+      "submitted": "Innsendt",
+      "district": "Bydel",
+      "status": "Status",
+      "priority": "Prioritet",
+      "actions": "Handlinger",
+      "view": "Vis",
+      "review": "Behandle",
+      "requestDocs": "Be om dok.",
+      "quickActions": "Hurtighandlinger",
+      "quickActionsDesc": "Vanlige oppgaver for å behandle søknader",
+      "bulkReview": "Massebehandling",
+      "requestDocuments": "Be om dokumenter",
+      "approveApplications": "Godkjenn søknader",
+      "contactGuardians": "Kontakt foresatte"
+    },
+    "placementManagement": {
+      "title": "Plasshåndtering",
+      "description": "Administrer barnehageplasser og kapasitet"
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Administratoroversikt",
+      "description": "Systemadministrasjon og rapportering"
+    },
+    "reports": {
+      "title": "Rapporter og analyse",
+      "description": "Omfattende rapporter for barnehageadministrasjon"
+    },
+    "settings": {
+      "title": "Systeminnstillinger",
+      "description": "Konfigurer systemparametere og brukeradministrasjon"
+    }
+  },
+  "common": {
+    "loading": "Laster...",
+    "error": "En feil oppstod",
+    "save": "Lagre",
+    "saveDraft": "Lagre utkast",
+    "cancel": "Avbryt",
+    "next": "Neste",
+    "previous": "Forrige",
+    "submit": "Send inn",
+    "submitting": "Sender inn...",
+    "saving": "Lagrer...",
+    "complete": "fullført",
+    "required": "påkrevd",
+    "optional": "valgfritt",
+    "status": {
+      "new": "Ny",
+      "submitted": "Under behandling",
+      "underReview": "Under behandling",
+      "missingDocuments": "Mangler dokumenter",
+      "approved": "Godkjent",
+      "rejected": "Avvist",
+      "placed": "Plass tildelt",
+      "pending": "Venter",
+      "accepted": "Akseptert",
+      "notProcessed": "Ikke behandlet",
+      "paid": "Betalt",
+      "due": "Forfaller",
+      "overdue": "Forfalt"
+    },
+    "validation": {
+      "nameRequired": "Navn er påkrevd",
+      "birthDateRequired": "Fødselsdato er påkrevd",
+      "nationalIdRequired": "Fødselsnummer er påkrevd",
+      "nationalIdLength": "Fødselsnummer må være 11 siffer",
+      "phoneRequired": "Telefonnummer er påkrevd",
+      "kindergartenRequired": "Vennligst velg minst én barnehage",
+      "startDateRequired": "Oppstartsdato er påkrevd",
+      "specialNeedsRequired": "Vennligst beskriv de spesielle behovene",
+      "siblingKindergartenRequired": "Vennligst velg søskenets barnehage"
+    }
+  }
+}

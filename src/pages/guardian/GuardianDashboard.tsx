@@ -7,6 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { 
   FileText, 
   Clock, 
@@ -22,7 +23,7 @@ import {
 } from 'lucide-react';
 
 const GuardianDashboard = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
@@ -90,11 +91,11 @@ const GuardianDashboard = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'submitted':
-        return <Badge variant="outline" className="text-yellow-600 border-yellow-300 bg-yellow-50">Under Review</Badge>;
+        return <Badge variant="outline" className="text-yellow-600 border-yellow-300 bg-yellow-50">{t('common.status.submitted')}</Badge>;
       case 'placed':
-        return <Badge variant="outline" className="text-green-600 border-green-300 bg-green-50">Place Assigned</Badge>;
+        return <Badge variant="outline" className="text-green-600 border-green-300 bg-green-50">{t('common.status.placed')}</Badge>;
       case 'rejected':
-        return <Badge variant="outline" className="text-red-600 border-red-300 bg-red-50">Rejected</Badge>;
+        return <Badge variant="outline" className="text-red-600 border-red-300 bg-red-50">{t('common.status.rejected')}</Badge>;
       default:
         return <Badge variant="outline">Unknown</Badge>;
     }
@@ -151,7 +152,7 @@ const GuardianDashboard = () => {
             </Badge>
           </h1>
           <p className="text-gray-600 text-lg">
-            Overview of your kindergarten applications and information
+            {t('guardian.dashboard.overview')}
           </p>
         </div>
         <Button 
@@ -159,7 +160,7 @@ const GuardianDashboard = () => {
           className="bg-oslo-blue hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all duration-200 h-12 px-6"
         >
           <Plus className="h-5 w-5 mr-2" />
-          New Application
+          {t('guardian.dashboard.newApplication')}
         </Button>
       </div>
 
@@ -172,8 +173,8 @@ const GuardianDashboard = () => {
                 <FileText className="h-6 w-6 text-oslo-blue" />
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900 group-hover:text-oslo-blue transition-colors">New Application</h3>
-                <p className="text-sm text-gray-600">Start new kindergarten application</p>
+                <h3 className="font-semibold text-gray-900 group-hover:text-oslo-blue transition-colors">{t('guardian.dashboard.newApplication')}</h3>
+                <p className="text-sm text-gray-600">{t('guardian.dashboard.newApplicationDesc')}</p>
               </div>
               <ArrowRight className="h-4 w-4 text-gray-400 ml-auto group-hover:text-oslo-blue transition-colors" />
             </CardContent>
@@ -187,8 +188,8 @@ const GuardianDashboard = () => {
                 <Clock className="h-6 w-6 text-green-600" />
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900 group-hover:text-green-600 transition-colors">Application Status</h3>
-                <p className="text-sm text-gray-600">View application progress</p>
+                <h3 className="font-semibold text-gray-900 group-hover:text-green-600 transition-colors">{t('guardian.dashboard.applicationStatus')}</h3>
+                <p className="text-sm text-gray-600">{t('guardian.dashboard.applicationStatusDesc')}</p>
               </div>
               <ArrowRight className="h-4 w-4 text-gray-400 ml-auto group-hover:text-green-600 transition-colors" />
             </CardContent>
@@ -207,8 +208,8 @@ const GuardianDashboard = () => {
                 )}
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">Messages</h3>
-                <p className="text-sm text-gray-600">{messages.filter(m => m.unread).length} unread messages</p>
+                <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">{t('guardian.dashboard.messages')}</h3>
+                <p className="text-sm text-gray-600">{messages.filter(m => m.unread).length} {t('guardian.dashboard.messagesDesc')}</p>
               </div>
               <ArrowRight className="h-4 w-4 text-gray-400 ml-auto group-hover:text-blue-600 transition-colors" />
             </CardContent>
@@ -222,8 +223,8 @@ const GuardianDashboard = () => {
                 <CreditCard className="h-6 w-6 text-purple-600" />
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900 group-hover:text-purple-600 transition-colors">Payments</h3>
-                <p className="text-sm text-gray-600">Invoices and fees</p>
+                <h3 className="font-semibold text-gray-900 group-hover:text-purple-600 transition-colors">{t('guardian.dashboard.payments')}</h3>
+                <p className="text-sm text-gray-600">{t('guardian.dashboard.paymentsDesc')}</p>
               </div>
               <ArrowRight className="h-4 w-4 text-gray-400 ml-auto group-hover:text-purple-600 transition-colors" />
             </CardContent>
@@ -238,10 +239,10 @@ const GuardianDashboard = () => {
             <div className="w-10 h-10 bg-oslo-blue/10 rounded-xl flex items-center justify-center">
               <FileText className="h-5 w-5 text-oslo-blue" />
             </div>
-            My Applications
+            {t('guardian.dashboard.myApplications')}
           </CardTitle>
           <CardDescription className="text-base">
-            Overview of all your kindergarten applications
+            {t('guardian.dashboard.applicationsOverview')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -276,7 +277,7 @@ const GuardianDashboard = () => {
               <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
                 <MessageSquare className="h-5 w-5 text-blue-600" />
               </div>
-              Recent Messages
+              {t('guardian.dashboard.recentMessages')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -309,7 +310,7 @@ const GuardianDashboard = () => {
               <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
                 <CreditCard className="h-5 w-5 text-purple-600" />
               </div>
-              Payment Overview
+              {t('guardian.dashboard.paymentOverview')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -332,7 +333,7 @@ const GuardianDashboard = () => {
                   <div className="text-right">
                     <p className="font-semibold text-lg text-gray-900">{payment.amount} kr</p>
                     <Badge variant={payment.status === 'paid' ? 'default' : 'secondary'} className="mt-1">
-                      {payment.status === 'paid' ? 'Paid' : 'Pending'}
+                      {payment.status === 'paid' ? t('common.status.paid') : t('common.status.pending')}
                     </Badge>
                   </div>
                 </div>

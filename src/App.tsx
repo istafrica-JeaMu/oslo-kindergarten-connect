@@ -22,6 +22,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import Reports from "./pages/admin/Reports";
 import SystemSettings from "./pages/admin/SystemSettings";
 import NotFound from "./pages/NotFound";
+import './i18n';
 
 const queryClient = new QueryClient();
 

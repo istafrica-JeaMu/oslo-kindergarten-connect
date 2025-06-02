@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Progress } from '@/components/ui/progress';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useTranslation } from 'react-i18next';
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -24,7 +24,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 const NewApplication = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -76,29 +76,29 @@ const NewApplication = () => {
     
     switch (step) {
       case 1:
-        if (!formData.childName.trim()) errors.childName = 'Child name is required';
-        if (!formData.childBirthDate) errors.childBirthDate = 'Birth date is required';
+        if (!formData.childName.trim()) errors.childName = t('common.validation.nameRequired');
+        if (!formData.childBirthDate) errors.childBirthDate = t('common.validation.birthDateRequired');
         if (!formData.childNationalId.trim()) {
-          errors.childNationalId = 'National ID is required';
+          errors.childNationalId = t('common.validation.nationalIdRequired');
         } else if (formData.childNationalId.length !== 11) {
-          errors.childNationalId = 'National ID must be 11 digits';
+          errors.childNationalId = t('common.validation.nationalIdLength');
         }
         break;
       case 2:
-        if (!formData.guardianPhone.trim()) errors.guardianPhone = 'Phone number is required';
+        if (!formData.guardianPhone.trim()) errors.guardianPhone = t('common.validation.phoneRequired');
         break;
       case 3:
         if (formData.preferredKindergartens.length === 0) {
-          errors.preferredKindergartens = 'Please select at least one kindergarten';
+          errors.preferredKindergartens = t('common.validation.kindergartenRequired');
         }
-        if (!formData.startDate) errors.startDate = 'Start date is required';
+        if (!formData.startDate) errors.startDate = t('common.validation.startDateRequired');
         break;
       case 4:
         if (formData.specialNeeds && !formData.specialNeedsDescription.trim()) {
-          errors.specialNeedsDescription = 'Please describe the special needs';
+          errors.specialNeedsDescription = t('common.validation.specialNeedsRequired');
         }
         if (formData.siblingInKindergarten && !formData.siblingKindergarten) {
-          errors.siblingKindergarten = 'Please select the sibling\'s kindergarten';
+          errors.siblingKindergarten = t('common.validation.siblingKindergartenRequired');
         }
         break;
     }
@@ -185,19 +185,19 @@ const NewApplication = () => {
                 <Baby className="h-6 w-6 text-blue-600" />
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-gray-900">Child Information</h3>
-                <p className="text-gray-600">Please provide your child's details</p>
+                <h3 className="text-xl font-semibold text-gray-900">{t('guardian.newApplication.childInformation.title')}</h3>
+                <p className="text-gray-600">{t('guardian.newApplication.childInformation.description')}</p>
               </div>
             </div>
             
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="childName" className="text-sm font-medium">Child's Full Name *</Label>
+                <Label htmlFor="childName" className="text-sm font-medium">{t('guardian.newApplication.childInformation.childName')} *</Label>
                 <Input
                   id="childName"
                   value={formData.childName}
                   onChange={(e) => updateFormData('childName', e.target.value)}
-                  placeholder="Enter your child's full name"
+                  placeholder={t('guardian.newApplication.childInformation.childNamePlaceholder')}
                   className={`h-12 ${validationErrors.childName ? 'border-red-500' : ''}`}
                   required
                 />
@@ -210,7 +210,7 @@ const NewApplication = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="childBirthDate" className="text-sm font-medium">Date of Birth *</Label>
+                <Label htmlFor="childBirthDate" className="text-sm font-medium">{t('guardian.newApplication.childInformation.birthDate')} *</Label>
                 <Input
                   id="childBirthDate"
                   type="date"
@@ -228,12 +228,12 @@ const NewApplication = () => {
               </div>
               
               <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="childNationalId" className="text-sm font-medium">National ID Number *</Label>
+                <Label htmlFor="childNationalId" className="text-sm font-medium">{t('guardian.newApplication.childInformation.nationalId')} *</Label>
                 <Input
                   id="childNationalId"
                   value={formData.childNationalId}
                   onChange={(e) => updateFormData('childNationalId', e.target.value)}
-                  placeholder="11 digits"
+                  placeholder={t('guardian.newApplication.childInformation.nationalIdPlaceholder')}
                   maxLength={11}
                   className={`h-12 ${validationErrors.childNationalId ? 'border-red-500' : ''}`}
                   required
@@ -246,7 +246,7 @@ const NewApplication = () => {
                 )}
                 <p className="text-sm text-gray-600 flex items-center gap-1">
                   <CheckCircle className="h-4 w-4 text-green-500" />
-                  Information will be retrieved from the Population Register
+                  {t('guardian.newApplication.childInformation.nationalIdNote')}
                 </p>
               </div>
             </div>
@@ -261,14 +261,14 @@ const NewApplication = () => {
                 <User className="h-6 w-6 text-green-600" />
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-gray-900">Guardian Information</h3>
-                <p className="text-gray-600">Your contact information</p>
+                <h3 className="text-xl font-semibold text-gray-900">{t('guardian.newApplication.guardianInformation.title')}</h3>
+                <p className="text-gray-600">{t('guardian.newApplication.guardianInformation.description')}</p>
               </div>
             </div>
             
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="guardianName" className="text-sm font-medium">Full Name *</Label>
+                <Label htmlFor="guardianName" className="text-sm font-medium">{t('guardian.newApplication.guardianInformation.fullName')} *</Label>
                 <Input
                   id="guardianName"
                   value={formData.guardianName}
@@ -278,12 +278,12 @@ const NewApplication = () => {
                 />
                 <p className="text-sm text-gray-600 flex items-center gap-1">
                   <CheckCircle className="h-4 w-4 text-green-500" />
-                  Automatically filled from your profile
+                  {t('guardian.newApplication.guardianInformation.autoFilled')}
                 </p>
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="guardianEmail" className="text-sm font-medium">Email Address *</Label>
+                <Label htmlFor="guardianEmail" className="text-sm font-medium">{t('guardian.newApplication.guardianInformation.email')} *</Label>
                 <Input
                   id="guardianEmail"
                   type="email"
@@ -295,13 +295,13 @@ const NewApplication = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="guardianPhone" className="text-sm font-medium">Phone Number *</Label>
+                <Label htmlFor="guardianPhone" className="text-sm font-medium">{t('guardian.newApplication.guardianInformation.phone')} *</Label>
                 <Input
                   id="guardianPhone"
                   type="tel"
                   value={formData.guardianPhone}
                   onChange={(e) => updateFormData('guardianPhone', e.target.value)}
-                  placeholder="+47 xxx xx xxx"
+                  placeholder={t('guardian.newApplication.guardianInformation.phonePlaceholder')}
                   className={`h-12 ${validationErrors.guardianPhone ? 'border-red-500' : ''}`}
                 />
                 {validationErrors.guardianPhone && (
@@ -323,14 +323,14 @@ const NewApplication = () => {
                 <Building className="h-6 w-6 text-purple-600" />
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-gray-900">Kindergarten Preferences</h3>
-                <p className="text-gray-600">Select your preferred kindergartens</p>
+                <h3 className="text-xl font-semibold text-gray-900">{t('guardian.newApplication.kindergartenPreferences.title')}</h3>
+                <p className="text-gray-600">{t('guardian.newApplication.kindergartenPreferences.description')}</p>
               </div>
             </div>
             
             <div className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="startDate" className="text-sm font-medium">Desired Start Date *</Label>
+                <Label htmlFor="startDate" className="text-sm font-medium">{t('guardian.newApplication.kindergartenPreferences.startDate')} *</Label>
                 <Input
                   id="startDate"
                   type="date"
@@ -349,9 +349,9 @@ const NewApplication = () => {
 
               <div className="space-y-4">
                 <div>
-                  <Label className="text-sm font-medium">Preferred Kindergartens (max 5) *</Label>
+                  <Label className="text-sm font-medium">{t('guardian.newApplication.kindergartenPreferences.preferences')} *</Label>
                   <p className="text-sm text-gray-600 mb-3">
-                    Select up to 5 kindergartens in priority order
+                    {t('guardian.newApplication.kindergartenPreferences.preferencesDesc')}
                   </p>
                   {validationErrors.preferredKindergartens && (
                     <p className="text-sm text-red-600 flex items-center gap-1 mb-3">
@@ -364,7 +364,7 @@ const NewApplication = () => {
                 {/* Selected kindergartens */}
                 {formData.preferredKindergartens.length > 0 && (
                   <div className="space-y-3">
-                    <h4 className="font-medium text-gray-900">Selected Kindergartens:</h4>
+                    <h4 className="font-medium text-gray-900">{t('guardian.newApplication.kindergartenPreferences.selected')}</h4>
                     <div className="space-y-2">
                       {formData.preferredKindergartens.map((id, index) => {
                         const kg = kindergartens.find(k => k.id === id);
@@ -385,7 +385,7 @@ const NewApplication = () => {
                               onClick={() => removeKindergarten(id)}
                               className="hover:bg-red-50 hover:border-red-300 hover:text-red-600"
                             >
-                              Remove
+                              {t('guardian.newApplication.kindergartenPreferences.remove')}
                             </Button>
                           </div>
                         );
@@ -397,7 +397,7 @@ const NewApplication = () => {
                 {/* Available kindergartens */}
                 {formData.preferredKindergartens.length < 5 && (
                   <div className="space-y-3">
-                    <h4 className="font-medium text-gray-900">Available Kindergartens:</h4>
+                    <h4 className="font-medium text-gray-900">{t('guardian.newApplication.kindergartenPreferences.available')}</h4>
                     <div className="border rounded-xl max-h-60 overflow-y-auto">
                       {kindergartens.filter(kg => !formData.preferredKindergartens.includes(kg.id)).map((kg) => (
                         <div key={kg.id} className="flex items-center justify-between p-4 border-b last:border-b-0 hover:bg-gray-50">
@@ -411,7 +411,7 @@ const NewApplication = () => {
                             onClick={() => addKindergarten(kg.id)}
                             className="hover:bg-blue-50 hover:border-blue-300 hover:text-blue-600"
                           >
-                            Select
+                            {t('guardian.newApplication.kindergartenPreferences.select')}
                           </Button>
                         </div>
                       ))}
@@ -431,8 +431,8 @@ const NewApplication = () => {
                 <FileText className="h-6 w-6 text-orange-600" />
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-gray-900">Additional Information</h3>
-                <p className="text-gray-600">Optional details about your child</p>
+                <h3 className="text-xl font-semibold text-gray-900">{t('guardian.newApplication.additionalInformation.title')}</h3>
+                <p className="text-gray-600">{t('guardian.newApplication.additionalInformation.description')}</p>
               </div>
             </div>
             
@@ -447,10 +447,10 @@ const NewApplication = () => {
                   />
                   <div className="space-y-1 flex-1">
                     <Label htmlFor="specialNeeds" className="text-sm font-medium cursor-pointer">
-                      My child has special needs
+                      {t('guardian.newApplication.additionalInformation.specialNeeds')}
                     </Label>
                     <p className="text-sm text-gray-600">
-                      Check this if your child requires special care or attention
+                      {t('guardian.newApplication.additionalInformation.specialNeedsDesc')}
                     </p>
                   </div>
                 </div>
@@ -465,7 +465,7 @@ const NewApplication = () => {
                       className={`w-full min-h-24 px-3 py-2 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-oslo-blue focus:border-transparent ${validationErrors.specialNeedsDescription ? 'border-red-500' : 'border-gray-300'}`}
                       value={formData.specialNeedsDescription}
                       onChange={(e) => updateFormData('specialNeedsDescription', e.target.value)}
-                      placeholder="Please describe your child's special needs..."
+                      placeholder={t('guardian.newApplication.additionalInformation.specialNeedsPlaceholder')}
                     />
                     {validationErrors.specialNeedsDescription && (
                       <p className="text-sm text-red-600 flex items-center gap-1">
@@ -485,10 +485,10 @@ const NewApplication = () => {
                   />
                   <div className="space-y-1 flex-1">
                     <Label htmlFor="siblingInKindergarten" className="text-sm font-medium cursor-pointer">
-                      Sibling in kindergarten
+                      {t('guardian.newApplication.additionalInformation.sibling')}
                     </Label>
                     <p className="text-sm text-gray-600">
-                      Check this if your child has a sibling currently attending kindergarten
+                      {t('guardian.newApplication.additionalInformation.siblingDesc')}
                     </p>
                   </div>
                 </div>
@@ -496,14 +496,14 @@ const NewApplication = () => {
                 {formData.siblingInKindergarten && (
                   <div className="space-y-2 ml-8">
                     <Label htmlFor="siblingKindergarten" className="text-sm font-medium">
-                      Which kindergarten? *
+                      {t('guardian.newApplication.additionalInformation.siblingKindergarten')} *
                     </Label>
                     <Select 
                       value={formData.siblingKindergarten} 
                       onValueChange={(value) => updateFormData('siblingKindergarten', value)}
                     >
                       <SelectTrigger className={`h-12 ${validationErrors.siblingKindergarten ? 'border-red-500' : ''}`}>
-                        <SelectValue placeholder="Select kindergarten" />
+                        <SelectValue placeholder={t('guardian.newApplication.additionalInformation.siblingSelect')} />
                       </SelectTrigger>
                       <SelectContent>
                         {kindergartens.map((kg) => (
@@ -538,7 +538,7 @@ const NewApplication = () => {
           {t('guardian.newApplication.title')}
         </h1>
         <p className="text-gray-600 text-lg">
-          Complete the information below to apply for a kindergarten place
+          {t('guardian.newApplication.description')}
         </p>
       </div>
 
@@ -547,7 +547,7 @@ const NewApplication = () => {
         <CardContent className="pt-8">
           <div className="flex items-center justify-between mb-6">
             <span className="text-sm font-medium text-gray-900">Step {currentStep} of {totalSteps}</span>
-            <span className="text-sm text-gray-600">{Math.round((currentStep / totalSteps) * 100)}% complete</span>
+            <span className="text-sm text-gray-600">{Math.round((currentStep / totalSteps) * 100)}% {t('common.complete')}</span>
           </div>
           <Progress value={(currentStep / totalSteps) * 100} className="h-3 mb-6" />
           
@@ -562,10 +562,10 @@ const NewApplication = () => {
                   {getStepIcon(step)}
                 </div>
                 <span className="text-xs font-medium text-center">
-                  {step === 1 && "Child Info"}
-                  {step === 2 && "Guardian Info"}
-                  {step === 3 && "Preferences"}
-                  {step === 4 && "Additional"}
+                  {step === 1 && t('guardian.newApplication.steps.childInfo')}
+                  {step === 2 && t('guardian.newApplication.steps.guardianInfo')}
+                  {step === 3 && t('guardian.newApplication.steps.preferences')}
+                  {step === 4 && t('guardian.newApplication.steps.additional')}
                 </span>
               </div>
             ))}
@@ -602,12 +602,12 @@ const NewApplication = () => {
             {isSaving ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Saving...
+                {t('common.saving')}
               </>
             ) : (
               <>
                 <Save className="h-4 w-4" />
-                Save Draft
+                {t('common.saveDraft')}
               </>
             )}
           </Button>
@@ -621,7 +621,7 @@ const NewApplication = () => {
               {isSubmitting ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Submitting...
+                  {t('common.submitting')}
                 </>
               ) : (
                 <>
