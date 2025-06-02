@@ -2,7 +2,7 @@
 import { Outlet } from 'react-router-dom';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from './AppSidebar';
-import { Header } from './Header';
+import Header from './Header';
 
 const Layout = () => {
   return (
