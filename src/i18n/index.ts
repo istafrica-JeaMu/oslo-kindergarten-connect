@@ -2,6 +2,10 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
+// Import translation files directly
+import enTranslation from '../../public/locales/en/translation.json';
+import noTranslation from '../../public/locales/no/translation.json';
+
 i18n
   .use(initReactI18next)
   .init({
@@ -15,10 +19,10 @@ i18n
     
     resources: {
       en: {
-        translation: require('../../public/locales/en/translation.json')
+        translation: enTranslation
       },
       no: {
-        translation: require('../../public/locales/no/translation.json')
+        translation: noTranslation
       }
     }
   });
