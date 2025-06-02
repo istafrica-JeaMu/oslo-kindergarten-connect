@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,11 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// Oslo municipality brand colors
+				'oslo-blue': '#00457C',
+				'oslo-green': '#31A24C',
+				'oslo-gray': '#F5F7F9'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
