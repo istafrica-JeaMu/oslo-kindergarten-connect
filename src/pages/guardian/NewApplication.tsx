@@ -8,11 +8,28 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Progress } from '@/components/ui/progress';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { ChevronLeft, ChevronRight, Save, Send } from 'lucide-react';
+import { 
+  ChevronLeft, 
+  ChevronRight, 
+  Save, 
+  Send, 
+  User, 
+  Baby, 
+  Building, 
+  FileText,
+  Loader2,
+  CheckCircle,
+  AlertCircle
+} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const NewApplication = () => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const totalSteps = 4;
 
   // Form state
@@ -39,15 +56,55 @@ const NewApplication = () => {
   });
 
   const kindergartens = [
-    { id: 'k1', name: 'Løvenskiold Barnehage', district: 'Frogner', type: 'Municipal' },
-    { id: 'k2', name: 'Sinsen Barnehage', district: 'Grünerløkka', type: 'Municipal' },
-    { id: 'k3', name: 'Sagene Barnehage', district: 'Sagene', type: 'Municipal' },
-    { id: 'k4', name: 'Vårtun Barnehage', district: 'Søndre Nordstrand', type: 'Private' },
-    { id: 'k5', name: 'Bjølsen Barnehage', district: 'Sagene', type: 'Municipal' }
+    { id: 'k1', name: 'Løvenskiold Kindergarten', district: 'Frogner', type: 'Municipal' },
+    { id: 'k2', name: 'Sinsen Kindergarten', district: 'Grünerløkka', type: 'Municipal' },
+    { id: 'k3', name: 'Sagene Kindergarten', district: 'Sagene', type: 'Municipal' },
+    { id: 'k4', name: 'Vårtun Kindergarten', district: 'Søndre Nordstrand', type: 'Private' },
+    { id: 'k5', name: 'Bjølsen Kindergarten', district: 'Sagene', type: 'Municipal' }
   ];
 
   const updateFormData = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    // Clear validation error when field is updated
+    if (validationErrors[field]) {
+      setValidationErrors(prev => ({...prev, [field]: ''}));
+    }
+  };
+
+  const validateStep = (step: number) => {
+    const errors: Record<string, string> = {};
+    
+    switch (step) {
+      case 1:
+        if (!formData.childName.trim()) errors.childName = 'Child name is required';
+        if (!formData.childBirthDate) errors.childBirthDate = 'Birth date is required';
+        if (!formData.childNationalId.trim()) {
+          errors.childNationalId = 'National ID is required';
+        } else if (formData.childNationalId.length !== 11) {
+          errors.childNationalId = 'National ID must be 11 digits';
+        }
+        break;
+      case 2:
+        if (!formData.guardianPhone.trim()) errors.guardianPhone = 'Phone number is required';
+        break;
+      case 3:
+        if (formData.preferredKindergartens.length === 0) {
+          errors.preferredKindergartens = 'Please select at least one kindergarten';
+        }
+        if (!formData.startDate) errors.startDate = 'Start date is required';
+        break;
+      case 4:
+        if (formData.specialNeeds && !formData.specialNeedsDescription.trim()) {
+          errors.specialNeedsDescription = 'Please describe the special needs';
+        }
+        if (formData.siblingInKindergarten && !formData.siblingKindergarten) {
+          errors.siblingKindergarten = 'Please select the sibling\'s kindergarten';
+        }
+        break;
+    }
+    
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const addKindergarten = (kindergartenId: string) => {
@@ -61,7 +118,7 @@ const NewApplication = () => {
   };
 
   const nextStep = () => {
-    if (currentStep < totalSteps) {
+    if (validateStep(currentStep) && currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -72,10 +129,50 @@ const NewApplication = () => {
     }
   };
 
-  const handleSubmit = () => {
-    console.log('Submitting application:', formData);
-    // Here you would typically make an API call
-    alert('Søknad sendt inn! Du vil motta en bekreftelse på e-post.');
+  const handleSaveDraft = async () => {
+    setIsSaving(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      console.log('Draft saved:', formData);
+      // Show success message (you could use toast here)
+    } catch (error) {
+      console.error('Failed to save draft:', error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!validateStep(currentStep)) {
+      return;
+    }
+    
+    setIsSubmitting(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      console.log('Submitting application:', formData);
+      
+      // Show success and navigate
+      alert('Application submitted successfully! You will receive a confirmation email.');
+      navigate('/guardian/application-status');
+    } catch (error) {
+      console.error('Failed to submit application:', error);
+      alert('Failed to submit application. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const getStepIcon = (step: number) => {
+    switch (step) {
+      case 1: return <Baby className="h-5 w-5" />;
+      case 2: return <User className="h-5 w-5" />;
+      case 3: return <Building className="h-5 w-5" />;
+      case 4: return <FileText className="h-5 w-5" />;
+      default: return <FileText className="h-5 w-5" />;
+    }
   };
 
   const renderStep = () => {
@@ -83,43 +180,74 @@ const NewApplication = () => {
       case 1:
         return (
           <div className="space-y-6">
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Barnets informasjon</h3>
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="childName">Barnets navn *</Label>
-                  <Input
-                    id="childName"
-                    value={formData.childName}
-                    onChange={(e) => updateFormData('childName', e.target.value)}
-                    placeholder="Skriv inn barnets fulle navn"
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="childBirthDate">Fødselsdato *</Label>
-                  <Input
-                    id="childBirthDate"
-                    type="date"
-                    value={formData.childBirthDate}
-                    onChange={(e) => updateFormData('childBirthDate', e.target.value)}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="childNationalId">Fødselsnummer *</Label>
-                  <Input
-                    id="childNationalId"
-                    value={formData.childNationalId}
-                    onChange={(e) => updateFormData('childNationalId', e.target.value)}
-                    placeholder="11 siffer"
-                    maxLength={11}
-                    required
-                  />
-                  <p className="text-sm text-gray-600 mt-1">
-                    Informasjonen blir hentet fra Folkeregisteret
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                <Baby className="h-6 w-6 text-blue-600" />
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-gray-900">Child Information</h3>
+                <p className="text-gray-600">Please provide your child's details</p>
+              </div>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="childName" className="text-sm font-medium">Child's Full Name *</Label>
+                <Input
+                  id="childName"
+                  value={formData.childName}
+                  onChange={(e) => updateFormData('childName', e.target.value)}
+                  placeholder="Enter your child's full name"
+                  className={`h-12 ${validationErrors.childName ? 'border-red-500' : ''}`}
+                  required
+                />
+                {validationErrors.childName && (
+                  <p className="text-sm text-red-600 flex items-center gap-1">
+                    <AlertCircle className="h-4 w-4" />
+                    {validationErrors.childName}
                   </p>
-                </div>
+                )}
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="childBirthDate" className="text-sm font-medium">Date of Birth *</Label>
+                <Input
+                  id="childBirthDate"
+                  type="date"
+                  value={formData.childBirthDate}
+                  onChange={(e) => updateFormData('childBirthDate', e.target.value)}
+                  className={`h-12 ${validationErrors.childBirthDate ? 'border-red-500' : ''}`}
+                  required
+                />
+                {validationErrors.childBirthDate && (
+                  <p className="text-sm text-red-600 flex items-center gap-1">
+                    <AlertCircle className="h-4 w-4" />
+                    {validationErrors.childBirthDate}
+                  </p>
+                )}
+              </div>
+              
+              <div className="space-y-2 md:col-span-2">
+                <Label htmlFor="childNationalId" className="text-sm font-medium">National ID Number *</Label>
+                <Input
+                  id="childNationalId"
+                  value={formData.childNationalId}
+                  onChange={(e) => updateFormData('childNationalId', e.target.value)}
+                  placeholder="11 digits"
+                  maxLength={11}
+                  className={`h-12 ${validationErrors.childNationalId ? 'border-red-500' : ''}`}
+                  required
+                />
+                {validationErrors.childNationalId && (
+                  <p className="text-sm text-red-600 flex items-center gap-1">
+                    <AlertCircle className="h-4 w-4" />
+                    {validationErrors.childNationalId}
+                  </p>
+                )}
+                <p className="text-sm text-gray-600 flex items-center gap-1">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  Information will be retrieved from the Population Register
+                </p>
               </div>
             </div>
           </div>
@@ -128,43 +256,60 @@ const NewApplication = () => {
       case 2:
         return (
           <div className="space-y-6">
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Foresattes informasjon</h3>
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="guardianName">Navn *</Label>
-                  <Input
-                    id="guardianName"
-                    value={formData.guardianName}
-                    onChange={(e) => updateFormData('guardianName', e.target.value)}
-                    disabled
-                    className="bg-gray-50"
-                  />
-                  <p className="text-sm text-gray-600 mt-1">
-                    Automatisk utfylt fra din profil
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                <User className="h-6 w-6 text-green-600" />
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-gray-900">Guardian Information</h3>
+                <p className="text-gray-600">Your contact information</p>
+              </div>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="guardianName" className="text-sm font-medium">Full Name *</Label>
+                <Input
+                  id="guardianName"
+                  value={formData.guardianName}
+                  onChange={(e) => updateFormData('guardianName', e.target.value)}
+                  disabled
+                  className="bg-gray-50 h-12"
+                />
+                <p className="text-sm text-gray-600 flex items-center gap-1">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  Automatically filled from your profile
+                </p>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="guardianEmail" className="text-sm font-medium">Email Address *</Label>
+                <Input
+                  id="guardianEmail"
+                  type="email"
+                  value={formData.guardianEmail}
+                  onChange={(e) => updateFormData('guardianEmail', e.target.value)}
+                  disabled
+                  className="bg-gray-50 h-12"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="guardianPhone" className="text-sm font-medium">Phone Number *</Label>
+                <Input
+                  id="guardianPhone"
+                  type="tel"
+                  value={formData.guardianPhone}
+                  onChange={(e) => updateFormData('guardianPhone', e.target.value)}
+                  placeholder="+47 xxx xx xxx"
+                  className={`h-12 ${validationErrors.guardianPhone ? 'border-red-500' : ''}`}
+                />
+                {validationErrors.guardianPhone && (
+                  <p className="text-sm text-red-600 flex items-center gap-1">
+                    <AlertCircle className="h-4 w-4" />
+                    {validationErrors.guardianPhone}
                   </p>
-                </div>
-                <div>
-                  <Label htmlFor="guardianEmail">E-post *</Label>
-                  <Input
-                    id="guardianEmail"
-                    type="email"
-                    value={formData.guardianEmail}
-                    onChange={(e) => updateFormData('guardianEmail', e.target.value)}
-                    disabled
-                    className="bg-gray-50"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="guardianPhone">Telefonnummer</Label>
-                  <Input
-                    id="guardianPhone"
-                    type="tel"
-                    value={formData.guardianPhone}
-                    onChange={(e) => updateFormData('guardianPhone', e.target.value)}
-                    placeholder="+47 xxx xx xxx"
-                  />
-                </div>
+                )}
               </div>
             </div>
           </div>
@@ -173,73 +318,106 @@ const NewApplication = () => {
       case 3:
         return (
           <div className="space-y-6">
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Barnehagepreferanser</h3>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                <Building className="h-6 w-6 text-purple-600" />
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-gray-900">Kindergarten Preferences</h3>
+                <p className="text-gray-600">Select your preferred kindergartens</p>
+              </div>
+            </div>
+            
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="startDate" className="text-sm font-medium">Desired Start Date *</Label>
+                <Input
+                  id="startDate"
+                  type="date"
+                  value={formData.startDate}
+                  onChange={(e) => updateFormData('startDate', e.target.value)}
+                  className={`h-12 ${validationErrors.startDate ? 'border-red-500' : ''}`}
+                  required
+                />
+                {validationErrors.startDate && (
+                  <p className="text-sm text-red-600 flex items-center gap-1">
+                    <AlertCircle className="h-4 w-4" />
+                    {validationErrors.startDate}
+                  </p>
+                )}
+              </div>
+
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="startDate">Ønsket oppstartsdato *</Label>
-                  <Input
-                    id="startDate"
-                    type="date"
-                    value={formData.startDate}
-                    onChange={(e) => updateFormData('startDate', e.target.value)}
-                    required
-                  />
-                </div>
-
-                <div>
-                  <Label>Foretrukne barnehager (maks 5)</Label>
+                  <Label className="text-sm font-medium">Preferred Kindergartens (max 5) *</Label>
                   <p className="text-sm text-gray-600 mb-3">
-                    Velg opptil 5 barnehager i prioritert rekkefølge
+                    Select up to 5 kindergartens in priority order
                   </p>
-                  
-                  {/* Selected kindergartens */}
-                  {formData.preferredKindergartens.length > 0 && (
-                    <div className="mb-4">
-                      <h4 className="font-medium mb-2">Valgte barnehager:</h4>
-                      <div className="space-y-2">
-                        {formData.preferredKindergartens.map((id, index) => {
-                          const kg = kindergartens.find(k => k.id === id);
-                          return (
-                            <div key={id} className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                              <div>
-                                <span className="font-medium text-sm">{index + 1}. {kg?.name}</span>
-                                <span className="text-xs text-gray-600 ml-2">({kg?.district}, {kg?.type})</span>
-                              </div>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => removeKindergarten(id)}
-                              >
-                                Fjern
-                              </Button>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
+                  {validationErrors.preferredKindergartens && (
+                    <p className="text-sm text-red-600 flex items-center gap-1 mb-3">
+                      <AlertCircle className="h-4 w-4" />
+                      {validationErrors.preferredKindergartens}
+                    </p>
                   )}
-
-                  {/* Available kindergartens */}
-                  <div className="border rounded-lg max-h-60 overflow-y-auto">
-                    {kindergartens.filter(kg => !formData.preferredKindergartens.includes(kg.id)).map((kg) => (
-                      <div key={kg.id} className="flex items-center justify-between p-3 border-b last:border-b-0">
-                        <div>
-                          <h4 className="font-medium">{kg.name}</h4>
-                          <p className="text-sm text-gray-600">{kg.district} • {kg.type}</p>
-                        </div>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => addKindergarten(kg.id)}
-                          disabled={formData.preferredKindergartens.length >= 5}
-                        >
-                          Velg
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
                 </div>
+                
+                {/* Selected kindergartens */}
+                {formData.preferredKindergartens.length > 0 && (
+                  <div className="space-y-3">
+                    <h4 className="font-medium text-gray-900">Selected Kindergartens:</h4>
+                    <div className="space-y-2">
+                      {formData.preferredKindergartens.map((id, index) => {
+                        const kg = kindergartens.find(k => k.id === id);
+                        return (
+                          <div key={id} className="flex items-center justify-between p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                            <div className="flex items-center gap-3">
+                              <span className="w-8 h-8 bg-blue-600 text-white text-sm rounded-lg flex items-center justify-center font-medium">
+                                {index + 1}
+                              </span>
+                              <div>
+                                <span className="font-medium text-gray-900">{kg?.name}</span>
+                                <span className="text-sm text-gray-600 ml-2">({kg?.district}, {kg?.type})</span>
+                              </div>
+                            </div>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => removeKindergarten(id)}
+                              className="hover:bg-red-50 hover:border-red-300 hover:text-red-600"
+                            >
+                              Remove
+                            </Button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Available kindergartens */}
+                {formData.preferredKindergartens.length < 5 && (
+                  <div className="space-y-3">
+                    <h4 className="font-medium text-gray-900">Available Kindergartens:</h4>
+                    <div className="border rounded-xl max-h-60 overflow-y-auto">
+                      {kindergartens.filter(kg => !formData.preferredKindergartens.includes(kg.id)).map((kg) => (
+                        <div key={kg.id} className="flex items-center justify-between p-4 border-b last:border-b-0 hover:bg-gray-50">
+                          <div>
+                            <h5 className="font-medium text-gray-900">{kg.name}</h5>
+                            <p className="text-sm text-gray-600">{kg.district} • {kg.type}</p>
+                          </div>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => addKindergarten(kg.id)}
+                            className="hover:bg-blue-50 hover:border-blue-300 hover:text-blue-600"
+                          >
+                            Select
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -248,56 +426,84 @@ const NewApplication = () => {
       case 4:
         return (
           <div className="space-y-6">
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Tilleggsinformasjon</h3>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+                <FileText className="h-6 w-6 text-orange-600" />
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-gray-900">Additional Information</h3>
+                <p className="text-gray-600">Optional details about your child</p>
+              </div>
+            </div>
+            
+            <div className="space-y-6">
               <div className="space-y-4">
-                <div className="flex items-start space-x-2">
+                <div className="flex items-start space-x-3 p-4 border rounded-xl">
                   <Checkbox
                     id="specialNeeds"
                     checked={formData.specialNeeds}
                     onCheckedChange={(checked) => updateFormData('specialNeeds', checked)}
+                    className="mt-1"
                   />
-                  <div className="space-y-1">
-                    <Label htmlFor="specialNeeds">Barnet har spesielle behov</Label>
+                  <div className="space-y-1 flex-1">
+                    <Label htmlFor="specialNeeds" className="text-sm font-medium cursor-pointer">
+                      My child has special needs
+                    </Label>
                     <p className="text-sm text-gray-600">
-                      Kryss av hvis barnet har behov for spesiell oppfølging
+                      Check this if your child requires special care or attention
                     </p>
                   </div>
                 </div>
 
                 {formData.specialNeeds && (
-                  <div>
-                    <Label htmlFor="specialNeedsDescription">Beskriv spesielle behov</Label>
+                  <div className="space-y-2 ml-8">
+                    <Label htmlFor="specialNeedsDescription" className="text-sm font-medium">
+                      Describe Special Needs *
+                    </Label>
                     <textarea
                       id="specialNeedsDescription"
-                      className="w-full min-h-20 px-3 py-2 border rounded-md"
+                      className={`w-full min-h-24 px-3 py-2 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-oslo-blue focus:border-transparent ${validationErrors.specialNeedsDescription ? 'border-red-500' : 'border-gray-300'}`}
                       value={formData.specialNeedsDescription}
                       onChange={(e) => updateFormData('specialNeedsDescription', e.target.value)}
-                      placeholder="Beskriv barnets spesielle behov..."
+                      placeholder="Please describe your child's special needs..."
                     />
+                    {validationErrors.specialNeedsDescription && (
+                      <p className="text-sm text-red-600 flex items-center gap-1">
+                        <AlertCircle className="h-4 w-4" />
+                        {validationErrors.specialNeedsDescription}
+                      </p>
+                    )}
                   </div>
                 )}
 
-                <div className="flex items-start space-x-2">
+                <div className="flex items-start space-x-3 p-4 border rounded-xl">
                   <Checkbox
                     id="siblingInKindergarten"
                     checked={formData.siblingInKindergarten}
                     onCheckedChange={(checked) => updateFormData('siblingInKindergarten', checked)}
+                    className="mt-1"
                   />
-                  <div className="space-y-1">
-                    <Label htmlFor="siblingInKindergarten">Søsken i barnehage</Label>
+                  <div className="space-y-1 flex-1">
+                    <Label htmlFor="siblingInKindergarten" className="text-sm font-medium cursor-pointer">
+                      Sibling in kindergarten
+                    </Label>
                     <p className="text-sm text-gray-600">
-                      Kryss av hvis barnet har søsken som går i barnehage
+                      Check this if your child has a sibling currently attending kindergarten
                     </p>
                   </div>
                 </div>
 
                 {formData.siblingInKindergarten && (
-                  <div>
-                    <Label htmlFor="siblingKindergarten">Hvilken barnehage?</Label>
-                    <Select value={formData.siblingKindergarten} onValueChange={(value) => updateFormData('siblingKindergarten', value)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Velg barnehage" />
+                  <div className="space-y-2 ml-8">
+                    <Label htmlFor="siblingKindergarten" className="text-sm font-medium">
+                      Which kindergarten? *
+                    </Label>
+                    <Select 
+                      value={formData.siblingKindergarten} 
+                      onValueChange={(value) => updateFormData('siblingKindergarten', value)}
+                    >
+                      <SelectTrigger className={`h-12 ${validationErrors.siblingKindergarten ? 'border-red-500' : ''}`}>
+                        <SelectValue placeholder="Select kindergarten" />
                       </SelectTrigger>
                       <SelectContent>
                         {kindergartens.map((kg) => (
@@ -307,6 +513,12 @@ const NewApplication = () => {
                         ))}
                       </SelectContent>
                     </Select>
+                    {validationErrors.siblingKindergarten && (
+                      <p className="text-sm text-red-600 flex items-center gap-1">
+                        <AlertCircle className="h-4 w-4" />
+                        {validationErrors.siblingKindergarten}
+                      </p>
+                    )}
                   </div>
                 )}
               </div>
@@ -321,65 +533,108 @@ const NewApplication = () => {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
-      <div>
+      <div className="text-center space-y-4">
         <h1 className="text-3xl font-bold text-gray-900">
           {t('guardian.newApplication.title')}
         </h1>
-        <p className="text-gray-600 mt-2">
-          Fyll ut informasjonen nedenfor for å søke om barnehageplass
+        <p className="text-gray-600 text-lg">
+          Complete the information below to apply for a kindergarten place
         </p>
       </div>
 
       {/* Progress indicator */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-sm font-medium">Steg {currentStep} av {totalSteps}</span>
-            <span className="text-sm text-gray-600">{Math.round((currentStep / totalSteps) * 100)}% fullført</span>
+      <Card className="shadow-lg border-0">
+        <CardContent className="pt-8">
+          <div className="flex items-center justify-between mb-6">
+            <span className="text-sm font-medium text-gray-900">Step {currentStep} of {totalSteps}</span>
+            <span className="text-sm text-gray-600">{Math.round((currentStep / totalSteps) * 100)}% complete</span>
           </div>
-          <Progress value={(currentStep / totalSteps) * 100} className="h-2" />
+          <Progress value={(currentStep / totalSteps) * 100} className="h-3 mb-6" />
           
-          <div className="flex justify-between mt-4 text-xs text-gray-600">
-            <span className={currentStep >= 1 ? 'text-oslo-blue font-medium' : ''}>Barnets info</span>
-            <span className={currentStep >= 2 ? 'text-oslo-blue font-medium' : ''}>Foresattes info</span>
-            <span className={currentStep >= 3 ? 'text-oslo-blue font-medium' : ''}>Barnehagevalg</span>
-            <span className={currentStep >= 4 ? 'text-oslo-blue font-medium' : ''}>Tilleggsinfo</span>
+          <div className="flex justify-between">
+            {[1, 2, 3, 4].map((step) => (
+              <div key={step} className={`flex flex-col items-center ${currentStep >= step ? 'text-oslo-blue' : 'text-gray-400'}`}>
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center border-2 mb-2 ${
+                  currentStep >= step 
+                    ? 'bg-oslo-blue border-oslo-blue text-white' 
+                    : 'border-gray-300 text-gray-400'
+                }`}>
+                  {getStepIcon(step)}
+                </div>
+                <span className="text-xs font-medium text-center">
+                  {step === 1 && "Child Info"}
+                  {step === 2 && "Guardian Info"}
+                  {step === 3 && "Preferences"}
+                  {step === 4 && "Additional"}
+                </span>
+              </div>
+            ))}
           </div>
         </CardContent>
       </Card>
 
       {/* Form content */}
-      <Card>
-        <CardContent className="pt-6">
+      <Card className="shadow-lg border-0">
+        <CardContent className="pt-8">
           {renderStep()}
         </CardContent>
       </Card>
 
       {/* Navigation buttons */}
-      <div className="flex justify-between">
+      <div className="flex justify-between items-center">
         <Button
           variant="outline"
           onClick={prevStep}
           disabled={currentStep === 1}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 h-12 px-6"
         >
           <ChevronLeft className="h-4 w-4" />
           {t('common.previous')}
         </Button>
 
         <div className="flex gap-3">
-          <Button variant="outline" className="flex items-center gap-2">
-            <Save className="h-4 w-4" />
-            Lagre kladd
+          <Button 
+            variant="outline" 
+            onClick={handleSaveDraft}
+            disabled={isSaving || isSubmitting}
+            className="flex items-center gap-2 h-12 px-6"
+          >
+            {isSaving ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <Save className="h-4 w-4" />
+                Save Draft
+              </>
+            )}
           </Button>
 
           {currentStep === totalSteps ? (
-            <Button onClick={handleSubmit} className="bg-oslo-blue hover:bg-blue-700 flex items-center gap-2">
-              <Send className="h-4 w-4" />
-              {t('common.submit')}
+            <Button 
+              onClick={handleSubmit} 
+              disabled={isSubmitting || isSaving}
+              className="bg-oslo-blue hover:bg-blue-700 flex items-center gap-2 h-12 px-6 shadow-lg"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                <>
+                  <Send className="h-4 w-4" />
+                  {t('common.submit')}
+                </>
+              )}
             </Button>
           ) : (
-            <Button onClick={nextStep} className="bg-oslo-blue hover:bg-blue-700 flex items-center gap-2">
+            <Button 
+              onClick={nextStep} 
+              className="bg-oslo-blue hover:bg-blue-700 flex items-center gap-2 h-12 px-6 shadow-lg"
+            >
               {t('common.next')}
               <ChevronRight className="h-4 w-4" />
             </Button>
