@@ -14,27 +14,27 @@ const Messages = () => {
   const messages = [
     {
       id: 1,
-      from: 'Løvenskiold Barnehage',
-      fromEmail: 'kontakt@lovenskiold.barnehage.oslo.no',
-      subject: 'Velkommen til Løvenskiold Barnehage!',
-      preview: 'Vi gleder oss til å ønske Emma velkommen til vårt barnehagefellesskap...',
-      content: `Kjære Anna Hansen,
+      from: 'Løvenskiold Kindergarten',
+      fromEmail: 'contact@lovenskiold.kindergarten.oslo.no',
+      subject: 'Welcome to Løvenskiold Kindergarten!',
+      preview: 'We are excited to welcome Emma to our kindergarten community...',
+      content: `Dear Anna Hansen,
 
-Vi gleder oss til å ønske Emma velkommen til vårt barnehagefellesskap!
+We are excited to welcome Emma to our kindergarten community!
 
-Som en del av forberedelsene til oppstart, ønsker vi å informere deg om følgende:
+As part of the preparations for starting, we would like to inform you about the following:
 
-• Første dag: Mandag 15. august 2024
-• Innkjøringsperiode: De første dagene vil være kortere for at Emma skal bli trygg
-• Garderobenummer: 24
-• Kontaktperson: Kari Andersen (avdelingsleder)
+• First day: Monday, August 15, 2024
+• Settling-in period: The first few days will be shorter so Emma can feel secure
+• Locker number: 24
+• Contact person: Kari Andersen (department head)
 
-Vi vil også invitere til et foreldremøte fredag 9. august kl. 18:00 der vi går gjennom praktisk informasjon og årets pedagogiske satsing.
+We will also invite you to a parent meeting on Friday, August 9 at 6:00 PM where we will go through practical information and this year's educational focus.
 
-Vi ser frem til et godt samarbeid!
+We look forward to a good cooperation!
 
-Mvh,
-Løvenskiold Barnehage`,
+Best regards,
+Løvenskiold Kindergarten`,
       date: '2024-03-18',
       time: '14:30',
       unread: true,
@@ -43,24 +43,24 @@ Løvenskiold Barnehage`,
     },
     {
       id: 2,
-      from: 'Oslo Kommune',
-      fromEmail: 'barnehage@oslo.kommune.no',
-      subject: 'Søknadsstatus oppdatert - Emma Hansen',
-      preview: 'Din søknad for Emma Hansen har blitt oppdatert. Status: Tildelt plass...',
-      content: `Kjære foresatte,
+      from: 'Oslo Municipality',
+      fromEmail: 'kindergarten@oslo.municipality.no',
+      subject: 'Application status updated - Emma Hansen',
+      preview: 'Your application for Emma Hansen has been updated. Status: Placement assigned...',
+      content: `Dear Parents,
 
-Din søknad for Emma Hansen (søknad #APP-001) har blitt oppdatert.
+Your application for Emma Hansen (application #APP-001) has been updated.
 
-STATUS: Tildelt plass
+STATUS: Placement assigned
 
-Emma har fått plass ved Løvenskiold Barnehage med oppstart 15. august 2024.
+Emma has been offered a place at Løvenskiold Kindergarten starting August 15, 2024.
 
-Du må akseptere plassen innen 14 dager for å sikre plassen. Dette gjør du ved å logge inn på barnehage.oslo.no og følge instruksjonene.
+You must accept the placement within 14 days to secure the spot. You can do this by logging in to kindergarten.oslo.no and following the instructions.
 
-Ved spørsmål kan du kontakte din saksbehandler Erik Johansen på erik.johansen@oslo.kommune.no eller telefon 23 48 XX XX.
+If you have questions, you can contact your case worker Erik Johansen at erik.johansen@oslo.municipality.no or phone 23 48 XX XX.
 
-Mvh,
-Oslo Kommune Barnehageadministrasjon`,
+Best regards,
+Oslo Municipality Kindergarten Administration`,
       date: '2024-03-16',
       time: '09:15',
       unread: false,
@@ -69,27 +69,27 @@ Oslo Kommune Barnehageadministrasjon`,
     },
     {
       id: 3,
-      from: 'Saksbehandler - Erik Johansen',
-      fromEmail: 'erik.johansen@oslo.kommune.no',
-      subject: 'Manglende dokumentasjon',
-      preview: 'Vi mangler inntektsopplysninger for behandling av søknad om redusert betaling...',
-      content: `Hei Anna,
+      from: 'Case Worker - Erik Johansen',
+      fromEmail: 'erik.johansen@oslo.municipality.no',
+      subject: 'Missing documentation',
+      preview: 'We are missing income documentation for processing your reduced payment application...',
+      content: `Hello Anna,
 
-Vi har mottatt din søknad om redusert betaling for Oliver, men vi mangler følgende dokumentasjon:
+We have received your application for reduced payment for Oliver, but we are missing the following documentation:
 
-- Siste års selvangivelse
-- Oppdatert inntektsattest fra arbeidsgiver
+- Last year's tax return
+- Updated income certificate from employer
 
-Kan du laste opp disse dokumentene i portalen eller sende dem på e-post?
+Can you upload these documents in the portal or send them by email?
 
-Søknaden vil ikke kunne behandles før vi har mottatt all nødvendig dokumentasjon.
+The application cannot be processed until we have received all necessary documentation.
 
-Ta gjerne kontakt hvis du har spørsmål.
+Please contact me if you have any questions.
 
-Mvh,
+Best regards,
 Erik Johansen
-Saksbehandler
-Oslo Kommune`,
+Case Worker
+Oslo Municipality`,
       date: '2024-03-14',
       time: '11:20',
       unread: false,
@@ -115,9 +115,9 @@ Oslo Kommune`,
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Meldinger</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Messages</h1>
         <p className="text-gray-600 mt-2">
-          Kommunikasjon med barnehager og Oslo Kommune
+          Communication with kindergartens and Oslo Municipality
         </p>
       </div>
 
@@ -128,13 +128,13 @@ Oslo Kommune`,
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
-                placeholder="Søk i meldinger..."
+                placeholder="Search messages..."
                 className="pl-10"
               />
             </div>
             <Button variant="outline">
               <Archive className="h-4 w-4 mr-2" />
-              Arkiverte
+              Archived
             </Button>
           </div>
         </CardContent>
@@ -144,7 +144,7 @@ Oslo Kommune`,
         {/* Message List */}
         <div className="lg:col-span-2 space-y-3">
           <h3 className="font-semibold text-gray-900 mb-3">
-            Innboks ({messages.filter(m => m.unread).length} uleste)
+            Inbox ({messages.filter(m => m.unread).length} unread)
           </h3>
           
           {messages.map((message) => (
@@ -166,7 +166,7 @@ Oslo Kommune`,
                       </h4>
                       {message.unread && (
                         <Badge variant="secondary" className="text-xs px-1 py-0">
-                          Ny
+                          New
                         </Badge>
                       )}
                     </div>
@@ -212,15 +212,15 @@ Oslo Kommune`,
                   <div>
                     <CardTitle className="text-xl">{selectedMessageData.subject}</CardTitle>
                     <CardDescription className="mt-2">
-                      Fra: {selectedMessageData.from} ({selectedMessageData.fromEmail})
+                      From: {selectedMessageData.from} ({selectedMessageData.fromEmail})
                       <br />
-                      {selectedMessageData.date} kl. {selectedMessageData.time}
+                      {selectedMessageData.date} at {selectedMessageData.time}
                     </CardDescription>
                   </div>
                   <div className="flex gap-2">
                     <Button variant="outline" size="sm">
                       <Archive className="h-4 w-4 mr-2" />
-                      Arkiver
+                      Archive
                     </Button>
                     <Button
                       variant="outline"
@@ -228,7 +228,7 @@ Oslo Kommune`,
                       onClick={() => toggleStar(selectedMessageData.id)}
                     >
                       <Star className={`h-4 w-4 mr-2 ${selectedMessageData.starred ? 'fill-yellow-400 text-yellow-400' : ''}`} />
-                      {selectedMessageData.starred ? 'Fjern stjerne' : 'Legg til stjerne'}
+                      {selectedMessageData.starred ? 'Remove star' : 'Add star'}
                     </Button>
                   </div>
                 </div>
@@ -247,11 +247,11 @@ Oslo Kommune`,
                   <div className="border-t pt-4">
                     <h4 className="font-medium mb-2 flex items-center gap-2">
                       <Paperclip className="h-4 w-4" />
-                      Vedlegg
+                      Attachments
                     </h4>
                     <div className="bg-gray-50 p-3 rounded-lg">
                       <Button variant="outline" size="sm">
-                        📄 Informasjonsbrosjyre.pdf (234 KB)
+                        📄 Information-brochure.pdf (234 KB)
                       </Button>
                     </div>
                   </div>
@@ -259,18 +259,18 @@ Oslo Kommune`,
 
                 {/* Reply Section */}
                 <div className="border-t pt-4">
-                  <h4 className="font-medium mb-3">Svar på melding</h4>
+                  <h4 className="font-medium mb-3">Reply to message</h4>
                   <div className="space-y-3">
                     <textarea
                       className="w-full min-h-24 px-3 py-2 border rounded-md resize-y"
-                      placeholder="Skriv ditt svar her..."
+                      placeholder="Write your reply here..."
                       value={replyText}
                       onChange={(e) => setReplyText(e.target.value)}
                     />
                     <div className="flex justify-between items-center">
                       <Button variant="outline" size="sm">
                         <Paperclip className="h-4 w-4 mr-2" />
-                        Legg ved fil
+                        Attach file
                       </Button>
                       <Button 
                         onClick={handleReply}
@@ -278,7 +278,7 @@ Oslo Kommune`,
                         className="bg-oslo-blue hover:bg-blue-700"
                       >
                         <Send className="h-4 w-4 mr-2" />
-                        Send svar
+                        Send reply
                       </Button>
                     </div>
                   </div>
@@ -290,7 +290,7 @@ Oslo Kommune`,
               <CardContent className="flex items-center justify-center h-96 text-gray-500">
                 <div className="text-center">
                   <MessageSquare className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                  <p>Velg en melding for å lese innholdet</p>
+                  <p>Select a message to read its content</p>
                 </div>
               </CardContent>
             </Card>

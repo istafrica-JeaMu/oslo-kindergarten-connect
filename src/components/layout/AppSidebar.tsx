@@ -119,8 +119,8 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="text-oslo-blue font-semibold">
-            {user?.role === 'guardian' && 'Foresatte'}
-            {user?.role === 'caseworker' && 'Saksbehandler'}
+            {user?.role === 'guardian' && 'Guardian Portal'}
+            {user?.role === 'caseworker' && 'Case Worker'}
             {user?.role === 'admin' && 'Administrator'}
           </SidebarGroupLabel>
           <SidebarGroupContent>
