@@ -30,6 +30,7 @@ const SystemSettings = () => {
   const [isSaving, setIsSaving] = useState(false);
 
   // Mock settings data
+
   const [settings, setSettings] = useState({
     general: {
       systemName: 'Oslo Kindergarten Portal',
@@ -101,6 +102,8 @@ const SystemSettings = () => {
       setIsSaving(false);
     }
   };
+
+  // all render functions
 
   const renderGeneralSettings = () => (
     <div className="space-y-6">
