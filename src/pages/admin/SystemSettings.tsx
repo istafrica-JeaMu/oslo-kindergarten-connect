@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -30,7 +31,6 @@ const SystemSettings = () => {
   const [isSaving, setIsSaving] = useState(false);
 
   // Mock settings data
-
   const [settings, setSettings] = useState({
     general: {
       systemName: 'Oslo Kindergarten Portal',
@@ -102,8 +102,6 @@ const SystemSettings = () => {
       setIsSaving(false);
     }
   };
-
-  // all render functions
 
   const renderGeneralSettings = () => (
     <div className="space-y-6">
@@ -492,7 +490,6 @@ const SystemSettings = () => {
       </div>
 
       <div className="grid lg:grid-cols-4 gap-8">
-        {/* Settings Navigation */}
         <Card className="shadow-lg border-0 lg:col-span-1">
           <CardHeader>
             <CardTitle className="text-lg">Settings Categories</CardTitle>
@@ -517,7 +514,6 @@ const SystemSettings = () => {
           </CardContent>
         </Card>
 
-        {/* Settings Content */}
         <div className="lg:col-span-3 space-y-6">
           <Card className="shadow-lg border-0">
             <CardHeader>
@@ -536,7 +532,6 @@ const SystemSettings = () => {
             </CardContent>
           </Card>
 
-          {/* Save Button */}
           <Card className="shadow-lg border-0">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
