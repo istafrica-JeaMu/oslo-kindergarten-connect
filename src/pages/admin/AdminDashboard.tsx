@@ -1,328 +1,313 @@
 
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
 import { 
   BarChart3, 
   Settings, 
-  Users, 
-  Building, 
-  TrendingUp, 
-  AlertCircle,
+  Users,
+  Building,
   FileText,
-  Shield,
+  AlertTriangle,
+  TrendingUp,
   Database,
-  Activity
+  Shield,
+  Calendar,
+  ArrowRight
 } from 'lucide-react';
 
 const AdminDashboard = () => {
+  const { t } = useTranslation();
   const { user } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Mock system statistics
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Mock admin dashboard data
   const systemStats = {
-    totalUsers: 45678,
-    totalApplications: 12547,
-    totalKindergartens: 680,
-    totalDistricts: 15,
-    systemUptime: 99.8,
-    avgResponseTime: 245,
-    activeUsers: 1247,
-    pendingApprovals: 23
+    totalApplications: 2847,
+    activeKindergartens: 680,
+    totalChildren: 34567,
+    systemUptime: 99.94,
+    pendingApplications: 234,
+    placementRate: 92.3,
+    avgProcessingTime: 8.5,
+    userSessions: 1423
   };
 
-  const districtStats = [
-    { name: 'Gamle Oslo', applications: 1247, capacity: 95, waitingList: 89 },
-    { name: 'Grünerløkka', applications: 987, capacity: 88, waitingList: 134 },
-    { name: 'Sagene', applications: 876, capacity: 92, waitingList: 67 },
-    { name: 'St. Hanshaugen', applications: 654, capacity: 97, waitingList: 23 },
-    { name: 'Frogner', applications: 543, capacity: 91, waitingList: 56 }
-  ];
-
-  const systemAlerts = [
+  const recentActivity = [
     {
       id: 1,
-      type: 'warning',
-      message: 'High load on database server - response time increased',
-      timestamp: '2024-03-20 14:30'
+      type: 'system',
+      message: 'System backup completed successfully',
+      time: '5 minutes ago',
+      severity: 'info'
     },
     {
       id: 2,
-      type: 'info',
-      message: 'Scheduled maintenance of FREG integration on March 25',
-      timestamp: '2024-03-19 09:15'
+      type: 'security',
+      message: 'Multiple failed login attempts detected',
+      time: '1 hour ago',
+      severity: 'warning'
     },
     {
       id: 3,
-      type: 'success',
-      message: 'Security update installed on all servers',
-      timestamp: '2024-03-18 22:00'
+      type: 'application',
+      message: '45 new applications submitted today',
+      time: '2 hours ago',
+      severity: 'info'
+    },
+    {
+      id: 4,
+      type: 'capacity',
+      message: 'Løvenskiold Kindergarten reached full capacity',
+      time: '4 hours ago',
+      severity: 'warning'
     }
   ];
 
-  const getAlertIcon = (type: string) => {
-    switch (type) {
-      case 'warning':
-        return <AlertCircle className="h-4 w-4 text-yellow-500" />;
-      case 'error':
-        return <AlertCircle className="h-4 w-4 text-red-500" />;
-      case 'success':
-        return <Shield className="h-4 w-4 text-green-500" />;
-      default:
-        return <AlertCircle className="h-4 w-4 text-blue-500" />;
+  const quickActions = [
+    {
+      title: t('admin.reports.title'),
+      description: 'Generate system reports and analytics',
+      icon: BarChart3,
+      link: '/admin/reports',
+      color: 'bg-blue-100 text-blue-600'
+    },
+    {
+      title: t('admin.settings.title'),
+      description: 'Configure system parameters',
+      icon: Settings,
+      link: '/admin/settings',
+      color: 'bg-green-100 text-green-600'
+    },
+    {
+      title: 'User Management',
+      description: 'Manage user accounts and permissions',
+      icon: Users,
+      link: '/admin/users',
+      color: 'bg-purple-100 text-purple-600'
+    },
+    {
+      title: 'System Logs',
+      description: 'View system and security logs',
+      icon: Shield,
+      link: '/admin/logs',
+      color: 'bg-orange-100 text-orange-600'
     }
-  };
+  ];
 
-  const getCapacityColor = (percentage: number) => {
-    if (percentage >= 95) return 'text-red-600';
-    if (percentage >= 85) return 'text-yellow-600';
-    return 'text-green-600';
-  };
+  if (isLoading) {
+    return (
+      <div className="space-y-8">
+        <div className="animate-pulse space-y-4">
+          <div className="h-8 bg-gray-200 rounded w-1/3"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+        </div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="animate-pulse">
+              <div className="h-32 bg-gray-200 rounded-lg"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">
-            Administrator Dashboard
-          </h1>
-          <p className="text-gray-600 mt-2">
-            Welcome back, {user?.name} • System monitoring and administration
-          </p>
-        </div>
-        <div className="flex gap-3">
-          <Link to="/admin/reports">
-            <Button className="bg-oslo-blue hover:bg-blue-700">
-              <BarChart3 className="h-4 w-4 mr-2" />
-              Reports
-            </Button>
-          </Link>
-          <Link to="/admin/settings">
-            <Button variant="outline">
-              <Settings className="h-4 w-4 mr-2" />
-              Settings
-            </Button>
-          </Link>
-        </div>
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+          {t('admin.dashboard.title')}
+          <Badge variant="outline" className="text-red-600 border-red-300 bg-red-50">
+            Administrator
+          </Badge>
+        </h1>
+        <p className="text-gray-600 mt-2 text-lg">
+          {t('admin.dashboard.description')}
+        </p>
       </div>
 
-      {/* System Health Overview */}
+      {/* System Statistics */}
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
-          <CardContent className="flex items-center p-6">
-            <Activity className="h-8 w-8 text-green-600 mr-4" />
-            <div>
-              <h3 className="font-semibold">System Status</h3>
-              <p className="text-2xl font-bold text-green-600">{systemStats.systemUptime}%</p>
-              <p className="text-xs text-gray-600">Uptime last 30 days</p>
+        <Card className="shadow-lg border-0">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                <FileText className="h-6 w-6 text-blue-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Total Applications</p>
+                <p className="text-2xl font-bold text-gray-900">{systemStats.totalApplications.toLocaleString()}</p>
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="flex items-center p-6">
-            <Users className="h-8 w-8 text-blue-600 mr-4" />
-            <div>
-              <h3 className="font-semibold">Active Users</h3>
-              <p className="text-2xl font-bold text-blue-600">{systemStats.activeUsers}</p>
-              <p className="text-xs text-gray-600">Currently logged in</p>
+        <Card className="shadow-lg border-0">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                <Building className="h-6 w-6 text-green-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Active Kindergartens</p>
+                <p className="text-2xl font-bold text-green-600">{systemStats.activeKindergartens}</p>
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="flex items-center p-6">
-            <FileText className="h-8 w-8 text-purple-600 mr-4" />
-            <div>
-              <h3 className="font-semibold">Total Applications</h3>
-              <p className="text-2xl font-bold text-purple-600">{systemStats.totalApplications.toLocaleString()}</p>
-              <p className="text-xs text-gray-600">This year</p>
+        <Card className="shadow-lg border-0">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                <Users className="h-6 w-6 text-purple-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Total Children</p>
+                <p className="text-2xl font-bold text-purple-600">{systemStats.totalChildren.toLocaleString()}</p>
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="flex items-center p-6">
-            <Database className="h-8 w-8 text-orange-600 mr-4" />
-            <div>
-              <h3 className="font-semibold">Response Time</h3>
-              <p className="text-2xl font-bold text-orange-600">{systemStats.avgResponseTime}ms</p>
-              <p className="text-xs text-gray-600">Average</p>
+        <Card className="shadow-lg border-0">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+                <TrendingUp className="h-6 w-6 text-orange-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">System Uptime</p>
+                <p className="text-2xl font-bold text-orange-600">{systemStats.systemUptime}%</p>
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* System Alerts */}
-      <Card className="border-l-4 border-l-yellow-500">
+      {/* Performance Metrics */}
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className="shadow-lg border-0">
+          <CardContent className="pt-6">
+            <div className="text-center">
+              <p className="text-sm text-gray-600">Pending Applications</p>
+              <p className="text-3xl font-bold text-yellow-600">{systemStats.pendingApplications}</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-lg border-0">
+          <CardContent className="pt-6">
+            <div className="text-center">
+              <p className="text-sm text-gray-600">Placement Rate</p>
+              <p className="text-3xl font-bold text-green-600">{systemStats.placementRate}%</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-lg border-0">
+          <CardContent className="pt-6">
+            <div className="text-center">
+              <p className="text-sm text-gray-600">Avg Processing (days)</p>
+              <p className="text-3xl font-bold text-blue-600">{systemStats.avgProcessingTime}</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-lg border-0">
+          <CardContent className="pt-6">
+            <div className="text-center">
+              <p className="text-sm text-gray-600">Active Sessions</p>
+              <p className="text-3xl font-bold text-purple-600">{systemStats.userSessions}</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Quick Actions */}
+      <Card className="shadow-lg border-0">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <AlertCircle className="h-5 w-5 text-yellow-600" />
-            System Alerts
+          <CardTitle className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-oslo-blue/10 rounded-xl flex items-center justify-center">
+              <Settings className="h-5 w-5 text-oslo-blue" />
+            </div>
+            Administrative Tools
           </CardTitle>
           <CardDescription>
-            Important messages and system updates
+            Common administrative tasks and system management
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
-            {systemAlerts.map((alert) => (
-              <div key={alert.id} className="flex items-start gap-3 p-3 rounded-lg bg-gray-50">
-                {getAlertIcon(alert.type)}
-                <div className="flex-1">
-                  <p className="text-sm font-medium">{alert.message}</p>
-                  <p className="text-xs text-gray-500">{alert.timestamp}</p>
+          <div className="grid md:grid-cols-2 gap-4">
+            {quickActions.map((action, index) => (
+              <Link key={index} to={action.link} className="group">
+                <div className="p-4 border border-gray-200 rounded-xl hover:border-oslo-blue/30 hover:bg-gray-50/50 transition-all cursor-pointer group-hover:scale-[1.02]">
+                  <div className="flex items-center gap-4">
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${action.color}`}>
+                      <action.icon className="h-6 w-6" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-gray-900 group-hover:text-oslo-blue transition-colors">
+                        {action.title}
+                      </h4>
+                      <p className="text-sm text-gray-600">{action.description}</p>
+                    </div>
+                    <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-oslo-blue transition-colors" />
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </CardContent>
       </Card>
 
-      {/* District Performance Overview */}
-      <Card>
+      {/* Recent System Activity */}
+      <Card className="shadow-lg border-0">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Building className="h-5 w-5" />
-            District Overview
+          <CardTitle className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
+              <Database className="h-5 w-5 text-green-600" />
+            </div>
+            Recent System Activity
           </CardTitle>
-          <CardDescription>
-            Performance and capacity per district
-          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {districtStats.map((district, index) => (
-              <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
-                <div>
-                  <h4 className="font-semibold">{district.name}</h4>
-                  <p className="text-sm text-gray-600">
-                    {district.applications} applications • {district.waitingList} on waiting list
+            {recentActivity.map((activity) => (
+              <div key={activity.id} className="flex items-start gap-4 p-4 border border-gray-200 rounded-xl">
+                <div className={`w-3 h-3 rounded-full mt-2 ${
+                  activity.severity === 'warning' ? 'bg-yellow-500' : 
+                  activity.severity === 'error' ? 'bg-red-500' : 'bg-blue-500'
+                }`}></div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-gray-900">{activity.message}</p>
+                  <p className="text-xs text-gray-500 flex items-center gap-1 mt-1">
+                    <Calendar className="h-3 w-3" />
+                    {activity.time}
                   </p>
                 </div>
-                <div className="text-right">
-                  <p className={`text-lg font-bold ${getCapacityColor(district.capacity)}`}>
-                    {district.capacity}%
-                  </p>
-                  <p className="text-xs text-gray-600">Capacity utilization</p>
-                </div>
+                {activity.severity === 'warning' && (
+                  <Badge variant="outline" className="text-yellow-600 border-yellow-300 bg-yellow-50">
+                    Warning
+                  </Badge>
+                )}
+                {activity.severity === 'error' && (
+                  <Badge variant="outline" className="text-red-600 border-red-300 bg-red-50">
+                    Error
+                  </Badge>
+                )}
               </div>
             ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Quick Actions and System Info */}
-      <div className="grid lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Settings className="h-5 w-5" />
-              Quick Actions
-            </CardTitle>
-            <CardDescription>
-              Common administrative tasks
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Link to="/admin/reports">
-              <Button variant="outline" className="w-full justify-start">
-                <BarChart3 className="h-4 w-4 mr-2" />
-                Generate Monthly Report
-              </Button>
-            </Link>
-            
-            <Button variant="outline" className="w-full justify-start">
-              <Users className="h-4 w-4 mr-2" />
-              Manage User Roles
-            </Button>
-
-            <Button variant="outline" className="w-full justify-start">
-              <Database className="h-4 w-4 mr-2" />
-              Backup Database
-            </Button>
-
-            <Link to="/admin/settings">
-              <Button variant="outline" className="w-full justify-start">
-                <Settings className="h-4 w-4 mr-2" />
-                System Configuration
-              </Button>
-            </Link>
-
-            <Button variant="outline" className="w-full justify-start">
-              <Shield className="h-4 w-4 mr-2" />
-              Security Access
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" />
-              System Statistics
-            </CardTitle>
-            <CardDescription>
-              Overview of system usage and performance
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-blue-50 p-3 rounded-lg">
-                <h4 className="font-semibold text-blue-900">Total Users</h4>
-                <p className="text-xl font-bold text-blue-600">{systemStats.totalUsers.toLocaleString()}</p>
-              </div>
-              
-              <div className="bg-green-50 p-3 rounded-lg">
-                <h4 className="font-semibold text-green-900">Kindergartens</h4>
-                <p className="text-xl font-bold text-green-600">{systemStats.totalKindergartens}</p>
-              </div>
-              
-              <div className="bg-purple-50 p-3 rounded-lg">
-                <h4 className="font-semibold text-purple-900">Districts</h4>
-                <p className="text-xl font-bold text-purple-600">{systemStats.totalDistricts}</p>
-              </div>
-              
-              <div className="bg-orange-50 p-3 rounded-lg">
-                <h4 className="font-semibold text-orange-900">Pending Approval</h4>
-                <p className="text-xl font-bold text-orange-600">{systemStats.pendingApprovals}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Compliance and Security Status */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Shield className="h-5 w-5" />
-            Security and Compliance
-          </CardTitle>
-          <CardDescription>
-            Status for security and regulatory compliance
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="text-center p-4 border rounded-lg">
-              <Shield className="h-8 w-8 text-green-600 mx-auto mb-2" />
-              <h4 className="font-semibold">GDPR Status</h4>
-              <Badge className="bg-green-100 text-green-800 mt-1">Compliant</Badge>
-            </div>
-            
-            <div className="text-center p-4 border rounded-lg">
-              <Database className="h-8 w-8 text-green-600 mx-auto mb-2" />
-              <h4 className="font-semibold">Data Security</h4>
-              <Badge className="bg-green-100 text-green-800 mt-1">Secured</Badge>
-            </div>
-            
-            <div className="text-center p-4 border rounded-lg">
-              <FileText className="h-8 w-8 text-green-600 mx-auto mb-2" />
-              <h4 className="font-semibold">NOARK 5</h4>
-              <Badge className="bg-green-100 text-green-800 mt-1">Compatible</Badge>
-            </div>
           </div>
         </CardContent>
       </Card>

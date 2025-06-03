@@ -1,322 +1,264 @@
 
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
 import { 
-  FolderOpen, 
-  Users, 
+  FileText, 
   Clock, 
-  CheckCircle, 
   AlertTriangle, 
-  FileText,
   TrendingUp,
-  Calendar
+  Users,
+  MessageSquare,
+  BarChart3,
+  FolderOpen,
+  CheckCircle,
+  Calendar,
+  ArrowRight
 } from 'lucide-react';
 
 const CaseWorkerDashboard = () => {
+  const { t } = useTranslation();
   const { user } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Mock statistics
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Mock dashboard data
   const stats = {
-    totalApplications: 1247,
-    pendingReview: 89,
-    placementsThisMonth: 156,
-    averageProcessingTime: 12,
-    districtsManaged: 3,
-    kindergartensInDistrict: 45
+    newApplications: 23,
+    urgentTasks: 5,
+    averageProcessingDays: 12,
+    completionRate: 87
   };
 
-  const recentApplications = [
-    {
-      id: 'APP-1247',
-      childName: 'Lise Eriksen',
-      guardianName: 'Maria Eriksen',
-      submittedDate: '2024-03-20',
-      status: 'new',
-      priority: 'high',
-      district: 'Søndre Nordstrand'
-    },
-    {
-      id: 'APP-1246',
-      childName: 'Noah Olsen',
-      guardianName: 'Anders Olsen',
-      submittedDate: '2024-03-19',
-      status: 'review',
-      priority: 'normal',
-      district: 'Søndre Nordstrand'
-    },
-    {
-      id: 'APP-1245',
-      childName: 'Sara Ahmed',
-      guardianName: 'Fatima Ahmed',
-      submittedDate: '2024-03-18',
-      status: 'pending_documents',
-      priority: 'normal',
-      district: 'Søndre Nordstrand'
-    }
-  ];
-
-  const urgentTasks = [
+  const recentActivity = [
     {
       id: 1,
-      type: 'document_review',
-      description: 'Missing documentation from 12 applicants',
-      dueDate: '2024-03-22',
-      count: 12
+      type: 'application_submitted',
+      description: 'New application submitted for Emma Larsen',
+      time: '2 hours ago',
+      priority: 'normal'
     },
     {
       id: 2,
-      type: 'placement_offers',
-      description: 'Placement offers expiring soon',
-      dueDate: '2024-03-25',
-      count: 8
+      type: 'document_missing',
+      description: 'Missing documents for Oliver Hansen application',
+      time: '4 hours ago',
+      priority: 'high'
     },
     {
       id: 3,
-      type: 'appeals',
-      description: 'Appeal cases awaiting review',
-      dueDate: '2024-03-28',
-      count: 4
+      type: 'placement_confirmed',
+      description: 'Placement confirmed at Løvenskiold Kindergarten',
+      time: '1 day ago',
+      priority: 'normal'
+    },
+    {
+      id: 4,
+      type: 'message_received',
+      description: 'Message received from guardian regarding application APP-125',
+      time: '1 day ago',
+      priority: 'normal'
     }
   ];
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'new':
-        return <Badge className="bg-blue-100 text-blue-800">New</Badge>;
-      case 'review':
-        return <Badge className="bg-yellow-100 text-yellow-800">Under Review</Badge>;
-      case 'pending_documents':
-        return <Badge className="bg-orange-100 text-orange-800">Awaiting Documents</Badge>;
-      case 'placed':
-        return <Badge className="bg-green-100 text-green-800">Placed</Badge>;
-      default:
-        return <Badge variant="outline">{status}</Badge>;
+  const quickActions = [
+    {
+      title: t('caseworker.dashboard.reviewApplications'),
+      description: 'Process pending applications',
+      icon: FolderOpen,
+      link: '/caseworker/review-queue',
+      color: 'bg-blue-100 text-blue-600'
+    },
+    {
+      title: t('caseworker.dashboard.managePlacements'),
+      description: 'Manage kindergarten placements',
+      icon: Users,
+      link: '/caseworker/placement-management',
+      color: 'bg-green-100 text-green-600'
+    },
+    {
+      title: t('caseworker.dashboard.sendMessages'),
+      description: 'Communicate with families',
+      icon: MessageSquare,
+      link: '/caseworker/messages',
+      color: 'bg-purple-100 text-purple-600'
+    },
+    {
+      title: t('caseworker.dashboard.generateReports'),
+      description: 'Create status reports',
+      icon: BarChart3,
+      link: '/caseworker/reports',
+      color: 'bg-orange-100 text-orange-600'
     }
-  };
+  ];
 
-  const getPriorityIcon = (priority: string) => {
-    if (priority === 'high') {
-      return <AlertTriangle className="h-4 w-4 text-red-500" />;
-    }
-    return null;
-  };
+  if (isLoading) {
+    return (
+      <div className="space-y-8">
+        <div className="animate-pulse space-y-4">
+          <div className="h-8 bg-gray-200 rounded w-1/3"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+        </div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="animate-pulse">
+              <div className="h-32 bg-gray-200 rounded-lg"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">
-            Case Worker Dashboard
-          </h1>
-          <p className="text-gray-600 mt-2">
-            Welcome back, {user?.name} • {user?.district}
-          </p>
-        </div>
-        <div className="flex gap-3">
-          <Link to="/caseworker/review-queue">
-            <Button className="bg-oslo-blue hover:bg-blue-700">
-              <FolderOpen className="h-4 w-4 mr-2" />
-              Review Queue
-            </Button>
-          </Link>
-        </div>
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+          {t('caseworker.dashboard.title')}
+          <Badge variant="outline" className="text-purple-600 border-purple-300 bg-purple-50">
+            {user?.district}
+          </Badge>
+        </h1>
+        <p className="text-gray-600 mt-2 text-lg">
+          {t('caseworker.dashboard.description')}
+        </p>
       </div>
 
-      {/* Statistics Overview */}
+      {/* Statistics Cards */}
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
-          <CardContent className="flex items-center p-6">
-            <FileText className="h-8 w-8 text-blue-600 mr-4" />
-            <div>
-              <h3 className="font-semibold">Total Applications</h3>
-              <p className="text-2xl font-bold text-blue-600">{stats.totalApplications}</p>
-              <p className="text-xs text-gray-600">This year</p>
+        <Card className="shadow-lg border-0">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                <FileText className="h-6 w-6 text-blue-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">{t('caseworker.dashboard.newApplications')}</p>
+                <p className="text-2xl font-bold text-gray-900">{stats.newApplications}</p>
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="flex items-center p-6">
-            <Clock className="h-8 w-8 text-yellow-600 mr-4" />
-            <div>
-              <h3 className="font-semibold">Pending Review</h3>
-              <p className="text-2xl font-bold text-yellow-600">{stats.pendingReview}</p>
-              <p className="text-xs text-gray-600">Active applications</p>
+        <Card className="shadow-lg border-0">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+                <AlertTriangle className="h-6 w-6 text-red-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">{t('caseworker.dashboard.urgentTasks')}</p>
+                <p className="text-2xl font-bold text-red-600">{stats.urgentTasks}</p>
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="flex items-center p-6">
-            <CheckCircle className="h-8 w-8 text-green-600 mr-4" />
-            <div>
-              <h3 className="font-semibold">Placements</h3>
-              <p className="text-2xl font-bold text-green-600">{stats.placementsThisMonth}</p>
-              <p className="text-xs text-gray-600">This month</p>
+        <Card className="shadow-lg border-0">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
+                <Clock className="h-6 w-6 text-yellow-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">{t('caseworker.dashboard.averageProcessing')}</p>
+                <p className="text-2xl font-bold text-yellow-600">{stats.averageProcessingDays}d</p>
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="flex items-center p-6">
-            <TrendingUp className="h-8 w-8 text-purple-600 mr-4" />
-            <div>
-              <h3 className="font-semibold">Avg Processing Time</h3>
-              <p className="text-2xl font-bold text-purple-600">{stats.averageProcessingTime}</p>
-              <p className="text-xs text-gray-600">Days</p>
+        <Card className="shadow-lg border-0">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                <TrendingUp className="h-6 w-6 text-green-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">{t('caseworker.dashboard.completionRate')}</p>
+                <p className="text-2xl font-bold text-green-600">{stats.completionRate}%</p>
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Urgent Tasks */}
-      <Card className="border-l-4 border-l-red-500">
+      {/* Quick Actions */}
+      <Card className="shadow-lg border-0">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5 text-red-600" />
-            Urgent Tasks
+          <CardTitle className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-oslo-blue/10 rounded-xl flex items-center justify-center">
+              <CheckCircle className="h-5 w-5 text-oslo-blue" />
+            </div>
+            {t('caseworker.dashboard.quickActions')}
           </CardTitle>
           <CardDescription>
-            Tasks requiring your immediate attention
+            {t('caseworker.reviewQueue.quickActionsDesc')}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
-            {urgentTasks.map((task) => (
-              <div key={task.id} className="flex items-center justify-between p-3 border rounded-lg bg-red-50 border-red-200">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
-                    <span className="text-red-600 font-semibold text-sm">{task.count}</span>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-red-900">{task.description}</h4>
-                    <p className="text-sm text-red-700">Due: {task.dueDate}</p>
+          <div className="grid md:grid-cols-2 gap-4">
+            {quickActions.map((action, index) => (
+              <Link key={index} to={action.link} className="group">
+                <div className="p-4 border border-gray-200 rounded-xl hover:border-oslo-blue/30 hover:bg-gray-50/50 transition-all cursor-pointer group-hover:scale-[1.02]">
+                  <div className="flex items-center gap-4">
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${action.color}`}>
+                      <action.icon className="h-6 w-6" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-gray-900 group-hover:text-oslo-blue transition-colors">
+                        {action.title}
+                      </h4>
+                      <p className="text-sm text-gray-600">{action.description}</p>
+                    </div>
+                    <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-oslo-blue transition-colors" />
                   </div>
                 </div>
-                <Button size="sm" variant="outline" className="border-red-300 text-red-700 hover:bg-red-100">
-                  Take Action
-                </Button>
-              </div>
+              </Link>
             ))}
           </div>
         </CardContent>
       </Card>
 
-      {/* Recent Applications and Quick Actions */}
-      <div className="grid lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FolderOpen className="h-5 w-5" />
-              Recent Applications
-            </CardTitle>
-            <CardDescription>
-              Latest applications in your review queue
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {recentApplications.map((app) => (
-                <div key={app.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 transition-colors">
-                  <div className="flex items-center gap-3">
-                    {getPriorityIcon(app.priority)}
-                    <div>
-                      <h4 className="font-medium">{app.childName}</h4>
-                      <p className="text-sm text-gray-600">{app.guardianName}</p>
-                      <p className="text-xs text-gray-500">Application #{app.id} • {app.submittedDate}</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    {getStatusBadge(app.status)}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-4 pt-4 border-t">
-              <Link to="/caseworker/review-queue">
-                <Button variant="outline" className="w-full">
-                  View All Applications
-                </Button>
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5" />
-              Quick Actions
-            </CardTitle>
-            <CardDescription>
-              Common tasks and shortcuts
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Link to="/caseworker/review-queue">
-              <Button variant="outline" className="w-full justify-start">
-                <FolderOpen className="h-4 w-4 mr-2" />
-                Review Queue ({stats.pendingReview})
-              </Button>
-            </Link>
-            
-            <Link to="/caseworker/placement-management">
-              <Button variant="outline" className="w-full justify-start">
-                <Users className="h-4 w-4 mr-2" />
-                Placement Management
-              </Button>
-            </Link>
-
-            <Button variant="outline" className="w-full justify-start">
-              <Calendar className="h-4 w-4 mr-2" />
-              Capacity Overview
-            </Button>
-
-            <Button variant="outline" className="w-full justify-start">
-              <FileText className="h-4 w-4 mr-2" />
-              Generate Report
-            </Button>
-
-            <Link to="/caseworker/messages">
-              <Button variant="outline" className="w-full justify-start">
-                <FileText className="h-4 w-4 mr-2" />
-                Internal Messages
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* District Overview */}
-      <Card>
+      {/* Recent Activity */}
+      <Card className="shadow-lg border-0">
         <CardHeader>
-          <CardTitle>District Overview - {user?.district}</CardTitle>
-          <CardDescription>
-            Status for kindergartens in your area of responsibility
-          </CardDescription>
+          <CardTitle className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
+              <Clock className="h-5 w-5 text-purple-600" />
+            </div>
+            {t('caseworker.dashboard.recentActivity')}
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-blue-900">Total Kindergartens</h4>
-              <p className="text-2xl font-bold text-blue-600">{stats.kindergartensInDistrict}</p>
-              <p className="text-sm text-blue-700">32 municipal, 13 private</p>
-            </div>
-            
-            <div className="bg-green-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-green-900">Available Spots</h4>
-              <p className="text-2xl font-bold text-green-600">127</p>
-              <p className="text-sm text-green-700">Available from August</p>
-            </div>
-            
-            <div className="bg-orange-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-orange-900">Waiting List</h4>
-              <p className="text-2xl font-bold text-orange-600">89</p>
-              <p className="text-sm text-orange-700">Active applicants</p>
-            </div>
+          <div className="space-y-4">
+            {recentActivity.map((activity) => (
+              <div key={activity.id} className="flex items-start gap-4 p-4 border border-gray-200 rounded-xl">
+                <div className={`w-3 h-3 rounded-full mt-2 ${
+                  activity.priority === 'high' ? 'bg-red-500' : 'bg-blue-500'
+                }`}></div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-gray-900">{activity.description}</p>
+                  <p className="text-xs text-gray-500 flex items-center gap-1 mt-1">
+                    <Calendar className="h-3 w-3" />
+                    {activity.time}
+                  </p>
+                </div>
+                {activity.priority === 'high' && (
+                  <Badge variant="outline" className="text-red-600 border-red-300 bg-red-50">
+                    Urgent
+                  </Badge>
+                )}
+              </div>
+            ))}
           </div>
         </CardContent>
       </Card>
