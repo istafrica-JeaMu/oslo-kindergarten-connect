@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -485,8 +484,8 @@ const SystemSettings = () => {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">{t('admin.settings.title')}</h1>
-        <p className="text-gray-600 mt-2">{t('admin.settings.description')}</p>
+        <h1 className="text-3xl font-bold text-gray-900">{t('admin.settings.title', 'System Settings')}</h1>
+        <p className="text-gray-600 mt-2">{t('admin.settings.description', 'Configure system-wide settings and integrations')}</p>
       </div>
 
       <div className="grid lg:grid-cols-4 gap-8">
