@@ -30,7 +30,6 @@ const SystemSettings = () => {
   const [activeTab, setActiveTab] = useState('general');
   const [isSaving, setIsSaving] = useState(false);
 
-  // Mock settings data
   const [settings, setSettings] = useState({
     general: {
       systemName: 'Oslo Kindergarten Portal',
@@ -91,7 +90,6 @@ const SystemSettings = () => {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
       console.log('Saving settings:', settings);
       alert('Settings saved successfully!');
