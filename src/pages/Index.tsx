@@ -272,7 +272,7 @@ const Index = () => {
                 </div>
                 <ul className="space-y-2 text-blue-100">
                   <li>• 99.9% Uptime SLA</li>
-                  <li>• <3s Response Time</li>
+                  <li>• &lt;3s Response Time</li>
                   <li>• 500+ Concurrent Users</li>
                   <li>• TLS 1.3 Encryption</li>
                 </ul>
