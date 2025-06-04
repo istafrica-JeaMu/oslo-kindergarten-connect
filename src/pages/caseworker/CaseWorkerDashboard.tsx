@@ -21,7 +21,10 @@ import {
   ArrowUp,
   ArrowDown,
   Filter,
-  Search
+  Search,
+  Eye,
+  Star,
+  Zap
 } from 'lucide-react';
 
 const CaseWorkerDashboard = () => {
@@ -189,34 +192,40 @@ const CaseWorkerDashboard = () => {
               {t('caseworker.dashboard.description')}
             </p>
           </div>
-          <Button 
-            size="lg" 
-            className="bg-white text-oslo-blue hover:bg-blue-50 shadow-lg"
-          >
-            <Filter className="h-4 w-4 mr-2" />
-            Quick Filters
-          </Button>
+          <div className="flex gap-3">
+            <Button size="lg" variant="outline" className="text-white border-white/30 hover:bg-white/10">
+              <Filter className="h-4 w-4 mr-2" />
+              Quick Filters
+            </Button>
+            <Button size="lg" className="bg-white text-oslo-blue hover:bg-blue-50 shadow-lg font-semibold">
+              <Star className="h-4 w-4 mr-2" />
+              Priority View
+            </Button>
+          </div>
         </div>
       </div>
 
       {/* Enhanced Statistics Cards */}
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="shadow-lg border-0 hover:shadow-xl transition-all duration-300 group">
-          <CardContent className="pt-6">
+        <Card className="shadow-lg border-0 hover:shadow-xl transition-all duration-300 group overflow-hidden relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-blue-100/50"></div>
+          <CardContent className="pt-6 relative z-10">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <FileText className="h-7 w-7 text-blue-600" />
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-white shadow-md rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <FileText className="h-8 w-8 text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600 font-medium">{t('caseworker.dashboard.newApplications')}</p>
-                  <div className="flex items-center gap-2">
-                    <p className="text-3xl font-bold text-gray-900">{stats.newApplications.value}</p>
-                    <div className={`flex items-center ${getTrendColor(stats.newApplications.trend)}`}>
-                      {getTrendIcon(stats.newApplications.trend) && (
-                        <getTrendIcon(stats.newApplications.trend) className="h-4 w-4" />
+                  <p className="text-sm text-gray-600 font-semibold mb-1">{t('caseworker.dashboard.newApplications')}</p>
+                  <div className="flex items-center gap-3">
+                    <p className="text-4xl font-black text-gray-900">{stats.newApplications.value}</p>
+                    <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold ${getTrendColor(stats.newApplications.trend)} bg-white shadow-sm`}>
+                      {stats.newApplications.trend === 'up' ? (
+                        <ArrowUp className="h-3 w-3" />
+                      ) : (
+                        <ArrowDown className="h-3 w-3" />
                       )}
-                      <span className="text-sm font-semibold">{stats.newApplications.change}</span>
+                      <span>{stats.newApplications.change}</span>
                     </div>
                   </div>
                 </div>
@@ -225,22 +234,25 @@ const CaseWorkerDashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="shadow-lg border-0 hover:shadow-xl transition-all duration-300 group border-l-4 border-l-red-500">
-          <CardContent className="pt-6">
+        <Card className="shadow-lg border-0 hover:shadow-xl transition-all duration-300 group overflow-hidden relative border-l-4 border-l-red-500">
+          <div className="absolute inset-0 bg-gradient-to-br from-red-50 to-red-100/50"></div>
+          <CardContent className="pt-6 relative z-10">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-14 h-14 bg-red-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform animate-pulse">
-                  <AlertTriangle className="h-7 w-7 text-red-600" />
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-white shadow-md rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform animate-pulse">
+                  <AlertTriangle className="h-8 w-8 text-red-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600 font-medium">{t('caseworker.dashboard.urgentTasks')}</p>
-                  <div className="flex items-center gap-2">
-                    <p className="text-3xl font-bold text-red-600">{stats.urgentTasks.value}</p>
-                    <div className={`flex items-center ${getTrendColor(stats.urgentTasks.trend)}`}>
-                      {getTrendIcon(stats.urgentTasks.trend) && (
-                        <getTrendIcon(stats.urgentTasks.trend) className="h-4 w-4" />
+                  <p className="text-sm text-gray-600 font-semibold mb-1">{t('caseworker.dashboard.urgentTasks')}</p>
+                  <div className="flex items-center gap-3">
+                    <p className="text-4xl font-black text-red-600">{stats.urgentTasks.value}</p>
+                    <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold ${getTrendColor(stats.urgentTasks.trend)} bg-white shadow-sm`}>
+                      {stats.urgentTasks.trend === 'up' ? (
+                        <ArrowUp className="h-3 w-3" />
+                      ) : (
+                        <ArrowDown className="h-3 w-3" />
                       )}
-                      <span className="text-sm font-semibold">{stats.urgentTasks.change}</span>
+                      <span>{stats.urgentTasks.change}</span>
                     </div>
                   </div>
                 </div>
@@ -249,22 +261,25 @@ const CaseWorkerDashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="shadow-lg border-0 hover:shadow-xl transition-all duration-300 group">
-          <CardContent className="pt-6">
+        <Card className="shadow-lg border-0 hover:shadow-xl transition-all duration-300 group overflow-hidden relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 to-yellow-100/50"></div>
+          <CardContent className="pt-6 relative z-10">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-14 h-14 bg-yellow-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Clock className="h-7 w-7 text-yellow-600" />
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-white shadow-md rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Clock className="h-8 w-8 text-yellow-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600 font-medium">{t('caseworker.dashboard.averageProcessing')}</p>
-                  <div className="flex items-center gap-2">
-                    <p className="text-3xl font-bold text-yellow-600">{stats.averageProcessingDays.value}d</p>
-                    <div className={`flex items-center ${getTrendColor(stats.averageProcessingDays.trend)}`}>
-                      {getTrendIcon(stats.averageProcessingDays.trend) && (
-                        <getTrendIcon(stats.averageProcessingDays.trend) className="h-4 w-4" />
+                  <p className="text-sm text-gray-600 font-semibold mb-1">{t('caseworker.dashboard.averageProcessing')}</p>
+                  <div className="flex items-center gap-3">
+                    <p className="text-4xl font-black text-yellow-600">{stats.averageProcessingDays.value}d</p>
+                    <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold ${getTrendColor(stats.averageProcessingDays.trend)} bg-white shadow-sm`}>
+                      {stats.averageProcessingDays.trend === 'up' ? (
+                        <ArrowUp className="h-3 w-3" />
+                      ) : (
+                        <ArrowDown className="h-3 w-3" />
                       )}
-                      <span className="text-sm font-semibold">{stats.averageProcessingDays.change}</span>
+                      <span>{stats.averageProcessingDays.change}</span>
                     </div>
                   </div>
                 </div>
@@ -273,22 +288,25 @@ const CaseWorkerDashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="shadow-lg border-0 hover:shadow-xl transition-all duration-300 group">
-          <CardContent className="pt-6">
+        <Card className="shadow-lg border-0 hover:shadow-xl transition-all duration-300 group overflow-hidden relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-green-100/50"></div>
+          <CardContent className="pt-6 relative z-10">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <TrendingUp className="h-7 w-7 text-green-600" />
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-white shadow-md rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <TrendingUp className="h-8 w-8 text-green-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600 font-medium">{t('caseworker.dashboard.completionRate')}</p>
-                  <div className="flex items-center gap-2">
-                    <p className="text-3xl font-bold text-green-600">{stats.completionRate.value}%</p>
-                    <div className={`flex items-center ${getTrendColor(stats.completionRate.trend)}`}>
-                      {getTrendIcon(stats.completionRate.trend) && (
-                        <getTrendIcon(stats.completionRate.trend) className="h-4 w-4" />
+                  <p className="text-sm text-gray-600 font-semibold mb-1">{t('caseworker.dashboard.completionRate')}</p>
+                  <div className="flex items-center gap-3">
+                    <p className="text-4xl font-black text-green-600">{stats.completionRate.value}%</p>
+                    <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold ${getTrendColor(stats.completionRate.trend)} bg-white shadow-sm`}>
+                      {stats.completionRate.trend === 'up' ? (
+                        <ArrowUp className="h-3 w-3" />
+                      ) : (
+                        <ArrowDown className="h-3 w-3" />
                       )}
-                      <span className="text-sm font-semibold">{stats.completionRate.change}</span>
+                      <span>{stats.completionRate.change}</span>
                     </div>
                   </div>
                 </div>
