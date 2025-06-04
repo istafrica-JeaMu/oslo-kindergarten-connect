@@ -8,7 +8,8 @@ import {
   Users,
   Settings,
   BarChart3,
-  FolderOpen
+  FolderOpen,
+  GraduationCap
 } from 'lucide-react';
 
 import {
@@ -20,6 +21,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarHeader,
 } from '@/components/ui/sidebar';
 
 import { useAuth } from '@/contexts/AuthContext';
@@ -115,22 +117,37 @@ export function AppSidebar() {
   const menuItems = getMenuItems();
 
   return (
-    <Sidebar className="border-r bg-white">
-      <SidebarContent>
+    <Sidebar className="border-r border-slate-200 bg-white">
+      <SidebarHeader className="border-b border-slate-200 p-6">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-oslo-blue to-blue-700 rounded-xl flex items-center justify-center shadow-md">
+            <GraduationCap className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h2 className="text-lg font-bold text-oslo-blue">IST Platform</h2>
+            <p className="text-xs text-slate-600 -mt-1">Oslo Municipality</p>
+          </div>
+        </div>
+      </SidebarHeader>
+      <SidebarContent className="p-4">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-oslo-blue font-semibold">
+          <SidebarGroupLabel className="text-oslo-blue font-semibold text-sm mb-3 px-3">
             {user?.role === 'guardian' && 'Guardian Portal'}
-            {user?.role === 'caseworker' && 'Case Worker'}
-            {user?.role === 'admin' && 'Administrator'}
+            {user?.role === 'caseworker' && 'Case Worker Dashboard'}
+            {user?.role === 'admin' && 'Administrator Panel'}
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="space-y-1">
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={location.pathname === item.url}>
-                    <Link to={item.url} className="flex items-center gap-3">
+                  <SidebarMenuButton 
+                    asChild 
+                    isActive={location.pathname === item.url}
+                    className="rounded-lg hover:bg-oslo-blue/10 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200"
+                  >
+                    <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
                       <item.icon className="h-5 w-5" />
-                      <span>{item.title}</span>
+                      <span className="font-medium">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
