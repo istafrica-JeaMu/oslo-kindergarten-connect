@@ -1,10 +1,10 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useTranslation } from 'react-i18next';
+import FeeReductionModal from '@/components/FeeReductionModal';
 import { 
   CreditCard, 
   Download, 
@@ -14,12 +14,14 @@ import {
   Calendar,
   DollarSign,
   FileText,
-  Info
+  Info,
+  Plus
 } from 'lucide-react';
 
 const Payments = () => {
   const { t } = useTranslation();
   const [selectedInvoice, setSelectedInvoice] = useState<any>(null);
+  const [showFeeReductionModal, setShowFeeReductionModal] = useState(false);
 
   // Mock payment data
   const paymentSummary = {
@@ -188,6 +190,33 @@ const Payments = () => {
         </Alert>
       )}
 
+      {/* Fee Reduction Application */}
+      {!paymentSummary.reductionApproved && (
+        <Card className="shadow-lg border-0 bg-blue-50 border-blue-200">
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between text-blue-800">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                  <DollarSign className="h-5 w-5 text-blue-600" />
+                </div>
+                Apply for Fee Reduction
+              </div>
+              <Button
+                onClick={() => setShowFeeReductionModal(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+                size="sm"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Apply Now
+              </Button>
+            </CardTitle>
+            <CardDescription className="text-blue-700">
+              You may be eligible for income-based fee reduction. Submit your household income for automatic verification.
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      )}
+
       {/* Invoices */}
       <Card className="shadow-lg border-0">
         <CardHeader>
@@ -273,6 +302,11 @@ const Payments = () => {
           </ul>
         </CardContent>
       </Card>
+
+      <FeeReductionModal
+        open={showFeeReductionModal}
+        onOpenChange={setShowFeeReductionModal}
+      />
     </div>
   );
 };
