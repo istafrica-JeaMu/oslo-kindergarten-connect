@@ -10,7 +10,12 @@ import {
   TrendingDown, 
   DollarSign,
   Info,
-  CheckCircle
+  CheckCircle,
+  Shield,
+  Clock,
+  Sparkles,
+  ArrowRight,
+  Loader2
 } from 'lucide-react';
 
 interface FeeReductionCalculatorProps {
@@ -24,6 +29,7 @@ const FeeReductionCalculator = ({ onApplyClick, currentFee }: FeeReductionCalcul
   const [calculatedFee, setCalculatedFee] = useState(0);
   const [monthlyReduction, setMonthlyReduction] = useState(0);
   const [annualSavings, setAnnualSavings] = useState(0);
+  const [isApplying, setIsApplying] = useState(false);
 
   const calculateReduction = (householdIncome: number) => {
     // Norwegian kindergarten fee reduction calculation (simplified)
@@ -68,6 +74,16 @@ const FeeReductionCalculator = ({ onApplyClick, currentFee }: FeeReductionCalcul
       setMonthlyReduction(0);
       setAnnualSavings(0);
     }
+  };
+
+  const handleApplyClick = async () => {
+    setIsApplying(true);
+    
+    // Simulate processing time
+    setTimeout(() => {
+      setIsApplying(false);
+      onApplyClick();
+    }, 1500);
   };
 
   const formatCurrency = (amount: number) => {
@@ -132,14 +148,66 @@ const FeeReductionCalculator = ({ onApplyClick, currentFee }: FeeReductionCalcul
               </div>
             </div>
 
-            <Button 
-              onClick={onApplyClick}
-              className="w-full bg-green-600 hover:bg-green-700 text-white mt-4"
-              size="lg"
-            >
-              <Calculator className="h-4 w-4 mr-2" />
-              Apply for Reduction
-            </Button>
+            {/* Enhanced Apply Button */}
+            <div className="space-y-3 mt-6">
+              <Button 
+                onClick={handleApplyClick}
+                disabled={isApplying}
+                className="w-full h-14 bg-gradient-to-r from-green-600 via-green-700 to-emerald-600 hover:from-green-700 hover:via-green-800 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 text-base font-semibold relative overflow-hidden group"
+                size="lg"
+              >
+                {isApplying ? (
+                  <div className="flex items-center gap-3">
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <span>Processing Application...</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                        <Sparkles className="h-4 w-4" />
+                      </div>
+                      <div className="text-left">
+                        <div className="font-bold">Apply for Reduction</div>
+                        <div className="text-xs text-green-100">Save {formatCurrency(annualSavings)}/year</div>
+                      </div>
+                    </div>
+                    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                  </div>
+                )}
+                
+                {/* Shimmer effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+              </Button>
+
+              {/* Trust Indicators */}
+              <div className="grid grid-cols-3 gap-2 text-xs">
+                <div className="flex items-center gap-1 text-green-700 bg-green-50 rounded-lg p-2">
+                  <Shield className="h-3 w-3" />
+                  <span className="font-medium">Secure</span>
+                </div>
+                <div className="flex items-center gap-1 text-green-700 bg-green-50 rounded-lg p-2">
+                  <Clock className="h-3 w-3" />
+                  <span className="font-medium">5-7 days</span>
+                </div>
+                <div className="flex items-center gap-1 text-green-700 bg-green-50 rounded-lg p-2">
+                  <CheckCircle className="h-3 w-3" />
+                  <span className="font-medium">Free</span>
+                </div>
+              </div>
+
+              {/* Additional Info */}
+              <div className="bg-green-100/60 rounded-lg p-3 border border-green-200">
+                <div className="flex items-start gap-2">
+                  <Info className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <div className="text-xs text-green-700 space-y-1">
+                    <p className="font-medium">✓ Government verified process</p>
+                    <p>✓ Automatic income verification with Tax Administration</p>
+                    <p>✓ No paperwork required - all done digitally</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
