@@ -17,7 +17,11 @@ import {
   FolderOpen,
   CheckCircle,
   Calendar,
-  ArrowRight
+  ArrowRight,
+  ArrowUp,
+  ArrowDown,
+  Filter,
+  Search
 } from 'lucide-react';
 
 const CaseWorkerDashboard = () => {
@@ -30,42 +34,54 @@ const CaseWorkerDashboard = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Mock dashboard data
+  // Enhanced mock dashboard data with trends
   const stats = {
-    newApplications: 23,
-    urgentTasks: 5,
-    averageProcessingDays: 12,
-    completionRate: 87
+    newApplications: { value: 23, trend: 'up', change: '+5' },
+    urgentTasks: { value: 5, trend: 'down', change: '-2' },
+    averageProcessingDays: { value: 12, trend: 'down', change: '-1' },
+    completionRate: { value: 87, trend: 'up', change: '+3%' }
   };
 
   const recentActivity = [
     {
       id: 1,
       type: 'application_submitted',
-      description: 'New application submitted for Emma Larsen',
+      title: 'New Application',
+      description: 'Emma Larsen submitted kindergarten application',
+      applicant: 'Emma Larsen',
       time: '2 hours ago',
-      priority: 'normal'
+      priority: 'normal',
+      actionRequired: false
     },
     {
       id: 2,
       type: 'document_missing',
-      description: 'Missing documents for Oliver Hansen application',
+      title: 'Missing Documents',
+      description: 'Oliver Hansen application requires additional documentation',
+      applicant: 'Oliver Hansen',
       time: '4 hours ago',
-      priority: 'high'
+      priority: 'high',
+      actionRequired: true
     },
     {
       id: 3,
       type: 'placement_confirmed',
-      description: 'Placement confirmed at Løvenskiold Kindergarten',
+      title: 'Placement Confirmed',
+      description: 'Successful placement at Løvenskiold Kindergarten',
+      applicant: 'Sofia Nielsen',
       time: '1 day ago',
-      priority: 'normal'
+      priority: 'normal',
+      actionRequired: false
     },
     {
       id: 4,
       type: 'message_received',
-      description: 'Message received from guardian regarding application APP-125',
+      title: 'Guardian Message',
+      description: 'Question about application APP-125 status',
+      applicant: 'Maria Olsen',
       time: '1 day ago',
-      priority: 'normal'
+      priority: 'normal',
+      actionRequired: true
     }
   ];
 
@@ -75,28 +91,40 @@ const CaseWorkerDashboard = () => {
       description: 'Process pending applications',
       icon: FolderOpen,
       link: '/caseworker/review-queue',
-      color: 'bg-blue-100 text-blue-600'
+      color: 'bg-blue-50 border-blue-200',
+      iconColor: 'text-blue-600',
+      isPrimary: true,
+      count: 23
     },
     {
       title: t('caseworker.dashboard.managePlacements'),
       description: 'Manage kindergarten placements',
       icon: Users,
       link: '/caseworker/placement-management',
-      color: 'bg-green-100 text-green-600'
+      color: 'bg-green-50 border-green-200',
+      iconColor: 'text-green-600',
+      isPrimary: false,
+      count: 8
     },
     {
       title: t('caseworker.dashboard.sendMessages'),
       description: 'Communicate with families',
       icon: MessageSquare,
       link: '/caseworker/messages',
-      color: 'bg-purple-100 text-purple-600'
+      color: 'bg-purple-50 border-purple-200',
+      iconColor: 'text-purple-600',
+      isPrimary: false,
+      count: 12
     },
     {
       title: t('caseworker.dashboard.generateReports'),
       description: 'Create status reports',
       icon: BarChart3,
       link: '/caseworker/reports',
-      color: 'bg-orange-100 text-orange-600'
+      color: 'bg-orange-50 border-orange-200',
+      iconColor: 'text-orange-600',
+      isPrimary: false,
+      count: 3
     }
   ];
 
@@ -118,146 +146,303 @@ const CaseWorkerDashboard = () => {
     );
   }
 
+  const getTrendIcon = (trend: string) => {
+    return trend === 'up' ? ArrowUp : ArrowDown;
+  };
+
+  const getTrendColor = (trend: string) => {
+    return trend === 'up' ? 'text-green-600' : 'text-red-600';
+  };
+
+  const getPriorityBadge = (priority: string, actionRequired: boolean) => {
+    if (priority === 'high') {
+      return (
+        <Badge className="bg-red-100 text-red-700 border-red-300 animate-pulse">
+          <AlertTriangle className="h-3 w-3 mr-1" />
+          Urgent
+        </Badge>
+      );
+    }
+    if (actionRequired) {
+      return (
+        <Badge className="bg-amber-100 text-amber-700 border-amber-300">
+          Action Required
+        </Badge>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-          {t('caseworker.dashboard.title')}
-          <Badge variant="outline" className="text-purple-600 border-purple-300 bg-purple-50">
-            {user?.district}
-          </Badge>
-        </h1>
-        <p className="text-gray-600 mt-2 text-lg">
-          {t('caseworker.dashboard.description')}
-        </p>
+      {/* Header Section */}
+      <div className="bg-gradient-to-r from-oslo-blue to-oslo-blue/90 -mx-6 -mt-8 px-6 pt-8 pb-6 text-white">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold flex items-center gap-3">
+              {t('caseworker.dashboard.title')}
+              <Badge variant="outline" className="text-white border-white/30 bg-white/10">
+                {user?.district}
+              </Badge>
+            </h1>
+            <p className="text-blue-100 mt-2 text-lg">
+              {t('caseworker.dashboard.description')}
+            </p>
+          </div>
+          <Button 
+            size="lg" 
+            className="bg-white text-oslo-blue hover:bg-blue-50 shadow-lg"
+          >
+            <Filter className="h-4 w-4 mr-2" />
+            Quick Filters
+          </Button>
+        </div>
       </div>
 
-      {/* Statistics Cards */}
+      {/* Enhanced Statistics Cards */}
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="shadow-lg border-0">
+        <Card className="shadow-lg border-0 hover:shadow-xl transition-all duration-300 group">
           <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                <FileText className="h-6 w-6 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">{t('caseworker.dashboard.newApplications')}</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.newApplications}</p>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <FileText className="h-7 w-7 text-blue-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600 font-medium">{t('caseworker.dashboard.newApplications')}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-3xl font-bold text-gray-900">{stats.newApplications.value}</p>
+                    <div className={`flex items-center ${getTrendColor(stats.newApplications.trend)}`}>
+                      {getTrendIcon(stats.newApplications.trend) && (
+                        <getTrendIcon(stats.newApplications.trend) className="h-4 w-4" />
+                      )}
+                      <span className="text-sm font-semibold">{stats.newApplications.change}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-lg border-0">
+        <Card className="shadow-lg border-0 hover:shadow-xl transition-all duration-300 group border-l-4 border-l-red-500">
           <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
-                <AlertTriangle className="h-6 w-6 text-red-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">{t('caseworker.dashboard.urgentTasks')}</p>
-                <p className="text-2xl font-bold text-red-600">{stats.urgentTasks}</p>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-14 h-14 bg-red-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform animate-pulse">
+                  <AlertTriangle className="h-7 w-7 text-red-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600 font-medium">{t('caseworker.dashboard.urgentTasks')}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-3xl font-bold text-red-600">{stats.urgentTasks.value}</p>
+                    <div className={`flex items-center ${getTrendColor(stats.urgentTasks.trend)}`}>
+                      {getTrendIcon(stats.urgentTasks.trend) && (
+                        <getTrendIcon(stats.urgentTasks.trend) className="h-4 w-4" />
+                      )}
+                      <span className="text-sm font-semibold">{stats.urgentTasks.change}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-lg border-0">
+        <Card className="shadow-lg border-0 hover:shadow-xl transition-all duration-300 group">
           <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
-                <Clock className="h-6 w-6 text-yellow-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">{t('caseworker.dashboard.averageProcessing')}</p>
-                <p className="text-2xl font-bold text-yellow-600">{stats.averageProcessingDays}d</p>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-14 h-14 bg-yellow-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Clock className="h-7 w-7 text-yellow-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600 font-medium">{t('caseworker.dashboard.averageProcessing')}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-3xl font-bold text-yellow-600">{stats.averageProcessingDays.value}d</p>
+                    <div className={`flex items-center ${getTrendColor(stats.averageProcessingDays.trend)}`}>
+                      {getTrendIcon(stats.averageProcessingDays.trend) && (
+                        <getTrendIcon(stats.averageProcessingDays.trend) className="h-4 w-4" />
+                      )}
+                      <span className="text-sm font-semibold">{stats.averageProcessingDays.change}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-lg border-0">
+        <Card className="shadow-lg border-0 hover:shadow-xl transition-all duration-300 group">
           <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                <TrendingUp className="h-6 w-6 text-green-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">{t('caseworker.dashboard.completionRate')}</p>
-                <p className="text-2xl font-bold text-green-600">{stats.completionRate}%</p>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <TrendingUp className="h-7 w-7 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600 font-medium">{t('caseworker.dashboard.completionRate')}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-3xl font-bold text-green-600">{stats.completionRate.value}%</p>
+                    <div className={`flex items-center ${getTrendColor(stats.completionRate.trend)}`}>
+                      {getTrendIcon(stats.completionRate.trend) && (
+                        <getTrendIcon(stats.completionRate.trend) className="h-4 w-4" />
+                      )}
+                      <span className="text-sm font-semibold">{stats.completionRate.change}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Quick Actions */}
+      {/* Enhanced Quick Actions */}
       <Card className="shadow-lg border-0">
         <CardHeader>
-          <CardTitle className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-oslo-blue/10 rounded-xl flex items-center justify-center">
-              <CheckCircle className="h-5 w-5 text-oslo-blue" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-oslo-blue/10 rounded-xl flex items-center justify-center">
+                <CheckCircle className="h-5 w-5 text-oslo-blue" />
+              </div>
+              <div>
+                <CardTitle>{t('caseworker.dashboard.quickActions')}</CardTitle>
+                <CardDescription>
+                  {t('caseworker.reviewQueue.quickActionsDesc')}
+                </CardDescription>
+              </div>
             </div>
-            {t('caseworker.dashboard.quickActions')}
-          </CardTitle>
-          <CardDescription>
-            {t('caseworker.reviewQueue.quickActionsDesc')}
-          </CardDescription>
+            <Button variant="outline" size="sm">
+              <Search className="h-4 w-4 mr-2" />
+              Search Tasks
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
-          <div className="grid md:grid-cols-2 gap-4">
-            {quickActions.map((action, index) => (
+          <div className="grid gap-4">
+            {/* Primary Action */}
+            {quickActions.filter(action => action.isPrimary).map((action, index) => (
               <Link key={index} to={action.link} className="group">
-                <div className="p-4 border border-gray-200 rounded-xl hover:border-oslo-blue/30 hover:bg-gray-50/50 transition-all cursor-pointer group-hover:scale-[1.02]">
-                  <div className="flex items-center gap-4">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${action.color}`}>
-                      <action.icon className="h-6 w-6" />
+                <div className={`p-6 border-2 rounded-xl transition-all duration-300 hover:shadow-lg ${action.color} border-dashed hover:border-solid group-hover:scale-[1.02]`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className={`w-14 h-14 bg-white rounded-xl flex items-center justify-center shadow-md ${action.iconColor}`}>
+                        <action.icon className="h-7 w-7" />
+                      </div>
+                      <div>
+                        <h4 className="text-lg font-bold text-gray-900 group-hover:text-oslo-blue transition-colors">
+                          {action.title}
+                        </h4>
+                        <p className="text-sm text-gray-600">{action.description}</p>
+                        <Badge className="mt-2 bg-white text-gray-700">
+                          {action.count} pending
+                        </Badge>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-gray-900 group-hover:text-oslo-blue transition-colors">
-                        {action.title}
-                      </h4>
-                      <p className="text-sm text-gray-600">{action.description}</p>
+                    <div className="flex items-center gap-2">
+                      <Button size="lg" className="shadow-md">
+                        Start Review
+                        <ArrowRight className="h-4 w-4 ml-2" />
+                      </Button>
                     </div>
-                    <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-oslo-blue transition-colors" />
                   </div>
                 </div>
               </Link>
             ))}
+
+            {/* Secondary Actions */}
+            <div className="grid md:grid-cols-3 gap-4 mt-4">
+              {quickActions.filter(action => !action.isPrimary).map((action, index) => (
+                <Link key={index} to={action.link} className="group">
+                  <div className={`p-4 border rounded-xl transition-all duration-300 hover:shadow-md ${action.color} group-hover:scale-[1.02]`}>
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 bg-white rounded-lg flex items-center justify-center ${action.iconColor}`}>
+                        <action.icon className="h-5 w-5" />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-gray-900 group-hover:text-oslo-blue transition-colors">
+                          {action.title}
+                        </h4>
+                        <div className="flex items-center justify-between mt-1">
+                          <p className="text-xs text-gray-600">{action.description}</p>
+                          <Badge variant="outline" className="text-xs">
+                            {action.count}
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Recent Activity */}
+      {/* Enhanced Recent Activity */}
       <Card className="shadow-lg border-0">
         <CardHeader>
-          <CardTitle className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
-              <Clock className="h-5 w-5 text-purple-600" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
+                <Clock className="h-5 w-5 text-purple-600" />
+              </div>
+              <div>
+                <CardTitle>{t('caseworker.dashboard.recentActivity')}</CardTitle>
+                <CardDescription>Latest updates requiring your attention</CardDescription>
+              </div>
             </div>
-            {t('caseworker.dashboard.recentActivity')}
-          </CardTitle>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm">
+                <Filter className="h-4 w-4 mr-2" />
+                Filter
+              </Button>
+              <Button variant="outline" size="sm">
+                View All
+              </Button>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {recentActivity.map((activity) => (
-              <div key={activity.id} className="flex items-start gap-4 p-4 border border-gray-200 rounded-xl">
-                <div className={`w-3 h-3 rounded-full mt-2 ${
-                  activity.priority === 'high' ? 'bg-red-500' : 'bg-blue-500'
-                }`}></div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-900">{activity.description}</p>
-                  <p className="text-xs text-gray-500 flex items-center gap-1 mt-1">
-                    <Calendar className="h-3 w-3" />
-                    {activity.time}
-                  </p>
-                </div>
-                {activity.priority === 'high' && (
-                  <Badge variant="outline" className="text-red-600 border-red-300 bg-red-50">
-                    Urgent
-                  </Badge>
-                )}
-              </div>
+              <Card key={activity.id} className={`transition-all duration-300 hover:shadow-md ${
+                activity.priority === 'high' ? 'border-l-4 border-l-red-500 bg-red-50/30' : 
+                activity.actionRequired ? 'border-l-4 border-l-amber-500 bg-amber-50/30' : 
+                'border-l-4 border-l-gray-200'
+              }`}>
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h4 className="font-semibold text-gray-900">{activity.title}</h4>
+                        {getPriorityBadge(activity.priority, activity.actionRequired)}
+                      </div>
+                      <p className="text-gray-700 mb-2">{activity.description}</p>
+                      <div className="flex items-center gap-4 text-sm text-gray-500">
+                        <span className="flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          {activity.time}
+                        </span>
+                        <span className="font-medium text-gray-700">
+                          {activity.applicant}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex gap-2 ml-4">
+                      {activity.actionRequired && (
+                        <Button size="sm" variant="outline">
+                          Take Action
+                        </Button>
+                      )}
+                      <Button size="sm" variant="ghost">
+                        View Details
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </CardContent>
