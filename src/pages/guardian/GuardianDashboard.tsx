@@ -209,20 +209,20 @@ const GuardianDashboard = () => {
                 <p className="text-slate-600 text-xl font-medium mt-2">
                   {t('guardian.dashboard.overview')}
                 </p>
-                <div className="flex items-center gap-4 mt-4">
-                  {/* Enhanced Guardian Account Badge */}
-                  <Badge className="relative overflow-hidden bg-gradient-to-r from-slate-100 via-slate-50 to-white text-slate-700 border-2 border-slate-300 hover:border-oslo-blue/50 font-bold px-5 py-3 shadow-lg hover:shadow-xl transition-all duration-300 group cursor-default">
+                <div className="flex items-center gap-3 mt-4">
+                  {/* Smaller Guardian Account Badge */}
+                  <Badge className="relative overflow-hidden bg-gradient-to-r from-slate-100 via-slate-50 to-white text-slate-700 border-2 border-slate-300 hover:border-oslo-blue/50 font-semibold px-3 py-1.5 shadow-md hover:shadow-lg transition-all duration-300 group cursor-default">
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                    <Shield className="w-5 h-5 mr-3 text-slate-600 relative z-10 drop-shadow-sm" />
-                    <span className="relative z-10 text-base font-bold tracking-wide">Guardian Account</span>
+                    <Shield className="w-3.5 h-3.5 mr-2 text-slate-600 relative z-10 drop-shadow-sm" />
+                    <span className="relative z-10 text-sm font-semibold tracking-wide">Guardian Account</span>
                   </Badge>
                   
-                  {/* Enhanced Verified Badge - More Prominent */}
-                  <Badge className="relative overflow-hidden bg-gradient-to-r from-oslo-green via-green-500 to-green-600 text-white border-2 border-green-400 font-bold px-6 py-3 shadow-xl hover:shadow-2xl transition-all duration-300 group cursor-default transform hover:scale-105">
+                  {/* Smaller Verified Badge - More Prominent */}
+                  <Badge className="relative overflow-hidden bg-gradient-to-r from-oslo-green via-green-500 to-green-600 text-white border-2 border-green-400 font-semibold px-4 py-1.5 shadow-lg hover:shadow-xl transition-all duration-300 group cursor-default transform hover:scale-105">
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full animate-pulse shadow-lg border border-yellow-300"></div>
-                    <Star className="w-5 h-5 mr-3 relative z-10 drop-shadow-md text-yellow-100" />
-                    <span className="relative z-10 text-base font-bold tracking-wide drop-shadow-sm">✓ Verified</span>
+                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full animate-pulse shadow-md border border-yellow-300"></div>
+                    <Star className="w-3.5 h-3.5 mr-2 relative z-10 drop-shadow-md text-yellow-100" />
+                    <span className="relative z-10 text-sm font-semibold tracking-wide drop-shadow-sm">✓ Verified</span>
                   </Badge>
                 </div>
               </div>
