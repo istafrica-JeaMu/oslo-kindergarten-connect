@@ -13,26 +13,22 @@ interface AnimatedAvatarProps {
   enableAnimation?: boolean;
 }
 
-const getGhibliCharacter = (role: string, name: string) => {
+const getEducationalCharacter = (role: string, name: string) => {
   const characters = {
     'System': {
-      static: 'https://i.pinimg.com/736x/8b/16/7a/8b167af653c2399dd93b952a48740620.jpg',
-      animated: 'https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGp5cHJoYnJkdGV6OXJxY2RyYWk4aXNmYzJlNGZvcjUxaGE3cXp1ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l0HlUJZE8Uo1cSlUI/giphy.gif',
+      static: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=400&fit=crop&crop=center',
       fallback: '🏛️'
     },
     'Kindergarten': {
-      static: 'https://i.pinimg.com/736x/0f/25/c4/0f25c4d62c8ac5bb39e04e2b65e50c12.jpg',
-      animated: 'https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExbXN2YjJ2OXE3bzR5dGJkdnN3NGUxZXA2YnhsaGp6cWl5bGp3cWNrZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/VbnUQpnihPSIgIXuZv/giphy.gif',
+      static: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=400&h=400&fit=crop&crop=center',
       fallback: '🌸'
     },
     'Case Worker': {
-      static: 'https://i.pinimg.com/736x/52/23/83/5223832ce89b54cd4f8092e5c2a21be0.jpg',
-      animated: 'https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExdGVkczJpNGV3eWs4Zmg4NzJxN3Q1NWE2N3JrZDE5YzVpd3I0NGR3ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oriO0OEd9QIDdllqo/giphy.gif',
+      static: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=400&fit=crop&crop=center',
       fallback: '📋'
     },
     'Guardian': {
-      static: 'https://i.pinimg.com/736x/fa/fe/34/fafe347f46e50e5d9e924f9ecffd61e9.jpg',
-      animated: 'https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExbm05dGNkbThzZWZqNG05cnBnZ2J4Y3R1NmpjdHd0M3RsaWJhZ2dwdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/JIX9t2j0ZTN9S/giphy.gif',
+      static: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=400&fit=crop&crop=center',
       fallback: '👤'
     }
   };
@@ -66,7 +62,7 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = ({
   context = 'sidebar',
   enableAnimation = true
 }) => {
-  const character = getGhibliCharacter(role, name);
+  const character = getEducationalCharacter(role, name);
   const [isHovered, setIsHovered] = React.useState(false);
   const [hasMotionPreference, setHasMotionPreference] = React.useState(false);
 
@@ -88,12 +84,8 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = ({
     lg: 'w-4 h-4'
   };
 
-  // Use static images for messages, animated for sidebar/header interactions
-  const shouldUseAnimation = enableAnimation && 
-                            !hasMotionPreference && 
-                            (context === 'sidebar' || (context === 'header' && isHovered));
-
-  const imageSource = shouldUseAnimation ? character.animated : character.static;
+  // Always use static images for educational context
+  const imageSource = character.static;
 
   return (
     <div 
@@ -114,7 +106,7 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = ({
         <AvatarImage 
           src={imageSource} 
           alt={`${name} avatar`}
-          className="object-cover transition-opacity duration-300"
+          className="object-cover transition-opacity duration-300 filter brightness-110 contrast-105"
           loading="lazy"
         />
         <AvatarFallback className={cn(
