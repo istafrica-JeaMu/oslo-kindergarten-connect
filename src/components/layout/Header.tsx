@@ -1,109 +1,61 @@
 
-import { Bell, LogOut, User } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { Button } from '@/components/ui/button';
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 import LanguageToggle from '@/components/LanguageToggle';
-import { AnimatedAvatar } from '@/components/ui/animated-avatar';
+import { User, LogOut, Settings, GraduationCap } from 'lucide-react';
 
 const Header = () => {
   const { user, logout } = useAuth();
-  const { t } = useLanguage();
-
-  const getRoleDisplayName = (role: string) => {
-    switch (role) {
-      case 'guardian':
-        return t('roles.guardian');
-      case 'caseworker':
-        return t('roles.caseworker');
-      case 'admin':
-        return t('roles.admin');
-      default:
-        return role;
-    }
-  };
-
-  const getRoleBadgeColor = (role: string) => {
-    switch (role) {
-      case 'guardian':
-        return 'bg-green-100 text-green-800 border-green-300';
-      case 'caseworker':
-        return 'bg-purple-100 text-purple-800 border-purple-300';
-      case 'admin':
-        return 'bg-blue-100 text-blue-800 border-blue-300';
-      default:
-        return 'bg-gray-100 text-gray-800 border-gray-300';
-    }
-  };
 
   return (
-    <header className="bg-white border-b border-slate-200 px-6 py-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <h1 className="text-xl font-semibold text-oslo-blue">
-            {user?.role === 'guardian' && t('header.guardianPortal')}
-            {user?.role === 'caseworker' && t('header.caseworkerDashboard')}
-            {user?.role === 'admin' && t('header.adminPanel')}
-          </h1>
-          {user?.district && (
-            <Badge variant="outline" className="text-slate-600 border-slate-300">
-              {user.district}
-            </Badge>
-          )}
+    <header className="flex h-16 shrink-0 items-center gap-2 border-b border-slate-200 px-4 bg-white shadow-sm">
+      <SidebarTrigger className="-ml-1 text-oslo-blue hover:bg-oslo-blue/10" />
+      
+      <div className="flex items-center gap-3 ml-2">
+        <div className="w-8 h-8 bg-gradient-to-br from-oslo-blue to-blue-700 rounded-lg flex items-center justify-center">
+          <GraduationCap className="w-5 h-5 text-white" />
         </div>
-
-        <div className="flex items-center gap-4">
-          <LanguageToggle />
-          
-          <Button variant="ghost" size="sm" className="relative">
-            <Bell className="h-5 w-5" />
-            <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
-              3
-            </span>
-          </Button>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="flex items-center gap-3 hover:bg-oslo-blue/10">
-                <AnimatedAvatar
-                  name={user?.name || 'User'}
-                  role={user?.role === 'caseworker' ? 'Case Worker' : user?.role || 'Guardian'}
-                  size="sm"
-                  context="header"
-                  enableAnimation={true}
-                />
-                <div className="text-left">
-                  <p className="text-sm font-medium text-gray-900">{user?.name}</p>
-                  <Badge variant="outline" className={getRoleBadgeColor(user?.role || '')}>
-                    {getRoleDisplayName(user?.role || '')}
-                  </Badge>
-                </div>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-lg">
-              <DropdownMenuLabel className="font-normal">
-                <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">{user?.name}</p>
-                  <p className="text-xs leading-none text-muted-foreground">
-                    {user?.email}
-                  </p>
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <User className="mr-2 h-4 w-4" />
-                <span>{t('header.profile')}</span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={logout} className="text-red-600">
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>{t('header.logout')}</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        <div className="hidden md:block">
+          <h1 className="text-lg font-bold text-oslo-blue">IST Platform</h1>
+          <p className="text-xs text-slate-600 -mt-1">Kindergarten Management</p>
         </div>
+      </div>
+      
+      <div className="flex-1" />
+      
+      <div className="flex items-center gap-4">
+        <LanguageToggle />
+        
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="sm" className="gap-2 text-oslo-blue hover:bg-oslo-blue/10">
+              <div className="w-8 h-8 bg-oslo-blue/10 rounded-full flex items-center justify-center">
+                <User className="h-4 w-4 text-oslo-blue" />
+              </div>
+              <span className="hidden md:inline font-medium">{user?.name}</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56 bg-white border border-slate-200 shadow-lg z-50 rounded-lg">
+            <DropdownMenuItem className="gap-2 cursor-pointer hover:bg-oslo-blue/5 rounded-md">
+              <Settings className="h-4 w-4 text-slate-600" />
+              <span className="text-slate-700">Settings</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={logout}
+              className="gap-2 cursor-pointer text-red-600 hover:bg-red-50 hover:text-red-700 rounded-md"
+            >
+              <LogOut className="h-4 w-4" />
+              Logout
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   );
