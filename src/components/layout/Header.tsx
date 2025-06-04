@@ -1,6 +1,7 @@
 
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -9,22 +10,89 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import LanguageToggle from '@/components/LanguageToggle';
-import { User, LogOut, Settings, GraduationCap } from 'lucide-react';
+import { User, LogOut, Settings, GraduationCap, CheckCircle, Shield } from 'lucide-react';
 
 const Header = () => {
   const { user, logout } = useAuth();
 
+  const getRoleSpecificContent = () => {
+    if (user?.role === 'caseworker') {
+      return {
+        title: `Welcome, ${user?.name}`,
+        subtitle: 'Case Worker Dashboard',
+        description: 'Manage applications and support families in their kindergarten journey',
+        badges: [
+          { 
+            text: user?.district || 'Oslo District', 
+            variant: 'default' as const,
+            icon: <GraduationCap className="w-3 h-3 mr-1" />,
+            className: 'bg-gradient-to-r from-oslo-blue to-blue-600 text-white border-0 shadow-md'
+          },
+          { 
+            text: 'Active Session', 
+            variant: 'default' as const,
+            icon: <CheckCircle className="w-3 h-3 mr-1" />,
+            className: 'bg-gradient-to-r from-green-500 to-green-600 text-white border-0 shadow-md'
+          },
+          { 
+            text: 'Certified', 
+            variant: 'outline' as const,
+            icon: <Shield className="w-3 h-3 mr-1" />,
+            className: 'border-oslo-blue/30 text-oslo-blue bg-oslo-blue/5 backdrop-blur-sm'
+          }
+        ]
+      };
+    }
+    
+    // Default for other roles
+    return {
+      title: `Welcome, ${user?.name}`,
+      subtitle: 'Dashboard',
+      description: 'Manage your account and access services',
+      badges: [
+        { 
+          text: user?.district || 'Oslo District', 
+          variant: 'outline' as const,
+          className: 'text-oslo-blue border-oslo-blue/30 bg-white/10 backdrop-blur-sm'
+        }
+      ]
+    };
+  };
+
+  const content = getRoleSpecificContent();
+
   return (
-    <header className="flex h-16 shrink-0 items-center gap-2 border-b border-slate-200 px-4 bg-white shadow-sm">
+    <header className="flex h-20 shrink-0 items-center gap-2 border-b border-slate-200 px-4 bg-gradient-to-r from-white via-white to-oslo-blue/5 shadow-sm">
       <SidebarTrigger className="-ml-1 text-oslo-blue hover:bg-oslo-blue/10" />
       
-      <div className="flex items-center gap-3 ml-2">
-        <div className="w-8 h-8 bg-gradient-to-br from-oslo-blue to-blue-700 rounded-lg flex items-center justify-center">
-          <GraduationCap className="w-5 h-5 text-white" />
+      <div className="flex items-center gap-4 ml-2">
+        <div className="relative">
+          <div className="w-12 h-12 bg-gradient-to-br from-oslo-blue to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
+            <GraduationCap className="w-6 h-6 text-white" />
+          </div>
+          {user?.role === 'caseworker' && (
+            <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-md">
+              <CheckCircle className="w-3 h-3 text-white" />
+            </div>
+          )}
         </div>
         <div className="hidden md:block">
-          <h1 className="text-lg font-bold text-oslo-blue">IST Platform</h1>
-          <p className="text-xs text-slate-600 -mt-1">Kindergarten Management</p>
+          <div className="flex items-center gap-3 mb-1">
+            <h1 className="text-xl font-bold text-oslo-blue leading-none">{content.title}</h1>
+            <div className="flex items-center gap-2">
+              {content.badges.map((badge, index) => (
+                <Badge 
+                  key={index} 
+                  variant={badge.variant}
+                  className={`text-xs font-semibold shadow-sm ${badge.className || ''}`}
+                >
+                  {badge.icon}
+                  {badge.text}
+                </Badge>
+              ))}
+            </div>
+          </div>
+          <p className="text-sm text-slate-600 leading-tight">{content.description}</p>
         </div>
       </div>
       
@@ -35,11 +103,11 @@ const Header = () => {
         
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="gap-2 text-oslo-blue hover:bg-oslo-blue/10">
-              <div className="w-8 h-8 bg-oslo-blue/10 rounded-full flex items-center justify-center">
-                <User className="h-4 w-4 text-oslo-blue" />
+            <Button variant="ghost" size="sm" className="gap-2 text-oslo-blue hover:bg-oslo-blue/10 h-12">
+              <div className="w-9 h-9 bg-gradient-to-br from-oslo-blue/10 to-oslo-blue/20 rounded-full flex items-center justify-center shadow-sm">
+                <User className="h-5 w-5 text-oslo-blue" />
               </div>
-              <span className="hidden md:inline font-medium">{user?.name}</span>
+              <span className="hidden md:inline font-semibold">{user?.name}</span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56 bg-white border border-slate-200 shadow-lg z-50 rounded-lg">
