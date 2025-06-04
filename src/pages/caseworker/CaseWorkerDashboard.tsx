@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
+import { AnimatedAvatar } from '@/components/ui/animated-avatar';
 import { 
   FileText, 
   Clock, 
@@ -43,6 +44,8 @@ const CaseWorkerDashboard = () => {
       id: 1,
       type: 'application_submitted',
       description: 'New application submitted for Emma Larsen',
+      guardianName: 'Maria Larsen',
+      childName: 'Emma Larsen',
       time: '2 hours ago',
       priority: 'normal'
     },
@@ -50,6 +53,8 @@ const CaseWorkerDashboard = () => {
       id: 2,
       type: 'document_missing',
       description: 'Missing documents for Oliver Hansen application',
+      guardianName: 'Anna Hansen',
+      childName: 'Oliver Hansen',
       time: '4 hours ago',
       priority: 'high'
     },
@@ -57,6 +62,8 @@ const CaseWorkerDashboard = () => {
       id: 3,
       type: 'placement_confirmed',
       description: 'Placement confirmed at Løvenskiold Kindergarten',
+      guardianName: 'Erik Andersen',
+      childName: 'Sofia Andersen',
       time: '1 day ago',
       priority: 'normal'
     },
@@ -64,6 +71,8 @@ const CaseWorkerDashboard = () => {
       id: 4,
       type: 'message_received',
       description: 'Message received from guardian regarding application APP-125',
+      guardianName: 'Thomas Berg',
+      childName: 'Liam Berg',
       time: '1 day ago',
       priority: 'normal'
     }
@@ -241,22 +250,33 @@ const CaseWorkerDashboard = () => {
         <CardContent>
           <div className="space-y-4">
             {recentActivity.map((activity) => (
-              <div key={activity.id} className="flex items-start gap-4 p-4 border border-gray-200 rounded-xl">
-                <div className={`w-3 h-3 rounded-full mt-2 ${
-                  activity.priority === 'high' ? 'bg-red-500' : 'bg-blue-500'
-                }`}></div>
+              <div key={activity.id} className="flex items-start gap-4 p-4 border border-gray-200 rounded-xl hover:bg-gray-50/50 transition-colors">
+                <AnimatedAvatar
+                  name={activity.guardianName}
+                  role="Guardian"
+                  size="sm"
+                  context="message"
+                  enableAnimation={false}
+                />
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-900">{activity.description}</p>
-                  <p className="text-xs text-gray-500 flex items-center gap-1 mt-1">
-                    <Calendar className="h-3 w-3" />
-                    {activity.time}
-                  </p>
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">{activity.description}</p>
+                      <p className="text-xs text-gray-600 mt-1">
+                        Guardian: {activity.guardianName} • Child: {activity.childName}
+                      </p>
+                      <p className="text-xs text-gray-500 flex items-center gap-1 mt-2">
+                        <Calendar className="h-3 w-3" />
+                        {activity.time}
+                      </p>
+                    </div>
+                    {activity.priority === 'high' && (
+                      <Badge variant="outline" className="text-red-600 border-red-300 bg-red-50">
+                        Urgent
+                      </Badge>
+                    )}
+                  </div>
                 </div>
-                {activity.priority === 'high' && (
-                  <Badge variant="outline" className="text-red-600 border-red-300 bg-red-50">
-                    Urgent
-                  </Badge>
-                )}
               </div>
             ))}
           </div>

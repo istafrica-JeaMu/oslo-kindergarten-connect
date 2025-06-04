@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTranslation } from 'react-i18next';
+import { AnimatedAvatar } from '@/components/ui/animated-avatar';
 import { 
   Search, 
   Filter, 
@@ -260,9 +261,13 @@ const ReviewQueue = () => {
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-oslo-blue/10 rounded-xl flex items-center justify-center">
-                      <User className="h-6 w-6 text-oslo-blue" />
-                    </div>
+                    <AnimatedAvatar
+                      name={app.guardianName}
+                      role="Guardian"
+                      size="md"
+                      context="message"
+                      enableAnimation={false}
+                    />
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                         <h4 className="font-semibold text-gray-900">{app.childName}</h4>
@@ -278,7 +283,7 @@ const ReviewQueue = () => {
                           </Badge>
                         )}
                       </div>
-                      <p className="text-gray-600">{app.guardianName}</p>
+                      <p className="text-gray-600">Guardian: {app.guardianName}</p>
                       <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
                         <span className="flex items-center gap-1">
                           <Calendar className="h-4 w-4" />
