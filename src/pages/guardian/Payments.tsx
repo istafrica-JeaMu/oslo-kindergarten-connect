@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -30,6 +30,7 @@ const Payments = () => {
   const { t } = useTranslation();
   const [selectedInvoice, setSelectedInvoice] = useState<any>(null);
   const [showFeeReductionModal, setShowFeeReductionModal] = useState(false);
+  const [timeUntilDue, setTimeUntilDue] = useState<{ days: number; hours: number; minutes: number }>({ days: 0, hours: 0, minutes: 0 });
 
   // Mock payment data
   const paymentSummary = {
@@ -147,6 +148,33 @@ const Payments = () => {
     });
   };
 
+  // Calculate time until payment is due
+  useEffect(() => {
+    const calculateTimeUntilDue = () => {
+      const dueDate = new Date(paymentSummary.nextPaymentDue);
+      const now = new Date();
+      const timeDiff = dueDate.getTime() - now.getTime();
+      
+      if (timeDiff > 0) {
+        const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        
+        setTimeUntilDue({ days, hours, minutes });
+      } else {
+        setTimeUntilDue({ days: 0, hours: 0, minutes: 0 });
+      }
+    };
+
+    calculateTimeUntilDue();
+    const interval = setInterval(calculateTimeUntilDue, 60000); // Update every minute
+
+    return () => clearInterval(interval);
+  }, [paymentSummary.nextPaymentDue]);
+
+  const isOverdue = timeUntilDue.days === 0 && timeUntilDue.hours === 0 && timeUntilDue.minutes === 0;
+  const isUrgent = timeUntilDue.days <= 3;
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -155,37 +183,89 @@ const Payments = () => {
         <p className="text-gray-600 mt-2">{t('guardian.payments.description')}</p>
       </div>
 
-      {/* Outstanding Balance - Primary Focus */}
-      <Card className="shadow-xl border-0 bg-gradient-to-br from-red-50 to-red-100 border-red-200">
+      {/* Enhanced Outstanding Balance Card */}
+      <Card className={`shadow-xl border-0 ${isOverdue ? 'bg-gradient-to-br from-red-100 to-red-200 border-red-300' : isUrgent ? 'bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200' : 'bg-gradient-to-br from-red-50 to-red-100 border-red-200'}`}>
         <CardContent className="p-8">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div className="flex items-center gap-6">
-              <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center ring-4 ring-red-50">
-                <AlertCircle className="h-8 w-8 text-red-600" />
+              <div className={`w-16 h-16 ${isOverdue ? 'bg-red-200' : isUrgent ? 'bg-amber-100' : 'bg-red-100'} rounded-2xl flex items-center justify-center ring-4 ${isOverdue ? 'ring-red-100' : isUrgent ? 'ring-amber-50' : 'ring-red-50'}`}>
+                <AlertCircle className={`h-8 w-8 ${isOverdue ? 'text-red-700' : isUrgent ? 'text-amber-600' : 'text-red-600'}`} />
               </div>
               <div>
-                <p className="text-sm text-red-600 font-medium mb-1 uppercase tracking-wide">Outstanding Balance</p>
-                <p className="text-4xl font-bold text-red-700 mb-2">
+                <p className={`text-sm ${isOverdue ? 'text-red-700' : isUrgent ? 'text-amber-600' : 'text-red-600'} font-medium mb-1 uppercase tracking-wide`}>
+                  {isOverdue ? 'OVERDUE PAYMENT' : 'Outstanding Balance'}
+                </p>
+                <p className={`text-4xl font-bold ${isOverdue ? 'text-red-800' : isUrgent ? 'text-amber-700' : 'text-red-700'} mb-2`}>
                   {formatCurrency(paymentSummary.currentBalance)}
                 </p>
-                <div className="flex items-center gap-3 text-sm text-red-600">
+                
+                {/* Countdown Timer */}
+                <div className={`flex items-center gap-3 text-sm ${isOverdue ? 'text-red-700' : isUrgent ? 'text-amber-600' : 'text-red-600'} mb-3`}>
                   <div className="flex items-center gap-1">
                     <Clock className="h-4 w-4" />
-                    <span>Due: {paymentSummary.nextPaymentDue}</span>
+                    <span>Due: {formatDate(paymentSummary.nextPaymentDue)}</span>
                   </div>
-                  <div className="w-1 h-1 bg-red-400 rounded-full"></div>
+                  <div className="w-1 h-1 bg-current rounded-full"></div>
                   <span className="font-medium">2 unpaid invoices</span>
                 </div>
+
+                {!isOverdue && (
+                  <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg ${isUrgent ? 'bg-amber-200 text-amber-800' : 'bg-red-200 text-red-800'} text-sm font-medium`}>
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs">Time left:</span>
+                      <span className="font-bold">
+                        {timeUntilDue.days}d {timeUntilDue.hours}h {timeUntilDue.minutes}m
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {isOverdue && (
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-200 text-red-800 text-sm font-bold animate-pulse">
+                    <AlertTriangle className="h-4 w-4" />
+                    PAYMENT OVERDUE
+                  </div>
+                )}
               </div>
             </div>
-            <Button size="lg" className="bg-red-600 hover:bg-red-700 text-white px-8 shadow-lg hover:shadow-xl transition-all">
-              <ExternalLink className="h-5 w-5 mr-2" />
-              Pay Now
-            </Button>
+            
+            {/* Payment Actions */}
+            <div className="flex flex-col gap-3">
+              <Button 
+                size="lg" 
+                className={`${isOverdue ? 'bg-red-700 hover:bg-red-800' : 'bg-red-600 hover:bg-red-700'} text-white px-8 shadow-lg hover:shadow-xl transition-all`}
+              >
+                <ExternalLink className="h-5 w-5 mr-2" />
+                Pay Full Amount
+              </Button>
+              
+              {/* Quick Payment Options */}
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-red-300 text-red-700 hover:bg-red-50"
+                >
+                  Pay {formatCurrency(2220)}
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-red-300 text-red-700 hover:bg-red-50"
+                >
+                  Pay Half
+                </Button>
+              </div>
+              
+              <p className="text-xs text-gray-600 text-center">
+                Secure payment via bank transfer or card
+              </p>
+            </div>
           </div>
         </CardContent>
       </Card>
 
+      {/* Left Column - Payment Overview */}
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Left Column - Payment Overview */}
         <div className="lg:col-span-2 space-y-6">
