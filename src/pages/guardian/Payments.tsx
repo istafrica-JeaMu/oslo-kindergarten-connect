@@ -1,8 +1,10 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useTranslation } from 'react-i18next';
 import FeeReductionModal from '@/components/FeeReductionModal';
 import { 
@@ -15,7 +17,8 @@ import {
   DollarSign,
   FileText,
   Info,
-  Plus
+  Plus,
+  ExternalLink
 } from 'lucide-react';
 
 const Payments = () => {
@@ -25,9 +28,10 @@ const Payments = () => {
 
   // Mock payment data
   const paymentSummary = {
-    totalPaidThisYear: 36630,
-    savedWithReduction: 12210,
-    openInvoices: 2,
+    currentBalance: 4440, // Outstanding balance for unpaid invoices
+    nextPaymentDue: '2024-05-01',
+    monthlyFeeAfterReduction: 2220,
+    totalSavedThisYear: 12210,
     reductionApproved: true
   };
 
@@ -43,7 +47,9 @@ const Payments = () => {
       dueDate: '2024-04-01',
       status: 'paid',
       paidDate: '2024-03-28',
-      invoiceDate: '2024-03-01'
+      invoiceDate: '2024-03-01',
+      paymentMethod: 'Bank Transfer',
+      referenceNumber: 'REF-240328-001'
     },
     {
       id: 'INV-2024-004',
@@ -55,7 +61,9 @@ const Payments = () => {
       amountDue: 2220,
       dueDate: '2024-05-01',
       status: 'due',
-      invoiceDate: '2024-04-01'
+      invoiceDate: '2024-04-01',
+      paymentMethod: '-',
+      referenceNumber: 'INV-2024-004'
     },
     {
       id: 'INV-2024-005',
@@ -67,7 +75,9 @@ const Payments = () => {
       amountDue: 2220,
       dueDate: '2024-06-01',
       status: 'pending',
-      invoiceDate: '2024-05-01'
+      invoiceDate: '2024-05-01',
+      paymentMethod: '-',
+      referenceNumber: 'INV-2024-005'
     }
   ];
 
@@ -109,51 +119,20 @@ const Payments = () => {
         <p className="text-gray-600 mt-2">{t('guardian.payments.description')}</p>
       </div>
 
-      {/* Payment Summary */}
+      {/* Enhanced Payment Summary */}
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="shadow-lg border-0">
+        <Card className="shadow-lg border-0 bg-red-50 border-red-200">
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                <DollarSign className="h-6 w-6 text-green-600" />
+              <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+                <AlertTriangle className="h-6 w-6 text-red-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">{t('guardian.payments.totalPaid')}</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {formatCurrency(paymentSummary.totalPaidThisYear)}
+                <p className="text-sm text-red-600 font-medium">Outstanding Balance</p>
+                <p className="text-2xl font-bold text-red-700">
+                  {formatCurrency(paymentSummary.currentBalance)}
                 </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-lg border-0">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                <CheckCircle className="h-6 w-6 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">{t('guardian.payments.savedReduction')}</p>
-                <p className="text-2xl font-bold text-blue-600">
-                  {formatCurrency(paymentSummary.savedWithReduction)}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-lg border-0">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
-                <AlertTriangle className="h-6 w-6 text-yellow-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">{t('guardian.payments.openInvoices')}</p>
-                <p className="text-2xl font-bold text-yellow-600">
-                  {paymentSummary.openInvoices}
-                </p>
+                <p className="text-xs text-red-600">Due: {paymentSummary.nextPaymentDue}</p>
               </div>
             </div>
           </CardContent>
@@ -168,9 +147,43 @@ const Payments = () => {
               <div>
                 <p className="text-sm text-gray-600">Monthly Fee</p>
                 <p className="text-2xl font-bold text-purple-600">
-                  {formatCurrency(2220)}
+                  {formatCurrency(paymentSummary.monthlyFeeAfterReduction)}
                 </p>
                 <p className="text-xs text-gray-500">After reduction</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-lg border-0">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                <CheckCircle className="h-6 w-6 text-blue-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">{t('guardian.payments.savedReduction')}</p>
+                <p className="text-2xl font-bold text-blue-600">
+                  {formatCurrency(paymentSummary.totalSavedThisYear)}
+                </p>
+                <p className="text-xs text-gray-500">This year</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-lg border-0">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                <Calendar className="h-6 w-6 text-green-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Next Due Date</p>
+                <p className="text-lg font-bold text-gray-900">
+                  {paymentSummary.nextPaymentDue}
+                </p>
+                <p className="text-xs text-gray-500">5 days remaining</p>
               </div>
             </div>
           </CardContent>
@@ -217,69 +230,80 @@ const Payments = () => {
         </Card>
       )}
 
-      {/* Invoices */}
+      {/* Payment History Table */}
       <Card className="shadow-lg border-0">
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
             <div className="w-10 h-10 bg-oslo-blue/10 rounded-xl flex items-center justify-center">
               <FileText className="h-5 w-5 text-oslo-blue" />
             </div>
-            {t('guardian.payments.invoices')}
+            Payment History
           </CardTitle>
           <CardDescription>
-            {t('guardian.payments.invoicesDesc')}
+            Complete overview of all invoices and payments
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {invoices.map((invoice) => (
-              <div
-                key={invoice.id}
-                className="p-4 border border-gray-200 rounded-xl hover:border-oslo-blue/30 hover:bg-gray-50/50 transition-all cursor-pointer"
-                onClick={() => setSelectedInvoice(invoice)}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-oslo-blue/10 rounded-xl flex items-center justify-center">
-                      <FileText className="h-6 w-6 text-oslo-blue" />
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Invoice</TableHead>
+                <TableHead>Period</TableHead>
+                <TableHead>Due Date</TableHead>
+                <TableHead>Original Amount</TableHead>
+                <TableHead>Final Amount</TableHead>
+                <TableHead>Payment Method</TableHead>
+                <TableHead>Reference</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {invoices.map((invoice) => (
+                <TableRow key={invoice.id} className="hover:bg-gray-50">
+                  <TableCell className="font-medium">{invoice.id}</TableCell>
+                  <TableCell>{invoice.month}</TableCell>
+                  <TableCell>{invoice.dueDate}</TableCell>
+                  <TableCell>
+                    <div className="flex flex-col">
+                      <span className="line-through text-gray-500 text-sm">
+                        {formatCurrency(invoice.originalAmount)}
+                      </span>
+                      {invoice.reduction > 0 && (
+                        <span className="text-green-600 text-xs">
+                          -{formatCurrency(invoice.reduction)}
+                        </span>
+                      )}
                     </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">{invoice.month}</h4>
-                      <p className="text-gray-600">{invoice.child} • {invoice.kindergarten}</p>
-                      <p className="text-sm text-gray-500 flex items-center gap-2 mt-1">
-                        <Calendar className="h-4 w-4" />
-                        {t('guardian.payments.dueDate')}: {invoice.dueDate}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="flex items-center gap-2 mb-2">
-                      {getStatusBadge(invoice.status)}
-                    </div>
-                    {invoice.reduction > 0 && (
-                      <div className="text-sm text-gray-500 mb-1">
-                        <span className="line-through">{formatCurrency(invoice.originalAmount)}</span>
-                        <span className="text-green-600 ml-2">-{formatCurrency(invoice.reduction)}</span>
-                      </div>
-                    )}
-                    <p className="text-xl font-bold text-gray-900">
-                      {formatCurrency(invoice.amountDue)}
-                    </p>
-                    <div className="flex gap-2 mt-2">
+                  </TableCell>
+                  <TableCell className="font-semibold">
+                    {formatCurrency(invoice.amountDue)}
+                  </TableCell>
+                  <TableCell>{invoice.paymentMethod}</TableCell>
+                  <TableCell className="font-mono text-sm">{invoice.referenceNumber}</TableCell>
+                  <TableCell>{getStatusBadge(invoice.status)}</TableCell>
+                  <TableCell>
+                    <div className="flex gap-2">
+                      {invoice.status === 'due' && (
+                        <Button size="sm" className="bg-green-600 hover:bg-green-700">
+                          <ExternalLink className="h-4 w-4 mr-1" />
+                          Pay Now
+                        </Button>
+                      )}
                       <Button variant="outline" size="sm">
-                        <Eye className="h-4 w-4 mr-2" />
-                        {t('guardian.payments.view')}
+                        <Eye className="h-4 w-4 mr-1" />
+                        View
                       </Button>
                       <Button variant="outline" size="sm">
-                        <Download className="h-4 w-4 mr-2" />
-                        {t('guardian.payments.downloadPdf')}
+                        <Download className="h-4 w-4 mr-1" />
+                        PDF
                       </Button>
                     </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
 
