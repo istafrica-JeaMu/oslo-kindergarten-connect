@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -33,7 +32,6 @@ const GuardianDashboard = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
 
-  // Simulate data loading
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -211,17 +209,20 @@ const GuardianDashboard = () => {
                 <p className="text-slate-600 text-xl font-medium mt-2">
                   {t('guardian.dashboard.overview')}
                 </p>
-                <div className="flex items-center gap-3 mt-3">
-                  <Badge className="relative overflow-hidden bg-gradient-to-br from-oslo-blue/10 via-oslo-blue/15 to-oslo-blue/20 text-oslo-blue border-oslo-blue/30 font-bold px-4 py-2 shadow-lg hover:shadow-xl transition-all duration-300 group">
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                    <Shield className="w-4 h-4 mr-2 relative z-10" />
-                    <span className="relative z-10 text-sm font-semibold">Guardian Account</span>
+                <div className="flex items-center gap-4 mt-4">
+                  {/* Enhanced Guardian Account Badge */}
+                  <Badge className="relative overflow-hidden bg-gradient-to-r from-slate-100 via-slate-50 to-white text-slate-700 border-2 border-slate-300 hover:border-oslo-blue/50 font-bold px-5 py-3 shadow-lg hover:shadow-xl transition-all duration-300 group cursor-default">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                    <Shield className="w-5 h-5 mr-3 text-slate-600 relative z-10 drop-shadow-sm" />
+                    <span className="relative z-10 text-base font-bold tracking-wide">Guardian Account</span>
                   </Badge>
-                  <Badge className="relative overflow-hidden bg-gradient-to-br from-oslo-green/10 via-oslo-green/15 to-oslo-green/20 text-oslo-green border-oslo-green/30 font-bold px-4 py-2 shadow-lg hover:shadow-xl transition-all duration-300 group">
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-br from-oslo-green to-green-600 rounded-full animate-pulse shadow-md"></div>
-                    <Star className="w-4 h-4 mr-2 relative z-10 drop-shadow-sm" />
-                    <span className="relative z-10 text-sm font-semibold">Verified</span>
+                  
+                  {/* Enhanced Verified Badge - More Prominent */}
+                  <Badge className="relative overflow-hidden bg-gradient-to-r from-oslo-green via-green-500 to-green-600 text-white border-2 border-green-400 font-bold px-6 py-3 shadow-xl hover:shadow-2xl transition-all duration-300 group cursor-default transform hover:scale-105">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full animate-pulse shadow-lg border border-yellow-300"></div>
+                    <Star className="w-5 h-5 mr-3 relative z-10 drop-shadow-md text-yellow-100" />
+                    <span className="relative z-10 text-base font-bold tracking-wide drop-shadow-sm">✓ Verified</span>
                   </Badge>
                 </div>
               </div>
