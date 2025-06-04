@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -23,7 +22,8 @@ import {
   Clock,
   AlertCircle,
   TrendingDown,
-  Wallet
+  Wallet,
+  MoreHorizontal
 } from 'lucide-react';
 
 const Payments = () => {
@@ -99,13 +99,33 @@ const Payments = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'paid':
-        return <Badge className="bg-green-100 text-green-800 border-green-300">{t('common.status.paid')}</Badge>;
+        return (
+          <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 font-medium">
+            <CheckCircle className="h-3 w-3 mr-1" />
+            {t('common.status.paid')}
+          </Badge>
+        );
       case 'due':
-        return <Badge className="bg-yellow-100 text-yellow-800 border-yellow-300">{t('common.status.due')}</Badge>;
+        return (
+          <Badge className="bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100 font-medium">
+            <Clock className="h-3 w-3 mr-1" />
+            {t('common.status.due')}
+          </Badge>
+        );
       case 'overdue':
-        return <Badge className="bg-red-100 text-red-800 border-red-300">{t('common.status.overdue')}</Badge>;
+        return (
+          <Badge className="bg-red-50 text-red-700 border-red-200 hover:bg-red-100 font-medium">
+            <AlertTriangle className="h-3 w-3 mr-1" />
+            {t('common.status.overdue')}
+          </Badge>
+        );
       case 'pending':
-        return <Badge className="bg-blue-100 text-blue-800 border-blue-300">{t('common.status.pending')}</Badge>;
+        return (
+          <Badge className="bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100 font-medium">
+            <Calendar className="h-3 w-3 mr-1" />
+            {t('common.status.pending')}
+          </Badge>
+        );
       default:
         return <Badge variant="outline">Unknown</Badge>;
     }
@@ -117,6 +137,14 @@ const Payments = () => {
       currency: 'NOK',
       minimumFractionDigits: 0
     }).format(amount);
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('nb-NO', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    });
   };
 
   return (
@@ -164,23 +192,23 @@ const Payments = () => {
           {/* Payment Summary Grid */}
           <div className="grid md:grid-cols-3 gap-6">
             {/* Monthly Fee Card */}
-            <Card className="border-0 shadow-lg bg-gradient-to-br from-blue-50 to-blue-100">
+            <Card className="border-0 shadow-lg bg-gradient-to-br from-blue-50 to-blue-100 hover:shadow-xl transition-all duration-300">
               <CardContent className="p-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center ring-2 ring-blue-50">
-                    <Wallet className="h-5 w-5 text-blue-600" />
+                  <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center ring-2 ring-blue-50">
+                    <Wallet className="h-6 w-6 text-blue-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-blue-600 font-medium uppercase tracking-wide">Monthly Fee</p>
+                    <p className="text-xs text-blue-600 font-semibold uppercase tracking-wider">Monthly Fee</p>
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <p className="text-2xl font-bold text-blue-800">
+                <div className="space-y-3">
+                  <p className="text-3xl font-bold text-blue-800">
                     {formatCurrency(paymentSummary.monthlyFeeAfterReduction)}
                   </p>
-                  <div className="flex items-center gap-2 text-xs">
-                    <span className="text-gray-500 line-through">{formatCurrency(paymentSummary.originalMonthlyFee)}</span>
-                    <Badge className="bg-green-100 text-green-700 border-green-200 text-xs px-2 py-0.5">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-500 line-through">{formatCurrency(paymentSummary.originalMonthlyFee)}</span>
+                    <Badge className="bg-green-100 text-green-700 border-green-200 text-xs px-2 py-1 font-medium">
                       {Math.round(((paymentSummary.originalMonthlyFee - paymentSummary.monthlyFeeAfterReduction) / paymentSummary.originalMonthlyFee) * 100)}% off
                     </Badge>
                   </div>
@@ -189,44 +217,44 @@ const Payments = () => {
             </Card>
 
             {/* Total Paid Card */}
-            <Card className="border-0 shadow-lg bg-gradient-to-br from-emerald-50 to-emerald-100">
+            <Card className="border-0 shadow-lg bg-gradient-to-br from-emerald-50 to-emerald-100 hover:shadow-xl transition-all duration-300">
               <CardContent className="p-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center ring-2 ring-emerald-50">
-                    <CheckCircle className="h-5 w-5 text-emerald-600" />
+                  <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center ring-2 ring-emerald-50">
+                    <CheckCircle className="h-6 w-6 text-emerald-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-emerald-600 font-medium uppercase tracking-wide">Paid in 2024</p>
+                    <p className="text-xs text-emerald-600 font-semibold uppercase tracking-wider">Paid in 2024</p>
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <p className="text-2xl font-bold text-emerald-800">
+                <div className="space-y-3">
+                  <p className="text-3xl font-bold text-emerald-800">
                     {formatCurrency(paymentSummary.totalPaidThisYear)}
                   </p>
-                  <p className="text-xs text-emerald-600 flex items-center gap-1">
+                  <p className="text-sm text-emerald-600 flex items-center gap-2">
                     <span>3 payments completed</span>
-                    <CheckCircle className="h-3 w-3" />
+                    <CheckCircle className="h-4 w-4" />
                   </p>
                 </div>
               </CardContent>
             </Card>
 
             {/* Total Saved Card */}
-            <Card className="border-0 shadow-lg bg-gradient-to-br from-purple-50 to-purple-100">
+            <Card className="border-0 shadow-lg bg-gradient-to-br from-purple-50 to-purple-100 hover:shadow-xl transition-all duration-300">
               <CardContent className="p-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center ring-2 ring-purple-50">
-                    <TrendingDown className="h-5 w-5 text-purple-600" />
+                  <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center ring-2 ring-purple-50">
+                    <TrendingDown className="h-6 w-6 text-purple-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-purple-600 font-medium uppercase tracking-wide">Total Saved</p>
+                    <p className="text-xs text-purple-600 font-semibold uppercase tracking-wider">Total Saved</p>
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <p className="text-2xl font-bold text-purple-800">
+                <div className="space-y-3">
+                  <p className="text-3xl font-bold text-purple-800">
                     {formatCurrency(paymentSummary.totalSavedThisYear)}
                   </p>
-                  <p className="text-xs text-purple-600">
+                  <p className="text-sm text-purple-600">
                     Since fee reduction approval
                   </p>
                 </div>
@@ -279,69 +307,102 @@ const Payments = () => {
         </div>
       </div>
 
-      {/* Payment History - Full Width */}
-      <Card className="shadow-lg border-0">
-        <CardHeader>
+      {/* Payment History - Enhanced Table */}
+      <Card className="shadow-lg border-0 bg-white">
+        <CardHeader className="pb-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-oslo-blue/10 rounded-xl flex items-center justify-center">
                 <FileText className="h-5 w-5 text-oslo-blue" />
               </div>
               <div>
-                <CardTitle>Payment History</CardTitle>
-                <CardDescription>Complete overview of all invoices and payments</CardDescription>
+                <CardTitle className="text-gray-900">Payment History</CardTitle>
+                <CardDescription>Your complete invoice and payment records</CardDescription>
               </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" className="text-sm">
+                <Download className="h-4 w-4 mr-2" />
+                Export All
+              </Button>
             </div>
           </div>
         </CardHeader>
-        <CardContent>
-          <div className="rounded-lg border border-gray-200 overflow-hidden">
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow className="bg-gray-50">
-                  <TableHead className="font-semibold">Invoice</TableHead>
-                  <TableHead className="font-semibold">Period</TableHead>
-                  <TableHead className="font-semibold">Due Date</TableHead>
-                  <TableHead className="font-semibold">Amount</TableHead>
-                  <TableHead className="font-semibold">Status</TableHead>
-                  <TableHead className="font-semibold">Actions</TableHead>
+                <TableRow className="bg-gray-50/50 border-b border-gray-200">
+                  <TableHead className="font-semibold text-gray-700 px-6 py-4">Period</TableHead>
+                  <TableHead className="font-semibold text-gray-700 px-4 py-4">Amount</TableHead>
+                  <TableHead className="font-semibold text-gray-700 px-4 py-4">Due Date</TableHead>
+                  <TableHead className="font-semibold text-gray-700 px-4 py-4">Status</TableHead>
+                  <TableHead className="font-semibold text-gray-700 px-4 py-4 text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {invoices.map((invoice) => (
-                  <TableRow key={invoice.id} className="hover:bg-gray-50 transition-colors">
-                    <TableCell className="font-medium">{invoice.id}</TableCell>
-                    <TableCell>{invoice.month}</TableCell>
-                    <TableCell>{invoice.dueDate}</TableCell>
-                    <TableCell>
-                      <div className="flex flex-col">
-                        <span className="font-semibold">
+                {invoices.map((invoice, index) => (
+                  <TableRow 
+                    key={invoice.id} 
+                    className={`
+                      hover:bg-gray-50/50 transition-colors border-b border-gray-100 last:border-b-0
+                      ${invoice.status === 'due' ? 'bg-amber-50/30' : ''}
+                      ${invoice.status === 'overdue' ? 'bg-red-50/30' : ''}
+                    `}
+                  >
+                    <TableCell className="px-6 py-4">
+                      <div className="space-y-1">
+                        <p className="font-medium text-gray-900">{invoice.month}</p>
+                        <p className="text-xs text-gray-500 font-mono">{invoice.id}</p>
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-4 py-4">
+                      <div className="space-y-1">
+                        <p className="font-semibold text-gray-900 text-lg">
                           {formatCurrency(invoice.amountDue)}
-                        </span>
+                        </p>
                         {invoice.reduction > 0 && (
-                          <span className="text-xs text-green-600">
-                            {formatCurrency(invoice.reduction)} saved
-                          </span>
+                          <div className="flex items-center gap-1">
+                            <span className="text-xs text-gray-400 line-through">
+                              {formatCurrency(invoice.originalAmount)}
+                            </span>
+                            <Badge className="bg-green-50 text-green-600 border-green-200 text-xs px-1.5 py-0.5">
+                              -{formatCurrency(invoice.reduction)}
+                            </Badge>
+                          </div>
                         )}
                       </div>
                     </TableCell>
-                    <TableCell>{getStatusBadge(invoice.status)}</TableCell>
-                    <TableCell>
-                      <div className="flex gap-2">
+                    <TableCell className="px-4 py-4">
+                      <div className="space-y-1">
+                        <p className="font-medium text-gray-700">{formatDate(invoice.dueDate)}</p>
+                        {invoice.status === 'paid' && invoice.paidDate && (
+                          <p className="text-xs text-green-600">Paid {formatDate(invoice.paidDate)}</p>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-4 py-4">
+                      {getStatusBadge(invoice.status)}
+                    </TableCell>
+                    <TableCell className="px-4 py-4">
+                      <div className="flex items-center justify-end gap-2">
                         {invoice.status === 'due' && (
-                          <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                            <ExternalLink className="h-4 w-4 mr-1" />
-                            Pay
+                          <Button 
+                            size="sm" 
+                            className="bg-green-600 hover:bg-green-700 text-white shadow-sm hover:shadow-md transition-all"
+                          >
+                            <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
+                            Pay Now
                           </Button>
                         )}
-                        <Button variant="outline" size="sm">
-                          <Eye className="h-4 w-4 mr-1" />
-                          View
-                        </Button>
-                        <Button variant="outline" size="sm">
-                          <Download className="h-4 w-4 mr-1" />
-                          PDF
-                        </Button>
+                        <div className="flex items-center gap-1">
+                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
+                            <Eye className="h-3.5 w-3.5" />
+                          </Button>
+                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
+                            <Download className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
                       </div>
                     </TableCell>
                   </TableRow>
