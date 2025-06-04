@@ -19,7 +19,10 @@ import {
   ArrowRight,
   Calendar,
   User,
-  GraduationCap
+  GraduationCap,
+  TrendingUp,
+  Bell,
+  Star
 } from 'lucide-react';
 
 const GuardianDashboard = () => {
@@ -43,14 +46,16 @@ const GuardianDashboard = () => {
       childName: 'Emma Hansen',
       status: 'submitted',
       submittedDate: '2024-03-15',
-      kindergarten: 'Løvenskiold Kindergarten'
+      kindergarten: 'Løvenskiold Kindergarten',
+      priority: 'high'
     },
     {
       id: 'APP-002',
       childName: 'Oliver Hansen',
       status: 'placed',
       submittedDate: '2024-02-20',
-      kindergarten: 'Sinsen Kindergarten'
+      kindergarten: 'Sinsen Kindergarten',
+      priority: 'normal'
     }
   ];
 
@@ -60,14 +65,16 @@ const GuardianDashboard = () => {
       from: 'Løvenskiold Kindergarten',
       subject: 'Welcome to our kindergarten',
       date: '2024-03-18',
-      unread: true
+      unread: true,
+      type: 'welcome'
     },
     {
       id: 2,
       from: 'Oslo Municipality',
       subject: 'Application status update',
       date: '2024-03-16',
-      unread: false
+      unread: false,
+      type: 'update'
     }
   ];
 
@@ -88,14 +95,36 @@ const GuardianDashboard = () => {
     }
   ];
 
+  const stats = [
+    { label: 'Active Applications', value: '2', change: '+1', trend: 'up' },
+    { label: 'Placed Children', value: '1', change: '0', trend: 'stable' },
+    { label: 'Pending Payments', value: '1', change: '0', trend: 'stable' },
+    { label: 'Unread Messages', value: '1', change: '+1', trend: 'up' }
+  ];
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'submitted':
-        return <Badge variant="outline" className="text-yellow-700 border-yellow-300 bg-yellow-50 font-medium">{t('common.status.submitted')}</Badge>;
+        return (
+          <Badge className="bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 border-yellow-300 font-semibold shadow-sm">
+            <Clock className="w-3 h-3 mr-1" />
+            {t('common.status.submitted')}
+          </Badge>
+        );
       case 'placed':
-        return <Badge variant="outline" className="text-oslo-green border-green-300 bg-green-50 font-medium">{t('common.status.placed')}</Badge>;
+        return (
+          <Badge className="bg-gradient-to-r from-green-100 to-green-200 text-green-800 border-green-300 font-semibold shadow-sm">
+            <CheckCircle className="w-3 h-3 mr-1" />
+            {t('common.status.placed')}
+          </Badge>
+        );
       case 'rejected':
-        return <Badge variant="outline" className="text-red-700 border-red-300 bg-red-50 font-medium">{t('common.status.rejected')}</Badge>;
+        return (
+          <Badge className="bg-gradient-to-r from-red-100 to-red-200 text-red-800 border-red-300 font-semibold shadow-sm">
+            <AlertCircle className="w-3 h-3 mr-1" />
+            {t('common.status.rejected')}
+          </Badge>
+        );
       default:
         return <Badge variant="outline">Unknown</Badge>;
     }
@@ -107,21 +136,37 @@ const GuardianDashboard = () => {
 
   if (isLoading) {
     return (
-      <div className="space-y-8">
+      <div className="space-y-8 animate-fade-in">
         <div className="flex justify-between items-center">
-          <div className="space-y-3">
-            <Skeleton className="h-10 w-80" />
-            <Skeleton className="h-5 w-96" />
+          <div className="space-y-4">
+            <Skeleton className="h-12 w-96 bg-gradient-to-r from-slate-200 to-slate-300" />
+            <Skeleton className="h-6 w-80 bg-gradient-to-r from-slate-200 to-slate-300" />
+            <Skeleton className="h-5 w-32 bg-gradient-to-r from-slate-200 to-slate-300" />
           </div>
-          <Skeleton className="h-12 w-40" />
+          <Skeleton className="h-14 w-48 bg-gradient-to-r from-oslo-blue/20 to-blue-300/20" />
+        </div>
+
+        {/* Stats skeleton */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+          {[...Array(4)].map((_, i) => (
+            <Card key={i} className="p-6 animate-pulse">
+              <div className="flex items-center justify-between">
+                <div className="space-y-3">
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-8 w-12" />
+                </div>
+                <Skeleton className="h-12 w-12 rounded-xl" />
+              </div>
+            </Card>
+          ))}
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[...Array(4)].map((_, i) => (
-            <Card key={i} className="p-6">
+            <Card key={i} className="p-6 animate-pulse">
               <div className="flex items-center space-x-4">
-                <Skeleton className="h-12 w-12 rounded-xl" />
-                <div className="space-y-2">
+                <Skeleton className="h-14 w-14 rounded-xl" />
+                <div className="space-y-2 flex-1">
                   <Skeleton className="h-5 w-24" />
                   <Skeleton className="h-4 w-32" />
                 </div>
@@ -131,10 +176,10 @@ const GuardianDashboard = () => {
         </div>
 
         <div className="space-y-6">
-          <Skeleton className="h-64 w-full rounded-xl" />
+          <Skeleton className="h-80 w-full rounded-xl" />
           <div className="grid lg:grid-cols-2 gap-6">
-            <Skeleton className="h-80 w-full rounded-xl" />
-            <Skeleton className="h-80 w-full rounded-xl" />
+            <Skeleton className="h-96 w-full rounded-xl" />
+            <Skeleton className="h-96 w-full rounded-xl" />
           </div>
         </div>
       </div>
@@ -142,213 +187,319 @@ const GuardianDashboard = () => {
   }
 
   return (
-    <div className="space-y-8">
-      {/* Header Section */}
-      <div className="flex justify-between items-start">
-        <div className="space-y-3">
-          <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-oslo-blue to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
-              <GraduationCap className="w-7 h-7 text-white" />
+    <div className="space-y-10 animate-fade-in">
+      {/* Enhanced Header Section */}
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-oslo-blue/5 via-transparent to-oslo-green/5 rounded-3xl -z-10" />
+        <div className="flex justify-between items-start p-8">
+          <div className="space-y-4">
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <div className="w-16 h-16 bg-gradient-to-br from-oslo-blue via-blue-600 to-blue-700 rounded-2xl flex items-center justify-center shadow-xl">
+                  <GraduationCap className="w-9 h-9 text-white" />
+                </div>
+                <div className="absolute -top-1 -right-1 w-6 h-6 bg-oslo-green rounded-full flex items-center justify-center">
+                  <CheckCircle className="w-4 h-4 text-white" />
+                </div>
+              </div>
+              <div>
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 via-slate-800 to-slate-700 bg-clip-text text-transparent">
+                  {t('guardian.dashboard.welcome')}, {user?.name}
+                </h1>
+                <p className="text-slate-600 text-xl font-medium mt-2">
+                  {t('guardian.dashboard.overview')}
+                </p>
+                <div className="flex items-center gap-3 mt-3">
+                  <Badge className="bg-gradient-to-r from-oslo-blue/10 to-oslo-blue/20 text-oslo-blue border-oslo-blue/30 font-semibold">
+                    Guardian Account
+                  </Badge>
+                  <Badge className="bg-gradient-to-r from-oslo-green/10 to-oslo-green/20 text-oslo-green border-oslo-green/30 font-semibold">
+                    <Star className="w-3 h-3 mr-1" />
+                    Verified
+                  </Badge>
+                </div>
+              </div>
             </div>
-            {t('guardian.dashboard.welcome')}, {user?.name}
-          </h1>
-          <p className="text-slate-600 text-lg font-medium ml-15">
-            {t('guardian.dashboard.overview')}
-          </p>
-          <Badge variant="outline" className="text-oslo-blue border-oslo-blue/30 bg-oslo-blue/5 font-medium ml-15">
-            Guardian Account
-          </Badge>
+          </div>
+          <Button 
+            onClick={handleNewApplication}
+            size="lg"
+            className="bg-gradient-to-r from-oslo-blue to-blue-700 hover:from-oslo-blue/90 hover:to-blue-700/90 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 px-8 py-6 text-lg font-semibold"
+          >
+            <Plus className="h-6 w-6 mr-3" />
+            {t('guardian.dashboard.newApplication')}
+          </Button>
         </div>
-        <Button 
-          onClick={handleNewApplication}
-          variant="default"
-          size="lg"
-          className="shadow-lg hover:shadow-xl transition-all duration-200"
-        >
-          <Plus className="h-5 w-5 mr-2" />
-          {t('guardian.dashboard.newApplication')}
-        </Button>
       </div>
 
-      {/* Quick Actions Grid */}
+      {/* Enhanced Stats Overview */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+        {stats.map((stat, index) => (
+          <Card key={index} className="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 group">
+            <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50 to-slate-100" />
+            <CardContent className="relative p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-slate-600 mb-2">{stat.label}</p>
+                  <div className="flex items-baseline gap-2">
+                    <p className="text-3xl font-bold text-slate-900">{stat.value}</p>
+                    {stat.change !== '0' && (
+                      <span className={`text-sm font-semibold flex items-center ${
+                        stat.trend === 'up' ? 'text-oslo-green' : 'text-oslo-blue'
+                      }`}>
+                        <TrendingUp className="w-3 h-3 mr-1" />
+                        {stat.change}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110 ${
+                  index === 0 ? 'bg-gradient-to-br from-oslo-blue/10 to-oslo-blue/20' :
+                  index === 1 ? 'bg-gradient-to-br from-oslo-green/10 to-oslo-green/20' :
+                  index === 2 ? 'bg-gradient-to-br from-purple-100 to-purple-200' :
+                  'bg-gradient-to-br from-blue-100 to-blue-200'
+                }`}>
+                  {index === 0 && <FileText className="h-7 w-7 text-oslo-blue" />}
+                  {index === 1 && <CheckCircle className="h-7 w-7 text-oslo-green" />}
+                  {index === 2 && <CreditCard className="h-7 w-7 text-purple-600" />}
+                  {index === 3 && <Bell className="h-7 w-7 text-blue-600" />}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Enhanced Quick Actions Grid */}
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Link to="/guardian/new-application" className="group">
-          <Card className="hover:shadow-lg transition-all duration-200 border-2 hover:border-oslo-blue/30 cursor-pointer group-hover:scale-[1.02] h-full">
-            <CardContent className="flex items-center p-6">
-              <div className="w-14 h-14 bg-oslo-blue/10 rounded-xl flex items-center justify-center mr-4 group-hover:bg-oslo-blue/20 transition-colors">
-                <FileText className="h-7 w-7 text-oslo-blue" />
+          <Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer group-hover:scale-[1.02] h-full">
+            <div className="absolute inset-0 bg-gradient-to-br from-oslo-blue/5 via-white to-oslo-blue/10" />
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-oslo-blue/10 to-transparent rounded-full transform translate-x-16 -translate-y-16" />
+            <CardContent className="relative flex items-center p-8">
+              <div className="w-16 h-16 bg-gradient-to-br from-oslo-blue/10 to-oslo-blue/20 rounded-2xl flex items-center justify-center mr-6 group-hover:bg-gradient-to-br group-hover:from-oslo-blue/20 group-hover:to-oslo-blue/30 transition-all duration-300 group-hover:scale-110">
+                <FileText className="h-8 w-8 text-oslo-blue" />
               </div>
               <div className="flex-1">
-                <h3 className="font-bold text-slate-900 group-hover:text-oslo-blue transition-colors text-lg">
+                <h3 className="font-bold text-slate-900 group-hover:text-oslo-blue transition-colors text-xl mb-2">
                   {t('guardian.dashboard.newApplication')}
                 </h3>
-                <p className="text-sm text-slate-600 mt-1">{t('guardian.dashboard.newApplicationDesc')}</p>
+                <p className="text-sm text-slate-600 leading-relaxed">{t('guardian.dashboard.newApplicationDesc')}</p>
               </div>
-              <ArrowRight className="h-5 w-5 text-slate-400 ml-2 group-hover:text-oslo-blue transition-colors" />
+              <ArrowRight className="h-6 w-6 text-slate-400 ml-4 group-hover:text-oslo-blue group-hover:translate-x-1 transition-all duration-300" />
             </CardContent>
           </Card>
         </Link>
 
         <Link to="/guardian/application-status" className="group">
-          <Card className="hover:shadow-lg transition-all duration-200 border-2 hover:border-oslo-green/30 cursor-pointer group-hover:scale-[1.02] h-full">
-            <CardContent className="flex items-center p-6">
-              <div className="w-14 h-14 bg-oslo-green/10 rounded-xl flex items-center justify-center mr-4 group-hover:bg-oslo-green/20 transition-colors">
-                <Clock className="h-7 w-7 text-oslo-green" />
+          <Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer group-hover:scale-[1.02] h-full">
+            <div className="absolute inset-0 bg-gradient-to-br from-oslo-green/5 via-white to-oslo-green/10" />
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-oslo-green/10 to-transparent rounded-full transform translate-x-16 -translate-y-16" />
+            <CardContent className="relative flex items-center p-8">
+              <div className="w-16 h-16 bg-gradient-to-br from-oslo-green/10 to-oslo-green/20 rounded-2xl flex items-center justify-center mr-6 group-hover:bg-gradient-to-br group-hover:from-oslo-green/20 group-hover:to-oslo-green/30 transition-all duration-300 group-hover:scale-110">
+                <Clock className="h-8 w-8 text-oslo-green" />
               </div>
               <div className="flex-1">
-                <h3 className="font-bold text-slate-900 group-hover:text-oslo-green transition-colors text-lg">
+                <h3 className="font-bold text-slate-900 group-hover:text-oslo-green transition-colors text-xl mb-2">
                   {t('guardian.dashboard.applicationStatus')}
                 </h3>
-                <p className="text-sm text-slate-600 mt-1">{t('guardian.dashboard.applicationStatusDesc')}</p>
+                <p className="text-sm text-slate-600 leading-relaxed">{t('guardian.dashboard.applicationStatusDesc')}</p>
               </div>
-              <ArrowRight className="h-5 w-5 text-slate-400 ml-2 group-hover:text-oslo-green transition-colors" />
+              <ArrowRight className="h-6 w-6 text-slate-400 ml-4 group-hover:text-oslo-green group-hover:translate-x-1 transition-all duration-300" />
             </CardContent>
           </Card>
         </Link>
 
         <Link to="/guardian/messages" className="group">
-          <Card className="hover:shadow-lg transition-all duration-200 border-2 hover:border-blue-300 cursor-pointer group-hover:scale-[1.02] h-full">
-            <CardContent className="flex items-center p-6">
-              <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mr-4 group-hover:bg-blue-200 transition-colors relative">
-                <MessageSquare className="h-7 w-7 text-blue-600" />
+          <Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer group-hover:scale-[1.02] h-full">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-blue-100" />
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-100 to-transparent rounded-full transform translate-x-16 -translate-y-16" />
+            <CardContent className="relative flex items-center p-8">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl flex items-center justify-center mr-6 group-hover:bg-gradient-to-br group-hover:from-blue-200 group-hover:to-blue-300 transition-all duration-300 group-hover:scale-110 relative">
+                <MessageSquare className="h-8 w-8 text-blue-600" />
                 {messages.filter(m => m.unread).length > 0 && (
-                  <span className="absolute -top-1 -right-1 h-6 w-6 bg-red-500 rounded-full text-xs text-white flex items-center justify-center font-bold shadow-md">
+                  <span className="absolute -top-2 -right-2 h-7 w-7 bg-gradient-to-br from-red-500 to-red-600 rounded-full text-xs text-white flex items-center justify-center font-bold shadow-lg animate-pulse">
                     {messages.filter(m => m.unread).length}
                   </span>
                 )}
               </div>
               <div className="flex-1">
-                <h3 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors text-lg">
+                <h3 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors text-xl mb-2">
                   {t('guardian.dashboard.messages')}
                 </h3>
-                <p className="text-sm text-slate-600 mt-1">{messages.filter(m => m.unread).length} {t('guardian.dashboard.messagesDesc')}</p>
+                <p className="text-sm text-slate-600 leading-relaxed">{messages.filter(m => m.unread).length} {t('guardian.dashboard.messagesDesc')}</p>
               </div>
-              <ArrowRight className="h-5 w-5 text-slate-400 ml-2 group-hover:text-blue-600 transition-colors" />
+              <ArrowRight className="h-6 w-6 text-slate-400 ml-4 group-hover:text-blue-600 group-hover:translate-x-1 transition-all duration-300" />
             </CardContent>
           </Card>
         </Link>
 
         <Link to="/guardian/payments" className="group">
-          <Card className="hover:shadow-lg transition-all duration-200 border-2 hover:border-purple-300 cursor-pointer group-hover:scale-[1.02] h-full">
-            <CardContent className="flex items-center p-6">
-              <div className="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mr-4 group-hover:bg-purple-200 transition-colors">
-                <CreditCard className="h-7 w-7 text-purple-600" />
+          <Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer group-hover:scale-[1.02] h-full">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-white to-purple-100" />
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-100 to-transparent rounded-full transform translate-x-16 -translate-y-16" />
+            <CardContent className="relative flex items-center p-8">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl flex items-center justify-center mr-6 group-hover:bg-gradient-to-br group-hover:from-purple-200 group-hover:to-purple-300 transition-all duration-300 group-hover:scale-110">
+                <CreditCard className="h-8 w-8 text-purple-600" />
               </div>
               <div className="flex-1">
-                <h3 className="font-bold text-slate-900 group-hover:text-purple-600 transition-colors text-lg">
+                <h3 className="font-bold text-slate-900 group-hover:text-purple-600 transition-colors text-xl mb-2">
                   {t('guardian.dashboard.payments')}
                 </h3>
-                <p className="text-sm text-slate-600 mt-1">{t('guardian.dashboard.paymentsDesc')}</p>
+                <p className="text-sm text-slate-600 leading-relaxed">{t('guardian.dashboard.paymentsDesc')}</p>
               </div>
-              <ArrowRight className="h-5 w-5 text-slate-400 ml-2 group-hover:text-purple-600 transition-colors" />
+              <ArrowRight className="h-6 w-6 text-slate-400 ml-4 group-hover:text-purple-600 group-hover:translate-x-1 transition-all duration-300" />
             </CardContent>
           </Card>
         </Link>
       </div>
 
-      {/* Applications Overview */}
-      <Card className="shadow-lg border-0">
-        <CardHeader className="pb-4">
-          <CardTitle className="flex items-center gap-4 text-2xl">
-            <div className="w-12 h-12 bg-oslo-blue/10 rounded-xl flex items-center justify-center">
-              <FileText className="h-6 w-6 text-oslo-blue" />
+      {/* Enhanced Applications Overview */}
+      <Card className="relative overflow-hidden border-0 shadow-xl">
+        <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50/50 to-oslo-gray/30" />
+        <CardHeader className="relative pb-6 border-b border-slate-200/50">
+          <CardTitle className="flex items-center gap-6 text-3xl">
+            <div className="w-14 h-14 bg-gradient-to-br from-oslo-blue/10 to-oslo-blue/20 rounded-2xl flex items-center justify-center">
+              <FileText className="h-7 w-7 text-oslo-blue" />
             </div>
-            {t('guardian.dashboard.myApplications')}
+            <div>
+              <h2 className="text-2xl font-bold text-slate-900">{t('guardian.dashboard.myApplications')}</h2>
+              <p className="text-base text-slate-600 font-normal mt-1">{t('guardian.dashboard.applicationsOverview')}</p>
+            </div>
           </CardTitle>
-          <CardDescription className="text-base ml-16">
-            {t('guardian.dashboard.applicationsOverview')}
-          </CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {applications.map((app) => (
-              <div key={app.id} className="flex items-center justify-between p-6 border-2 border-slate-200 rounded-xl hover:border-oslo-blue/30 hover:bg-oslo-gray/30 transition-all cursor-pointer">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 bg-oslo-blue/10 rounded-xl flex items-center justify-center">
-                    <User className="h-7 w-7 text-oslo-blue" />
+        <CardContent className="relative p-8">
+          <div className="space-y-6">
+            {applications.map((app, index) => (
+              <div key={app.id} className="group cursor-pointer">
+                <div className="flex items-center justify-between p-8 border-2 border-slate-200 rounded-2xl hover:border-oslo-blue/40 hover:bg-gradient-to-r hover:from-oslo-blue/5 hover:to-transparent transition-all duration-300 hover:shadow-lg">
+                  <div className="flex items-center gap-6">
+                    <div className="relative">
+                      <div className="w-16 h-16 bg-gradient-to-br from-oslo-blue/10 to-oslo-blue/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <User className="h-8 w-8 text-oslo-blue" />
+                      </div>
+                      {app.priority === 'high' && (
+                        <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center">
+                          <Star className="w-3 h-3 text-white" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      <h4 className="font-bold text-slate-900 text-2xl group-hover:text-oslo-blue transition-colors">{app.childName}</h4>
+                      <p className="text-slate-700 font-semibold text-lg">{app.kindergarten}</p>
+                      <div className="flex items-center gap-4 text-sm text-slate-500">
+                        <span className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4" />
+                          Applied: {app.submittedDate}
+                        </span>
+                        <span className="text-slate-300">•</span>
+                        <span className="font-medium">ID: {app.id}</span>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-bold text-slate-900 text-xl">{app.childName}</h4>
-                    <p className="text-slate-700 font-medium">{app.kindergarten}</p>
-                    <p className="text-sm text-slate-500 flex items-center gap-2 mt-2">
-                      <Calendar className="h-4 w-4" />
-                      Applied: {app.submittedDate}
-                    </p>
+                  <div className="flex items-center gap-4">
+                    {getStatusBadge(app.status)}
+                    <ArrowRight className="h-6 w-6 text-slate-400 group-hover:text-oslo-blue group-hover:translate-x-1 transition-all duration-300" />
                   </div>
                 </div>
-                {getStatusBadge(app.status)}
               </div>
             ))}
           </div>
         </CardContent>
       </Card>
 
-      {/* Recent Messages and Payments */}
+      {/* Enhanced Recent Messages and Payments */}
       <div className="grid lg:grid-cols-2 gap-8">
-        <Card className="shadow-lg border-0">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-4 text-2xl">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                <MessageSquare className="h-6 w-6 text-blue-600" />
+        <Card className="relative overflow-hidden border-0 shadow-xl">
+          <div className="absolute inset-0 bg-gradient-to-br from-white via-blue-50/30 to-blue-100/20" />
+          <CardHeader className="relative border-b border-slate-200/50">
+            <CardTitle className="flex items-center gap-6 text-2xl">
+              <div className="w-14 h-14 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl flex items-center justify-center">
+                <MessageSquare className="h-7 w-7 text-blue-600" />
               </div>
-              {t('guardian.dashboard.recentMessages')}
+              <div>
+                <h3 className="text-xl font-bold text-slate-900">{t('guardian.dashboard.recentMessages')}</h3>
+                <p className="text-sm text-slate-600 font-normal mt-1">Latest updates and notifications</p>
+              </div>
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="relative p-6">
             <div className="space-y-4">
               {messages.slice(0, 3).map((message) => (
-                <div key={message.id} className="flex items-start gap-4 p-4 rounded-xl hover:bg-oslo-gray/50 transition-colors cursor-pointer border border-slate-100">
-                  <div className={`w-4 h-4 rounded-full mt-2 ${message.unread ? 'bg-blue-500' : 'bg-slate-300'}`} />
-                  <div className="flex-1">
-                    <h5 className="font-semibold text-slate-900">{message.subject}</h5>
-                    <p className="text-sm text-slate-600 mt-1">{message.from}</p>
-                    <p className="text-xs text-slate-500 mt-2 flex items-center gap-1">
-                      <Calendar className="h-3 w-3" />
-                      {message.date}
-                    </p>
+                <div key={message.id} className="group cursor-pointer">
+                  <div className="flex items-start gap-4 p-6 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent transition-all duration-300 border border-transparent hover:border-blue-200 hover:shadow-md">
+                    <div className={`w-5 h-5 rounded-full mt-2 shadow-sm ${message.unread ? 'bg-gradient-to-br from-blue-500 to-blue-600 animate-pulse' : 'bg-slate-300'}`} />
+                    <div className="flex-1 space-y-2">
+                      <h5 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors text-lg">{message.subject}</h5>
+                      <p className="text-slate-600 font-medium">{message.from}</p>
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm text-slate-500 flex items-center gap-2">
+                          <Calendar className="h-4 w-4" />
+                          {message.date}
+                        </p>
+                        {message.unread && (
+                          <Badge className="bg-gradient-to-r from-blue-100 to-blue-200 text-blue-700 border-blue-300 font-semibold">
+                            <Bell className="w-3 h-3 mr-1" />
+                            New
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  {message.unread && (
-                    <Badge variant="outline" className="text-blue-600 border-blue-300 bg-blue-50 font-medium">
-                      New
-                    </Badge>
-                  )}
                 </div>
               ))}
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-lg border-0">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-4 text-2xl">
-              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                <CreditCard className="h-6 w-6 text-purple-600" />
+        <Card className="relative overflow-hidden border-0 shadow-xl">
+          <div className="absolute inset-0 bg-gradient-to-br from-white via-purple-50/30 to-purple-100/20" />
+          <CardHeader className="relative border-b border-slate-200/50">
+            <CardTitle className="flex items-center gap-6 text-2xl">
+              <div className="w-14 h-14 bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl flex items-center justify-center">
+                <CreditCard className="h-7 w-7 text-purple-600" />
               </div>
-              {t('guardian.dashboard.paymentOverview')}
+              <div>
+                <h3 className="text-xl font-bold text-slate-900">{t('guardian.dashboard.paymentOverview')}</h3>
+                <p className="text-sm text-slate-600 font-normal mt-1">Upcoming and recent payments</p>
+              </div>
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="relative p-6">
             <div className="space-y-4">
               {payments.slice(0, 3).map((payment) => (
-                <div key={payment.id} className="flex items-center justify-between p-4 rounded-xl border-2 border-slate-200 hover:border-purple-200 hover:bg-purple-50/30 transition-colors">
-                  <div className="flex items-center gap-4">
-                    {payment.status === 'paid' ? 
-                      <CheckCircle className="h-7 w-7 text-oslo-green" /> :
-                      <AlertCircle className="h-7 w-7 text-yellow-500" />
-                    }
-                    <div>
-                      <p className="font-semibold text-slate-900">{payment.child}</p>
-                      <p className="text-sm text-slate-600 flex items-center gap-1 mt-1">
-                        <Calendar className="h-3 w-3" />
-                        Due: {payment.dueDate}
-                      </p>
+                <div key={payment.id} className="group cursor-pointer">
+                  <div className="flex items-center justify-between p-6 rounded-xl border-2 border-slate-200 hover:border-purple-300 hover:bg-gradient-to-r hover:from-purple-50 hover:to-transparent transition-all duration-300 hover:shadow-md">
+                    <div className="flex items-center gap-6">
+                      <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform duration-300 ${
+                        payment.status === 'paid' 
+                          ? 'bg-gradient-to-br from-oslo-green/10 to-oslo-green/20' 
+                          : 'bg-gradient-to-br from-yellow-100 to-yellow-200'
+                      }`}>
+                        {payment.status === 'paid' ? 
+                          <CheckCircle className="h-8 w-8 text-oslo-green" /> :
+                          <AlertCircle className="h-8 w-8 text-yellow-600" />
+                        }
+                      </div>
+                      <div className="space-y-2">
+                        <p className="font-bold text-slate-900 text-lg group-hover:text-purple-600 transition-colors">{payment.child}</p>
+                        <p className="text-sm text-slate-600 flex items-center gap-2 font-medium">
+                          <Calendar className="h-4 w-4" />
+                          Due: {payment.dueDate}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-bold text-xl text-slate-900">{payment.amount} kr</p>
-                    <Badge variant={payment.status === 'paid' ? 'default' : 'secondary'} className="mt-1">
-                      {payment.status === 'paid' ? t('common.status.paid') : t('common.status.pending')}
-                    </Badge>
+                    <div className="text-right space-y-2">
+                      <p className="font-bold text-2xl text-slate-900">{payment.amount} kr</p>
+                      <Badge 
+                        className={payment.status === 'paid' 
+                          ? 'bg-gradient-to-r from-oslo-green/10 to-oslo-green/20 text-oslo-green border-oslo-green/30 font-semibold' 
+                          : 'bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-700 border-yellow-300 font-semibold'
+                        }
+                      >
+                        {payment.status === 'paid' ? t('common.status.paid') : t('common.status.pending')}
+                      </Badge>
+                    </div>
                   </div>
                 </div>
               ))}
