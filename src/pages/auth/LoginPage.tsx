@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -8,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Loader2, Eye, EyeOff } from 'lucide-react';
+import { Loader2, Eye, EyeOff, GraduationCap } from 'lucide-react';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -96,27 +95,25 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-oslo-blue to-blue-700 flex items-center justify-center p-6">
-      <Card className="w-full max-w-md shadow-2xl border-0">
-        <CardHeader className="text-center space-y-4 pb-8">
-          <div className="mx-auto w-16 h-16 bg-oslo-blue rounded-2xl flex items-center justify-center shadow-lg">
-            <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2L2 7v10c0 5.55 3.84 9.74 9 11 5.16-1.26 9-5.45 9-11V7l-10-5z"/>
-            </svg>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-blue-900 flex items-center justify-center p-6">
+      <Card className="w-full max-w-md shadow-2xl border-0 bg-white">
+        <CardHeader className="text-center space-y-6 pb-8">
+          <div className="mx-auto w-16 h-16 bg-blue-900 rounded-2xl flex items-center justify-center shadow-lg">
+            <GraduationCap className="w-8 h-8 text-white" />
           </div>
           <div>
-            <CardTitle className="text-2xl font-bold text-gray-900">
+            <CardTitle className="text-2xl font-bold text-slate-900 font-inter">
               {t('auth.login')}
             </CardTitle>
-            <CardDescription className="text-gray-600 mt-2">
-              Sign in to access the kindergarten portal
+            <CardDescription className="text-slate-600 mt-2">
+              Sign in to access the IST Platform
             </CardDescription>
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+              <Label htmlFor="email" className="text-sm font-medium text-slate-700">
                 {t('auth.email')} *
               </Label>
               <Input
@@ -143,7 +140,7 @@ const LoginPage = () => {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+              <Label htmlFor="password" className="text-sm font-medium text-slate-700">
                 {t('auth.password')} *
               </Label>
               <div className="relative">
@@ -166,7 +163,7 @@ const LoginPage = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700 transition-colors"
                   disabled={isLoading}
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
@@ -188,7 +185,7 @@ const LoginPage = () => {
 
             <Button 
               type="submit" 
-              className="w-full h-12 bg-oslo-blue hover:bg-blue-700 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
+              className="w-full h-12 bg-blue-900 hover:bg-blue-800 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
               disabled={isLoading}
             >
               {isLoading ? (
@@ -202,20 +199,20 @@ const LoginPage = () => {
             </Button>
           </form>
 
-          <div className="mt-8 p-6 bg-gray-50 rounded-lg border">
-            <p className="text-sm font-medium text-gray-700 mb-4">Demo Accounts:</p>
+          <div className="mt-8 p-6 bg-slate-50 rounded-lg border border-slate-200">
+            <p className="text-sm font-medium text-slate-700 mb-4">Demo Accounts:</p>
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-sm font-medium text-gray-900">Guardian Account</p>
-                  <p className="text-xs text-gray-600">guardian@example.com</p>
+                  <p className="text-sm font-medium text-slate-900">Guardian Account</p>
+                  <p className="text-xs text-slate-600">guardian@example.com</p>
                 </div>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => handleDemoLogin('guardian@example.com', 'password')}
                   disabled={isLoading}
-                  className="text-xs"
+                  className="text-xs border-slate-300 text-slate-700 hover:bg-slate-50"
                 >
                   Try Demo
                 </Button>
@@ -223,15 +220,15 @@ const LoginPage = () => {
               
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-sm font-medium text-gray-900">Case Worker</p>
-                  <p className="text-xs text-gray-600">caseworker@oslo.kommune.no</p>
+                  <p className="text-sm font-medium text-slate-900">Case Worker</p>
+                  <p className="text-xs text-slate-600">caseworker@oslo.kommune.no</p>
                 </div>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => handleDemoLogin('caseworker@oslo.kommune.no', 'password')}
                   disabled={isLoading}
-                  className="text-xs"
+                  className="text-xs border-slate-300 text-slate-700 hover:bg-slate-50"
                 >
                   Try Demo
                 </Button>
@@ -239,15 +236,15 @@ const LoginPage = () => {
               
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-sm font-medium text-gray-900">Administrator</p>
-                  <p className="text-xs text-gray-600">admin@oslo.kommune.no</p>
+                  <p className="text-sm font-medium text-slate-900">Administrator</p>
+                  <p className="text-xs text-slate-600">admin@oslo.kommune.no</p>
                 </div>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => handleDemoLogin('admin@oslo.kommune.no', 'password')}
                   disabled={isLoading}
-                  className="text-xs"
+                  className="text-xs border-slate-300 text-slate-700 hover:bg-slate-50"
                 >
                   Try Demo
                 </Button>
