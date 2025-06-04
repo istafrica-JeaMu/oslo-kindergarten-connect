@@ -3,18 +3,26 @@ import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { FileText, User, Building2, Calendar, ArrowRight, CheckCircle, AlertCircle, Sparkles, Clock } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { FileText, User, Building2, Calendar, ArrowRight, CheckCircle, AlertCircle, Sparkles, Clock, Shield, Upload, Info, AlertTriangle } from 'lucide-react';
 
 const NewApplication = () => {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [applicationType, setApplicationType] = useState('');
   const [formData, setFormData] = useState({
+    applicationType: '',
     childInfo: {
       firstName: '',
       lastName: '',
       birthDate: '',
       personalNumber: '',
       specialNeeds: false,
-      siblings: false
+      siblings: false,
+      statutoryRight: false
     },
     preferences: {
       kindergartens: [],
@@ -27,15 +35,52 @@ const NewApplication = () => {
       email: '',
       phone: '',
       address: '',
-      relationship: 'parent'
+      relationship: 'parent',
+      idMethod: 'electronic'
+    },
+    documents: {
+      disabilityProof: null,
+      identityDocument: null,
+      residenceProof: null
     }
   });
 
+  const applicationTypes = [
+    {
+      id: 'main-part-1',
+      title: 'Main Recording Part 1',
+      deadline: '1 March',
+      description: 'For children with statutory right to a place (turning one by 31 August) or without a place by 30 September',
+      volume: '~7,000 applications',
+      color: 'from-oslo-blue to-blue-700',
+      urgent: true
+    },
+    {
+      id: 'main-part-2',
+      title: 'Main Recording Part 2',
+      deadline: '15 August',
+      description: 'For children turning one by 31 November without a place',
+      volume: '~2,000 applications',
+      color: 'from-oslo-green to-green-600',
+      urgent: false
+    },
+    {
+      id: 'ongoing',
+      title: 'Ongoing Recording',
+      deadline: 'No deadline',
+      description: 'Applications for vacant places after main rounds',
+      volume: 'As available',
+      color: 'from-slate-600 to-slate-700',
+      urgent: false
+    }
+  ];
+
   const steps = [
+    { id: 0, title: 'Application Type', icon: Calendar, description: 'Choose your application type' },
     { id: 1, title: 'Child Information', icon: User, description: 'Basic details about your child' },
     { id: 2, title: 'Kindergarten Preferences', icon: Building2, description: 'Choose your preferred kindergartens' },
-    { id: 3, title: 'Guardian Information', icon: FileText, description: 'Your contact details' },
-    { id: 4, title: 'Review & Submit', icon: CheckCircle, description: 'Review and submit your application' }
+    { id: 3, title: 'Guardian Information', icon: Shield, description: 'Your contact and verification details' },
+    { id: 4, title: 'Documents & Review', icon: FileText, description: 'Upload documents and review application' }
   ];
 
   const kindergartenOptions = [
@@ -52,7 +97,7 @@ const NewApplication = () => {
   };
 
   const handlePrev = () => {
-    if (currentStep > 1) {
+    if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
     }
   };
@@ -62,27 +107,26 @@ const NewApplication = () => {
       {steps.map((step, index) => (
         <div key={step.id} className="flex items-center">
           <div className="flex flex-col items-center">
-            <div className={`relative w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 ${
+            <div className={`relative w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 ${
               currentStep >= step.id 
                 ? 'bg-gradient-to-br from-oslo-blue to-blue-700 shadow-lg' 
                 : 'bg-slate-200 hover:bg-slate-300'
             }`}>
-              <step.icon className={`w-6 h-6 ${currentStep >= step.id ? 'text-white' : 'text-slate-500'}`} />
+              <step.icon className={`w-5 h-5 ${currentStep >= step.id ? 'text-white' : 'text-slate-500'}`} />
               {currentStep > step.id && (
-                <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-emerald-500 to-green-500 rounded-full flex items-center justify-center">
-                  <CheckCircle className="w-4 h-4 text-white" />
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-emerald-500 to-green-500 rounded-full flex items-center justify-center">
+                  <CheckCircle className="w-3 h-3 text-white" />
                 </div>
               )}
             </div>
-            <div className="mt-3 text-center">
-              <div className={`font-semibold text-sm ${currentStep >= step.id ? 'text-oslo-blue' : 'text-slate-500'}`}>
+            <div className="mt-2 text-center">
+              <div className={`font-medium text-xs ${currentStep >= step.id ? 'text-oslo-blue' : 'text-slate-500'}`}>
                 {step.title}
               </div>
-              <div className="text-xs text-slate-500 mt-1 max-w-24">{step.description}</div>
             </div>
           </div>
           {index < steps.length - 1 && (
-            <div className={`flex-1 h-0.5 mx-4 mt-[-20px] transition-colors duration-300 ${
+            <div className={`flex-1 h-0.5 mx-3 mt-[-20px] transition-colors duration-300 ${
               currentStep > step.id ? 'bg-gradient-to-r from-oslo-blue to-blue-600' : 'bg-slate-200'
             }`} />
           )}
@@ -91,14 +135,71 @@ const NewApplication = () => {
     </div>
   );
 
+  const renderApplicationTypeSelection = () => (
+    <div className="space-y-6">
+      <div className="bg-gradient-to-r from-oslo-blue/5 to-blue-50 p-6 rounded-xl border border-oslo-blue/20">
+        <div className="flex items-center gap-3 mb-4">
+          <Calendar className="w-6 h-6 text-oslo-blue" />
+          <h3 className="text-lg font-semibold text-slate-900">Select Application Type</h3>
+        </div>
+        <p className="text-slate-600">Choose the appropriate application type based on your child's age and timing needs.</p>
+      </div>
+
+      <div className="grid gap-4">
+        {applicationTypes.map((type) => (
+          <Card 
+            key={type.id} 
+            className={`group hover:shadow-lg transition-all duration-300 cursor-pointer border-2 ${
+              formData.applicationType === type.id ? 'border-oslo-blue bg-oslo-blue/5' : 'hover:border-oslo-blue/30'
+            }`}
+            onClick={() => setFormData({...formData, applicationType: type.id})}
+          >
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between">
+                <div className="flex items-start gap-4">
+                  <div className={`w-12 h-12 bg-gradient-to-br ${type.color} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200`}>
+                    <Calendar className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <h4 className="font-bold text-slate-900 text-lg">{type.title}</h4>
+                      {type.urgent && (
+                        <Badge className="bg-red-100 text-red-700 border-red-300 text-xs">
+                          <Clock className="w-3 h-3 mr-1" />
+                          Urgent
+                        </Badge>
+                      )}
+                    </div>
+                    <p className="text-slate-600 mb-2">{type.description}</p>
+                    <div className="flex items-center gap-4 text-sm">
+                      <span className="font-medium text-oslo-blue">Deadline: {type.deadline}</span>
+                      <span className="text-slate-500">Expected: {type.volume}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className={`w-6 h-6 rounded-full border-2 transition-all duration-200 ${
+                  formData.applicationType === type.id 
+                    ? 'bg-oslo-blue border-oslo-blue' 
+                    : 'border-slate-300'
+                }`}>
+                  {formData.applicationType === type.id && (
+                    <CheckCircle className="w-4 h-4 text-white m-0.5" />
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+
   const renderChildInformation = () => (
     <div className="space-y-6">
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <label className="text-sm font-semibold text-slate-700">First Name *</label>
-          <input 
-            type="text"
-            className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-oslo-blue focus:outline-none transition-colors duration-200 bg-white"
+          <Label className="text-sm font-semibold text-slate-700">First Name *</Label>
+          <Input 
             placeholder="Enter child's first name"
             value={formData.childInfo.firstName}
             onChange={(e) => setFormData({
@@ -108,10 +209,8 @@ const NewApplication = () => {
           />
         </div>
         <div className="space-y-2">
-          <label className="text-sm font-semibold text-slate-700">Last Name *</label>
-          <input 
-            type="text"
-            className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-oslo-blue focus:outline-none transition-colors duration-200 bg-white"
+          <Label className="text-sm font-semibold text-slate-700">Last Name *</Label>
+          <Input 
             placeholder="Enter child's last name"
             value={formData.childInfo.lastName}
             onChange={(e) => setFormData({
@@ -124,10 +223,9 @@ const NewApplication = () => {
       
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <label className="text-sm font-semibold text-slate-700">Date of Birth *</label>
-          <input 
+          <Label className="text-sm font-semibold text-slate-700">Date of Birth *</Label>
+          <Input 
             type="date"
-            className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-oslo-blue focus:outline-none transition-colors duration-200 bg-white"
             value={formData.childInfo.birthDate}
             onChange={(e) => setFormData({
               ...formData,
@@ -136,10 +234,8 @@ const NewApplication = () => {
           />
         </div>
         <div className="space-y-2">
-          <label className="text-sm font-semibold text-slate-700">Personal Number *</label>
-          <input 
-            type="text"
-            className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-oslo-blue focus:outline-none transition-colors duration-200 bg-white"
+          <Label className="text-sm font-semibold text-slate-700">Personal Number *</Label>
+          <Input 
             placeholder="11 digits (DDMMYYXXXXX)"
             value={formData.childInfo.personalNumber}
             onChange={(e) => setFormData({
@@ -151,36 +247,46 @@ const NewApplication = () => {
       </div>
 
       <div className="space-y-4">
-        <div className="flex items-center space-x-3 p-4 bg-gradient-to-r from-oslo-blue/5 to-blue-50 rounded-xl border border-oslo-blue/20">
-          <input 
-            type="checkbox"
-            id="specialNeeds"
-            className="w-5 h-5 text-oslo-blue focus:ring-oslo-blue border-slate-300 rounded"
-            checked={formData.childInfo.specialNeeds}
-            onChange={(e) => setFormData({
+        <div className="flex items-center space-x-3 p-4 bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl border border-emerald-200">
+          <Switch 
+            id="statutoryRight"
+            checked={formData.childInfo.statutoryRight}
+            onCheckedChange={(checked) => setFormData({
               ...formData,
-              childInfo: { ...formData.childInfo, specialNeeds: e.target.checked }
+              childInfo: { ...formData.childInfo, statutoryRight: checked }
             })}
           />
-          <label htmlFor="specialNeeds" className="text-sm font-medium text-slate-700">
+          <Label htmlFor="statutoryRight" className="text-sm font-medium text-slate-700">
+            Child has statutory right to kindergarten place
+          </Label>
+        </div>
+
+        <div className="flex items-center space-x-3 p-4 bg-gradient-to-r from-oslo-blue/5 to-blue-50 rounded-xl border border-oslo-blue/20">
+          <Switch 
+            id="specialNeeds"
+            checked={formData.childInfo.specialNeeds}
+            onCheckedChange={(checked) => setFormData({
+              ...formData,
+              childInfo: { ...formData.childInfo, specialNeeds: checked }
+            })}
+          />
+          <Label htmlFor="specialNeeds" className="text-sm font-medium text-slate-700">
             Child has special needs or requires additional support
-          </label>
+          </Label>
         </div>
         
-        <div className="flex items-center space-x-3 p-4 bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl border border-emerald-200">
-          <input 
-            type="checkbox"
+        <div className="flex items-center space-x-3 p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl border border-amber-200">
+          <Switch 
             id="siblings"
-            className="w-5 h-5 text-emerald-600 focus:ring-emerald-500 border-slate-300 rounded"
             checked={formData.childInfo.siblings}
-            onChange={(e) => setFormData({
+            onCheckedChange={(checked) => setFormData({
               ...formData,
-              childInfo: { ...formData.childInfo, siblings: e.target.checked }
+              childInfo: { ...formData.childInfo, siblings: checked }
             })}
           />
-          <label htmlFor="siblings" className="text-sm font-medium text-slate-700">
+          <Label htmlFor="siblings" className="text-sm font-medium text-slate-700">
             Child has siblings already attending kindergarten in Oslo
-          </label>
+          </Label>
         </div>
       </div>
     </div>
@@ -202,8 +308,8 @@ const NewApplication = () => {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 bg-gradient-to-br from-oslo-blue/10 to-blue-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
-                    <Building2 className="w-7 h-7 text-oslo-blue" />
+                  <div className="w-12 h-12 bg-gradient-to-br from-oslo-blue/10 to-blue-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+                    <Building2 className="w-6 h-6 text-oslo-blue" />
                   </div>
                   <div>
                     <h4 className="font-bold text-slate-900 text-lg group-hover:text-oslo-blue transition-colors">{kg.name}</h4>
@@ -233,10 +339,9 @@ const NewApplication = () => {
 
       <div className="grid md:grid-cols-2 gap-6 mt-8">
         <div className="space-y-2">
-          <label className="text-sm font-semibold text-slate-700">Preferred Start Date *</label>
-          <input 
+          <Label className="text-sm font-semibold text-slate-700">Preferred Start Date *</Label>
+          <Input 
             type="date"
-            className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-oslo-blue focus:outline-none transition-colors duration-200 bg-white"
             value={formData.preferences.startDate}
             onChange={(e) => setFormData({
               ...formData,
@@ -246,18 +351,22 @@ const NewApplication = () => {
         </div>
         
         <div className="space-y-2">
-          <label className="text-sm font-semibold text-slate-700">Attendance Type *</label>
-          <select 
-            className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-oslo-blue focus:outline-none transition-colors duration-200 bg-white"
+          <Label className="text-sm font-semibold text-slate-700">Attendance Type *</Label>
+          <Select 
             value={formData.preferences.fullTime ? 'full' : 'part'}
-            onChange={(e) => setFormData({
+            onValueChange={(value) => setFormData({
               ...formData,
-              preferences: { ...formData.preferences, fullTime: e.target.value === 'full' }
+              preferences: { ...formData.preferences, fullTime: value === 'full' }
             })}
           >
-            <option value="full">Full-time (7:30 - 17:00)</option>
-            <option value="part">Part-time (8:00 - 14:00)</option>
-          </select>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="full">Full-time (7:30 - 17:00)</SelectItem>
+              <SelectItem value="part">Part-time (8:00 - 14:00)</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
     </div>
@@ -265,12 +374,60 @@ const NewApplication = () => {
 
   const renderGuardianInformation = () => (
     <div className="space-y-6">
+      <div className="bg-gradient-to-r from-amber-50 to-orange-50 p-6 rounded-xl border border-amber-200">
+        <div className="flex items-center gap-3 mb-4">
+          <Shield className="w-6 h-6 text-amber-600" />
+          <h3 className="text-lg font-semibold text-slate-900">Identity Verification Method</h3>
+        </div>
+        <div className="space-y-3">
+          <Label className="text-sm font-semibold text-slate-700">How will you verify your identity? *</Label>
+          <Select 
+            value={formData.guardian.idMethod}
+            onValueChange={(value) => setFormData({
+              ...formData,
+              guardian: { ...formData.guardian, idMethod: value }
+            })}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="electronic">Electronic ID (ID-porten/Entra ID) - Standard</SelectItem>
+              <SelectItem value="manual">Manual verification through Contact Center (OKK)</SelectItem>
+              <SelectItem value="foreign">Foreign ID/Non-Oslo resident</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        
+        {formData.guardian.idMethod === 'manual' && (
+          <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <div className="flex items-start gap-2">
+              <Info className="w-5 h-5 text-blue-600 mt-0.5" />
+              <div className="text-sm text-blue-800">
+                <p className="font-medium mb-1">Manual Verification Process:</p>
+                <p>Contact the Contact Center (OKK) or your district office. Case workers will help you submit your application via paper forms or document uploads, creating a temporary record pending verification.</p>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {formData.guardian.idMethod === 'foreign' && (
+          <div className="mt-4 p-4 bg-purple-50 rounded-lg border border-purple-200">
+            <div className="flex items-start gap-2">
+              <Info className="w-5 h-5 text-purple-600 mt-0.5" />
+              <div className="text-sm text-purple-800">
+                <p className="font-medium mb-1">Foreign ID/Non-resident Process:</p>
+                <p>You can submit via the portal if registered in FREG, or manually through OKK. Case workers will verify your identity using alternative documents (passport, residence permit, etc.).</p>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <label className="text-sm font-semibold text-slate-700">First Name *</label>
-          <input 
-            type="text"
-            className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-oslo-blue focus:outline-none transition-colors duration-200 bg-white"
+          <Label className="text-sm font-semibold text-slate-700">First Name *</Label>
+          <Input 
             placeholder="Your first name"
             value={formData.guardian.firstName}
             onChange={(e) => setFormData({
@@ -280,10 +437,8 @@ const NewApplication = () => {
           />
         </div>
         <div className="space-y-2">
-          <label className="text-sm font-semibold text-slate-700">Last Name *</label>
-          <input 
-            type="text"
-            className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-oslo-blue focus:outline-none transition-colors duration-200 bg-white"
+          <Label className="text-sm font-semibold text-slate-700">Last Name *</Label>
+          <Input 
             placeholder="Your last name"
             value={formData.guardian.lastName}
             onChange={(e) => setFormData({
@@ -296,10 +451,9 @@ const NewApplication = () => {
 
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <label className="text-sm font-semibold text-slate-700">Email Address *</label>
-          <input 
+          <Label className="text-sm font-semibold text-slate-700">Email Address *</Label>
+          <Input 
             type="email"
-            className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-oslo-blue focus:outline-none transition-colors duration-200 bg-white"
             placeholder="your.email@example.com"
             value={formData.guardian.email}
             onChange={(e) => setFormData({
@@ -309,10 +463,9 @@ const NewApplication = () => {
           />
         </div>
         <div className="space-y-2">
-          <label className="text-sm font-semibold text-slate-700">Phone Number *</label>
-          <input 
+          <Label className="text-sm font-semibold text-slate-700">Phone Number *</Label>
+          <Input 
             type="tel"
-            className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-oslo-blue focus:outline-none transition-colors duration-200 bg-white"
             placeholder="+47 xxx xx xxx"
             value={formData.guardian.phone}
             onChange={(e) => setFormData({
@@ -324,10 +477,8 @@ const NewApplication = () => {
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-semibold text-slate-700">Home Address *</label>
-        <input 
-          type="text"
-          className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-oslo-blue focus:outline-none transition-colors duration-200 bg-white"
+        <Label className="text-sm font-semibold text-slate-700">Home Address *</Label>
+        <Input 
           placeholder="Street address, postal code, city"
           value={formData.guardian.address}
           onChange={(e) => setFormData({
@@ -338,77 +489,112 @@ const NewApplication = () => {
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-semibold text-slate-700">Relationship to Child *</label>
-        <select 
-          className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-oslo-blue focus:outline-none transition-colors duration-200 bg-white"
+        <Label className="text-sm font-semibold text-slate-700">Relationship to Child *</Label>
+        <Select 
           value={formData.guardian.relationship}
-          onChange={(e) => setFormData({
+          onValueChange={(value) => setFormData({
             ...formData,
-            guardian: { ...formData.guardian, relationship: e.target.value }
+            guardian: { ...formData.guardian, relationship: value }
           })}
         >
-          <option value="parent">Parent</option>
-          <option value="guardian">Legal Guardian</option>
-          <option value="other">Other</option>
-        </select>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="parent">Parent</SelectItem>
+            <SelectItem value="guardian">Legal Guardian</SelectItem>
+            <SelectItem value="other">Other</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );
 
-  const renderReviewSubmit = () => (
+  const renderDocumentsAndReview = () => (
     <div className="space-y-6">
       <div className="bg-gradient-to-r from-emerald-50 to-green-50 p-6 rounded-xl border border-emerald-200">
         <div className="flex items-center gap-3 mb-4">
-          <CheckCircle className="w-6 h-6 text-emerald-600" />
-          <h3 className="text-lg font-semibold text-slate-900">Review Your Application</h3>
+          <Upload className="w-6 h-6 text-emerald-600" />
+          <h3 className="text-lg font-semibold text-slate-900">Optional Documents</h3>
         </div>
-        <p className="text-slate-600">Please review all information before submitting. You can make changes by going back to previous steps.</p>
+        <p className="text-slate-600">Upload any supporting documents for your application.</p>
       </div>
 
-      {/* Review sections */}
-      <div className="grid gap-6">
-        <Card className="border-2 border-slate-200">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center gap-2">
-              <User className="w-5 h-5 text-oslo-blue" />
-              Child Information
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid md:grid-cols-2 gap-4 text-sm">
-              <div><span className="font-medium">Name:</span> {formData.childInfo.firstName} {formData.childInfo.lastName}</div>
-              <div><span className="font-medium">Birth Date:</span> {formData.childInfo.birthDate}</div>
-              <div><span className="font-medium">Personal Number:</span> {formData.childInfo.personalNumber}</div>
-              <div><span className="font-medium">Special Needs:</span> {formData.childInfo.specialNeeds ? 'Yes' : 'No'}</div>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="grid gap-4">
+        {formData.childInfo.specialNeeds && (
+          <Card className="border-2 border-dashed border-slate-300 hover:border-oslo-blue transition-colors">
+            <CardContent className="p-6 text-center">
+              <Upload className="w-8 h-8 text-slate-400 mx-auto mb-3" />
+              <h4 className="font-semibold text-slate-700 mb-2">Disability/Special Needs Proof</h4>
+              <p className="text-sm text-slate-500 mb-4">Upload documentation for special needs support</p>
+              <Button variant="outline" size="sm">Choose File</Button>
+            </CardContent>
+          </Card>
+        )}
 
-        <Card className="border-2 border-slate-200">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center gap-2">
-              <Building2 className="w-5 h-5 text-oslo-blue" />
-              Kindergarten Preferences
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2 text-sm">
-              <div><span className="font-medium">Start Date:</span> {formData.preferences.startDate}</div>
-              <div><span className="font-medium">Attendance:</span> {formData.preferences.fullTime ? 'Full-time' : 'Part-time'}</div>
-            </div>
-          </CardContent>
-        </Card>
+        {formData.guardian.idMethod === 'foreign' && (
+          <Card className="border-2 border-dashed border-slate-300 hover:border-oslo-blue transition-colors">
+            <CardContent className="p-6 text-center">
+              <Upload className="w-8 h-8 text-slate-400 mx-auto mb-3" />
+              <h4 className="font-semibold text-slate-700 mb-2">Identity Document</h4>
+              <p className="text-sm text-slate-500 mb-4">Upload passport, residence permit, or other ID</p>
+              <Button variant="outline" size="sm">Choose File</Button>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+
+      {/* Review Section */}
+      <div className="mt-8 space-y-4">
+        <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+          <CheckCircle className="w-5 h-5 text-emerald-600" />
+          Application Review
+        </h3>
+        
+        <div className="grid gap-4">
+          <Card className="border-2 border-slate-200">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-oslo-blue" />
+                Application Type
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm font-medium">
+                {applicationTypes.find(t => t.id === formData.applicationType)?.title || 'Not selected'}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="border-2 border-slate-200">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2">
+                <User className="w-4 h-4 text-oslo-blue" />
+                Child Information
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-2 gap-3 text-sm">
+                <div><span className="font-medium">Name:</span> {formData.childInfo.firstName} {formData.childInfo.lastName}</div>
+                <div><span className="font-medium">Birth Date:</span> {formData.childInfo.birthDate}</div>
+                <div><span className="font-medium">Personal Number:</span> {formData.childInfo.personalNumber}</div>
+                <div><span className="font-medium">Statutory Right:</span> {formData.childInfo.statutoryRight ? 'Yes' : 'No'}</div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
       <div className="bg-amber-50 p-6 rounded-xl border border-amber-200">
         <div className="flex items-start gap-3">
-          <AlertCircle className="w-6 h-6 text-amber-600 mt-0.5" />
+          <AlertTriangle className="w-6 h-6 text-amber-600 mt-0.5" />
           <div>
             <h4 className="font-semibold text-amber-800 mb-2">Important Information</h4>
             <ul className="text-amber-700 text-sm space-y-1">
-              <li>• Application processing typically takes 4-6 weeks</li>
+              <li>• Application will receive a unique ApplicationID upon submission</li>
+              <li>• Status will be set to "Draft" initially, then updated based on admission round</li>
+              <li>• Processing typically takes 4-6 weeks</li>
               <li>• You will receive email confirmation once submitted</li>
-              <li>• Changes can be made until the application deadline</li>
               <li>• Contact us if you need assistance: kindergarten@oslo.kommune.no</li>
             </ul>
           </div>
@@ -450,17 +636,18 @@ const NewApplication = () => {
       <Card className="border-0 shadow-xl bg-white/90 backdrop-blur-sm">
         <CardHeader className="border-b border-slate-200/60">
           <CardTitle className="text-2xl text-slate-900">
-            {steps[currentStep - 1].title}
+            {steps[currentStep].title}
           </CardTitle>
           <CardDescription className="text-lg text-slate-600">
-            {steps[currentStep - 1].description}
+            {steps[currentStep].description}
           </CardDescription>
         </CardHeader>
         <CardContent className="p-8">
+          {currentStep === 0 && renderApplicationTypeSelection()}
           {currentStep === 1 && renderChildInformation()}
           {currentStep === 2 && renderKindergartenPreferences()}
           {currentStep === 3 && renderGuardianInformation()}
-          {currentStep === 4 && renderReviewSubmit()}
+          {currentStep === 4 && renderDocumentsAndReview()}
         </CardContent>
       </Card>
 
@@ -469,7 +656,7 @@ const NewApplication = () => {
         <Button 
           variant="outline" 
           onClick={handlePrev}
-          disabled={currentStep === 1}
+          disabled={currentStep === 0}
           className="hover:bg-slate-50"
         >
           Previous
@@ -477,7 +664,7 @@ const NewApplication = () => {
         
         <div className="flex items-center gap-2">
           <span className="text-sm text-slate-600">
-            Step {currentStep} of {steps.length}
+            Step {currentStep + 1} of {steps.length}
           </span>
         </div>
 
