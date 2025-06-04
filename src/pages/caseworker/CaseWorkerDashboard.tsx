@@ -24,7 +24,9 @@ import {
   Search,
   Eye,
   Star,
-  Zap
+  Zap,
+  GraduationCap,
+  Shield
 } from 'lucide-react';
 
 const CaseWorkerDashboard = () => {
@@ -178,47 +180,56 @@ const CaseWorkerDashboard = () => {
 
   return (
     <div className="space-y-8">
-      {/* Enhanced Header Section */}
-      <div className="bg-gradient-to-br from-oslo-blue via-oslo-blue to-blue-700 -mx-6 -mt-8 px-6 pt-8 pb-8 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white/5"></div>
-        <div className="relative z-10">
+      {/* Clean Header Section - matching Guardian design */}
+      <Card className="border-0 shadow-lg bg-white">
+        <CardContent className="p-8">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
-                  <Users className="h-8 w-8 text-white" />
+            <div className="flex items-center gap-6">
+              <div className="relative">
+                <div className="w-16 h-16 bg-gradient-to-br from-oslo-blue to-blue-700 rounded-2xl flex items-center justify-center shadow-lg">
+                  <GraduationCap className="h-8 w-8 text-white" />
                 </div>
-                <div>
-                  <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
-                    {t('caseworker.dashboard.title')}
-                  </h1>
-                  <div className="flex items-center gap-3">
-                    <Badge variant="outline" className="text-white border-white/30 bg-white/10 backdrop-blur-sm">
-                      {user?.district}
-                    </Badge>
-                    <Badge className="bg-green-500 text-white border-0">
-                      Active Session
-                    </Badge>
-                  </div>
+                <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-md">
+                  <CheckCircle className="h-4 w-4 text-white" />
                 </div>
               </div>
-              <p className="text-blue-100 text-lg leading-relaxed max-w-2xl">
-                {t('caseworker.dashboard.description')}
-              </p>
+              <div className="space-y-3">
+                <div>
+                  <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                    Welcome, {user?.name}
+                  </h1>
+                  <p className="text-lg text-gray-600">
+                    Manage applications and support families in their kindergarten journey
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Badge className="bg-oslo-blue text-white border-0 font-semibold">
+                    <Shield className="w-3 h-3 mr-1" />
+                    Case Worker Account
+                  </Badge>
+                  <Badge className="bg-green-100 text-green-700 border-green-200 font-semibold">
+                    <CheckCircle className="w-3 h-3 mr-1" />
+                    ✓ Verified
+                  </Badge>
+                  <Badge variant="outline" className="text-oslo-blue border-oslo-blue/30 font-semibold">
+                    {user?.district || 'Oslo District'}
+                  </Badge>
+                </div>
+              </div>
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
-              <Button size="lg" variant="outline" className="text-white border-white/30 hover:bg-white/10 backdrop-blur-sm">
+              <Button size="lg" variant="outline" className="font-semibold">
                 <Filter className="h-4 w-4 mr-2" />
                 Quick Filters
               </Button>
-              <Button size="lg" className="bg-white text-oslo-blue hover:bg-blue-50 shadow-xl font-semibold transform hover:scale-105 transition-all duration-200">
-                <Star className="h-4 w-4 mr-2" />
-                Priority View
+              <Button size="lg" className="font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200">
+                <FolderOpen className="h-4 w-4 mr-2" />
+                Review Applications
               </Button>
             </div>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Enhanced Statistics Cards */}
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
