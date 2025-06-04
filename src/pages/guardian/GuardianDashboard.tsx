@@ -23,7 +23,8 @@ import {
   TrendingUp,
   Bell,
   Star,
-  ChevronRight
+  ChevronRight,
+  Shield
 } from 'lucide-react';
 
 const GuardianDashboard = () => {
@@ -211,12 +212,16 @@ const GuardianDashboard = () => {
                   {t('guardian.dashboard.overview')}
                 </p>
                 <div className="flex items-center gap-3 mt-3">
-                  <Badge className="bg-gradient-to-r from-oslo-blue/10 to-oslo-blue/20 text-oslo-blue border-oslo-blue/30 font-semibold">
-                    Guardian Account
+                  <Badge className="relative overflow-hidden bg-gradient-to-br from-oslo-blue/10 via-oslo-blue/15 to-oslo-blue/20 text-oslo-blue border-oslo-blue/30 font-bold px-4 py-2 shadow-lg hover:shadow-xl transition-all duration-300 group">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                    <Shield className="w-4 h-4 mr-2 relative z-10" />
+                    <span className="relative z-10 text-sm font-semibold">Guardian Account</span>
                   </Badge>
-                  <Badge className="bg-gradient-to-r from-oslo-green/10 to-oslo-green/20 text-oslo-green border-oslo-green/30 font-semibold">
-                    <Star className="w-3 h-3 mr-1" />
-                    Verified
+                  <Badge className="relative overflow-hidden bg-gradient-to-br from-oslo-green/10 via-oslo-green/15 to-oslo-green/20 text-oslo-green border-oslo-green/30 font-bold px-4 py-2 shadow-lg hover:shadow-xl transition-all duration-300 group">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-br from-oslo-green to-green-600 rounded-full animate-pulse shadow-md"></div>
+                    <Star className="w-4 h-4 mr-2 relative z-10 drop-shadow-sm" />
+                    <span className="relative z-10 text-sm font-semibold">Verified</span>
                   </Badge>
                 </div>
               </div>
