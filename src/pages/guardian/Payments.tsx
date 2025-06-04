@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -257,11 +256,11 @@ const Payments = () => {
             {/* Payment Info Section */}
             <div className="flex-1">
               <div className="flex items-center gap-4 mb-4">
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${isOverdue ? 'bg-red-200' : isUrgent ? 'bg-amber-200' : 'bg-blue-200'}`}>
-                  <AlertCircle className={`h-7 w-7 ${isOverdue ? 'text-red-700' : isUrgent ? 'text-amber-700' : 'text-blue-700'}`} />
+                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center ${isOverdue ? 'bg-red-200' : isUrgent ? 'bg-amber-200' : 'bg-blue-200'}`}>
+                  <AlertCircle className={`h-8 w-8 ${isOverdue ? 'text-red-700' : isUrgent ? 'text-amber-700' : 'text-blue-700'}`} />
                 </div>
                 <div>
-                  <p className={`text-sm font-semibold ${isOverdue ? 'text-red-700' : isUrgent ? 'text-amber-700' : 'text-blue-700'} uppercase tracking-wide`}>
+                  <p className={`text-sm font-semibold ${isOverdue ? 'text-red-700' : isUrgent ? 'text-amber-700' : 'text-blue-700'} uppercase tracking-wide mb-1`}>
                     Outstanding Balance
                   </p>
                   <h2 className={`text-4xl font-bold ${isOverdue ? 'text-red-800' : isUrgent ? 'text-amber-800' : 'text-blue-800'} leading-tight`}>
@@ -282,7 +281,7 @@ const Payments = () => {
                 </div>
               </div>
 
-              {/* Countdown Timer - Simplified */}
+              {/* Countdown Timer */}
               {!isOverdue && (
                 <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg ${isUrgent ? 'bg-amber-200 text-amber-800' : 'bg-blue-200 text-blue-800'} text-sm font-medium`}>
                   <Clock className="h-4 w-4" />
@@ -291,22 +290,22 @@ const Payments = () => {
               )}
             </div>
             
-            {/* Payment Actions - Improved Hierarchy */}
-            <div className="flex flex-col gap-3 min-w-[280px]">
+            {/* Payment Actions */}
+            <div className="flex flex-col gap-3 min-w-[300px]">
               {/* Primary CTA */}
               <Button 
                 size="lg" 
-                className={`h-14 ${isOverdue ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'} text-white px-6 shadow-lg hover:shadow-xl transition-all duration-200 text-base font-semibold group relative overflow-hidden`}
+                className={`h-16 ${isOverdue ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'} text-white px-6 shadow-lg hover:shadow-xl transition-all duration-200 text-base font-semibold group relative overflow-hidden`}
                 onClick={() => handlePaymentClick(paymentSummary.currentBalance, 'full')}
               >
                 <div className="flex items-center justify-between w-full">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                      <Zap className="h-4 w-4" />
+                    <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                      <Zap className="h-5 w-5" />
                     </div>
                     <div className="text-left">
-                      <div className="font-bold">Pay Full Amount</div>
-                      <div className="text-xs opacity-90">{formatCurrency(paymentSummary.currentBalance)}</div>
+                      <div className="font-bold text-lg">Pay Full Amount</div>
+                      <div className="text-sm opacity-90">{formatCurrency(paymentSummary.currentBalance)}</div>
                     </div>
                   </div>
                   <ExternalLink className="h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -316,10 +315,10 @@ const Payments = () => {
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
               </Button>
               
-              {/* Secondary Options */}
+              {/* Secondary Options with fixed hover */}
               <Button 
                 variant="outline" 
-                className="text-gray-700 border-gray-300 hover:bg-gray-50"
+                className="text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
                 onClick={() => setShowQuickPayOptions(!showQuickPayOptions)}
               >
                 <span>More Payment Options</span>
@@ -332,7 +331,7 @@ const Payments = () => {
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="w-full justify-between text-gray-600 hover:bg-gray-50"
+                    className="w-full justify-between text-gray-600 hover:bg-gray-50 hover:border-gray-300"
                     onClick={() => handleQuickPayment(2220, 'Single Invoice')}
                   >
                     <span>Pay Single Invoice</span>
@@ -341,7 +340,7 @@ const Payments = () => {
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="w-full justify-between text-gray-600 hover:bg-gray-50"
+                    className="w-full justify-between text-gray-600 hover:bg-gray-50 hover:border-gray-300"
                     onClick={() => handleQuickPayment(paymentSummary.currentBalance / 2, 'Partial')}
                   >
                     <span>Pay Partial Amount</span>
@@ -354,12 +353,12 @@ const Payments = () => {
               <div className="flex items-center justify-center gap-4 pt-2">
                 <div className="flex items-center gap-1 text-xs text-gray-500">
                   <Shield className="h-3 w-3" />
-                  <span>Secure</span>
+                  <span>Bank Secured</span>
                 </div>
                 <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
                 <div className="flex items-center gap-1 text-xs text-gray-500">
                   <CheckCircle className="h-3 w-3" />
-                  <span>Bank verified</span>
+                  <span>SSL Protected</span>
                 </div>
               </div>
             </div>
@@ -367,7 +366,7 @@ const Payments = () => {
         </CardContent>
       </Card>
 
-      {/* Left Column - Payment Overview */}
+      {/* Content Grid */}
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Left Column - Payment Overview */}
         <div className="lg:col-span-2 space-y-6">
@@ -456,28 +455,6 @@ const Payments = () => {
               </div>
             </Alert>
           )}
-
-          {/* Payment Information */}
-          <Card className="shadow-lg border-0 bg-gradient-to-br from-slate-50 to-slate-100">
-            <CardHeader className="pb-4">
-              <CardTitle className="flex items-center gap-3 text-slate-800">
-                <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center">
-                  <Info className="h-4 w-4 text-slate-600" />
-                </div>
-                {t('guardian.payments.paymentInfo')}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-3 text-slate-700">
-                {paymentInfo.map((info, index) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 bg-slate-400 rounded-full mt-2 flex-shrink-0"></div>
-                    <span className="text-sm leading-relaxed">{info}</span>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
         </div>
 
         {/* Right Column - Fee Reduction */}
@@ -608,6 +585,28 @@ const Payments = () => {
               </TableBody>
             </Table>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Payment Information - Moved to bottom */}
+      <Card className="shadow-lg border-0 bg-gradient-to-br from-slate-50 to-slate-100">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-3 text-slate-800">
+            <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center">
+              <Info className="h-4 w-4 text-slate-600" />
+            </div>
+            Important Payment Information
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className="space-y-3 text-slate-700">
+            {paymentInfo.map((info, index) => (
+              <li key={index} className="flex items-start gap-3">
+                <div className="w-1.5 h-1.5 bg-slate-400 rounded-full mt-2 flex-shrink-0"></div>
+                <span className="text-sm leading-relaxed">{info}</span>
+              </li>
+            ))}
+          </ul>
         </CardContent>
       </Card>
 
