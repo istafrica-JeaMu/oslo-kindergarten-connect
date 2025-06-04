@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useTranslation } from 'react-i18next';
+import { toast } from '@/hooks/use-toast';
 import FeeReductionModal from '@/components/FeeReductionModal';
 import FeeReductionCalculator from '@/components/FeeReductionCalculator';
 import { 
@@ -96,6 +97,50 @@ const Payments = () => {
     'Contact us immediately if you cannot make payment',
     'Electronic invoices are sent via Altinn'
   ];
+
+  const handlePaymentClick = (amount: number, type: string = 'full') => {
+    toast({
+      title: "Payment Initiated",
+      description: `Redirecting to secure payment portal for ${formatCurrency(amount)}...`,
+    });
+    
+    // Simulate redirect delay
+    setTimeout(() => {
+      toast({
+        title: "Payment Portal",
+        description: "This is a demo - payment functionality would redirect to your bank or payment provider.",
+        variant: "default",
+      });
+    }, 2000);
+  };
+
+  const handleQuickPayment = (amount: number, type: string) => {
+    toast({
+      title: `${type} Payment Selected`,
+      description: `Processing payment of ${formatCurrency(amount)}...`,
+    });
+  };
+
+  const handleInvoiceView = (invoiceId: string) => {
+    toast({
+      title: "Opening Invoice",
+      description: `Loading detailed view for ${invoiceId}...`,
+    });
+  };
+
+  const handleInvoiceDownload = (invoiceId: string) => {
+    toast({
+      title: "Download Started",
+      description: `Downloading invoice ${invoiceId} as PDF...`,
+    });
+  };
+
+  const handleExportAll = () => {
+    toast({
+      title: "Export Started",
+      description: "Preparing payment history export. This may take a few moments...",
+    });
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -234,6 +279,7 @@ const Payments = () => {
               <Button 
                 size="lg" 
                 className={`${isOverdue ? 'bg-red-700 hover:bg-red-800' : 'bg-red-600 hover:bg-red-700'} text-white px-8 shadow-lg hover:shadow-xl transition-all`}
+                onClick={() => handlePaymentClick(paymentSummary.currentBalance, 'full')}
               >
                 <ExternalLink className="h-5 w-5 mr-2" />
                 Pay Full Amount
@@ -245,6 +291,7 @@ const Payments = () => {
                   variant="outline" 
                   size="sm" 
                   className="border-red-300 text-red-700 hover:bg-red-50"
+                  onClick={() => handleQuickPayment(2220, 'Single Invoice')}
                 >
                   Pay {formatCurrency(2220)}
                 </Button>
@@ -252,6 +299,7 @@ const Payments = () => {
                   variant="outline" 
                   size="sm" 
                   className="border-red-300 text-red-700 hover:bg-red-50"
+                  onClick={() => handleQuickPayment(paymentSummary.currentBalance / 2, 'Half')}
                 >
                   Pay Half
                 </Button>
@@ -401,7 +449,12 @@ const Payments = () => {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" className="text-sm">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="text-sm"
+                onClick={handleExportAll}
+              >
                 <Download className="h-4 w-4 mr-2" />
                 Export All
               </Button>
@@ -470,16 +523,27 @@ const Payments = () => {
                           <Button 
                             size="sm" 
                             className="bg-green-600 hover:bg-green-700 text-white shadow-sm hover:shadow-md transition-all"
+                            onClick={() => handlePaymentClick(invoice.amountDue, 'individual')}
                           >
                             <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
                             Pay Now
                           </Button>
                         )}
                         <div className="flex items-center gap-1">
-                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="h-8 w-8 p-0 hover:bg-gray-100"
+                            onClick={() => handleInvoiceView(invoice.id)}
+                          >
                             <Eye className="h-3.5 w-3.5" />
                           </Button>
-                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="h-8 w-8 p-0 hover:bg-gray-100"
+                            onClick={() => handleInvoiceDownload(invoice.id)}
+                          >
                             <Download className="h-3.5 w-3.5" />
                           </Button>
                         </div>
