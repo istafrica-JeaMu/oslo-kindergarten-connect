@@ -287,6 +287,7 @@ const Messages = () => {
                       role={conversation.participant.role}
                       online={conversation.participant.online}
                       size="md"
+                      context="sidebar"
                     />
                     
                     <div className="flex-1 min-w-0">
@@ -350,6 +351,7 @@ const Messages = () => {
                       role={selectedMessage.participant.role}
                       online={selectedMessage.participant.online}
                       size="md"
+                      context="header"
                     />
                     
                     <div>
@@ -399,7 +401,8 @@ const Messages = () => {
                           name={message.sender}
                           role={selectedMessage.participant.role}
                           size="sm"
-                          className="mb-1"
+                          context="message"
+                          enableAnimation={false}
                         />
                       )}
                       
