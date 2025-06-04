@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -212,13 +211,11 @@ const Payments = () => {
         </Alert>
       )}
 
-      {/* Fee Reduction Calculator */}
-      {!paymentSummary.reductionApproved && (
-        <FeeReductionCalculator
-          onApplyClick={() => setShowFeeReductionModal(true)}
-          currentFee={paymentSummary.originalMonthlyFee}
-        />
-      )}
+      {/* Fee Reduction Calculator - Always show */}
+      <FeeReductionCalculator
+        onApplyClick={() => setShowFeeReductionModal(true)}
+        currentFee={paymentSummary.originalMonthlyFee}
+      />
 
       {/* Payment History Table */}
       <Card className="shadow-lg border-0">
