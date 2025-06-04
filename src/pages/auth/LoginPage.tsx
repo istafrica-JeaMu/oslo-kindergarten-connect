@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -95,25 +96,25 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-blue-900 flex items-center justify-center p-6">
-      <Card className="w-full max-w-md shadow-2xl border-0 bg-white">
-        <CardHeader className="text-center space-y-6 pb-8">
-          <div className="mx-auto w-16 h-16 bg-blue-900 rounded-2xl flex items-center justify-center shadow-lg">
-            <GraduationCap className="w-8 h-8 text-white" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center p-6">
+      <Card className="w-full max-w-md shadow-xl border-0 bg-white/95 backdrop-blur-sm">
+        <CardHeader className="text-center space-y-8 pb-8">
+          <div className="mx-auto w-20 h-20 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl flex items-center justify-center shadow-lg ring-4 ring-blue-100">
+            <GraduationCap className="w-10 h-10 text-white" />
           </div>
-          <div>
-            <CardTitle className="text-2xl font-bold text-slate-900 font-inter">
+          <div className="space-y-3">
+            <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-700 bg-clip-text text-transparent">
               {t('auth.login')}
             </CardTitle>
-            <CardDescription className="text-slate-600 mt-2">
+            <CardDescription className="text-slate-600 text-base font-medium">
               Sign in to access the IST Platform
             </CardDescription>
           </div>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-8">
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium text-slate-700">
+            <div className="space-y-3">
+              <Label htmlFor="email" className="text-sm font-semibold text-slate-800">
                 {t('auth.email')} *
               </Label>
               <Input
@@ -128,19 +129,23 @@ const LoginPage = () => {
                 }}
                 required
                 placeholder="Enter your email address"
-                className={`h-12 ${validationErrors.email ? 'border-red-500 focus:border-red-500' : ''}`}
+                className={`h-12 border-2 transition-all duration-200 ${
+                  validationErrors.email 
+                    ? 'border-red-400 focus:border-red-500 bg-red-50' 
+                    : 'border-slate-200 focus:border-blue-500 hover:border-slate-300'
+                }`}
                 disabled={isLoading}
                 aria-describedby={validationErrors.email ? "email-error" : undefined}
               />
               {validationErrors.email && (
-                <p id="email-error" className="text-sm text-red-600 mt-1" role="alert">
+                <p id="email-error" className="text-sm text-red-600 font-medium flex items-center gap-1" role="alert">
                   {validationErrors.email}
                 </p>
               )}
             </div>
             
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-sm font-medium text-slate-700">
+            <div className="space-y-3">
+              <Label htmlFor="password" className="text-sm font-semibold text-slate-800">
                 {t('auth.password')} *
               </Label>
               <div className="relative">
@@ -156,14 +161,18 @@ const LoginPage = () => {
                   }}
                   required
                   placeholder="Enter your password"
-                  className={`h-12 pr-12 ${validationErrors.password ? 'border-red-500 focus:border-red-500' : ''}`}
+                  className={`h-12 pr-12 border-2 transition-all duration-200 ${
+                    validationErrors.password 
+                      ? 'border-red-400 focus:border-red-500 bg-red-50' 
+                      : 'border-slate-200 focus:border-blue-500 hover:border-slate-300'
+                  }`}
                   disabled={isLoading}
                   aria-describedby={validationErrors.password ? "password-error" : undefined}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700 transition-colors"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700 transition-colors p-1 rounded-md hover:bg-slate-100"
                   disabled={isLoading}
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
@@ -171,21 +180,21 @@ const LoginPage = () => {
                 </button>
               </div>
               {validationErrors.password && (
-                <p id="password-error" className="text-sm text-red-600 mt-1" role="alert">
+                <p id="password-error" className="text-sm text-red-600 font-medium flex items-center gap-1" role="alert">
                   {validationErrors.password}
                 </p>
               )}
             </div>
 
             {error && (
-              <Alert variant="destructive" className="border-red-200 bg-red-50">
-                <AlertDescription className="text-red-800">{error}</AlertDescription>
+              <Alert variant="destructive" className="border-red-200 bg-red-50/80 backdrop-blur-sm">
+                <AlertDescription className="text-red-800 font-medium">{error}</AlertDescription>
               </Alert>
             )}
 
             <Button 
               type="submit" 
-              className="w-full h-12 bg-blue-900 hover:bg-blue-800 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
+              className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
               disabled={isLoading}
             >
               {isLoading ? (
@@ -199,12 +208,12 @@ const LoginPage = () => {
             </Button>
           </form>
 
-          <div className="mt-8 p-6 bg-slate-50 rounded-lg border border-slate-200">
-            <p className="text-sm font-medium text-slate-700 mb-4">Demo Accounts:</p>
+          <div className="mt-8 p-6 bg-gradient-to-br from-slate-50 to-blue-50/50 rounded-xl border border-slate-100">
+            <p className="text-sm font-semibold text-slate-800 mb-4">Demo Accounts:</p>
             <div className="space-y-3">
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center p-3 bg-white rounded-lg border border-slate-100 shadow-sm">
                 <div>
-                  <p className="text-sm font-medium text-slate-900">Guardian Account</p>
+                  <p className="text-sm font-semibold text-slate-900">Guardian Account</p>
                   <p className="text-xs text-slate-600">guardian@example.com</p>
                 </div>
                 <Button
@@ -212,15 +221,15 @@ const LoginPage = () => {
                   size="sm"
                   onClick={() => handleDemoLogin('guardian@example.com', 'password')}
                   disabled={isLoading}
-                  className="text-xs border-slate-300 text-slate-700 hover:bg-slate-50"
+                  className="text-xs border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200"
                 >
                   Try Demo
                 </Button>
               </div>
               
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center p-3 bg-white rounded-lg border border-slate-100 shadow-sm">
                 <div>
-                  <p className="text-sm font-medium text-slate-900">Case Worker</p>
+                  <p className="text-sm font-semibold text-slate-900">Case Worker</p>
                   <p className="text-xs text-slate-600">caseworker@oslo.kommune.no</p>
                 </div>
                 <Button
@@ -228,15 +237,15 @@ const LoginPage = () => {
                   size="sm"
                   onClick={() => handleDemoLogin('caseworker@oslo.kommune.no', 'password')}
                   disabled={isLoading}
-                  className="text-xs border-slate-300 text-slate-700 hover:bg-slate-50"
+                  className="text-xs border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200"
                 >
                   Try Demo
                 </Button>
               </div>
               
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center p-3 bg-white rounded-lg border border-slate-100 shadow-sm">
                 <div>
-                  <p className="text-sm font-medium text-slate-900">Administrator</p>
+                  <p className="text-sm font-semibold text-slate-900">Administrator</p>
                   <p className="text-xs text-slate-600">admin@oslo.kommune.no</p>
                 </div>
                 <Button
@@ -244,7 +253,7 @@ const LoginPage = () => {
                   size="sm"
                   onClick={() => handleDemoLogin('admin@oslo.kommune.no', 'password')}
                   disabled={isLoading}
-                  className="text-xs border-slate-300 text-slate-700 hover:bg-slate-50"
+                  className="text-xs border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200"
                 >
                   Try Demo
                 </Button>
