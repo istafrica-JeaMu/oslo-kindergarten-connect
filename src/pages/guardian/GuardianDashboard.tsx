@@ -22,7 +22,8 @@ import {
   GraduationCap,
   TrendingUp,
   Bell,
-  Star
+  Star,
+  ChevronRight
 } from 'lucide-react';
 
 const GuardianDashboard = () => {
@@ -271,84 +272,108 @@ const GuardianDashboard = () => {
       </div>
 
       {/* Enhanced Quick Actions Grid */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Link to="/guardian/new-application" className="group">
-          <Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer group-hover:scale-[1.02] h-full">
-            <div className="absolute inset-0 bg-gradient-to-br from-oslo-blue/5 via-white to-oslo-blue/10" />
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-oslo-blue/10 to-transparent rounded-full transform translate-x-16 -translate-y-16" />
-            <CardContent className="relative flex items-center p-8">
-              <div className="w-16 h-16 bg-gradient-to-br from-oslo-blue/10 to-oslo-blue/20 rounded-2xl flex items-center justify-center mr-6 group-hover:bg-gradient-to-br group-hover:from-oslo-blue/20 group-hover:to-oslo-blue/30 transition-all duration-300 group-hover:scale-110">
-                <FileText className="h-8 w-8 text-oslo-blue" />
+          <Card className="relative overflow-hidden h-full bg-white/95 backdrop-blur-sm border border-slate-200/80 shadow-md hover:shadow-xl transition-all duration-500 cursor-pointer transform hover:scale-[1.02] hover:bg-white">
+            <div className="absolute inset-0 bg-gradient-to-br from-oslo-blue/3 via-transparent to-oslo-blue/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-oslo-blue/10 to-transparent rounded-full transform translate-x-10 -translate-y-10 group-hover:scale-150 transition-transform duration-700"></div>
+            <CardContent className="relative p-6">
+              <div className="flex flex-col space-y-4">
+                <div className="flex items-start justify-between">
+                  <div className="w-12 h-12 bg-gradient-to-br from-oslo-blue/15 to-oslo-blue/25 rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
+                    <FileText className="h-6 w-6 text-oslo-blue" />
+                  </div>
+                  <ChevronRight className="h-5 w-5 text-slate-400 group-hover:text-oslo-blue group-hover:translate-x-1 transition-all duration-300" />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="font-bold text-slate-900 text-lg group-hover:text-oslo-blue transition-colors duration-300">
+                    New Application
+                  </h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    Start new kindergarten application
+                  </p>
+                </div>
               </div>
-              <div className="flex-1">
-                <h3 className="font-bold text-slate-900 group-hover:text-oslo-blue transition-colors text-xl mb-2">
-                  {t('guardian.dashboard.newApplication')}
-                </h3>
-                <p className="text-sm text-slate-600 leading-relaxed">{t('guardian.dashboard.newApplicationDesc')}</p>
-              </div>
-              <ArrowRight className="h-6 w-6 text-slate-400 ml-4 group-hover:text-oslo-blue group-hover:translate-x-1 transition-all duration-300" />
             </CardContent>
           </Card>
         </Link>
 
         <Link to="/guardian/application-status" className="group">
-          <Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer group-hover:scale-[1.02] h-full">
-            <div className="absolute inset-0 bg-gradient-to-br from-oslo-green/5 via-white to-oslo-green/10" />
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-oslo-green/10 to-transparent rounded-full transform translate-x-16 -translate-y-16" />
-            <CardContent className="relative flex items-center p-8">
-              <div className="w-16 h-16 bg-gradient-to-br from-oslo-green/10 to-oslo-green/20 rounded-2xl flex items-center justify-center mr-6 group-hover:bg-gradient-to-br group-hover:from-oslo-green/20 group-hover:to-oslo-green/30 transition-all duration-300 group-hover:scale-110">
-                <Clock className="h-8 w-8 text-oslo-green" />
+          <Card className="relative overflow-hidden h-full bg-white/95 backdrop-blur-sm border border-slate-200/80 shadow-md hover:shadow-xl transition-all duration-500 cursor-pointer transform hover:scale-[1.02] hover:bg-white">
+            <div className="absolute inset-0 bg-gradient-to-br from-oslo-green/3 via-transparent to-oslo-green/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-oslo-green/10 to-transparent rounded-full transform translate-x-10 -translate-y-10 group-hover:scale-150 transition-transform duration-700"></div>
+            <CardContent className="relative p-6">
+              <div className="flex flex-col space-y-4">
+                <div className="flex items-start justify-between">
+                  <div className="w-12 h-12 bg-gradient-to-br from-oslo-green/15 to-oslo-green/25 rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
+                    <Clock className="h-6 w-6 text-oslo-green" />
+                  </div>
+                  <ChevronRight className="h-5 w-5 text-slate-400 group-hover:text-oslo-green group-hover:translate-x-1 transition-all duration-300" />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="font-bold text-slate-900 text-lg group-hover:text-oslo-green transition-colors duration-300">
+                    Application Status
+                  </h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    View application progress
+                  </p>
+                </div>
               </div>
-              <div className="flex-1">
-                <h3 className="font-bold text-slate-900 group-hover:text-oslo-green transition-colors text-xl mb-2">
-                  {t('guardian.dashboard.applicationStatus')}
-                </h3>
-                <p className="text-sm text-slate-600 leading-relaxed">{t('guardian.dashboard.applicationStatusDesc')}</p>
-              </div>
-              <ArrowRight className="h-6 w-6 text-slate-400 ml-4 group-hover:text-oslo-green group-hover:translate-x-1 transition-all duration-300" />
             </CardContent>
           </Card>
         </Link>
 
         <Link to="/guardian/messages" className="group">
-          <Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer group-hover:scale-[1.02] h-full">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-blue-100" />
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-100 to-transparent rounded-full transform translate-x-16 -translate-y-16" />
-            <CardContent className="relative flex items-center p-8">
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl flex items-center justify-center mr-6 group-hover:bg-gradient-to-br group-hover:from-blue-200 group-hover:to-blue-300 transition-all duration-300 group-hover:scale-110 relative">
-                <MessageSquare className="h-8 w-8 text-blue-600" />
-                {messages.filter(m => m.unread).length > 0 && (
-                  <span className="absolute -top-2 -right-2 h-7 w-7 bg-gradient-to-br from-red-500 to-red-600 rounded-full text-xs text-white flex items-center justify-center font-bold shadow-lg animate-pulse">
-                    {messages.filter(m => m.unread).length}
-                  </span>
-                )}
+          <Card className="relative overflow-hidden h-full bg-white/95 backdrop-blur-sm border border-slate-200/80 shadow-md hover:shadow-xl transition-all duration-500 cursor-pointer transform hover:scale-[1.02] hover:bg-white">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/3 via-transparent to-blue-500/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-blue-100/50 to-transparent rounded-full transform translate-x-10 -translate-y-10 group-hover:scale-150 transition-transform duration-700"></div>
+            <CardContent className="relative p-6">
+              <div className="flex flex-col space-y-4">
+                <div className="flex items-start justify-between">
+                  <div className="relative w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
+                    <MessageSquare className="h-6 w-6 text-blue-600" />
+                    {messages.filter(m => m.unread).length > 0 && (
+                      <span className="absolute -top-2 -right-2 h-5 w-5 bg-gradient-to-br from-red-500 to-red-600 rounded-full text-xs text-white flex items-center justify-center font-bold shadow-md animate-pulse">
+                        {messages.filter(m => m.unread).length}
+                      </span>
+                    )}
+                  </div>
+                  <ChevronRight className="h-5 w-5 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all duration-300" />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="font-bold text-slate-900 text-lg group-hover:text-blue-600 transition-colors duration-300">
+                    Messages
+                  </h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    {messages.filter(m => m.unread).length} unread messages
+                  </p>
+                </div>
               </div>
-              <div className="flex-1">
-                <h3 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors text-xl mb-2">
-                  {t('guardian.dashboard.messages')}
-                </h3>
-                <p className="text-sm text-slate-600 leading-relaxed">{messages.filter(m => m.unread).length} {t('guardian.dashboard.messagesDesc')}</p>
-              </div>
-              <ArrowRight className="h-6 w-6 text-slate-400 ml-4 group-hover:text-blue-600 group-hover:translate-x-1 transition-all duration-300" />
             </CardContent>
           </Card>
         </Link>
 
         <Link to="/guardian/payments" className="group">
-          <Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer group-hover:scale-[1.02] h-full">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-white to-purple-100" />
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-100 to-transparent rounded-full transform translate-x-16 -translate-y-16" />
-            <CardContent className="relative flex items-center p-8">
-              <div className="w-16 h-16 bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl flex items-center justify-center mr-6 group-hover:bg-gradient-to-br group-hover:from-purple-200 group-hover:to-purple-300 transition-all duration-300 group-hover:scale-110">
-                <CreditCard className="h-8 w-8 text-purple-600" />
+          <Card className="relative overflow-hidden h-full bg-white/95 backdrop-blur-sm border border-slate-200/80 shadow-md hover:shadow-xl transition-all duration-500 cursor-pointer transform hover:scale-[1.02] hover:bg-white">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/3 via-transparent to-purple-500/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-purple-100/50 to-transparent rounded-full transform translate-x-10 -translate-y-10 group-hover:scale-150 transition-transform duration-700"></div>
+            <CardContent className="relative p-6">
+              <div className="flex flex-col space-y-4">
+                <div className="flex items-start justify-between">
+                  <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
+                    <CreditCard className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <ChevronRight className="h-5 w-5 text-slate-400 group-hover:text-purple-600 group-hover:translate-x-1 transition-all duration-300" />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="font-bold text-slate-900 text-lg group-hover:text-purple-600 transition-colors duration-300">
+                    Payments
+                  </h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    Invoices and fees
+                  </p>
+                </div>
               </div>
-              <div className="flex-1">
-                <h3 className="font-bold text-slate-900 group-hover:text-purple-600 transition-colors text-xl mb-2">
-                  {t('guardian.dashboard.payments')}
-                </h3>
-                <p className="text-sm text-slate-600 leading-relaxed">{t('guardian.dashboard.paymentsDesc')}</p>
-              </div>
-              <ArrowRight className="h-6 w-6 text-slate-400 ml-4 group-hover:text-purple-600 group-hover:translate-x-1 transition-all duration-300" />
             </CardContent>
           </Card>
         </Link>
