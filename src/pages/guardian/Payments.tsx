@@ -19,7 +19,8 @@ import {
   Info,
   ExternalLink,
   TrendingUp,
-  Clock
+  Clock,
+  AlertCircle
 } from 'lucide-react';
 
 const Payments = () => {
@@ -117,118 +118,145 @@ const Payments = () => {
 
   return (
     <div className="space-y-8">
+      {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900">{t('guardian.payments.title')}</h1>
         <p className="text-gray-600 mt-2">{t('guardian.payments.description')}</p>
       </div>
 
-      {/* Enhanced Payment Summary */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="shadow-lg border-0 bg-gradient-to-br from-red-50 to-red-100 border-red-200">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
-                <AlertTriangle className="h-6 w-6 text-red-600" />
+      {/* Outstanding Balance - Primary Focus */}
+      <Card className="shadow-xl border-0 bg-gradient-to-br from-red-50 to-red-100 border-red-200">
+        <CardContent className="p-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center">
+                <AlertCircle className="h-8 w-8 text-red-600" />
               </div>
               <div>
-                <p className="text-sm text-red-600 font-medium">Outstanding Balance</p>
-                <p className="text-2xl font-bold text-red-700">
+                <p className="text-sm text-red-600 font-medium mb-1">Outstanding Balance</p>
+                <p className="text-4xl font-bold text-red-700 mb-2">
                   {formatCurrency(paymentSummary.currentBalance)}
                 </p>
-                <p className="text-xs text-red-600 flex items-center gap-1">
-                  <Clock className="h-3 w-3" />
+                <p className="text-sm text-red-600 flex items-center gap-2">
+                  <Clock className="h-4 w-4" />
                   Due: {paymentSummary.nextPaymentDue}
                 </p>
               </div>
             </div>
-          </CardContent>
-        </Card>
+            <Button size="lg" className="bg-red-600 hover:bg-red-700 text-white px-8">
+              <ExternalLink className="h-5 w-5 mr-2" />
+              Pay Now
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
-        <Card className="shadow-lg border-0 bg-gradient-to-br from-blue-50 to-blue-100">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                <CreditCard className="h-6 w-6 text-blue-600" />
+      <div className="grid lg:grid-cols-2 gap-8">
+        {/* Left Column - Payment Overview */}
+        <div className="space-y-6">
+          {/* Current Payment Summary */}
+          <Card className="shadow-lg border-0">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                  <CreditCard className="h-5 w-5 text-blue-600" />
+                </div>
+                Payment Summary
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <p className="text-sm text-gray-600">Monthly Fee</p>
+                  <p className="text-2xl font-bold text-blue-700">
+                    {formatCurrency(paymentSummary.monthlyFeeAfterReduction)}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    <span className="line-through">{formatCurrency(paymentSummary.originalMonthlyFee)}</span> after reduction
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm text-gray-600">Total Paid (2024)</p>
+                  <p className="text-2xl font-bold text-green-700">
+                    {formatCurrency(paymentSummary.totalPaidThisYear)}
+                  </p>
+                  <p className="text-xs text-gray-500">3 payments completed</p>
+                </div>
               </div>
-              <div>
-                <p className="text-sm text-blue-600 font-medium">Monthly Fee</p>
-                <p className="text-2xl font-bold text-blue-700">
-                  {formatCurrency(paymentSummary.monthlyFeeAfterReduction)}
-                </p>
-                <p className="text-xs text-blue-600">
-                  <span className="line-through">{formatCurrency(paymentSummary.originalMonthlyFee)}</span> after reduction
-                </p>
+              
+              <div className="pt-4 border-t">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
+                    <DollarSign className="h-4 w-4 text-emerald-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Total Saved This Year</p>
+                    <p className="text-xl font-bold text-emerald-700">
+                      {formatCurrency(paymentSummary.totalSavedThisYear)}
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        <Card className="shadow-lg border-0 bg-gradient-to-br from-green-50 to-green-100">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                <TrendingUp className="h-6 w-6 text-green-600" />
-              </div>
+          {/* Reduction Status */}
+          {paymentSummary.reductionApproved && (
+            <Alert className="border-green-200 bg-green-50">
+              <CheckCircle className="h-5 w-5 text-green-600" />
               <div>
-                <p className="text-sm text-green-600 font-medium">Total Paid (2024)</p>
-                <p className="text-2xl font-bold text-green-700">
-                  {formatCurrency(paymentSummary.totalPaidThisYear)}
-                </p>
-                <p className="text-xs text-green-600">3 payments</p>
+                <h4 className="text-green-800 font-semibold">{t('guardian.payments.reducedPayment')}</h4>
+                <AlertDescription className="text-green-700">
+                  {t('guardian.payments.applicationApproved')} You're saving {formatCurrency(paymentSummary.originalMonthlyFee - paymentSummary.monthlyFeeAfterReduction)} per month.
+                </AlertDescription>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </Alert>
+          )}
 
-        <Card className="shadow-lg border-0 bg-gradient-to-br from-emerald-50 to-emerald-100">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
-                <DollarSign className="h-6 w-6 text-emerald-600" />
-              </div>
-              <div>
-                <p className="text-sm text-emerald-600 font-medium">{t('guardian.payments.savedReduction')}</p>
-                <p className="text-2xl font-bold text-emerald-700">
-                  {formatCurrency(paymentSummary.totalSavedThisYear)}
-                </p>
-                <p className="text-xs text-emerald-600">This year</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+          {/* Payment Information */}
+          <Card className="shadow-lg border-0 bg-blue-50 border-blue-200">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3 text-blue-800">
+                <Info className="h-5 w-5" />
+                {t('guardian.payments.paymentInfo')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2 text-blue-700">
+                {paymentInfo.map((info, index) => (
+                  <li key={index} className="flex items-start gap-2">
+                    <span className="text-blue-600 mt-1">•</span>
+                    <span className="text-sm">{info}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Right Column - Fee Reduction */}
+        <div className="space-y-6">
+          <FeeReductionCalculator
+            onApplyClick={() => setShowFeeReductionModal(true)}
+            currentFee={paymentSummary.originalMonthlyFee}
+          />
+        </div>
       </div>
 
-      {/* Reduction Approved Alert */}
-      {paymentSummary.reductionApproved && (
-        <Alert className="border-green-200 bg-green-50">
-          <CheckCircle className="h-5 w-5 text-green-600" />
-          <div>
-            <h4 className="text-green-800 font-semibold">{t('guardian.payments.reducedPayment')}</h4>
-            <AlertDescription className="text-green-700">
-              {t('guardian.payments.applicationApproved')} You're saving {formatCurrency(paymentSummary.originalMonthlyFee - paymentSummary.monthlyFeeAfterReduction)} per month.
-            </AlertDescription>
-          </div>
-        </Alert>
-      )}
-
-      {/* Fee Reduction Calculator - Always show */}
-      <FeeReductionCalculator
-        onApplyClick={() => setShowFeeReductionModal(true)}
-        currentFee={paymentSummary.originalMonthlyFee}
-      />
-
-      {/* Payment History Table */}
+      {/* Payment History - Full Width */}
       <Card className="shadow-lg border-0">
         <CardHeader>
-          <CardTitle className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-oslo-blue/10 rounded-xl flex items-center justify-center">
-              <FileText className="h-5 w-5 text-oslo-blue" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-oslo-blue/10 rounded-xl flex items-center justify-center">
+                <FileText className="h-5 w-5 text-oslo-blue" />
+              </div>
+              <div>
+                <CardTitle>Payment History</CardTitle>
+                <CardDescription>Complete overview of all invoices and payments</CardDescription>
+              </div>
             </div>
-            Payment History
-          </CardTitle>
-          <CardDescription>
-            Complete overview of all invoices and payments
-          </CardDescription>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="rounded-lg border border-gray-200 overflow-hidden">
@@ -238,10 +266,7 @@ const Payments = () => {
                   <TableHead className="font-semibold">Invoice</TableHead>
                   <TableHead className="font-semibold">Period</TableHead>
                   <TableHead className="font-semibold">Due Date</TableHead>
-                  <TableHead className="font-semibold">Original Amount</TableHead>
-                  <TableHead className="font-semibold">Final Amount</TableHead>
-                  <TableHead className="font-semibold">Payment Method</TableHead>
-                  <TableHead className="font-semibold">Reference</TableHead>
+                  <TableHead className="font-semibold">Amount</TableHead>
                   <TableHead className="font-semibold">Status</TableHead>
                   <TableHead className="font-semibold">Actions</TableHead>
                 </TableRow>
@@ -254,28 +279,23 @@ const Payments = () => {
                     <TableCell>{invoice.dueDate}</TableCell>
                     <TableCell>
                       <div className="flex flex-col">
-                        <span className="line-through text-gray-500 text-sm">
-                          {formatCurrency(invoice.originalAmount)}
+                        <span className="font-semibold">
+                          {formatCurrency(invoice.amountDue)}
                         </span>
                         {invoice.reduction > 0 && (
-                          <span className="text-green-600 text-xs font-medium">
-                            -{formatCurrency(invoice.reduction)}
+                          <span className="text-xs text-green-600">
+                            {formatCurrency(invoice.reduction)} saved
                           </span>
                         )}
                       </div>
                     </TableCell>
-                    <TableCell className="font-semibold">
-                      {formatCurrency(invoice.amountDue)}
-                    </TableCell>
-                    <TableCell>{invoice.paymentMethod}</TableCell>
-                    <TableCell className="font-mono text-sm">{invoice.referenceNumber}</TableCell>
                     <TableCell>{getStatusBadge(invoice.status)}</TableCell>
                     <TableCell>
                       <div className="flex gap-2">
                         {invoice.status === 'due' && (
                           <Button size="sm" className="bg-green-600 hover:bg-green-700">
                             <ExternalLink className="h-4 w-4 mr-1" />
-                            Pay Now
+                            Pay
                           </Button>
                         )}
                         <Button variant="outline" size="sm">
@@ -293,26 +313,6 @@ const Payments = () => {
               </TableBody>
             </Table>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Payment Information */}
-      <Card className="shadow-lg border-0 bg-blue-50 border-blue-200">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3 text-blue-800">
-            <Info className="h-5 w-5" />
-            {t('guardian.payments.paymentInfo')}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul className="space-y-2 text-blue-700">
-            {paymentInfo.map((info, index) => (
-              <li key={index} className="flex items-start gap-2">
-                <span className="text-blue-600 mt-1">•</span>
-                <span className="text-sm">{info}</span>
-              </li>
-            ))}
-          </ul>
         </CardContent>
       </Card>
 
