@@ -15,7 +15,9 @@ import {
   CheckCircle,
   Shield,
   Globe,
-  Clock
+  Clock,
+  BookOpen,
+  GraduationCap
 } from 'lucide-react';
 
 const Index = () => {
@@ -30,7 +32,7 @@ const Index = () => {
   // Show loading while checking authentication
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-oslo-blue to-blue-700">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-blue-900">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
       </div>
     );
@@ -38,56 +40,56 @@ const Index = () => {
 
   const features = [
     {
-      title: 'Streamlined Applications',
-      description: 'Digital application process with document upload and real-time status tracking',
+      title: 'Digital Admissions',
+      description: 'Streamlined application process with document management and real-time status tracking',
       icon: FileText,
-      color: 'bg-blue-100 text-blue-600'
+      color: 'bg-blue-50 text-blue-600'
     },
     {
-      title: 'Intelligent Placement',
-      description: 'Automated matching system considering preferences, special needs, and capacity',
+      title: 'Smart Placement System',
+      description: 'AI-powered matching considering preferences, requirements, and institutional capacity',
       icon: Users,
-      color: 'bg-green-100 text-green-600'
+      color: 'bg-green-50 text-green-600'
     },
     {
-      title: 'Multi-Role Portal',
-      description: 'Dedicated interfaces for guardians, case workers, kindergarten staff, and administrators',
+      title: 'Multi-Role Platform',
+      description: 'Integrated dashboards for administrators, staff, students, and parents',
       icon: Building,
-      color: 'bg-purple-100 text-purple-600'
+      color: 'bg-purple-50 text-purple-600'
     },
     {
       title: 'Secure & Compliant',
-      description: 'GDPR compliant with ID-porten integration and NOARK 5 archiving',
+      description: 'Enterprise-grade security with educational data privacy compliance',
       icon: Shield,
-      color: 'bg-orange-100 text-orange-600'
+      color: 'bg-orange-50 text-orange-600'
     }
   ];
 
   const stats = [
-    { label: 'Kindergartens', value: '680+' },
-    { label: 'Children Served', value: '35,000+' },
-    { label: 'Annual Applications', value: '20,000+' },
-    { label: 'Success Rate', value: '92%' }
+    { label: 'Educational Institutions', value: '2,500+' },
+    { label: 'Students Managed', value: '150,000+' },
+    { label: 'Annual Applications', value: '75,000+' },
+    { label: 'System Uptime', value: '99.9%' }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-oslo-blue to-blue-700">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-blue-900">
       {/* Header */}
       <header className="bg-white/10 backdrop-blur-md border-b border-white/20">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center">
-                <Building className="h-6 w-6 text-oslo-blue" />
+                <GraduationCap className="h-6 w-6 text-blue-900" />
               </div>
-              <h1 className="text-xl font-bold text-white">Oslo Kindergarten Portal</h1>
+              <h1 className="text-xl font-bold text-white">IST Platform</h1>
             </div>
             <div className="flex items-center gap-4">
               <Badge variant="outline" className="text-white border-white/30 bg-white/10">
-                Production Ready
+                Enterprise Ready
               </Badge>
               <Link to="/login">
-                <Button className="bg-white text-oslo-blue hover:bg-gray-100">
+                <Button className="bg-white text-blue-900 hover:bg-gray-100 font-medium">
                   {t('auth.login')}
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
@@ -101,25 +103,25 @@ const Index = () => {
       <section className="py-20">
         <div className="container mx-auto px-6 text-center">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-5xl font-bold text-white mb-6">
-              Comprehensive Kindergarten Admissions System
+            <h2 className="text-5xl font-bold text-white mb-6 leading-tight">
+              Integrated School Technology Platform
             </h2>
-            <p className="text-xl text-blue-100 mb-8 leading-relaxed">
-              A centralized platform managing 680 kindergartens, serving 35,000+ children 
-              with 20,000+ annual applications. Supporting multiple user roles with 
-              integrated workflows for applications, placements, messaging, and administration.
+            <p className="text-xl text-blue-100 mb-8 leading-relaxed max-w-3xl mx-auto">
+              Comprehensive educational administration system managing 2,500+ institutions 
+              and 150,000+ students. Streamlined workflows for admissions, placements, 
+              communications, and institutional management across all educational levels.
             </p>
-            <div className="flex items-center justify-center gap-4">
+            <div className="flex items-center justify-center gap-4 flex-wrap">
               <Link to="/login">
-                <Button size="lg" className="bg-white text-oslo-blue hover:bg-gray-100 h-14 px-8 text-lg">
-                  Access Portal
+                <Button size="lg" className="bg-white text-blue-900 hover:bg-gray-100 h-14 px-8 text-lg font-medium">
+                  Access Platform
                   <ArrowRight className="h-5 w-5 ml-2" />
                 </Button>
               </Link>
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="border-white text-white hover:bg-white hover:text-oslo-blue h-14 px-8 text-lg"
+                className="border-white text-white hover:bg-white hover:text-blue-900 h-14 px-8 text-lg"
               >
                 View Demo
                 <Globe className="h-5 w-5 ml-2" />
@@ -136,7 +138,7 @@ const Index = () => {
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="text-4xl font-bold text-white mb-2">{stat.value}</div>
-                <div className="text-blue-200">{stat.label}</div>
+                <div className="text-blue-200 text-sm">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -147,9 +149,9 @@ const Index = () => {
       <section className="py-20">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h3 className="text-3xl font-bold text-white mb-4">Platform Features</h3>
+            <h3 className="text-3xl font-bold text-white mb-4">Platform Capabilities</h3>
             <p className="text-blue-100 text-lg max-w-2xl mx-auto">
-              Built for efficiency, designed for compliance, and optimized for user experience
+              Built for educational excellence with enterprise-grade reliability and user-focused design
             </p>
           </div>
           
@@ -177,60 +179,60 @@ const Index = () => {
       <section className="py-20 bg-white/5 backdrop-blur-sm">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h3 className="text-3xl font-bold text-white mb-4">Multi-Role Access</h3>
-            <p className="text-blue-100 text-lg">Tailored interfaces for every user type</p>
+            <h3 className="text-3xl font-bold text-white mb-4">Role-Based Access</h3>
+            <p className="text-blue-100 text-lg">Tailored interfaces for every stakeholder in education</p>
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card className="bg-white/10 backdrop-blur-md border-white/20 text-white text-center">
               <CardContent className="pt-6">
-                <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-blue-50 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <Users className="h-8 w-8 text-blue-600" />
                 </div>
-                <h4 className="text-lg font-semibold mb-2">Guardians</h4>
-                <p className="text-blue-100 text-sm">Submit applications, track status, manage payments</p>
+                <h4 className="text-lg font-semibold mb-2">Students & Parents</h4>
+                <p className="text-blue-100 text-sm">Application submission, status tracking, communication</p>
               </CardContent>
             </Card>
 
             <Card className="bg-white/10 backdrop-blur-md border-white/20 text-white text-center">
               <CardContent className="pt-6">
-                <div className="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <FileText className="h-8 w-8 text-green-600" />
                 </div>
-                <h4 className="text-lg font-semibold mb-2">Case Workers</h4>
-                <p className="text-blue-100 text-sm">Review applications, manage placements</p>
+                <h4 className="text-lg font-semibold mb-2">Admissions Staff</h4>
+                <p className="text-blue-100 text-sm">Application review, placement management</p>
               </CardContent>
             </Card>
 
             <Card className="bg-white/10 backdrop-blur-md border-white/20 text-white text-center">
               <CardContent className="pt-6">
-                <div className="w-16 h-16 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <Building className="h-8 w-8 text-purple-600" />
+                <div className="w-16 h-16 bg-purple-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <BookOpen className="h-8 w-8 text-purple-600" />
                 </div>
-                <h4 className="text-lg font-semibold mb-2">Kindergarten Staff</h4>
-                <p className="text-blue-100 text-sm">Manage capacity, confirm placements</p>
+                <h4 className="text-lg font-semibold mb-2">Educational Staff</h4>
+                <p className="text-blue-100 text-sm">Enrollment management, student records</p>
               </CardContent>
             </Card>
 
             <Card className="bg-white/10 backdrop-blur-md border-white/20 text-white text-center">
               <CardContent className="pt-6">
-                <div className="w-16 h-16 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-orange-50 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <Shield className="h-8 w-8 text-orange-600" />
                 </div>
                 <h4 className="text-lg font-semibold mb-2">Administrators</h4>
-                <p className="text-blue-100 text-sm">System configuration, reports, user management</p>
+                <p className="text-blue-100 text-sm">System oversight, reporting, configuration</p>
               </CardContent>
             </Card>
           </div>
         </div>
       </section>
 
-      {/* Integration & Compliance */}
+      {/* Integration & Security */}
       <section className="py-20">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h3 className="text-3xl font-bold text-white mb-4">Integrations & Compliance</h3>
-            <p className="text-blue-100 text-lg">Connected to national services and fully compliant</p>
+            <h3 className="text-3xl font-bold text-white mb-4">Enterprise Integration</h3>
+            <p className="text-blue-100 text-lg">Seamless connectivity with existing educational infrastructure</p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
@@ -238,13 +240,13 @@ const Index = () => {
               <CardContent className="pt-6">
                 <div className="flex items-center gap-3 mb-4">
                   <CheckCircle className="h-6 w-6 text-green-400" />
-                  <h4 className="text-lg font-semibold">National Services</h4>
+                  <h4 className="text-lg font-semibold">System Integration</h4>
                 </div>
-                <ul className="space-y-2 text-blue-100">
-                  <li>• FREG (Population Register)</li>
-                  <li>• ID-porten Authentication</li>
-                  <li>• Altinn Notifications</li>
-                  <li>• SvarUt Document Dispatch</li>
+                <ul className="space-y-2 text-blue-100 text-sm">
+                  <li>• Student Information Systems</li>
+                  <li>• Learning Management Systems</li>
+                  <li>• Financial Management Systems</li>
+                  <li>• Identity Management (SSO)</li>
                 </ul>
               </CardContent>
             </Card>
@@ -253,13 +255,13 @@ const Index = () => {
               <CardContent className="pt-6">
                 <div className="flex items-center gap-3 mb-4">
                   <Shield className="h-6 w-6 text-green-400" />
-                  <h4 className="text-lg font-semibold">Compliance</h4>
+                  <h4 className="text-lg font-semibold">Security & Compliance</h4>
                 </div>
-                <ul className="space-y-2 text-blue-100">
-                  <li>• GDPR Compliant</li>
-                  <li>• NOARK 5 Archiving</li>
-                  <li>• ISO 27001 Security</li>
-                  <li>• WCAG 2.1 AA Accessibility</li>
+                <ul className="space-y-2 text-blue-100 text-sm">
+                  <li>• FERPA Compliant</li>
+                  <li>• SOC 2 Type II Certified</li>
+                  <li>• End-to-End Encryption</li>
+                  <li>• Regular Security Audits</li>
                 </ul>
               </CardContent>
             </Card>
@@ -268,13 +270,13 @@ const Index = () => {
               <CardContent className="pt-6">
                 <div className="flex items-center gap-3 mb-4">
                   <Clock className="h-6 w-6 text-green-400" />
-                  <h4 className="text-lg font-semibold">Performance</h4>
+                  <h4 className="text-lg font-semibold">Performance & Support</h4>
                 </div>
-                <ul className="space-y-2 text-blue-100">
+                <ul className="space-y-2 text-blue-100 text-sm">
                   <li>• 99.9% Uptime SLA</li>
-                  <li>• &lt;3s Response Time</li>
-                  <li>• 500+ Concurrent Users</li>
-                  <li>• TLS 1.3 Encryption</li>
+                  <li>• Sub-2s Response Time</li>
+                  <li>• 24/7 Technical Support</li>
+                  <li>• Dedicated Success Manager</li>
                 </ul>
               </CardContent>
             </Card>
@@ -288,12 +290,12 @@ const Index = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-                <Building className="h-5 w-5 text-oslo-blue" />
+                <GraduationCap className="h-5 w-5 text-blue-900" />
               </div>
-              <span className="text-white font-medium">Oslo Municipality</span>
+              <span className="text-white font-medium">IST Platform</span>
             </div>
             <div className="text-blue-200 text-sm">
-              © 2024 Oslo Kindergarten Portal. Production-ready prototype.
+              © 2024 Integrated School Technology. Enterprise education platform.
             </div>
           </div>
         </div>
