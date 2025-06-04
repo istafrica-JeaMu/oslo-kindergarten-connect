@@ -211,17 +211,19 @@ const GuardianDashboard = () => {
                 <p className="text-slate-600 text-xl font-medium mt-2">
                   {t('guardian.dashboard.overview')}
                 </p>
-                <div className="flex items-center gap-3 mt-3">
-                  <Badge className="relative overflow-hidden bg-gradient-to-br from-oslo-blue/10 via-oslo-blue/15 to-oslo-blue/20 text-oslo-blue border-oslo-blue/30 font-bold px-4 py-2 shadow-lg hover:shadow-xl transition-all duration-300 group">
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                    <Shield className="w-4 h-4 mr-2 relative z-10" />
-                    <span className="relative z-10 text-sm font-semibold">Guardian Account</span>
+                <div className="flex items-center gap-4 mt-4">
+                  <Badge className="relative overflow-hidden bg-gradient-to-br from-oslo-blue/20 via-oslo-blue/30 to-oslo-blue/40 text-oslo-blue border-2 border-oslo-blue/50 font-bold px-6 py-3 shadow-2xl hover:shadow-3xl transition-all duration-500 group transform hover:scale-105 hover:-translate-y-1">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-oslo-blue/10 to-transparent rounded-lg animate-pulse"></div>
+                    <Shield className="w-5 h-5 mr-3 relative z-10 drop-shadow-lg" />
+                    <span className="relative z-10 text-base font-bold tracking-wide">Guardian Account</span>
                   </Badge>
-                  <Badge className="relative overflow-hidden bg-gradient-to-br from-oslo-green/10 via-oslo-green/15 to-oslo-green/20 text-oslo-green border-oslo-green/30 font-bold px-4 py-2 shadow-lg hover:shadow-xl transition-all duration-300 group">
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-br from-oslo-green to-green-600 rounded-full animate-pulse shadow-md"></div>
-                    <Star className="w-4 h-4 mr-2 relative z-10 drop-shadow-sm" />
-                    <span className="relative z-10 text-sm font-semibold">Verified</span>
+                  <Badge className="relative overflow-hidden bg-gradient-to-br from-oslo-green/20 via-oslo-green/30 to-oslo-green/40 text-oslo-green border-2 border-oslo-green/50 font-bold px-6 py-3 shadow-2xl hover:shadow-3xl transition-all duration-500 group transform hover:scale-105 hover:-translate-y-1">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-oslo-green/10 to-transparent rounded-lg"></div>
+                    <div className="absolute -top-2 -right-2 w-4 h-4 bg-gradient-to-br from-oslo-green via-green-500 to-green-600 rounded-full animate-bounce shadow-xl border-2 border-white"></div>
+                    <Star className="w-5 h-5 mr-3 relative z-10 drop-shadow-lg animate-pulse" />
+                    <span className="relative z-10 text-base font-bold tracking-wide">Verified</span>
                   </Badge>
                 </div>
               </div>
