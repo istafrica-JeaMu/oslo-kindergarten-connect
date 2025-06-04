@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -24,13 +25,17 @@ import {
   AlertCircle,
   TrendingDown,
   Wallet,
-  MoreHorizontal
+  MoreHorizontal,
+  ChevronDown,
+  Shield,
+  Zap
 } from 'lucide-react';
 
 const Payments = () => {
   const { t } = useTranslation();
   const [selectedInvoice, setSelectedInvoice] = useState<any>(null);
   const [showFeeReductionModal, setShowFeeReductionModal] = useState(false);
+  const [showQuickPayOptions, setShowQuickPayOptions] = useState(false);
   const [timeUntilDue, setTimeUntilDue] = useState<{ days: number; hours: number; minutes: number }>({ days: 0, hours: 0, minutes: 0 });
 
   // Mock payment data
@@ -229,85 +234,134 @@ const Payments = () => {
       </div>
 
       {/* Enhanced Outstanding Balance Card */}
-      <Card className={`shadow-xl border-0 ${isOverdue ? 'bg-gradient-to-br from-red-100 to-red-200 border-red-300' : isUrgent ? 'bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200' : 'bg-gradient-to-br from-red-50 to-red-100 border-red-200'}`}>
-        <CardContent className="p-8">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-            <div className="flex items-center gap-6">
-              <div className={`w-16 h-16 ${isOverdue ? 'bg-red-200' : isUrgent ? 'bg-amber-100' : 'bg-red-100'} rounded-2xl flex items-center justify-center ring-4 ${isOverdue ? 'ring-red-100' : isUrgent ? 'ring-amber-50' : 'ring-red-50'}`}>
-                <AlertCircle className={`h-8 w-8 ${isOverdue ? 'text-red-700' : isUrgent ? 'text-amber-600' : 'text-red-600'}`} />
+      <Card className={`shadow-xl border-0 overflow-hidden ${isOverdue ? 'bg-gradient-to-br from-red-50 to-red-100' : isUrgent ? 'bg-gradient-to-br from-amber-50 to-amber-100' : 'bg-gradient-to-br from-blue-50 to-blue-100'}`}>
+        <CardContent className="p-6 sm:p-8">
+          {/* Status Banner */}
+          {(isOverdue || isUrgent) && (
+            <div className={`mb-6 flex items-center gap-3 p-4 rounded-xl ${isOverdue ? 'bg-red-100 border border-red-200' : 'bg-amber-100 border border-amber-200'}`}>
+              <div className={`p-2 rounded-lg ${isOverdue ? 'bg-red-200' : 'bg-amber-200'}`}>
+                <AlertTriangle className={`h-5 w-5 ${isOverdue ? 'text-red-700' : 'text-amber-700'}`} />
               </div>
               <div>
-                <p className={`text-sm ${isOverdue ? 'text-red-700' : isUrgent ? 'text-amber-600' : 'text-red-600'} font-medium mb-1 uppercase tracking-wide`}>
-                  {isOverdue ? 'OVERDUE PAYMENT' : 'Outstanding Balance'}
+                <h3 className={`font-bold ${isOverdue ? 'text-red-800' : 'text-amber-800'}`}>
+                  {isOverdue ? 'Payment Overdue' : 'Payment Due Soon'}
+                </h3>
+                <p className={`text-sm ${isOverdue ? 'text-red-700' : 'text-amber-700'}`}>
+                  {isOverdue ? 'Late fees may apply' : `${timeUntilDue.days} days remaining`}
                 </p>
-                <p className={`text-4xl font-bold ${isOverdue ? 'text-red-800' : isUrgent ? 'text-amber-700' : 'text-red-700'} mb-2`}>
-                  {formatCurrency(paymentSummary.currentBalance)}
-                </p>
-                
-                {/* Countdown Timer */}
-                <div className={`flex items-center gap-3 text-sm ${isOverdue ? 'text-red-700' : isUrgent ? 'text-amber-600' : 'text-red-600'} mb-3`}>
-                  <div className="flex items-center gap-1">
-                    <Clock className="h-4 w-4" />
-                    <span>Due: {formatDate(paymentSummary.nextPaymentDue)}</span>
-                  </div>
-                  <div className="w-1 h-1 bg-current rounded-full"></div>
-                  <span className="font-medium">2 unpaid invoices</span>
-                </div>
-
-                {!isOverdue && (
-                  <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg ${isUrgent ? 'bg-amber-200 text-amber-800' : 'bg-red-200 text-red-800'} text-sm font-medium`}>
-                    <div className="flex items-center gap-1">
-                      <span className="text-xs">Time left:</span>
-                      <span className="font-bold">
-                        {timeUntilDue.days}d {timeUntilDue.hours}h {timeUntilDue.minutes}m
-                      </span>
-                    </div>
-                  </div>
-                )}
-
-                {isOverdue && (
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-200 text-red-800 text-sm font-bold animate-pulse">
-                    <AlertTriangle className="h-4 w-4" />
-                    PAYMENT OVERDUE
-                  </div>
-                )}
               </div>
             </div>
+          )}
+
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            {/* Payment Info Section */}
+            <div className="flex-1">
+              <div className="flex items-center gap-4 mb-4">
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${isOverdue ? 'bg-red-200' : isUrgent ? 'bg-amber-200' : 'bg-blue-200'}`}>
+                  <AlertCircle className={`h-7 w-7 ${isOverdue ? 'text-red-700' : isUrgent ? 'text-amber-700' : 'text-blue-700'}`} />
+                </div>
+                <div>
+                  <p className={`text-sm font-semibold ${isOverdue ? 'text-red-700' : isUrgent ? 'text-amber-700' : 'text-blue-700'} uppercase tracking-wide`}>
+                    Outstanding Balance
+                  </p>
+                  <h2 className={`text-4xl font-bold ${isOverdue ? 'text-red-800' : isUrgent ? 'text-amber-800' : 'text-blue-800'} leading-tight`}>
+                    {formatCurrency(paymentSummary.currentBalance)}
+                  </h2>
+                </div>
+              </div>
+
+              {/* Payment Details */}
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <Calendar className="h-4 w-4" />
+                  <span>Due: {formatDate(paymentSummary.nextPaymentDue)}</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <FileText className="h-4 w-4" />
+                  <span>2 unpaid invoices</span>
+                </div>
+              </div>
+
+              {/* Countdown Timer - Simplified */}
+              {!isOverdue && (
+                <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg ${isUrgent ? 'bg-amber-200 text-amber-800' : 'bg-blue-200 text-blue-800'} text-sm font-medium`}>
+                  <Clock className="h-4 w-4" />
+                  <span>{timeUntilDue.days}d {timeUntilDue.hours}h remaining</span>
+                </div>
+              )}
+            </div>
             
-            {/* Payment Actions */}
-            <div className="flex flex-col gap-3">
+            {/* Payment Actions - Improved Hierarchy */}
+            <div className="flex flex-col gap-3 min-w-[280px]">
+              {/* Primary CTA */}
               <Button 
                 size="lg" 
-                className={`${isOverdue ? 'bg-red-700 hover:bg-red-800' : 'bg-red-600 hover:bg-red-700'} text-white px-8 shadow-lg hover:shadow-xl transition-all`}
+                className={`h-14 ${isOverdue ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'} text-white px-6 shadow-lg hover:shadow-xl transition-all duration-200 text-base font-semibold group relative overflow-hidden`}
                 onClick={() => handlePaymentClick(paymentSummary.currentBalance, 'full')}
               >
-                <ExternalLink className="h-5 w-5 mr-2" />
-                Pay Full Amount
+                <div className="flex items-center justify-between w-full">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                      <Zap className="h-4 w-4" />
+                    </div>
+                    <div className="text-left">
+                      <div className="font-bold">Pay Full Amount</div>
+                      <div className="text-xs opacity-90">{formatCurrency(paymentSummary.currentBalance)}</div>
+                    </div>
+                  </div>
+                  <ExternalLink className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                </div>
+                
+                {/* Shimmer effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
               </Button>
               
-              {/* Quick Payment Options */}
-              <div className="flex gap-2">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="border-red-300 text-red-700 hover:bg-red-50"
-                  onClick={() => handleQuickPayment(2220, 'Single Invoice')}
-                >
-                  Pay {formatCurrency(2220)}
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="border-red-300 text-red-700 hover:bg-red-50"
-                  onClick={() => handleQuickPayment(paymentSummary.currentBalance / 2, 'Half')}
-                >
-                  Pay Half
-                </Button>
-              </div>
+              {/* Secondary Options */}
+              <Button 
+                variant="outline" 
+                className="text-gray-700 border-gray-300 hover:bg-gray-50"
+                onClick={() => setShowQuickPayOptions(!showQuickPayOptions)}
+              >
+                <span>More Payment Options</span>
+                <ChevronDown className={`h-4 w-4 ml-2 transition-transform ${showQuickPayOptions ? 'rotate-180' : ''}`} />
+              </Button>
+
+              {/* Expandable Quick Options */}
+              {showQuickPayOptions && (
+                <div className="space-y-2 animate-fade-in">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full justify-between text-gray-600 hover:bg-gray-50"
+                    onClick={() => handleQuickPayment(2220, 'Single Invoice')}
+                  >
+                    <span>Pay Single Invoice</span>
+                    <span className="font-semibold">{formatCurrency(2220)}</span>
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full justify-between text-gray-600 hover:bg-gray-50"
+                    onClick={() => handleQuickPayment(paymentSummary.currentBalance / 2, 'Partial')}
+                  >
+                    <span>Pay Partial Amount</span>
+                    <span className="font-semibold">{formatCurrency(paymentSummary.currentBalance / 2)}</span>
+                  </Button>
+                </div>
+              )}
               
-              <p className="text-xs text-gray-600 text-center">
-                Secure payment via bank transfer or card
-              </p>
+              {/* Trust Indicators */}
+              <div className="flex items-center justify-center gap-4 pt-2">
+                <div className="flex items-center gap-1 text-xs text-gray-500">
+                  <Shield className="h-3 w-3" />
+                  <span>Secure</span>
+                </div>
+                <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
+                <div className="flex items-center gap-1 text-xs text-gray-500">
+                  <CheckCircle className="h-3 w-3" />
+                  <span>Bank verified</span>
+                </div>
+              </div>
             </div>
           </div>
         </CardContent>
