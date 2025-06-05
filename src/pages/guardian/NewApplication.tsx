@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { FileText, User, Building2, Calendar, ArrowRight, CheckCircle, AlertCircle, Sparkles, Clock, Shield, Upload, Info, AlertTriangle, HelpCircle, Loader2, Database } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import GuardianInfoManager from '@/components/guardian/GuardianInfoManager';
 
 const NewApplication = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -140,36 +140,6 @@ const NewApplication = () => {
     }
   };
 
-  const applicationTypes = [
-    {
-      id: 'new-admission',
-      title: 'New Admission',
-      icon: '🏫',
-      description: 'For children without a current kindergarten placement',
-      details: 'First-time application for kindergarten placement in Oslo',
-      color: 'from-oslo-blue to-blue-700',
-      recommended: true
-    },
-    {
-      id: 'transfer-request',
-      title: 'Transfer Request',
-      icon: '🔄',
-      description: 'For changing from one kindergarten to another',
-      details: 'Moving your child from their current kindergarten to a new one',
-      color: 'from-oslo-green to-green-600',
-      recommended: false
-    },
-    {
-      id: 'late-ongoing',
-      title: 'Late/Ongoing Application',
-      icon: '⏱️',
-      description: 'For applying after main deadlines or under special circumstances',
-      details: 'Applications submitted outside standard deadlines or for immediate placement needs',
-      color: 'from-amber-500 to-orange-500',
-      recommended: false
-    }
-  ];
-
   const steps = [
     { id: 0, title: 'Application Type', icon: Calendar, description: 'Choose your application intent' },
     { id: 1, title: 'Child Information', icon: User, description: 'Basic details about your child' },
@@ -281,7 +251,35 @@ const NewApplication = () => {
       </div>
 
       <div className="grid gap-4">
-        {applicationTypes.map((type) => (
+        {[
+          {
+            id: 'new-admission',
+            title: 'New Admission',
+            icon: '🏫',
+            description: 'For children without a current kindergarten placement',
+            details: 'First-time application for kindergarten placement in Oslo',
+            color: 'from-oslo-blue to-blue-700',
+            recommended: true
+          },
+          {
+            id: 'transfer-request',
+            title: 'Transfer Request',
+            icon: '🔄',
+            description: 'For changing from one kindergarten to another',
+            details: 'Moving your child from their current kindergarten to a new one',
+            color: 'from-oslo-green to-green-600',
+            recommended: false
+          },
+          {
+            id: 'late-ongoing',
+            title: 'Late/Ongoing Application',
+            icon: '⏱️',
+            description: 'For applying after main deadlines or under special circumstances',
+            details: 'Applications submitted outside standard deadlines or for immediate placement needs',
+            color: 'from-amber-500 to-orange-500',
+            recommended: false
+          }
+        ].map((type) => (
           <Card 
             key={type.id} 
             className={`group hover:shadow-lg transition-all duration-300 cursor-pointer border-2 ${
@@ -536,6 +534,14 @@ const NewApplication = () => {
     </div>
   );
 
+  const renderGuardianInformation = () => (
+    <GuardianInfoManager 
+      formData={formData.guardian}
+      setFormData={(data) => setFormData({...formData, guardian: data})}
+      childPersonalNumber={formData.childInfo.personalNumber}
+    />
+  );
+
   const renderKindergartenPreferences = () => (
     <div className="space-y-6">
       <div className="bg-gradient-to-r from-oslo-blue/5 to-blue-50 p-6 rounded-xl border border-oslo-blue/20">
@@ -616,144 +622,6 @@ const NewApplication = () => {
     </div>
   );
 
-  const renderGuardianInformation = () => (
-    <div className="space-y-6">
-      <div className="bg-gradient-to-r from-amber-50 to-orange-50 p-6 rounded-xl border border-amber-200">
-        <div className="flex items-center gap-3 mb-4">
-          <Shield className="w-6 h-6 text-amber-600" />
-          <h3 className="text-lg font-semibold text-slate-900">Identity Verification Method</h3>
-        </div>
-        <div className="space-y-3">
-          <Label className="text-sm font-semibold text-slate-700">How will you verify your identity? *</Label>
-          <Select 
-            value={formData.guardian.idMethod}
-            onValueChange={(value) => setFormData({
-              ...formData,
-              guardian: { ...formData.guardian, idMethod: value }
-            })}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="electronic">Electronic ID (ID-porten/Entra ID) - Standard</SelectItem>
-              <SelectItem value="manual">Manual verification through Contact Center (OKK)</SelectItem>
-              <SelectItem value="foreign">Foreign ID/Non-Oslo resident</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        
-        {formData.guardian.idMethod === 'manual' && (
-          <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-            <div className="flex items-start gap-2">
-              <Info className="w-5 h-5 text-blue-600 mt-0.5" />
-              <div className="text-sm text-blue-800">
-                <p className="font-medium mb-1">Manual Verification Process:</p>
-                <p>Contact the Contact Center (OKK) or your district office. Case workers will help you submit your application via paper forms or document uploads, creating a temporary record pending verification.</p>
-              </div>
-            </div>
-          </div>
-        )}
-        
-        {formData.guardian.idMethod === 'foreign' && (
-          <div className="mt-4 p-4 bg-purple-50 rounded-lg border border-purple-200">
-            <div className="flex items-start gap-2">
-              <Info className="w-5 h-5 text-purple-600 mt-0.5" />
-              <div className="text-sm text-purple-800">
-                <p className="font-medium mb-1">Foreign ID/Non-resident Process:</p>
-                <p>You can submit via the portal if registered in FREG, or manually through OKK. Case workers will verify your identity using alternative documents (passport, residence permit, etc.).</p>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <Label className="text-sm font-semibold text-slate-700">First Name *</Label>
-          <Input 
-            placeholder="Your first name"
-            value={formData.guardian.firstName}
-            onChange={(e) => setFormData({
-              ...formData,
-              guardian: { ...formData.guardian, firstName: e.target.value }
-            })}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label className="text-sm font-semibold text-slate-700">Last Name *</Label>
-          <Input 
-            placeholder="Your last name"
-            value={formData.guardian.lastName}
-            onChange={(e) => setFormData({
-              ...formData,
-              guardian: { ...formData.guardian, lastName: e.target.value }
-            })}
-          />
-        </div>
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <Label className="text-sm font-semibold text-slate-700">Email Address *</Label>
-          <Input 
-            type="email"
-            placeholder="your.email@example.com"
-            value={formData.guardian.email}
-            onChange={(e) => setFormData({
-              ...formData,
-              guardian: { ...formData.guardian, email: e.target.value }
-            })}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label className="text-sm font-semibold text-slate-700">Phone Number *</Label>
-          <Input 
-            type="tel"
-            placeholder="+47 xxx xx xxx"
-            value={formData.guardian.phone}
-            onChange={(e) => setFormData({
-              ...formData,
-              guardian: { ...formData.guardian, phone: e.target.value }
-            })}
-          />
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <Label className="text-sm font-semibold text-slate-700">Home Address *</Label>
-        <Input 
-          placeholder="Street address, postal code, city"
-          value={formData.guardian.address}
-          onChange={(e) => setFormData({
-            ...formData,
-            guardian: { ...formData.guardian, address: e.target.value }
-          })}
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label className="text-sm font-semibold text-slate-700">Relationship to Child *</Label>
-        <Select 
-          value={formData.guardian.relationship}
-          onValueChange={(value) => setFormData({
-            ...formData,
-            guardian: { ...formData.guardian, relationship: value }
-          })}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="parent">Parent</SelectItem>
-            <SelectItem value="guardian">Legal Guardian</SelectItem>
-            <SelectItem value="other">Other</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-    </div>
-  );
-
   const renderDocumentsAndReview = () => (
     <div className="space-y-6">
       <div className="bg-gradient-to-r from-emerald-50 to-green-50 p-6 rounded-xl border border-emerald-200">
@@ -805,7 +673,20 @@ const NewApplication = () => {
             </CardHeader>
             <CardContent>
               <p className="text-sm font-medium">
-                {applicationTypes.find(t => t.id === formData.applicationType)?.title || 'Not selected'}
+                {[
+                  {
+                    id: 'new-admission',
+                    title: 'New Admission',
+                  },
+                  {
+                    id: 'transfer-request',
+                    title: 'Transfer Request',
+                  },
+                  {
+                    id: 'late-ongoing',
+                    title: 'Late/Ongoing Application',
+                  }
+                ].find(t => t.id === formData.applicationType)?.title || 'Not selected'}
               </p>
             </CardContent>
           </Card>
