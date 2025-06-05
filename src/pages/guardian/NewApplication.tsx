@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -172,8 +173,8 @@ const NewApplication = () => {
   const steps = [
     { id: 0, title: 'Application Type', icon: Calendar, description: 'Choose your application intent' },
     { id: 1, title: 'Child Information', icon: User, description: 'Basic details about your child' },
-    { id: 2, title: 'Kindergarten Preferences', icon: Building2, description: 'Choose your preferred kindergartens' },
-    { id: 3, title: 'Guardian Information', icon: Shield, description: 'Your contact and verification details' },
+    { id: 2, title: 'Guardian Information', icon: Shield, description: 'Your contact and verification details' },
+    { id: 3, title: 'Kindergarten Preferences', icon: Building2, description: 'Choose your preferred kindergartens' },
     { id: 4, title: 'Documents & Review', icon: FileText, description: 'Upload documents and review application' }
   ];
 
@@ -896,8 +897,8 @@ const NewApplication = () => {
         <CardContent className="p-8">
           {currentStep === 0 && renderApplicationTypeSelection()}
           {currentStep === 1 && renderChildInformation()}
-          {currentStep === 2 && renderKindergartenPreferences()}
-          {currentStep === 3 && renderGuardianInformation()}
+          {currentStep === 2 && renderGuardianInformation()}
+          {currentStep === 3 && renderKindergartenPreferences()}
           {currentStep === 4 && renderDocumentsAndReview()}
         </CardContent>
       </Card>
