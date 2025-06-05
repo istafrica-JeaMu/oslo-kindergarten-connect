@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -23,6 +22,8 @@ import Reports from "./pages/admin/Reports";
 import SystemSettings from "./pages/admin/SystemSettings";
 import StaffDashboard from "./pages/staff/StaffDashboard";
 import PartnerDashboard from "./pages/partner/PartnerDashboard";
+import KindergartenDashboard from "./pages/kindergarten/KindergartenDashboard";
+import DistrictAdminDashboard from "./pages/district-admin/DistrictAdminDashboard";
 import NotFound from "./pages/NotFound";
 import './i18n';
 
@@ -76,7 +77,7 @@ const App = () => (
                 <Route path="settings" element={<SystemSettings />} />
               </Route>
 
-              {/* Staff Routes */}
+              {/* Staff Routes (Legacy) */}
               <Route path="/staff" element={
                 <ProtectedRoute allowedRoles={['staff']}>
                   <Layout />
@@ -85,13 +86,31 @@ const App = () => (
                 <Route index element={<StaffDashboard />} />
               </Route>
 
-              {/* Partner Routes */}
+              {/* Partner Routes (Legacy) */}
               <Route path="/partner" element={
                 <ProtectedRoute allowedRoles={['partner']}>
                   <Layout />
                 </ProtectedRoute>
               }>
                 <Route index element={<PartnerDashboard />} />
+              </Route>
+
+              {/* Kindergarten Routes (Public & Private Staff) */}
+              <Route path="/kindergarten" element={
+                <ProtectedRoute allowedRoles={['staff', 'partner']}>
+                  <Layout />
+                </ProtectedRoute>
+              }>
+                <Route index element={<KindergartenDashboard />} />
+              </Route>
+
+              {/* District Admin Routes */}
+              <Route path="/district-admin" element={
+                <ProtectedRoute allowedRoles={['district-admin']}>
+                  <Layout />
+                </ProtectedRoute>
+              }>
+                <Route index element={<DistrictAdminDashboard />} />
               </Route>
 
               <Route path="*" element={<NotFound />} />

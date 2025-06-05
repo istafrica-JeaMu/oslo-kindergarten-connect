@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -45,10 +44,11 @@ const LoginPage = () => {
         redirectPath = '/admin';
         break;
       case 'staff':
-        redirectPath = '/staff';
-        break;
       case 'partner':
-        redirectPath = '/partner';
+        redirectPath = '/kindergarten';
+        break;
+      case 'district-admin':
+        redirectPath = '/district-admin';
         break;
     }
     return <Navigate to={redirectPath} replace />;
@@ -313,6 +313,21 @@ const LoginPage = () => {
                 
                 <div className="flex justify-between items-center p-2 bg-white rounded border">
                   <div>
+                    <p className="text-xs font-medium">Case Worker (Entra ID)</p>
+                    <p className="text-xs text-slate-600">caseworker@oslo.kommune.no</p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setEmail('caseworker@oslo.kommune.no')}
+                    className="text-xs"
+                  >
+                    Use
+                  </Button>
+                </div>
+                
+                <div className="flex justify-between items-center p-2 bg-white rounded border">
+                  <div>
                     <p className="text-xs font-medium">Public Staff (Entra ID)</p>
                     <p className="text-xs text-slate-600">staff@oslo.kommune.no</p>
                   </div>
@@ -350,6 +365,21 @@ const LoginPage = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => setEmail('admin@admin.oslo.kommune.no')}
+                    className="text-xs"
+                  >
+                    Use
+                  </Button>
+                </div>
+
+                <div className="flex justify-between items-center p-2 bg-white rounded border">
+                  <div>
+                    <p className="text-xs font-medium">District Admin (Entra ID)</p>
+                    <p className="text-xs text-slate-600">district@oslo.kommune.no</p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setEmail('district@oslo.kommune.no')}
                     className="text-xs"
                   >
                     Use

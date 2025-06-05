@@ -1,7 +1,6 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type UserRole = 'guardian' | 'caseworker' | 'admin' | 'staff' | 'partner';
+export type UserRole = 'guardian' | 'caseworker' | 'admin' | 'staff' | 'partner' | 'district-admin';
 
 export interface User {
   id: string;
@@ -18,7 +17,7 @@ interface AuthContextType {
   user: User | null;
   login: (email: string, password?: string) => Promise<boolean>;
   loginWithIDPorten: () => Promise<boolean>;
-  loginWithEntraID: () => Promise<boolean>;
+  loginWithEntraID: (email?: string) => Promise<boolean>;
   logout: () => void;
   isLoading: boolean;
   checkDomainType: (email: string) => 'guardian' | 'public-staff' | 'private-staff' | 'admin' | 'unknown';
@@ -61,7 +60,7 @@ const mockUsers: Record<string, User> = {
     id: '4',
     name: 'Kari Olsen',
     email: 'staff@oslo.kommune.no',
-    role: 'caseworker',
+    role: 'staff',
     organization: 'Oslo Kommune',
     authMethod: 'entra-id'
   },
@@ -69,7 +68,7 @@ const mockUsers: Record<string, User> = {
     id: '5',
     name: 'Lars Bjørn',
     email: 'partner@ist.com',
-    role: 'caseworker',
+    role: 'partner',
     organization: 'IST Private Kindergarten',
     authMethod: 'entra-id'
   },
@@ -77,8 +76,16 @@ const mockUsers: Record<string, User> = {
     id: '6',
     name: 'Silje Nordahl',
     email: 'partner@privbarnehage.no',
-    role: 'caseworker',
+    role: 'partner',
     organization: 'Private Barnehage AS',
+    authMethod: 'entra-id'
+  },
+  'district@oslo.kommune.no': {
+    id: '7',
+    name: 'Ola Nordmann',
+    email: 'district@oslo.kommune.no',
+    role: 'district-admin',
+    district: 'Bydel Sentrum',
     authMethod: 'entra-id'
   }
 };
@@ -179,6 +186,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     let redirectPath = '/caseworker';
     if (staffUser.role === 'admin') {
       redirectPath = '/admin';
+    } else if (staffUser.role === 'staff' || staffUser.role === 'partner') {
+      redirectPath = '/kindergarten';
+    } else if (staffUser.role === 'district-admin') {
+      redirectPath = '/district-admin';
     }
     
     window.history.replaceState({}, document.title, redirectPath);

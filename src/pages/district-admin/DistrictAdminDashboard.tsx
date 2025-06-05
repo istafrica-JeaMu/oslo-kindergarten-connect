@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
@@ -9,43 +10,45 @@ import {
   Building2,
   Calendar,
   AlertTriangle,
-  TrendingUp
+  TrendingUp,
+  MapPin,
+  School
 } from 'lucide-react';
 
-const StaffDashboard = () => {
+const DistrictAdminDashboard = () => {
   const { user } = useAuth();
 
   const stats = [
     {
-      title: 'Active Applications',
-      value: '34',
-      change: '+5',
+      title: 'Kindergartens',
+      value: '23',
+      change: '+2',
       trend: 'up',
-      icon: FileText,
+      icon: School,
       color: 'bg-blue-50 text-blue-600'
     },
     {
-      title: 'Pending Reviews',
-      value: '12',
-      change: '-3',
+      title: 'Total Children',
+      value: '1,456',
+      change: '+87',
+      trend: 'up',
+      icon: Users,
+      color: 'bg-green-50 text-green-600'
+    },
+    {
+      title: 'Pending Applications',
+      value: '234',
+      change: '-12',
       trend: 'down',
       icon: Clock,
       color: 'bg-yellow-50 text-yellow-600'
     },
     {
-      title: 'Completed Today',
-      value: '8',
-      change: '+2',
+      title: 'Available Spots',
+      value: '45',
+      change: '+8',
       trend: 'up',
       icon: CheckCircle,
-      color: 'bg-green-50 text-green-600'
-    },
-    {
-      title: 'Available Spots',
-      value: '23',
-      change: '-1',
-      trend: 'down',
-      icon: Users,
       color: 'bg-purple-50 text-purple-600'
     }
   ];
@@ -59,17 +62,15 @@ const StaffDashboard = () => {
             Welcome back, {user?.name}
           </h1>
           <p className="text-slate-600 mt-2">
-            Staff Dashboard - {user?.organization}
+            District Administrator - {user?.district}
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Badge className="bg-blue-100 text-blue-800 border-blue-200">
-            <Building2 className="w-3 h-3 mr-1" />
-            Public Staff
+          <Badge className="bg-indigo-100 text-indigo-800 border-indigo-200">
+            <MapPin className="w-3 h-3 mr-1" />
+            District Admin
           </Badge>
-          {user?.authMethod === 'entra-id' && (
-            <Badge variant="outline">Microsoft Entra ID</Badge>
-          )}
+          <Badge variant="outline">Microsoft Entra ID</Badge>
         </div>
       </div>
 
@@ -101,42 +102,46 @@ const StaffDashboard = () => {
 
       {/* Main Content Grid */}
       <div className="grid lg:grid-cols-3 gap-6">
-        {/* Recent Applications */}
+        {/* District Overview */}
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <FileText className="w-5 h-5" />
-              Recent Applications
+              <Building2 className="w-5 h-5" />
+              Kindergarten Overview
             </CardTitle>
             <CardDescription>
-              Latest kindergarten applications requiring review
+              Performance and status across all kindergartens in your district
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {[
-                { name: 'Emma Larsen', age: '3 years', status: 'Pending Review', priority: 'High', time: '2 hours ago' },
-                { name: 'Oliver Hansen', age: '4 years', status: 'Documentation Required', priority: 'Medium', time: '4 hours ago' },
-                { name: 'Maja Andersen', age: '2 years', status: 'Under Review', priority: 'Low', time: '1 day ago' },
-              ].map((application, index) => (
+                { name: 'Sentrum Barnehage', capacity: '120/125', status: 'Excellent', rating: 4.8, type: 'public' },
+                { name: 'Nordre Barnehage', capacity: '98/110', status: 'Good', rating: 4.5, type: 'public' },
+                { name: 'Private Kids AS', capacity: '85/90', status: 'Very Good', rating: 4.6, type: 'private' },
+              ].map((kindergarten, index) => (
                 <div key={index} className="flex items-center justify-between p-4 border rounded-lg hover:bg-slate-50">
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
-                      {application.name.split(' ').map(n => n[0]).join('')}
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold ${
+                      kindergarten.type === 'public' ? 'bg-blue-500' : 'bg-purple-500'
+                    }`}>
+                      {kindergarten.name.split(' ')[0][0]}
                     </div>
                     <div>
-                      <p className="font-medium text-slate-900">{application.name}</p>
-                      <p className="text-sm text-slate-600">{application.age} • {application.time}</p>
+                      <p className="font-medium text-slate-900">{kindergarten.name}</p>
+                      <p className="text-sm text-slate-600">Capacity: {kindergarten.capacity} • Rating: {kindergarten.rating}/5</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge variant={
-                      application.priority === 'High' ? 'destructive' : 
-                      application.priority === 'Medium' ? 'default' : 'secondary'
+                      kindergarten.status === 'Excellent' ? 'default' : 
+                      kindergarten.status === 'Very Good' ? 'secondary' : 'outline'
                     }>
-                      {application.priority}
+                      {kindergarten.status}
                     </Badge>
-                    <Badge variant="outline">{application.status}</Badge>
+                    <Badge variant="outline">
+                      {kindergarten.type === 'public' ? 'Public' : 'Private'}
+                    </Badge>
                   </div>
                 </div>
               ))}
@@ -144,14 +149,14 @@ const StaffDashboard = () => {
           </CardContent>
         </Card>
 
-        {/* Quick Actions & Updates */}
+        {/* District Actions & Updates */}
         <div className="space-y-6">
           {/* Quick Actions */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="w-5 h-5" />
-                Quick Actions
+                District Actions
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -160,17 +165,17 @@ const StaffDashboard = () => {
                   <FileText className="w-5 h-5 text-blue-600" />
                   <div>
                     <p className="font-medium text-slate-900">Review Applications</p>
-                    <p className="text-sm text-slate-600">12 pending</p>
+                    <p className="text-sm text-slate-600">234 pending</p>
                   </div>
                 </div>
               </button>
               
               <button className="w-full p-3 text-left border rounded-lg hover:bg-green-50 hover:border-green-200 transition-colors">
                 <div className="flex items-center gap-3">
-                  <Calendar className="w-5 h-5 text-green-600" />
+                  <School className="w-5 h-5 text-green-600" />
                   <div>
-                    <p className="font-medium text-slate-900">Schedule Visits</p>
-                    <p className="text-sm text-slate-600">3 families waiting</p>
+                    <p className="font-medium text-slate-900">Kindergarten Inspections</p>
+                    <p className="text-sm text-slate-600">5 scheduled</p>
                   </div>
                 </div>
               </button>
@@ -179,31 +184,36 @@ const StaffDashboard = () => {
                 <div className="flex items-center gap-3">
                   <Users className="w-5 h-5 text-purple-600" />
                   <div>
-                    <p className="font-medium text-slate-900">Manage Placements</p>
-                    <p className="text-sm text-slate-600">Update availability</p>
+                    <p className="font-medium text-slate-900">Staff Management</p>
+                    <p className="text-sm text-slate-600">23 kindergartens</p>
                   </div>
                 </div>
               </button>
             </CardContent>
           </Card>
 
-          {/* System Alerts */}
+          {/* District Alerts */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <AlertTriangle className="w-5 h-5 text-orange-500" />
-                System Alerts
+                District Alerts
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="p-3 bg-orange-50 border border-orange-200 rounded-lg">
-                <p className="text-sm font-medium text-orange-800">Deadline Reminder</p>
-                <p className="text-sm text-orange-700">Application deadline: March 15th</p>
+              <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm font-medium text-red-800">Urgent</p>
+                <p className="text-sm text-red-700">3 kindergartens over capacity</p>
+              </div>
+              
+              <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <p className="text-sm font-medium text-yellow-800">Budget Review</p>
+                <p className="text-sm text-yellow-700">Q1 budget review due</p>
               </div>
               
               <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                <p className="text-sm font-medium text-blue-800">System Update</p>
-                <p className="text-sm text-blue-700">Maintenance scheduled for weekend</p>
+                <p className="text-sm font-medium text-blue-800">Training Program</p>
+                <p className="text-sm text-blue-700">New staff training next week</p>
               </div>
             </CardContent>
           </Card>
@@ -213,4 +223,4 @@ const StaffDashboard = () => {
   );
 };
 
-export default StaffDashboard;
+export default DistrictAdminDashboard;

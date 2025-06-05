@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
@@ -9,43 +10,44 @@ import {
   Building2,
   Calendar,
   AlertTriangle,
-  TrendingUp
+  TrendingUp,
+  School
 } from 'lucide-react';
 
-const StaffDashboard = () => {
+const KindergartenDashboard = () => {
   const { user } = useAuth();
 
   const stats = [
     {
-      title: 'Active Applications',
-      value: '34',
-      change: '+5',
+      title: 'Total Children',
+      value: '124',
+      change: '+8',
       trend: 'up',
-      icon: FileText,
+      icon: Users,
       color: 'bg-blue-50 text-blue-600'
     },
     {
-      title: 'Pending Reviews',
+      title: 'Available Spots',
       value: '12',
       change: '-3',
       trend: 'down',
+      icon: School,
+      color: 'bg-green-50 text-green-600'
+    },
+    {
+      title: 'Waiting List',
+      value: '34',
+      change: '+5',
+      trend: 'up',
       icon: Clock,
       color: 'bg-yellow-50 text-yellow-600'
     },
     {
-      title: 'Completed Today',
-      value: '8',
-      change: '+2',
+      title: 'Staff Members',
+      value: '18',
+      change: '+1',
       trend: 'up',
-      icon: CheckCircle,
-      color: 'bg-green-50 text-green-600'
-    },
-    {
-      title: 'Available Spots',
-      value: '23',
-      change: '-1',
-      trend: 'down',
-      icon: Users,
+      icon: FileText,
       color: 'bg-purple-50 text-purple-600'
     }
   ];
@@ -59,17 +61,15 @@ const StaffDashboard = () => {
             Welcome back, {user?.name}
           </h1>
           <p className="text-slate-600 mt-2">
-            Staff Dashboard - {user?.organization}
+            Kindergarten Dashboard - {user?.organization}
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Badge className="bg-blue-100 text-blue-800 border-blue-200">
+          <Badge className={user?.role === 'staff' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-purple-100 text-purple-800 border-purple-200'}>
             <Building2 className="w-3 h-3 mr-1" />
-            Public Staff
+            {user?.role === 'staff' ? 'Public Kindergarten' : 'Private Kindergarten'}
           </Badge>
-          {user?.authMethod === 'entra-id' && (
-            <Badge variant="outline">Microsoft Entra ID</Badge>
-          )}
+          <Badge variant="outline">Microsoft Entra ID</Badge>
         </div>
       </div>
 
@@ -101,50 +101,50 @@ const StaffDashboard = () => {
 
       {/* Main Content Grid */}
       <div className="grid lg:grid-cols-3 gap-6">
-        {/* Recent Applications */}
+        {/* Recent Activities */}
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="w-5 h-5" />
-              Recent Applications
+              Recent Activities
             </CardTitle>
             <CardDescription>
-              Latest kindergarten applications requiring review
+              Latest updates and activities in your kindergarten
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {[
-                { name: 'Emma Larsen', age: '3 years', status: 'Pending Review', priority: 'High', time: '2 hours ago' },
-                { name: 'Oliver Hansen', age: '4 years', status: 'Documentation Required', priority: 'Medium', time: '4 hours ago' },
-                { name: 'Maja Andersen', age: '2 years', status: 'Under Review', priority: 'Low', time: '1 day ago' },
-              ].map((application, index) => (
+                { activity: 'New enrollment', child: 'Emma Larsen', status: 'Completed', time: '2 hours ago', type: 'success' },
+                { activity: 'Parent meeting', child: 'Oliver Hansen', status: 'Scheduled', time: 'Tomorrow 10:00', type: 'info' },
+                { activity: 'Health check', child: 'Maja Andersen', status: 'Pending', time: '1 day ago', type: 'warning' },
+              ].map((item, index) => (
                 <div key={index} className="flex items-center justify-between p-4 border rounded-lg hover:bg-slate-50">
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
-                      {application.name.split(' ').map(n => n[0]).join('')}
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold ${
+                      item.type === 'success' ? 'bg-green-500' : 
+                      item.type === 'info' ? 'bg-blue-500' : 'bg-yellow-500'
+                    }`}>
+                      {item.child.split(' ').map(n => n[0]).join('')}
                     </div>
                     <div>
-                      <p className="font-medium text-slate-900">{application.name}</p>
-                      <p className="text-sm text-slate-600">{application.age} • {application.time}</p>
+                      <p className="font-medium text-slate-900">{item.activity}</p>
+                      <p className="text-sm text-slate-600">{item.child} • {item.time}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant={
-                      application.priority === 'High' ? 'destructive' : 
-                      application.priority === 'Medium' ? 'default' : 'secondary'
-                    }>
-                      {application.priority}
-                    </Badge>
-                    <Badge variant="outline">{application.status}</Badge>
-                  </div>
+                  <Badge variant={
+                    item.type === 'success' ? 'default' : 
+                    item.type === 'info' ? 'secondary' : 'outline'
+                  }>
+                    {item.status}
+                  </Badge>
                 </div>
               ))}
             </div>
           </CardContent>
         </Card>
 
-        {/* Quick Actions & Updates */}
+        {/* Quick Actions & Alerts */}
         <div className="space-y-6">
           {/* Quick Actions */}
           <Card>
@@ -157,10 +157,10 @@ const StaffDashboard = () => {
             <CardContent className="space-y-3">
               <button className="w-full p-3 text-left border rounded-lg hover:bg-blue-50 hover:border-blue-200 transition-colors">
                 <div className="flex items-center gap-3">
-                  <FileText className="w-5 h-5 text-blue-600" />
+                  <Users className="w-5 h-5 text-blue-600" />
                   <div>
-                    <p className="font-medium text-slate-900">Review Applications</p>
-                    <p className="text-sm text-slate-600">12 pending</p>
+                    <p className="font-medium text-slate-900">Manage Children</p>
+                    <p className="text-sm text-slate-600">124 enrolled</p>
                   </div>
                 </div>
               </button>
@@ -169,41 +169,41 @@ const StaffDashboard = () => {
                 <div className="flex items-center gap-3">
                   <Calendar className="w-5 h-5 text-green-600" />
                   <div>
-                    <p className="font-medium text-slate-900">Schedule Visits</p>
-                    <p className="text-sm text-slate-600">3 families waiting</p>
+                    <p className="font-medium text-slate-900">Schedule Events</p>
+                    <p className="text-sm text-slate-600">3 upcoming</p>
                   </div>
                 </div>
               </button>
               
               <button className="w-full p-3 text-left border rounded-lg hover:bg-purple-50 hover:border-purple-200 transition-colors">
                 <div className="flex items-center gap-3">
-                  <Users className="w-5 h-5 text-purple-600" />
+                  <FileText className="w-5 h-5 text-purple-600" />
                   <div>
-                    <p className="font-medium text-slate-900">Manage Placements</p>
-                    <p className="text-sm text-slate-600">Update availability</p>
+                    <p className="font-medium text-slate-900">Reports</p>
+                    <p className="text-sm text-slate-600">Generate monthly</p>
                   </div>
                 </div>
               </button>
             </CardContent>
           </Card>
 
-          {/* System Alerts */}
+          {/* Alerts */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <AlertTriangle className="w-5 h-5 text-orange-500" />
-                System Alerts
+                Important Notices
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="p-3 bg-orange-50 border border-orange-200 rounded-lg">
-                <p className="text-sm font-medium text-orange-800">Deadline Reminder</p>
-                <p className="text-sm text-orange-700">Application deadline: March 15th</p>
+                <p className="text-sm font-medium text-orange-800">Health Inspection</p>
+                <p className="text-sm text-orange-700">Scheduled for next Friday</p>
               </div>
               
               <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                <p className="text-sm font-medium text-blue-800">System Update</p>
-                <p className="text-sm text-blue-700">Maintenance scheduled for weekend</p>
+                <p className="text-sm font-medium text-blue-800">New Guidelines</p>
+                <p className="text-sm text-blue-700">Updated safety protocols available</p>
               </div>
             </CardContent>
           </Card>
@@ -213,4 +213,4 @@ const StaffDashboard = () => {
   );
 };
 
-export default StaffDashboard;
+export default KindergartenDashboard;
