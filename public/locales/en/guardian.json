@@ -17,6 +17,86 @@
     "recentMessages": "Recent Messages",
     "paymentOverview": "Payment Overview"
   },
+  "location": {
+    "title": "Child Location",
+    "description": "See where your child is currently located in the kindergarten",
+    "currentLocation": "Current Location",
+    "locationHistory": "Location History",
+    "lastUpdated": "Last updated",
+    "responsibleStaff": "Responsible Staff",
+    "contactStaff": "Contact Staff",
+    "kindergartenMap": "Kindergarten Map",
+    "historyDescription": "Your child's movements throughout the day",
+    "current": "Current",
+    "pickupInstructions": "Pickup Instructions",
+    "areas": {
+      "playground": "Playground",
+      "mainEntrance": "Main Entrance",
+      "classroom": "Classroom",
+      "diningRoom": "Dining Room",
+      "restRoom": "Rest Room"
+    },
+    "buildings": {
+      "main": "Main Building"
+    },
+    "rooms": {
+      "outdoor": "Outdoor"
+    },
+    "activities": {
+      "outdoorPlay": "Outdoor Play",
+      "lunch": "Lunch",
+      "learningTime": "Learning Time",
+      "morningPlay": "Morning Play",
+      "arrival": "Arrival"
+    },
+    "instructions": {
+      "enterMain": "Enter through the main entrance and check in with staff",
+      "askStaff": "Ask staff where your child is currently located",
+      "waitArea": "Wait in the designated area until your child is brought to you",
+      "signOut": "Remember to sign out your child when leaving"
+    }
+  },
+  "pickup": {
+    "title": "Pickup Authorization",
+    "description": "Manage who is authorized to pick up your child",
+    "addAuthorized": "Add New Person",
+    "emergencyToday": "Emergency Pickup Today",
+    "selectPerson": "Select Person",
+    "pickupTime": "Pickup Time",
+    "emergencyReason": "Reason for Emergency Pickup",
+    "notifyEmergency": "Send Emergency Notice",
+    "authorizedPersons": "Authorized Persons",
+    "authorizedDescription": "People who are authorized to pick up your child",
+    "validUntil": "Valid Until",
+    "emergency": "Emergency Contact",
+    "recentEmergency": "Recent Emergency Pickups",
+    "recentDescription": "Overview of recent emergency pickups",
+    "requestedAt": "Requested at",
+    "addNewPerson": "Add New Person",
+    "fullName": "Full Name",
+    "enterName": "Enter name",
+    "relationship": "Relationship",
+    "selectRelationship": "Select relationship",
+    "phoneNumber": "Phone Number",
+    "markAsEmergency": "Mark as emergency contact",
+    "addPerson": "Add Person",
+    "relationships": {
+      "father": "Father",
+      "mother": "Mother",
+      "grandmother": "Grandmother",
+      "grandfather": "Grandfather",
+      "friend": "Friend",
+      "other": "Other"
+    },
+    "status": {
+      "active": "Active",
+      "temporary": "Temporary",
+      "approved": "Approved"
+    },
+    "emergencyReasons": {
+      "parentIll": "Parent Ill"
+    }
+  },
   "meetings": {
     "title": "Teacher Meetings",
     "description": "Book meetings with your child's teachers and educators",

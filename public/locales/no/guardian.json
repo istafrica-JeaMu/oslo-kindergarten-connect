@@ -17,6 +17,86 @@
     "recentMessages": "Siste meldinger",
     "paymentOverview": "Betalingsoversikt"
   },
+  "location": {
+    "title": "Barnets plassering",
+    "description": "Se hvor barnet ditt befinner seg i barnehagen",
+    "currentLocation": "Nåværende plassering",
+    "locationHistory": "Plasseringshistorikk",
+    "lastUpdated": "Sist oppdatert",
+    "responsibleStaff": "Ansvarlig personal",
+    "contactStaff": "Kontakt personal",
+    "kindergartenMap": "Barnehagekart",
+    "historyDescription": "Barnets bevegelser gjennom dagen",
+    "current": "Nåværende",
+    "pickupInstructions": "Henteinstruksjoner",
+    "areas": {
+      "playground": "Lekeplass",
+      "mainEntrance": "Hovedinngang",
+      "classroom": "Klasserom",
+      "diningRoom": "Spiserom",
+      "restRoom": "Hvilerom"
+    },
+    "buildings": {
+      "main": "Hovedbygg"
+    },
+    "rooms": {
+      "outdoor": "Utendørs"
+    },
+    "activities": {
+      "outdoorPlay": "Utelek",
+      "lunch": "Lunsj",
+      "learningTime": "Læringstid",
+      "morningPlay": "Morgenlek",
+      "arrival": "Ankomst"
+    },
+    "instructions": {
+      "enterMain": "Gå inn hovedinngangen og meld deg til personalet",
+      "askStaff": "Spør personalet hvor barnet ditt befinner seg",
+      "waitArea": "Vent i ventesonen til barnet er hentet",
+      "signOut": "Husk å signere ut barnet ved avreise"
+    }
+  },
+  "pickup": {
+    "title": "Hentefullmakt",
+    "description": "Administrer hvem som kan hente barnet ditt",
+    "addAuthorized": "Legg til ny person",
+    "emergencyToday": "Nødhenting i dag",
+    "selectPerson": "Velg person",
+    "pickupTime": "Hentetid",
+    "emergencyReason": "Årsak til nødhenting",
+    "notifyEmergency": "Send nødmelding",
+    "authorizedPersons": "Autoriserte personer",
+    "authorizedDescription": "Personer som kan hente barnet ditt",
+    "validUntil": "Gyldig til",
+    "emergency": "Nødkontakt",
+    "recentEmergency": "Nylige nødhentinger",
+    "recentDescription": "Oversikt over tidligere nødhentinger",
+    "requestedAt": "Forespurt kl",
+    "addNewPerson": "Legg til ny person",
+    "fullName": "Fullt navn",
+    "enterName": "Skriv inn navn",
+    "relationship": "Relasjon",
+    "selectRelationship": "Velg relasjon",
+    "phoneNumber": "Telefonnummer",
+    "markAsEmergency": "Merk som nødkontakt",
+    "addPerson": "Legg til person",
+    "relationships": {
+      "father": "Far",
+      "mother": "Mor",
+      "grandmother": "Bestemor",
+      "grandfather": "Bestefar",
+      "friend": "Venn",
+      "other": "Annet"
+    },
+    "status": {
+      "active": "Aktiv",
+      "temporary": "Midlertidig",
+      "approved": "Godkjent"
+    },
+    "emergencyReasons": {
+      "parentIll": "Forelder syk"
+    }
+  },
   "meetings": {
     "title": "Lærersamtaler",
     "description": "Book møter med barnets lærere og pedagoger",
