@@ -101,18 +101,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
-
-    // Check for ID-Porten return
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('id-porten-auth') === 'success') {
-      handleIDPortenReturn();
-    }
-
-    // Check for Entra ID return
-    if (urlParams.get('entra-id-auth') === 'success') {
-      handleEntraIDReturn();
-    }
-
     setIsLoading(false);
   }, []);
 
@@ -139,10 +127,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return 'unknown';
   };
 
-  const handleIDPortenReturn = async () => {
+  const loginWithIDPorten = async (): Promise<boolean> => {
     setIsLoading(true);
     
-    // Simulate ID-Porten processing
+    // Simulate authentication delay
     await new Promise(resolve => setTimeout(resolve, 500));
     
     // Mock guardian user from ID-Porten
@@ -156,99 +144,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     setUser(guardianUser);
     localStorage.setItem('user', JSON.stringify(guardianUser));
-    
-    // Clean up URL and redirect directly to guardian dashboard
-    window.history.replaceState({}, document.title, '/guardian');
     setIsLoading(false);
+    return true;
   };
 
-  const handleEntraIDReturn = async () => {
+  const loginWithEntraID = async (email?: string): Promise<boolean> => {
     setIsLoading(true);
     
-    // Simulate Entra ID processing
+    // Simulate authentication delay
     await new Promise(resolve => setTimeout(resolve, 500));
     
-    // Get the email from URL params to determine which user
-    const urlParams = new URLSearchParams(window.location.search);
-    const email = urlParams.get('email') || 'caseworker@oslo.kommune.no';
-    
-    const staffUser = mockUsers[email] || {
+    const defaultEmail = email || 'caseworker@oslo.kommune.no';
+    const staffUser = mockUsers[defaultEmail] || {
       id: 'entra-id-' + Date.now(),
       name: 'Staff User',
-      email: email,
+      email: defaultEmail,
       role: 'caseworker',
       authMethod: 'entra-id'
     };
     
     setUser(staffUser);
     localStorage.setItem('user', JSON.stringify(staffUser));
-    
-    // Clean up URL and redirect based on role directly
-    let redirectPath = '/caseworker';
-    if (staffUser.role === 'admin') {
-      redirectPath = '/admin';
-    } else if (staffUser.role === 'staff' || staffUser.role === 'partner') {
-      redirectPath = '/kindergarten';
-    } else if (staffUser.role === 'district-admin') {
-      redirectPath = '/district-admin';
-    }
-    
-    window.history.replaceState({}, document.title, redirectPath);
     setIsLoading(false);
-  };
-
-  const loginWithIDPorten = async (): Promise<boolean> => {
-    // Simulate opening ID-Porten in new tab
-    const idPortenWindow = window.open('https://login.idporten.no/authorize/selector', '_blank');
-    
-    // Simulate successful authentication after a delay
-    setTimeout(() => {
-      if (idPortenWindow) {
-        idPortenWindow.close();
-      }
-      // Redirect current tab directly to guardian portal
-      window.location.href = window.location.origin + '/guardian?id-porten-auth=success';
-    }, 500);
-    
-    return true;
-  };
-
-  const loginWithEntraID = async (email?: string): Promise<boolean> => {
-    // Simulate opening Entra ID in new tab
-    const entraIdWindow = window.open('https://login.microsoftonline.com/common/oauth2/authorize', '_blank');
-    
-    // Simulate successful authentication after a delay
-    setTimeout(() => {
-      if (entraIdWindow) {
-        entraIdWindow.close();
-      }
-      // Determine the correct redirect path based on email and redirect directly
-      let redirectPath = '/caseworker';
-      if (email) {
-        const user = mockUsers[email];
-        if (user) {
-          if (user.role === 'admin') {
-            redirectPath = '/admin';
-          } else if (user.role === 'staff' || user.role === 'partner') {
-            redirectPath = '/kindergarten';
-          } else if (user.role === 'district-admin') {
-            redirectPath = '/district-admin';
-          }
-        } else {
-          // Fallback based on domain
-          const domain = email.split('@')[1]?.toLowerCase();
-          if (DOMAIN_CONFIG.admin.includes(domain)) {
-            redirectPath = '/admin';
-          } else if (DOMAIN_CONFIG.publicStaff.includes(domain) || DOMAIN_CONFIG.privateStaff.includes(domain)) {
-            redirectPath = '/kindergarten';
-          }
-        }
-      }
-      
-      const emailParam = email ? `&email=${encodeURIComponent(email)}` : '';
-      window.location.href = window.location.origin + `${redirectPath}?entra-id-auth=success${emailParam}`;
-    }, 500);
-    
     return true;
   };
 
