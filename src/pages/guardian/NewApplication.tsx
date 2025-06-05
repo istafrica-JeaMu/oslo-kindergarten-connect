@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,7 +7,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { FileText, User, Building2, Calendar, ArrowRight, CheckCircle, AlertCircle, Sparkles, Clock, Shield, Upload, Info, AlertTriangle } from 'lucide-react';
+import { FileText, User, Building2, Calendar, ArrowRight, CheckCircle, AlertCircle, Sparkles, Clock, Shield, Upload, Info, AlertTriangle, HelpCircle } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const NewApplication = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -47,36 +47,36 @@ const NewApplication = () => {
 
   const applicationTypes = [
     {
-      id: 'main-part-1',
-      title: 'Main Recording Part 1',
-      deadline: '1 March',
-      description: 'For children with statutory right to a place (turning one by 31 August) or without a place by 30 September',
-      volume: '~7,000 applications',
+      id: 'new-admission',
+      title: 'New Admission',
+      icon: '🏫',
+      description: 'For children without a current kindergarten placement',
+      details: 'First-time application for kindergarten placement in Oslo',
       color: 'from-oslo-blue to-blue-700',
-      urgent: true
+      recommended: true
     },
     {
-      id: 'main-part-2',
-      title: 'Main Recording Part 2',
-      deadline: '15 August',
-      description: 'For children turning one by 31 November without a place',
-      volume: '~2,000 applications',
+      id: 'transfer-request',
+      title: 'Transfer Request',
+      icon: '🔄',
+      description: 'For changing from one kindergarten to another',
+      details: 'Moving your child from their current kindergarten to a new one',
       color: 'from-oslo-green to-green-600',
-      urgent: false
+      recommended: false
     },
     {
-      id: 'ongoing',
-      title: 'Ongoing Recording',
-      deadline: 'No deadline',
-      description: 'Applications for vacant places after main rounds',
-      volume: 'As available',
-      color: 'from-slate-600 to-slate-700',
-      urgent: false
+      id: 'late-ongoing',
+      title: 'Late/Ongoing Application',
+      icon: '⏱️',
+      description: 'For applying after main deadlines or under special circumstances',
+      details: 'Applications submitted outside standard deadlines or for immediate placement needs',
+      color: 'from-amber-500 to-orange-500',
+      recommended: false
     }
   ];
 
   const steps = [
-    { id: 0, title: 'Application Type', icon: Calendar, description: 'Choose your application type' },
+    { id: 0, title: 'Application Type', icon: Calendar, description: 'Choose your application intent' },
     { id: 1, title: 'Child Information', icon: User, description: 'Basic details about your child' },
     { id: 2, title: 'Kindergarten Preferences', icon: Building2, description: 'Choose your preferred kindergartens' },
     { id: 3, title: 'Guardian Information', icon: Shield, description: 'Your contact and verification details' },
@@ -89,6 +89,46 @@ const NewApplication = () => {
     { id: 3, name: 'Sagene Kindergarten', district: 'Sagene', capacity: 'Low', rating: 4.7 },
     { id: 4, name: 'Bjølsen Kindergarten', district: 'Sagene', capacity: 'High', rating: 4.5 }
   ];
+
+  // Function to determine provisional recording period based on child's birthdate
+  const getProvisionalRecordingPeriod = (birthDate: string) => {
+    if (!birthDate) return null;
+    
+    const childBirthDate = new Date(birthDate);
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    
+    // Check if child turns 1 by August 31st of current year
+    const august31 = new Date(currentYear, 7, 31); // Month is 0-indexed
+    const november30 = new Date(currentYear, 10, 30);
+    const march1 = new Date(currentYear, 2, 1);
+    const august15 = new Date(currentYear, 7, 15);
+    
+    // Calculate when child turns 1
+    const childTurns1 = new Date(childBirthDate.getFullYear() + 1, childBirthDate.getMonth(), childBirthDate.getDate());
+    
+    if (childTurns1 <= august31 && currentDate <= march1) {
+      return {
+        period: 'Main Recording Part 1',
+        deadline: 'March 1st',
+        description: 'Your child has statutory right to a kindergarten place'
+      };
+    } else if (childTurns1 <= november30 && currentDate <= august15) {
+      return {
+        period: 'Main Recording Part 2',
+        deadline: 'August 15th',
+        description: 'Second round of main applications'
+      };
+    } else {
+      return {
+        period: 'Ongoing Recording',
+        deadline: 'No fixed deadline',
+        description: 'Applications processed as places become available'
+      };
+    }
+  };
+
+  const provisionalPeriod = getProvisionalRecordingPeriod(formData.childInfo.birthDate);
 
   const handleNext = () => {
     if (currentStep < 4) {
@@ -140,9 +180,9 @@ const NewApplication = () => {
       <div className="bg-gradient-to-r from-oslo-blue/5 to-blue-50 p-6 rounded-xl border border-oslo-blue/20">
         <div className="flex items-center gap-3 mb-4">
           <Calendar className="w-6 h-6 text-oslo-blue" />
-          <h3 className="text-lg font-semibold text-slate-900">Select Application Type</h3>
+          <h3 className="text-lg font-semibold text-slate-900">What type of application is this?</h3>
         </div>
-        <p className="text-slate-600">Choose the appropriate application type based on your child's age and timing needs.</p>
+        <p className="text-slate-600">Choose the option that best describes your situation. The system will automatically determine the appropriate processing period based on your child's age and submission date.</p>
       </div>
 
       <div className="grid gap-4">
@@ -158,23 +198,29 @@ const NewApplication = () => {
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-4">
                   <div className={`w-12 h-12 bg-gradient-to-br ${type.color} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200`}>
-                    <Calendar className="w-6 h-6 text-white" />
+                    <span className="text-2xl">{type.icon}</span>
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <h4 className="font-bold text-slate-900 text-lg">{type.title}</h4>
-                      {type.urgent && (
-                        <Badge className="bg-red-100 text-red-700 border-red-300 text-xs">
-                          <Clock className="w-3 h-3 mr-1" />
-                          Urgent
+                      {type.recommended && (
+                        <Badge className="bg-emerald-100 text-emerald-700 border-emerald-300 text-xs">
+                          Most Common
                         </Badge>
                       )}
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <HelpCircle className="w-4 h-4 text-slate-400 hover:text-slate-600" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="max-w-xs">{type.details}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
                     <p className="text-slate-600 mb-2">{type.description}</p>
-                    <div className="flex items-center gap-4 text-sm">
-                      <span className="font-medium text-oslo-blue">Deadline: {type.deadline}</span>
-                      <span className="text-slate-500">Expected: {type.volume}</span>
-                    </div>
+                    <p className="text-sm text-slate-500">{type.details}</p>
                   </div>
                 </div>
                 <div className={`w-6 h-6 rounded-full border-2 transition-all duration-200 ${
@@ -191,6 +237,22 @@ const NewApplication = () => {
           </Card>
         ))}
       </div>
+
+      {formData.applicationType && (
+        <div className="bg-blue-50 p-6 rounded-xl border border-blue-200">
+          <div className="flex items-start gap-3">
+            <Info className="w-5 h-5 text-blue-600 mt-0.5" />
+            <div>
+              <h4 className="font-semibold text-blue-800 mb-2">Processing Information</h4>
+              <p className="text-blue-700 text-sm">
+                The system will automatically determine which recording period (Main Part 1, Main Part 2, or Ongoing) 
+                your application falls under based on your child's birthdate and when you submit the application. 
+                This ensures your application is processed in the correct timeframe according to Oslo municipality guidelines.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 
@@ -245,6 +307,27 @@ const NewApplication = () => {
           />
         </div>
       </div>
+
+      {/* Provisional Recording Period Hint */}
+      {provisionalPeriod && (
+        <div className="bg-gradient-to-r from-emerald-50 to-green-50 p-6 rounded-xl border border-emerald-200">
+          <div className="flex items-start gap-3">
+            <CheckCircle className="w-6 h-6 text-emerald-600 mt-0.5" />
+            <div>
+              <h4 className="font-semibold text-emerald-800 mb-2">Provisional Processing Period</h4>
+              <p className="text-emerald-700 mb-2">
+                Based on your child's age and today's date, this application is likely to fall under 
+                <span className="font-semibold"> {provisionalPeriod.period}</span>.
+              </p>
+              <div className="text-sm text-emerald-600">
+                <p>• Deadline: {provisionalPeriod.deadline}</p>
+                <p>• {provisionalPeriod.description}</p>
+                <p className="mt-2 font-medium">This will be confirmed automatically when you submit your application.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="space-y-4">
         <div className="flex items-center space-x-3 p-4 bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl border border-emerald-200">
