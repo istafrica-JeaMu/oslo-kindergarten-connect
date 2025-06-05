@@ -108,6 +108,57 @@ export function AppSidebar() {
             icon: Settings,
           },
         ];
+
+      case 'staff':
+      case 'partner':
+        return [
+          {
+            title: 'Dashboard',
+            url: '/kindergarten',
+            icon: Home,
+          },
+          {
+            title: 'Children',
+            url: '/kindergarten/children',
+            icon: Users,
+          },
+          {
+            title: 'Attendance',
+            url: '/kindergarten/attendance',
+            icon: Clock,
+          },
+          {
+            title: 'Reports',
+            url: '/kindergarten/reports',
+            icon: BarChart3,
+          },
+          {
+            title: 'Messages',
+            url: '/kindergarten/messages',
+            icon: MessageSquare,
+          },
+          ...(user?.role === 'partner' ? [
+            {
+              title: 'Applications',
+              url: '/kindergarten/applications',
+              icon: FileText,
+            },
+            {
+              title: 'Capacity',
+              url: '/kindergarten/capacity',
+              icon: Settings,
+            }
+          ] : [])
+        ];
+
+      case 'district-admin':
+        return [
+          {
+            title: t('nav.dashboard'),
+            url: baseUrl,
+            icon: Home,
+          },
+        ];
       
       default:
         return [];
@@ -115,6 +166,25 @@ export function AppSidebar() {
   };
 
   const menuItems = getMenuItems();
+
+  const getSidebarTitle = () => {
+    switch (user?.role) {
+      case 'guardian':
+        return 'Guardian Portal';
+      case 'caseworker':
+        return 'Case Worker Dashboard';
+      case 'admin':
+        return 'Administrator Panel';
+      case 'staff':
+        return 'Public Kindergarten';
+      case 'partner':
+        return 'Private Kindergarten';
+      case 'district-admin':
+        return 'District Administration';
+      default:
+        return 'Platform';
+    }
+  };
 
   return (
     <Sidebar className="border-r border-slate-200 bg-white">
@@ -132,9 +202,7 @@ export function AppSidebar() {
       <SidebarContent className="p-4">
         <SidebarGroup>
           <SidebarGroupLabel className="text-oslo-blue font-semibold text-sm mb-3 px-3">
-            {user?.role === 'guardian' && 'Guardian Portal'}
-            {user?.role === 'caseworker' && 'Case Worker Dashboard'}
-            {user?.role === 'admin' && 'Administrator Panel'}
+            {getSidebarTitle()}
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">

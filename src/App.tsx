@@ -26,6 +26,9 @@ import KindergartenDashboard from "./pages/kindergarten/KindergartenDashboard";
 import DistrictAdminDashboard from "./pages/district-admin/DistrictAdminDashboard";
 import NotFound from "./pages/NotFound";
 import './i18n';
+import PublicKindergartenDashboard from "./pages/staff/PublicKindergartenDashboard";
+import PrivateKindergartenDashboard from "./pages/staff/PrivateKindergartenDashboard";
+import ChildrenManagement from "./pages/staff/ChildrenManagement";
 
 const queryClient = new QueryClient();
 
@@ -102,6 +105,9 @@ const App = () => (
                 </ProtectedRoute>
               }>
                 <Route index element={<KindergartenDashboard />} />
+                <Route path="public" element={<PublicKindergartenDashboard />} />
+                <Route path="private" element={<PrivateKindergartenDashboard />} />
+                <Route path="children" element={<ChildrenManagement />} />
               </Route>
 
               {/* District Admin Routes */}
