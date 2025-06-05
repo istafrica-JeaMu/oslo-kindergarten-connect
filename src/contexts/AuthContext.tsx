@@ -143,7 +143,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     
     // Simulate ID-Porten processing
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 500));
     
     // Mock guardian user from ID-Porten
     const guardianUser: User = {
@@ -166,7 +166,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     
     // Simulate Entra ID processing
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 500));
     
     // Get the email from URL params to determine which user
     const urlParams = new URLSearchParams(window.location.search);
@@ -208,7 +208,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       // Redirect current tab directly to guardian portal
       window.location.href = window.location.origin + '/guardian?id-porten-auth=success';
-    }, 1000);
+    }, 500);
     
     return true;
   };
@@ -239,7 +239,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       const emailParam = email ? `&email=${encodeURIComponent(email)}` : '';
       window.location.href = window.location.origin + `${redirectPath}?entra-id-auth=success${emailParam}`;
-    }, 1000);
+    }, 500);
     
     return true;
   };
@@ -248,7 +248,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 500));
     
     const foundUser = mockUsers[email];
     if (foundUser && (password === 'password' || foundUser.authMethod === 'entra-id')) {
