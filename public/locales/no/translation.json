@@ -9,7 +9,18 @@
     "reviewQueue": "Behandlingskø",
     "placementManagement": "Plasshåndtering",
     "reports": "Rapporter",
-    "settings": "Innstillinger"
+    "settings": "Innstillinger",
+    "dailySchedule": "Dagsplan",
+    "absence": "Fravær",
+    "attendance": "Oppmøte",
+    "location": "Plassering",
+    "pickup": "Henting",
+    "meetings": "Lærersamtaler",
+    "consents": "Samtykker",
+    "documents": "Dokumenter",
+    "noticeBoard": "Oppslagstavle",
+    "livingArrangements": "Boordning",
+    "holidayRegistration": "Ferieplaner"
   },
   "auth": {
     "login": "Logg inn",
@@ -141,6 +152,32 @@
       "addStar": "Legg til stjerne",
       "removeStar": "Fjern stjerne",
       "attachments": "Vedlegg"
+    },
+    "dailySchedule": {
+      "title": "Dagsplan",
+      "description": "Se ditt barns daglige timeplan og aktiviteter",
+      "currentActivity": "Nå pågår",
+      "schedule": "Dagens timeplan",
+      "viewWeek": "Se hele uken",
+      "activityTypes": {
+        "meal": "Måltid",
+        "activity": "Aktivitet",
+        "outdoor": "Utebygninger",
+        "rest": "Hvil",
+        "arrival": "Ankomst",
+        "departure": "Henting"
+      }
+    },
+    "absence": {
+      "title": "Fravær",
+      "description": "Rapporter når barnet ditt ikke kan møte i barnehagen",
+      "quickReport": "Rask rapportering - I dag",
+      "reasons": {
+        "sick": "Sykdom",
+        "doctor": "Legetime",
+        "emergency": "Familienødstilfelle",
+        "other": "Annet"
+      }
     }
   },
   "caseworker": {

@@ -9,7 +9,18 @@
     "reviewQueue": "Review Queue",
     "placementManagement": "Placement Management",
     "reports": "Reports",
-    "settings": "Settings"
+    "settings": "Settings",
+    "dailySchedule": "Daily Schedule",
+    "absence": "Absence",
+    "attendance": "Attendance",
+    "location": "Location",
+    "pickup": "Pickup",
+    "meetings": "Teacher Meetings",
+    "consents": "Consents",
+    "documents": "Documents",
+    "noticeBoard": "Notice Board",
+    "livingArrangements": "Living Arrangements",
+    "holidayRegistration": "Holiday Plans"
   },
   "auth": {
     "login": "Login",
@@ -141,6 +152,32 @@
       "addStar": "Add star",
       "removeStar": "Remove star",
       "attachments": "Attachments"
+    },
+    "dailySchedule": {
+      "title": "Daily Schedule",
+      "description": "View your child's daily timetable and activities",
+      "currentActivity": "Currently Active",
+      "schedule": "Today's Schedule",
+      "viewWeek": "View Full Week",
+      "activityTypes": {
+        "meal": "Meal",
+        "activity": "Activity",
+        "outdoor": "Outdoor",
+        "rest": "Rest",
+        "arrival": "Arrival",
+        "departure": "Pickup"
+      }
+    },
+    "absence": {
+      "title": "Absence",
+      "description": "Report when your child cannot attend kindergarten",
+      "quickReport": "Quick Report - Today",
+      "reasons": {
+        "sick": "Sickness",
+        "doctor": "Doctor Appointment",
+        "emergency": "Family Emergency",
+        "other": "Other"
+      }
     }
   },
   "caseworker": {

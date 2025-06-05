@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,6 +15,17 @@ import NewApplication from "./pages/guardian/NewApplication";
 import ApplicationStatus from "./pages/guardian/ApplicationStatus";
 import Messages from "./pages/guardian/Messages";
 import Payments from "./pages/guardian/Payments";
+import DailySchedule from "./pages/guardian/DailySchedule";
+import AbsenceReporting from "./pages/guardian/AbsenceReporting";
+import AttendanceTracking from "./pages/guardian/AttendanceTracking";
+import ChildLocation from "./pages/guardian/ChildLocation";
+import PickupAuthorization from "./pages/guardian/PickupAuthorization";
+import TeacherMeetings from "./pages/guardian/TeacherMeetings";
+import Consents from "./pages/guardian/Consents";
+import Documents from "./pages/guardian/Documents";
+import NoticeBoard from "./pages/guardian/NoticeBoard";
+import LivingArrangements from "./pages/guardian/LivingArrangements";
+import HolidayRegistration from "./pages/guardian/HolidayRegistration";
 import CaseWorkerDashboard from "./pages/caseworker/CaseWorkerDashboard";
 import ReviewQueue from "./pages/caseworker/ReviewQueue";
 import PlacementManagement from "./pages/caseworker/PlacementManagement";
@@ -57,7 +69,18 @@ const App = () => (
                 <Route index element={<GuardianDashboard />} />
                 <Route path="new-application" element={<NewApplication />} />
                 <Route path="application-status" element={<ApplicationStatus />} />
+                <Route path="daily-schedule" element={<DailySchedule />} />
+                <Route path="absence" element={<AbsenceReporting />} />
+                <Route path="attendance" element={<AttendanceTracking />} />
+                <Route path="location" element={<ChildLocation />} />
+                <Route path="pickup" element={<PickupAuthorization />} />
                 <Route path="messages" element={<Messages />} />
+                <Route path="meetings" element={<TeacherMeetings />} />
+                <Route path="consents" element={<Consents />} />
+                <Route path="documents" element={<Documents />} />
+                <Route path="notice-board" element={<NoticeBoard />} />
+                <Route path="living-arrangements" element={<LivingArrangements />} />
+                <Route path="holiday-registration" element={<HolidayRegistration />} />
                 <Route path="payments" element={<Payments />} />
               </Route>
 

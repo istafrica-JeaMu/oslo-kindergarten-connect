@@ -1,4 +1,3 @@
-
 import {
   Home,
   FileText,
@@ -29,44 +28,20 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Link, useLocation } from 'react-router-dom';
+import { useGuardianNavigation } from '@/components/guardian/navigation/GuardianNavigation';
 
 export function AppSidebar() {
   const { user } = useAuth();
   const { t } = useLanguage();
   const location = useLocation();
+  const guardianNavItems = useGuardianNavigation();
 
   const getMenuItems = () => {
     const baseUrl = `/${user?.role}`;
     
     switch (user?.role) {
       case 'guardian':
-        return [
-          {
-            title: t('nav.dashboard'),
-            url: baseUrl,
-            icon: Home,
-          },
-          {
-            title: t('nav.newApplication'),
-            url: `${baseUrl}/new-application`,
-            icon: FileText,
-          },
-          {
-            title: t('nav.applicationStatus'),
-            url: `${baseUrl}/application-status`,
-            icon: Clock,
-          },
-          {
-            title: t('nav.messages'),
-            url: `${baseUrl}/messages`,
-            icon: MessageSquare,
-          },
-          {
-            title: t('nav.payments'),
-            url: `${baseUrl}/payments`,
-            icon: CreditCard,
-          },
-        ];
+        return guardianNavItems;
       
       case 'caseworker':
         return [
