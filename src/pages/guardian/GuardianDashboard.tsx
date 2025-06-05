@@ -189,61 +189,8 @@ const GuardianDashboard = () => {
 
   return (
     <div className="space-y-8 animate-fade-in">
-      {/* Compact Header with Notice Board */}
-      <div className="grid lg:grid-cols-3 gap-8">
-        {/* Left: Compact Welcome */}
-        <div className="lg:col-span-1">
-          <Card className="relative overflow-hidden border-0 shadow-lg h-full">
-            <div className="absolute inset-0 bg-gradient-to-br from-oslo-blue/5 via-transparent to-oslo-blue/10" />
-            <CardContent className="relative p-6 flex flex-col justify-center h-full">
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="relative">
-                    <div className="w-12 h-12 bg-gradient-to-br from-oslo-blue via-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
-                      <GraduationCap className="w-6 h-6 text-white" />
-                    </div>
-                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-oslo-green rounded-full flex items-center justify-center">
-                      <CheckCircle className="w-3 h-3 text-white" />
-                    </div>
-                  </div>
-                  <div className="flex-1">
-                    <h1 className="text-2xl font-bold text-slate-900">
-                      {t('guardian.dashboard.welcome')}, {user?.name}
-                    </h1>
-                    <p className="text-slate-600 text-sm mt-1">
-                      {t('guardian.dashboard.overview')}
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex flex-wrap gap-2">
-                  <Badge className="bg-gradient-to-r from-slate-100 to-white text-slate-700 border border-slate-300 font-medium px-3 py-1">
-                    <Shield className="w-3 h-3 mr-1" />
-                    Guardian Account
-                  </Badge>
-                  <Badge className="bg-gradient-to-r from-oslo-green to-green-600 text-white border border-green-400 font-medium px-3 py-1">
-                    <Star className="w-3 h-3 mr-1" />
-                    ✓ Verified
-                  </Badge>
-                </div>
-
-                <Button 
-                  onClick={handleNewApplication}
-                  className="w-full bg-gradient-to-r from-oslo-blue to-blue-700 hover:from-oslo-blue/90 hover:to-blue-700/90 shadow-lg hover:shadow-xl transition-all duration-300"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  {t('guardian.dashboard.newApplication')}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Right: Notice Board */}
-        <div className="lg:col-span-2">
-          <MinimalNoticeBoard />
-        </div>
-      </div>
+      {/* Enhanced Notice Board - Full Width */}
+      <MinimalNoticeBoard />
 
       {/* Stats Overview */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
