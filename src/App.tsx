@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -108,6 +109,7 @@ const App = () => (
                 <Route path="public" element={<PublicKindergartenDashboard />} />
                 <Route path="private" element={<PrivateKindergartenDashboard />} />
                 <Route path="children" element={<ChildrenManagement />} />
+                <Route path="messages" element={<Messages />} />
               </Route>
 
               {/* District Admin Routes */}
