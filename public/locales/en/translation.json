@@ -14,7 +14,15 @@
     "noticeBoard": "Notice Board",
     "consents": "Consents",
     "documents": "Documents",
-    "payments": "Payments"
+    "payments": "Payments",
+    "newApplication": "New Application",
+    "applicationStatus": "Application Status",
+    "dailySchedule": "Daily Schedule",
+    "holidayRegistration": "Holiday Registration",
+    "reviewQueue": "Review Queue",
+    "placementManagement": "Placement Management",
+    "reports": "Reports",
+    "settings": "Settings"
   },
   "common": {
     "cancel": "Cancel",
@@ -31,5 +39,54 @@
     "success": "Success",
     "warning": "Warning",
     "info": "Information"
+  },
+  "holidayRegistration": {
+    "title": "Holiday Registration",
+    "description": "Register your child's holiday periods",
+    "badge": "Holiday Planning",
+    "upcomingHolidays": "Upcoming Holidays",
+    "noUpcomingHolidays": "No upcoming holidays registered",
+    "registerNewHoliday": "Register New Holiday",
+    "myHolidayRegistrations": "My Holiday Registrations",
+    "allRegistrations": "Overview of your registered holiday periods",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "selectStartDate": "Select start date",
+    "selectEndDate": "Select end date",
+    "holidayType": "Holiday Type",
+    "selectHolidayType": "Select holiday type",
+    "specialRequests": "Special Requests",
+    "enterSpecialRequests": "Enter any special requests or notes",
+    "registerHoliday": "Register Holiday",
+    "registeredHolidays": "Registered Holidays",
+    "status": "Status",
+    "actions": "Actions",
+    "types": {
+      "summer": "Summer Holiday",
+      "winter": "Winter Holiday",
+      "easter": "Easter Holiday",
+      "autumn": "Autumn Holiday",
+      "other": "Other"
+    },
+    "statuses": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "examples": {
+      "summerTrip": "2-week summer trip to Sweden",
+      "familyVisit": "Visit to grandparents in Trondheim"
+    },
+    "importantInfo": "Important Information",
+    "info": {
+      "advance": "Holiday registrations should be submitted at least 2 weeks in advance",
+      "approval": "All holiday periods require approval from the kindergarten",
+      "attendance": "Holiday periods affect monthly attendance calculations",
+      "fees": "Special fee arrangements may apply for extended holidays"
+    },
+    "toast": {
+      "title": "Holiday registered",
+      "description": "Your holiday registration has been submitted for approval."
+    }
   }
 }

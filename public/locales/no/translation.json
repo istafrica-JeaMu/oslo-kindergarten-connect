@@ -14,7 +14,15 @@
     "noticeBoard": "Oppslagstavle",
     "consents": "Samtykker",
     "documents": "Dokumenter",
-    "payments": "Betalinger"
+    "payments": "Betalinger",
+    "newApplication": "Ny søknad",
+    "applicationStatus": "Søknadsstatus",
+    "dailySchedule": "Dagsplan",
+    "holidayRegistration": "Ferieplaner",
+    "reviewQueue": "Behandlingskø",
+    "placementManagement": "Plasseringsadministrasjon",
+    "reports": "Rapporter",
+    "settings": "Innstillinger"
   },
   "common": {
     "cancel": "Avbryt",
@@ -31,5 +39,54 @@
     "success": "Suksess",
     "warning": "Advarsel",
     "info": "Informasjon"
+  },
+  "holidayRegistration": {
+    "title": "Ferieregistrering",
+    "description": "Registrer barnets ferieperioder",
+    "badge": "Ferieplanlegging",
+    "upcomingHolidays": "Kommende ferier",
+    "noUpcomingHolidays": "Ingen kommende ferier registrert",
+    "registerNewHoliday": "Registrer ny ferie",
+    "myHolidayRegistrations": "Mine ferieregistreringer",
+    "allRegistrations": "Oversikt over dine registrerte ferieperioder",
+    "startDate": "Startdato",
+    "endDate": "Sluttdato",
+    "selectStartDate": "Velg startdato",
+    "selectEndDate": "Velg sluttdato",
+    "holidayType": "Ferietype",
+    "selectHolidayType": "Velg ferietype",
+    "specialRequests": "Spesielle ønsker",
+    "enterSpecialRequests": "Skriv inn spesielle ønsker eller merknader",
+    "registerHoliday": "Registrer ferie",
+    "registeredHolidays": "Registrerte ferier",
+    "status": "Status",
+    "actions": "Handlinger",
+    "types": {
+      "summer": "Sommerferie",
+      "winter": "Vinterferie",
+      "easter": "Påskeferie",
+      "autumn": "Høstferie",
+      "other": "Annet"
+    },
+    "statuses": {
+      "pending": "Venter",
+      "approved": "Godkjent",
+      "rejected": "Avslått"
+    },
+    "examples": {
+      "summerTrip": "2 ukers sommertur til Sverige",
+      "familyVisit": "Besøk hos besteforeldre i Trondheim"
+    },
+    "importantInfo": "Viktig informasjon",
+    "info": {
+      "advance": "Ferieregistreringer bør sendes inn minst 2 uker på forhånd",
+      "approval": "Alle ferieperioder krever godkjenning fra barnehagen",
+      "attendance": "Ferieperioder påvirker månedlige oppmøteberegninger",
+      "fees": "Spesielle avgiftsordninger kan gjelde for lengre ferier"
+    },
+    "toast": {
+      "title": "Ferie registrert",
+      "description": "Din ferieregistrering er sendt til godkjenning."
+    }
   }
 }
