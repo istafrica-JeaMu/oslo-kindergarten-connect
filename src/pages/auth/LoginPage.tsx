@@ -17,10 +17,10 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [loginStep, setLoginStep] = useState<'email' | 'staff-auth' | 'id-porten'>('email');
-  const [domainType, setDomainType] = useState<'guardian' | 'public-staff' | 'private-staff' | 'unknown'>('guardian');
+  const [loginStep, setLoginStep] = useState<'email' | 'staff-auth' | 'id-porten' | 'entra-id'>('email');
+  const [domainType, setDomainType] = useState<'guardian' | 'public-staff' | 'private-staff' | 'admin' | 'unknown'>('guardian');
   
-  const { user, login, loginWithIDPorten, checkDomainType } = useAuth();
+  const { user, login, loginWithIDPorten, loginWithEntraID, checkDomainType } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
 
@@ -71,7 +71,7 @@ const LoginPage = () => {
     if (type === 'guardian') {
       setLoginStep('id-porten');
     } else {
-      setLoginStep('staff-auth');
+      setLoginStep('entra-id');
     }
   };
 
@@ -85,33 +85,20 @@ const LoginPage = () => {
     }
   };
 
-  const handleStaffLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    
-    if (!password) {
-      setError('Password is required');
-      return;
-    }
-    
+  const handleEntraIDLogin = async () => {
     setIsLoading(true);
-    
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      const success = await login(email, password);
-      if (!success) {
-        setError('Invalid email or password. Please try again.');
-      }
+      await loginWithEntraID(email);
     } catch (err) {
-      setError('An error occurred during login. Please try again.');
-    } finally {
+      setError('Failed to connect to Microsoft Entra ID. Please try again.');
       setIsLoading(false);
     }
   };
 
   const getDomainBadge = () => {
     switch (domainType) {
+      case 'admin':
+        return <Badge className="bg-red-100 text-red-800 border-red-200">Admin</Badge>;
       case 'public-staff':
         return <Badge className="bg-blue-100 text-blue-800 border-blue-200">Public Staff</Badge>;
       case 'private-staff':
@@ -128,13 +115,21 @@ const LoginPage = () => {
     switch (domain) {
       case 'oslo.kommune.no':
         return 'Oslo Kommune';
+      case 'admin.oslo.kommune.no':
+        return 'Oslo Kommune Admin';
       case 'ist.com':
         return 'IST Private Kindergarten';
+      case 'admin.ist.com':
+        return 'IST Admin';
       case 'privbarnehage.no':
         return 'Private Barnehage AS';
       default:
         return 'Guardian Portal';
     }
+  };
+
+  const getAuthMethod = () => {
+    return domainType === 'guardian' ? 'ID-Porten' : 'Microsoft Entra ID';
   };
 
   return (
@@ -151,7 +146,7 @@ const LoginPage = () => {
             <CardDescription className="text-slate-600">
               {loginStep === 'email' && "Enter your email to continue"}
               {loginStep === 'id-porten' && "Continue with ID-Porten"}
-              {loginStep === 'staff-auth' && `Sign in to ${getOrganizationName()}`}
+              {loginStep === 'entra-id' && `Continue with Microsoft Entra ID`}
             </CardDescription>
           </div>
         </CardHeader>
@@ -177,7 +172,7 @@ const LoginPage = () => {
                   <div className="flex items-center gap-2 mt-2">
                     {getDomainBadge()}
                     <span className="text-xs text-slate-600">
-                      {domainType === 'guardian' ? 'Will use ID-Porten' : 'Staff login required'}
+                      Will use {getAuthMethod()}
                     </span>
                   </div>
                 )}
@@ -212,7 +207,7 @@ const LoginPage = () => {
               <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
                 <Shield className="w-8 h-8 text-green-600 mx-auto mb-2" />
                 <h3 className="font-semibold text-green-800 mb-1">Secure Login with ID-Porten</h3>
-                <p className="text-sm text-green-700">You'll be redirected to ID-Porten for secure authentication</p>
+                <p className="text-sm text-green-700">A new tab will open for secure authentication. This tab will redirect automatically.</p>
               </div>
 
               <Button 
@@ -223,7 +218,7 @@ const LoginPage = () => {
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Redirecting...
+                    Authenticating...
                   </>
                 ) : (
                   <>
@@ -244,37 +239,21 @@ const LoginPage = () => {
             </div>
           )}
 
-          {/* Staff Authentication Step */}
-          {loginStep === 'staff-auth' && (
-            <form onSubmit={handleStaffLogin} className="space-y-4">
+          {/* Microsoft Entra ID Step */}
+          {loginStep === 'entra-id' && (
+            <div className="space-y-4">
               <div className="text-center p-3 bg-blue-50 rounded-lg border border-blue-200 mb-4">
                 <Building2 className="w-6 h-6 text-blue-600 mx-auto mb-1" />
                 <p className="text-sm font-medium text-blue-800">{getOrganizationName()}</p>
                 <p className="text-xs text-blue-600">{email}</p>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-semibold text-slate-800">
-                  Password
-                </Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter your password"
-                    className="h-12 pr-12 border-2 focus:border-blue-500"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700"
-                  >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                  </button>
+              <div className="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <div className="w-8 h-8 bg-blue-600 rounded mx-auto mb-2 flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">MS</span>
                 </div>
+                <h3 className="font-semibold text-blue-800 mb-1">Microsoft Entra ID Login</h3>
+                <p className="text-sm text-blue-700">A new tab will open for secure authentication. This tab will redirect automatically.</p>
               </div>
 
               {error && (
@@ -284,17 +263,20 @@ const LoginPage = () => {
               )}
 
               <Button 
-                type="submit" 
+                onClick={handleEntraIDLogin}
                 className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800"
                 disabled={isLoading}
               >
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Signing in...
+                    Authenticating...
                   </>
                 ) : (
-                  'Sign In'
+                  <>
+                    Continue with Microsoft Entra ID
+                    <ExternalLink className="ml-2 h-4 w-4" />
+                  </>
                 )}
               </Button>
 
@@ -306,7 +288,7 @@ const LoginPage = () => {
               >
                 Back to email
               </Button>
-            </form>
+            </div>
           )}
 
           {/* Demo Accounts Section */}
@@ -331,7 +313,7 @@ const LoginPage = () => {
                 
                 <div className="flex justify-between items-center p-2 bg-white rounded border">
                   <div>
-                    <p className="text-xs font-medium">Public Staff</p>
+                    <p className="text-xs font-medium">Public Staff (Entra ID)</p>
                     <p className="text-xs text-slate-600">staff@oslo.kommune.no</p>
                   </div>
                   <Button
@@ -346,13 +328,28 @@ const LoginPage = () => {
                 
                 <div className="flex justify-between items-center p-2 bg-white rounded border">
                   <div>
-                    <p className="text-xs font-medium">Private Partner</p>
+                    <p className="text-xs font-medium">Private Partner (Entra ID)</p>
                     <p className="text-xs text-slate-600">partner@ist.com</p>
                   </div>
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => setEmail('partner@ist.com')}
+                    className="text-xs"
+                  >
+                    Use
+                  </Button>
+                </div>
+
+                <div className="flex justify-between items-center p-2 bg-white rounded border">
+                  <div>
+                    <p className="text-xs font-medium">Admin (Entra ID)</p>
+                    <p className="text-xs text-slate-600">admin@admin.oslo.kommune.no</p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setEmail('admin@admin.oslo.kommune.no')}
                     className="text-xs"
                   >
                     Use

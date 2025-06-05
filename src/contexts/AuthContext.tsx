@@ -11,16 +11,17 @@ export interface User {
   district?: string;
   kindergartenId?: string;
   organization?: string;
-  authMethod?: 'id-porten' | 'staff-login';
+  authMethod?: 'id-porten' | 'entra-id';
 }
 
 interface AuthContextType {
   user: User | null;
   login: (email: string, password?: string) => Promise<boolean>;
   loginWithIDPorten: () => Promise<boolean>;
+  loginWithEntraID: () => Promise<boolean>;
   logout: () => void;
   isLoading: boolean;
-  checkDomainType: (email: string) => 'guardian' | 'public-staff' | 'private-staff' | 'unknown';
+  checkDomainType: (email: string) => 'guardian' | 'public-staff' | 'private-staff' | 'admin' | 'unknown';
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -29,6 +30,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const DOMAIN_CONFIG = {
   publicStaff: ['oslo.kommune.no'],
   privateStaff: ['ist.com', 'privbarnehage.no'],
+  admin: ['admin.oslo.kommune.no', 'admin.ist.com'],
 };
 
 // Mock users for demonstration
@@ -46,38 +48,38 @@ const mockUsers: Record<string, User> = {
     email: 'caseworker@oslo.kommune.no',
     role: 'caseworker',
     district: 'Søndre Nordstrand',
-    authMethod: 'staff-login'
+    authMethod: 'entra-id'
   },
-  'admin@oslo.kommune.no': {
+  'admin@admin.oslo.kommune.no': {
     id: '3',
     name: 'Ingrid Andersen',
-    email: 'admin@oslo.kommune.no',
+    email: 'admin@admin.oslo.kommune.no',
     role: 'admin',
-    authMethod: 'staff-login'
+    authMethod: 'entra-id'
   },
   'staff@oslo.kommune.no': {
     id: '4',
     name: 'Kari Olsen',
     email: 'staff@oslo.kommune.no',
-    role: 'staff',
+    role: 'caseworker',
     organization: 'Oslo Kommune',
-    authMethod: 'staff-login'
+    authMethod: 'entra-id'
   },
   'partner@ist.com': {
     id: '5',
     name: 'Lars Bjørn',
     email: 'partner@ist.com',
-    role: 'partner',
+    role: 'caseworker',
     organization: 'IST Private Kindergarten',
-    authMethod: 'staff-login'
+    authMethod: 'entra-id'
   },
   'partner@privbarnehage.no': {
     id: '6',
     name: 'Silje Nordahl',
     email: 'partner@privbarnehage.no',
-    role: 'partner',
+    role: 'caseworker',
     organization: 'Private Barnehage AS',
-    authMethod: 'staff-login'
+    authMethod: 'entra-id'
   }
 };
 
@@ -98,11 +100,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       handleIDPortenReturn();
     }
 
+    // Check for Entra ID return
+    if (urlParams.get('entra-id-auth') === 'success') {
+      handleEntraIDReturn();
+    }
+
     setIsLoading(false);
   }, []);
 
-  const checkDomainType = (email: string): 'guardian' | 'public-staff' | 'private-staff' | 'unknown' => {
+  const checkDomainType = (email: string): 'guardian' | 'public-staff' | 'private-staff' | 'admin' | 'unknown' => {
     const domain = email.split('@')[1]?.toLowerCase();
+    
+    if (DOMAIN_CONFIG.admin.includes(domain)) {
+      return 'admin';
+    }
     
     if (DOMAIN_CONFIG.publicStaff.includes(domain)) {
       return 'public-staff';
@@ -138,14 +149,72 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(guardianUser);
     localStorage.setItem('user', JSON.stringify(guardianUser));
     
-    // Clean up URL
-    window.history.replaceState({}, document.title, window.location.pathname);
+    // Clean up URL and redirect to guardian dashboard
+    window.history.replaceState({}, document.title, '/guardian');
+    setIsLoading(false);
+  };
+
+  const handleEntraIDReturn = async () => {
+    setIsLoading(true);
+    
+    // Simulate Entra ID processing
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Get the email from URL params to determine which user
+    const urlParams = new URLSearchParams(window.location.search);
+    const email = urlParams.get('email') || 'caseworker@oslo.kommune.no';
+    
+    const staffUser = mockUsers[email] || {
+      id: 'entra-id-' + Date.now(),
+      name: 'Staff User',
+      email: email,
+      role: 'caseworker',
+      authMethod: 'entra-id'
+    };
+    
+    setUser(staffUser);
+    localStorage.setItem('user', JSON.stringify(staffUser));
+    
+    // Clean up URL and redirect based on role
+    let redirectPath = '/caseworker';
+    if (staffUser.role === 'admin') {
+      redirectPath = '/admin';
+    }
+    
+    window.history.replaceState({}, document.title, redirectPath);
     setIsLoading(false);
   };
 
   const loginWithIDPorten = async (): Promise<boolean> => {
-    // Redirect to mock ID-Porten
-    window.location.href = 'https://login.idporten.no/authorize/selector';
+    // Open ID-Porten in new tab
+    const idPortenWindow = window.open('https://login.idporten.no/authorize/selector', '_blank');
+    
+    // Simulate successful authentication after a delay
+    setTimeout(() => {
+      if (idPortenWindow) {
+        idPortenWindow.close();
+      }
+      // Redirect current tab to success URL
+      window.location.href = window.location.origin + '/?id-porten-auth=success';
+    }, 3000);
+    
+    return true;
+  };
+
+  const loginWithEntraID = async (email?: string): Promise<boolean> => {
+    // Open Entra ID in new tab
+    const entraIdWindow = window.open('https://login.microsoftonline.com/common/oauth2/authorize', '_blank');
+    
+    // Simulate successful authentication after a delay
+    setTimeout(() => {
+      if (entraIdWindow) {
+        entraIdWindow.close();
+      }
+      // Redirect current tab to success URL with email
+      const emailParam = email ? `&email=${encodeURIComponent(email)}` : '';
+      window.location.href = window.location.origin + `/?entra-id-auth=success${emailParam}`;
+    }, 3000);
+    
     return true;
   };
 
@@ -156,7 +225,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     const foundUser = mockUsers[email];
-    if (foundUser && (password === 'password' || foundUser.authMethod === 'id-porten')) {
+    if (foundUser && (password === 'password' || foundUser.authMethod === 'entra-id')) {
       setUser(foundUser);
       localStorage.setItem('user', JSON.stringify(foundUser));
       setIsLoading(false);
@@ -177,6 +246,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       user, 
       login, 
       loginWithIDPorten,
+      loginWithEntraID,
       logout, 
       isLoading, 
       checkDomainType 
