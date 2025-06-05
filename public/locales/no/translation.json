@@ -1,4 +1,3 @@
-
 {
   "nav": {
     "dashboard": "Dashboard",
@@ -48,6 +47,75 @@
       "applicationsOverview": "Oversikt over alle dine barnehagesøknader",
       "recentMessages": "Siste meldinger",
       "paymentOverview": "Betalingsoversikt"
+    },
+    "holidayRegistration": {
+      "title": "Ferieregistrering",
+      "description": "Registrer fravær for ferier og spesielle perioder",
+      "planningBadge": "Ferieplanlegging",
+      "registerAbsence": "Registrer fravær",
+      "importantDeadlines": "Viktige frister",
+      "deadlines": {
+        "summer": "Sommerferie",
+        "summerDate": "Frist for registrering: 15. april 2024",
+        "christmas": "Juleferie",
+        "christmasDate": "Frist for registrering: 1. november 2024"
+      },
+      "note": "NB",
+      "minimumNotice": "Feriefravær må registreres minimum 14 dager i forveien.",
+      "formDescription": "Fyll ut informasjon om planlagt fravær",
+      "absenceType": "Type fravær",
+      "types": {
+        "vacation": "Ferie",
+        "travel": "Reise",
+        "family": "Familiebesøk",
+        "other": "Annet fravær"
+      },
+      "firstAbsenceDay": "Første fraværsdag",
+      "lastAbsenceDay": "Siste fraværsdag",
+      "minimumDays": "Må være minst 14 dager fra i dag",
+      "descriptionOptional": "Beskrivelse (valgfritt)",
+      "descriptionPlaceholder": "F.eks. 'Familieferie til Spania'...",
+      "contactOptional": "Kontaktinformasjon under fravær (valgfritt)",
+      "contactPlaceholder": "Telefon eller e-post hvis annerledes enn vanlig",
+      "sending": "Sender...",
+      "registeredAbsences": "Registrerte fravær",
+      "absencesOverview": "Oversikt over planlagte ferier og fravær",
+      "registered": "Registrert",
+      "status": {
+        "confirmed": "Bekreftet",
+        "pending": "Venter godkjenning",
+        "rejected": "Avvist"
+      },
+      "lessThan14Days": "Mindre enn 14d",
+      "kindergartenCalendar": "Barnehagens feriekalender 2024",
+      "closedDaysOverview": "Oversikt over stengte dager og spesielle perioder",
+      "kindergartenClosed": "Barnehagen stengt",
+      "closedDays": {
+        "easter": "Påskestengt",
+        "easterDates": "28. mars - 1. april 2024",
+        "summer": "Sommerstengt",
+        "summerDates": "15. juli - 29. juli 2024",
+        "planning": "Planleggingsdag",
+        "planningDate": "29. august 2024",
+        "christmas": "Julestengt",
+        "christmasDates": "24. desember - 1. januar 2025"
+      },
+      "policyTitle": "Retningslinjer for feriefravær",
+      "policy": {
+        "minimum14Days": "Minimum 14 dagers varsel for alle typer feriefravær",
+        "summerDeadline": "Sommerferie må registreres innen 15. april",
+        "christmasDeadline": "Juleferie må registreres innen 1. november",
+        "dispensation": "Barnehagen kan gi dispensasjon for kortere varsel i spesielle tilfeller",
+        "planning": "Registrerte ferier bidrar til planlegging av bemanning og aktiviteter"
+      },
+      "toast": {
+        "title": "Feriefravær registrert",
+        "description": "Barnehagen er informert om fraværet."
+      },
+      "examples": {
+        "summerVacation": "Sommerferie til Vestlandet",
+        "easterVacation": "Påskeferie hos besteforeldre i Bergen"
+      }
     },
     "dailySchedule": {
       "title": "Dagsplan",

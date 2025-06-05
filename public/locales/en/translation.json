@@ -1,4 +1,3 @@
-
 {
   "nav": {
     "dashboard": "Dashboard",
@@ -48,6 +47,75 @@
       "applicationsOverview": "Overview of all your kindergarten applications",
       "recentMessages": "Recent Messages",
       "paymentOverview": "Payment Overview"
+    },
+    "holidayRegistration": {
+      "title": "Holiday Registration",
+      "description": "Register absence for holidays and special periods",
+      "planningBadge": "Holiday Planning",
+      "registerAbsence": "Register Absence",
+      "importantDeadlines": "Important Deadlines",
+      "deadlines": {
+        "summer": "Summer Holiday",
+        "summerDate": "Registration deadline: April 15, 2024",
+        "christmas": "Christmas Holiday",
+        "christmasDate": "Registration deadline: November 1, 2024"
+      },
+      "note": "NB",
+      "minimumNotice": "Holiday absences must be registered at least 14 days in advance.",
+      "formDescription": "Fill out information about planned absence",
+      "absenceType": "Absence Type",
+      "types": {
+        "vacation": "Vacation",
+        "travel": "Travel",
+        "family": "Family Visit",
+        "other": "Other Absence"
+      },
+      "firstAbsenceDay": "First Absence Day",
+      "lastAbsenceDay": "Last Absence Day",
+      "minimumDays": "Must be at least 14 days from today",
+      "descriptionOptional": "Description (optional)",
+      "descriptionPlaceholder": "E.g. 'Family vacation to Spain'...",
+      "contactOptional": "Contact information during absence (optional)",
+      "contactPlaceholder": "Phone or email if different from usual",
+      "sending": "Sending...",
+      "registeredAbsences": "Registered Absences",
+      "absencesOverview": "Overview of planned holidays and absences",
+      "registered": "Registered",
+      "status": {
+        "confirmed": "Confirmed",
+        "pending": "Awaiting Approval",
+        "rejected": "Rejected"
+      },
+      "lessThan14Days": "Less than 14d",
+      "kindergartenCalendar": "Kindergarten Holiday Calendar 2024",
+      "closedDaysOverview": "Overview of closed days and special periods",
+      "kindergartenClosed": "Kindergarten Closed",
+      "closedDays": {
+        "easter": "Easter Closure",
+        "easterDates": "March 28 - April 1, 2024",
+        "summer": "Summer Closure",
+        "summerDates": "July 15 - July 29, 2024",
+        "planning": "Planning Day",
+        "planningDate": "August 29, 2024",
+        "christmas": "Christmas Closure",
+        "christmasDates": "December 24 - January 1, 2025"
+      },
+      "policyTitle": "Holiday Absence Guidelines",
+      "policy": {
+        "minimum14Days": "Minimum 14 days notice for all types of holiday absence",
+        "summerDeadline": "Summer holidays must be registered by April 15",
+        "christmasDeadline": "Christmas holidays must be registered by November 1",
+        "dispensation": "Kindergarten may grant dispensation for shorter notice in special cases",
+        "planning": "Registered holidays contribute to planning staffing and activities"
+      },
+      "toast": {
+        "title": "Holiday absence registered",
+        "description": "Kindergarten has been informed about the absence."
+      },
+      "examples": {
+        "summerVacation": "Summer vacation to Western Norway",
+        "easterVacation": "Easter vacation with grandparents in Bergen"
+      }
     },
     "dailySchedule": {
       "title": "Daily Schedule",

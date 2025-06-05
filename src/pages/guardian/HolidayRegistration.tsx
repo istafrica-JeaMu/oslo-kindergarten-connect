@@ -21,11 +21,13 @@ import {
 import { format, addDays, isAfter } from 'date-fns';
 import { nb } from 'date-fns/locale';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const HolidayRegistration = () => {
   const [showForm, setShowForm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const today = new Date();
   const twoWeeksLater = addDays(today, 14);
@@ -37,7 +39,7 @@ const HolidayRegistration = () => {
       type: 'vacation',
       startDate: '2024-06-24',
       endDate: '2024-07-15',
-      description: 'Sommerferie til Vestlandet',
+      description: t('guardian.holidayRegistration.examples.summerVacation'),
       status: 'confirmed',
       submittedDate: '2024-03-01'
     },
@@ -46,17 +48,17 @@ const HolidayRegistration = () => {
       type: 'travel',
       startDate: '2024-04-10',
       endDate: '2024-04-16',
-      description: 'Påskeferie hos besteforeldre i Bergen',
+      description: t('guardian.holidayRegistration.examples.easterVacation'),
       status: 'pending',
       submittedDate: '2024-03-15'
     }
   ];
 
   const holidayTypes = [
-    { id: 'vacation', label: 'Ferie' },
-    { id: 'travel', label: 'Reise' },
-    { id: 'family', label: 'Familiebesøk' },
-    { id: 'absence', label: 'Annet fravær' }
+    { id: 'vacation', label: t('guardian.holidayRegistration.types.vacation') },
+    { id: 'travel', label: t('guardian.holidayRegistration.types.travel') },
+    { id: 'family', label: t('guardian.holidayRegistration.types.family') },
+    { id: 'absence', label: t('guardian.holidayRegistration.types.other') }
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -67,8 +69,8 @@ const HolidayRegistration = () => {
     await new Promise(resolve => setTimeout(resolve, 1500));
     
     toast({
-      title: "Feriefravær registrert",
-      description: "Barnehagen er informert om fraværet.",
+      title: t('guardian.holidayRegistration.toast.title'),
+      description: t('guardian.holidayRegistration.toast.description'),
     });
     
     setIsSubmitting(false);
@@ -85,12 +87,7 @@ const HolidayRegistration = () => {
   };
 
   const getStatusText = (status: string) => {
-    switch (status) {
-      case 'confirmed': return 'Bekreftet';
-      case 'pending': return 'Venter godkjenning';
-      case 'rejected': return 'Avvist';
-      default: return 'Ukjent';
-    }
+    return t(`guardian.holidayRegistration.status.${status}`);
   };
 
   const isDateTooClose = (dateStr: string) => {
@@ -103,17 +100,17 @@ const HolidayRegistration = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Ferieregistrering</h1>
-          <p className="text-slate-600 mt-2">Registrer fravær for ferier og spesielle perioder</p>
+          <h1 className="text-3xl font-bold text-slate-900">{t('guardian.holidayRegistration.title')}</h1>
+          <p className="text-slate-600 mt-2">{t('guardian.holidayRegistration.description')}</p>
         </div>
         <div className="flex items-center gap-3">
           <Badge variant="outline" className="bg-oslo-blue/5 text-oslo-blue border-oslo-blue/20">
             <Calendar className="w-4 h-4 mr-2" />
-            Ferieplanlegging
+            {t('guardian.holidayRegistration.planningBadge')}
           </Badge>
           <Button onClick={() => setShowForm(true)} disabled={showForm}>
             <Plus className="w-4 h-4 mr-2" />
-            Registrer fravær
+            {t('guardian.holidayRegistration.registerAbsence')}
           </Button>
         </div>
       </div>
@@ -123,7 +120,7 @@ const HolidayRegistration = () => {
         <CardHeader>
           <CardTitle className="text-yellow-800 flex items-center gap-2">
             <AlertTriangle className="w-5 h-5" />
-            Viktige frister
+            {t('guardian.holidayRegistration.importantDeadlines')}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -131,21 +128,21 @@ const HolidayRegistration = () => {
             <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-yellow-200">
               <Calendar className="w-5 h-5 text-yellow-600" />
               <div>
-                <p className="font-medium text-yellow-800">Sommerferie</p>
-                <p className="text-sm text-yellow-700">Frist for registrering: 15. april 2024</p>
+                <p className="font-medium text-yellow-800">{t('guardian.holidayRegistration.deadlines.summer')}</p>
+                <p className="text-sm text-yellow-700">{t('guardian.holidayRegistration.deadlines.summerDate')}</p>
               </div>
             </div>
             
             <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-yellow-200">
               <Calendar className="w-5 h-5 text-yellow-600" />
               <div>
-                <p className="font-medium text-yellow-800">Juleferie</p>
-                <p className="text-sm text-yellow-700">Frist for registrering: 1. november 2024</p>
+                <p className="font-medium text-yellow-800">{t('guardian.holidayRegistration.deadlines.christmas')}</p>
+                <p className="text-sm text-yellow-700">{t('guardian.holidayRegistration.deadlines.christmasDate')}</p>
               </div>
             </div>
             
             <p className="text-sm text-yellow-700 pt-2">
-              <span className="font-semibold">NB:</span> Feriefravær må registreres minimum 14 dager i forveien.
+              <span className="font-semibold">{t('guardian.holidayRegistration.note')}:</span> {t('guardian.holidayRegistration.minimumNotice')}
             </p>
           </div>
         </CardContent>
@@ -155,15 +152,15 @@ const HolidayRegistration = () => {
       {showForm && (
         <Card>
           <CardHeader>
-            <CardTitle>Registrer fravær</CardTitle>
+            <CardTitle>{t('guardian.holidayRegistration.registerAbsence')}</CardTitle>
             <CardDescription>
-              Fyll ut informasjon om planlagt fravær
+              {t('guardian.holidayRegistration.formDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-3">
-                <Label>Type fravær</Label>
+                <Label>{t('guardian.holidayRegistration.absenceType')}</Label>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {holidayTypes.map((type) => (
                     <div
@@ -178,7 +175,7 @@ const HolidayRegistration = () => {
               
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="start-date">Første fraværsdag</Label>
+                  <Label htmlFor="start-date">{t('guardian.holidayRegistration.firstAbsenceDay')}</Label>
                   <Input
                     id="start-date"
                     type="date"
@@ -186,12 +183,12 @@ const HolidayRegistration = () => {
                     required
                   />
                   <p className="text-xs text-slate-500 mt-1">
-                    Må være minst 14 dager fra i dag
+                    {t('guardian.holidayRegistration.minimumDays')}
                   </p>
                 </div>
                 
                 <div>
-                  <Label htmlFor="end-date">Siste fraværsdag</Label>
+                  <Label htmlFor="end-date">{t('guardian.holidayRegistration.lastAbsenceDay')}</Label>
                   <Input
                     id="end-date"
                     type="date"
@@ -202,19 +199,19 @@ const HolidayRegistration = () => {
               </div>
               
               <div>
-                <Label htmlFor="description">Beskrivelse (valgfritt)</Label>
+                <Label htmlFor="description">{t('guardian.holidayRegistration.descriptionOptional')}</Label>
                 <Textarea
                   id="description"
-                  placeholder="F.eks. 'Familieferie til Spania'..."
+                  placeholder={t('guardian.holidayRegistration.descriptionPlaceholder')}
                   rows={3}
                 />
               </div>
               
               <div>
-                <Label htmlFor="contact">Kontaktinformasjon under fravær (valgfritt)</Label>
+                <Label htmlFor="contact">{t('guardian.holidayRegistration.contactOptional')}</Label>
                 <Input
                   id="contact"
-                  placeholder="Telefon eller e-post hvis annerledes enn vanlig"
+                  placeholder={t('guardian.holidayRegistration.contactPlaceholder')}
                 />
               </div>
               
@@ -223,17 +220,17 @@ const HolidayRegistration = () => {
                   {isSubmitting ? (
                     <>
                       <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></span>
-                      Sender...
+                      {t('guardian.holidayRegistration.sending')}
                     </>
                   ) : (
                     <>
                       <Save className="w-4 h-4 mr-2" />
-                      Registrer fravær
+                      {t('guardian.holidayRegistration.registerAbsence')}
                     </>
                   )}
                 </Button>
                 <Button type="button" variant="outline" onClick={() => setShowForm(false)}>
-                  Avbryt
+                  {t('common.cancel')}
                 </Button>
               </div>
             </form>
@@ -244,9 +241,9 @@ const HolidayRegistration = () => {
       {/* Registered Holidays */}
       <Card>
         <CardHeader>
-          <CardTitle>Registrerte fravær</CardTitle>
+          <CardTitle>{t('guardian.holidayRegistration.registeredAbsences')}</CardTitle>
           <CardDescription>
-            Oversikt over planlagte ferier og fravær
+            {t('guardian.holidayRegistration.absencesOverview')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -272,7 +269,7 @@ const HolidayRegistration = () => {
                         {holiday.description}
                       </p>
                       <p className="text-xs text-slate-500 mt-1">
-                        Registrert: {format(new Date(holiday.submittedDate), 'd. MMM yyyy', { locale: nb })}
+                        {t('guardian.holidayRegistration.registered')}: {format(new Date(holiday.submittedDate), 'd. MMM yyyy', { locale: nb })}
                       </p>
                     </div>
                   </div>
@@ -285,7 +282,7 @@ const HolidayRegistration = () => {
                     {isTooClose && holiday.status === 'pending' && (
                       <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
                         <AlertTriangle className="w-3 h-3 mr-1" />
-                        Mindre enn 14d
+                        {t('guardian.holidayRegistration.lessThan14Days')}
                       </Badge>
                     )}
                     
@@ -310,44 +307,44 @@ const HolidayRegistration = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Flag className="w-5 h-5" />
-            Barnehagens feriekalender 2024
+            {t('guardian.holidayRegistration.kindergartenCalendar')}
           </CardTitle>
           <CardDescription>
-            Oversikt over stengte dager og spesielle perioder
+            {t('guardian.holidayRegistration.closedDaysOverview')}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
             <div className="p-3 border rounded-lg flex justify-between items-center hover:bg-slate-50">
               <div>
-                <p className="font-medium">Påskestengt</p>
-                <p className="text-sm text-slate-600">28. mars - 1. april 2024</p>
+                <p className="font-medium">{t('guardian.holidayRegistration.closedDays.easter')}</p>
+                <p className="text-sm text-slate-600">{t('guardian.holidayRegistration.closedDays.easterDates')}</p>
               </div>
-              <Badge>Barnehagen stengt</Badge>
+              <Badge>{t('guardian.holidayRegistration.kindergartenClosed')}</Badge>
             </div>
             
             <div className="p-3 border rounded-lg flex justify-between items-center hover:bg-slate-50">
               <div>
-                <p className="font-medium">Sommerstengt</p>
-                <p className="text-sm text-slate-600">15. juli - 29. juli 2024</p>
+                <p className="font-medium">{t('guardian.holidayRegistration.closedDays.summer')}</p>
+                <p className="text-sm text-slate-600">{t('guardian.holidayRegistration.closedDays.summerDates')}</p>
               </div>
-              <Badge>Barnehagen stengt</Badge>
+              <Badge>{t('guardian.holidayRegistration.kindergartenClosed')}</Badge>
             </div>
             
             <div className="p-3 border rounded-lg flex justify-between items-center hover:bg-slate-50">
               <div>
-                <p className="font-medium">Planleggingsdag</p>
-                <p className="text-sm text-slate-600">29. august 2024</p>
+                <p className="font-medium">{t('guardian.holidayRegistration.closedDays.planning')}</p>
+                <p className="text-sm text-slate-600">{t('guardian.holidayRegistration.closedDays.planningDate')}</p>
               </div>
-              <Badge>Barnehagen stengt</Badge>
+              <Badge>{t('guardian.holidayRegistration.kindergartenClosed')}</Badge>
             </div>
             
             <div className="p-3 border rounded-lg flex justify-between items-center hover:bg-slate-50">
               <div>
-                <p className="font-medium">Julestengt</p>
-                <p className="text-sm text-slate-600">24. desember - 1. januar 2025</p>
+                <p className="font-medium">{t('guardian.holidayRegistration.closedDays.christmas')}</p>
+                <p className="text-sm text-slate-600">{t('guardian.holidayRegistration.closedDays.christmasDates')}</p>
               </div>
-              <Badge>Barnehagen stengt</Badge>
+              <Badge>{t('guardian.holidayRegistration.kindergartenClosed')}</Badge>
             </div>
           </div>
         </CardContent>
@@ -358,16 +355,16 @@ const HolidayRegistration = () => {
         <CardHeader>
           <CardTitle className="text-blue-800 flex items-center gap-2">
             <Check className="w-5 h-5" />
-            Retningslinjer for feriefravær
+            {t('guardian.holidayRegistration.policyTitle')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2 text-sm text-blue-700">
-            <p>• Minimum 14 dagers varsel for alle typer feriefravær</p>
-            <p>• Sommerferie må registreres innen 15. april</p>
-            <p>• Juleferie må registreres innen 1. november</p>
-            <p>• Barnehagen kan gi dispensasjon for kortere varsel i spesielle tilfeller</p>
-            <p>• Registrerte ferier bidrar til planlegging av bemanning og aktiviteter</p>
+            <p>• {t('guardian.holidayRegistration.policy.minimum14Days')}</p>
+            <p>• {t('guardian.holidayRegistration.policy.summerDeadline')}</p>
+            <p>• {t('guardian.holidayRegistration.policy.christmasDeadline')}</p>
+            <p>• {t('guardian.holidayRegistration.policy.dispensation')}</p>
+            <p>• {t('guardian.holidayRegistration.policy.planning')}</p>
           </div>
         </CardContent>
       </Card>
