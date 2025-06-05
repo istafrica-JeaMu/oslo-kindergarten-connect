@@ -1,4 +1,3 @@
-
 {
   "dashboard": {
     "title": "Min oversikt",
@@ -48,7 +47,27 @@
   },
   "absence": {
     "title": "Fraværsmelding",
-    "description": "Meld fra når barnet ditt ikke kommer i barnehagen"
+    "description": "Meld fra når barnet ditt ikke kommer i barnehagen",
+    "quickReport": "Rask melding for i dag",
+    "additionalInfo": "Tilleggsinformasjon",
+    "additionalInfoPlaceholder": "Valgfritt: Gi flere detaljer om fraværet...",
+    "reportAbsence": "Meld fravær",
+    "scheduleAbsence": "Planlegg fremtidig fravær",
+    "scheduleDescription": "Planlegg på forhånd for kjente fravær",
+    "scheduleNew": "Planlegg nytt",
+    "recentAbsences": "Nylige fravær",
+    "recentDescription": "Dine nylige fraværsmeldinger",
+    "reportedAt": "Meldt kl",
+    "reasons": {
+      "sick": "Barnet er sykt",
+      "doctor": "Legetidspunkt",
+      "emergency": "Familienødsituasjon",
+      "other": "Annen årsak"
+    },
+    "status": {
+      "approved": "Godkjent",
+      "pending": "Venter"
+    }
   },
   "attendance": {
     "title": "Oppmøteoversikt",
@@ -327,5 +346,15 @@
         "description": "Kvartalsrapport om Emmas utvikling og læring"
       }
     }
+  },
+  "common": {
+    "cancel": "Avbryt",
+    "save": "Lagre",
+    "edit": "Rediger",
+    "delete": "Slett",
+    "confirm": "Bekreft",
+    "loading": "Laster...",
+    "error": "Feil",
+    "success": "Suksess"
   }
 }

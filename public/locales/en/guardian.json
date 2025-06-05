@@ -1,4 +1,3 @@
-
 {
   "dashboard": {
     "title": "My Dashboard",
@@ -48,7 +47,27 @@
   },
   "absence": {
     "title": "Absence Reporting",
-    "description": "Report when your child will be absent from kindergarten"
+    "description": "Report when your child will be absent from kindergarten",
+    "quickReport": "Quick Report for Today",
+    "additionalInfo": "Additional Information",
+    "additionalInfoPlaceholder": "Optional: Provide additional details about the absence...",
+    "reportAbsence": "Report Absence",
+    "scheduleAbsence": "Schedule Future Absence",
+    "scheduleDescription": "Plan ahead for known absences",
+    "scheduleNew": "Schedule New",
+    "recentAbsences": "Recent Absences",
+    "recentDescription": "Your recent absence reports",
+    "reportedAt": "Reported at",
+    "reasons": {
+      "sick": "Child is sick",
+      "doctor": "Doctor appointment",
+      "emergency": "Family emergency",
+      "other": "Other reason"
+    },
+    "status": {
+      "approved": "Approved",
+      "pending": "Pending"
+    }
   },
   "attendance": {
     "title": "Attendance Tracking",
@@ -327,5 +346,15 @@
         "description": "Quarterly report on Emma's development and learning"
       }
     }
+  },
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
   }
 }
