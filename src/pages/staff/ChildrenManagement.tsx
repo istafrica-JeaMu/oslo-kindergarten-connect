@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { useAuth } from '@/contexts/AuthContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { 
@@ -34,6 +35,8 @@ const ChildrenManagement = () => {
   const [filterAgeGroup, setFilterAgeGroup] = useState('all');
   const [filterDocumentStatus, setFilterDocumentStatus] = useState('all');
   const [selectedChild, setSelectedChild] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const getAgeGroup = (age: string) => {
     const ageNum = parseInt(age);
@@ -129,12 +132,30 @@ const ChildrenManagement = () => {
     return matchesSearch && matchesDepartment && matchesStatus && matchesAgeGroup && matchesDocumentStatus;
   });
 
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredChildren.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedChildren = filteredChildren.slice(startIndex, endIndex);
+
+  // Reset to first page when filters change
+  const handleFilterChange = (setter: (value: string) => void) => (value: string) => {
+    setter(value);
+    setCurrentPage(1);
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1);
+  };
+
   const clearFilters = () => {
     setSearchTerm('');
     setFilterDepartment('all');
     setFilterStatus('all');
     setFilterAgeGroup('all');
     setFilterDocumentStatus('all');
+    setCurrentPage(1);
   };
 
   const getStatusBadge = (status: string) => {
@@ -491,14 +512,14 @@ const ChildrenManagement = () => {
               <Input
                 placeholder="Search by child name or guardian..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={handleSearchChange}
                 className="pl-10"
               />
             </div>
             
             {/* Filter Row */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-              <Select value={filterDepartment} onValueChange={setFilterDepartment}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+              <Select value={filterDepartment} onValueChange={handleFilterChange(setFilterDepartment)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Department" />
                 </SelectTrigger>
@@ -512,7 +533,7 @@ const ChildrenManagement = () => {
                 </SelectContent>
               </Select>
 
-              <Select value={filterAgeGroup} onValueChange={setFilterAgeGroup}>
+              <Select value={filterAgeGroup} onValueChange={handleFilterChange(setFilterAgeGroup)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Age Group" />
                 </SelectTrigger>
@@ -524,7 +545,7 @@ const ChildrenManagement = () => {
                 </SelectContent>
               </Select>
               
-              <Select value={filterStatus} onValueChange={setFilterStatus}>
+              <Select value={filterStatus} onValueChange={handleFilterChange(setFilterStatus)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
@@ -535,7 +556,7 @@ const ChildrenManagement = () => {
                 </SelectContent>
               </Select>
 
-              <Select value={filterDocumentStatus} onValueChange={setFilterDocumentStatus}>
+              <Select value={filterDocumentStatus} onValueChange={handleFilterChange(setFilterDocumentStatus)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Documents" />
                 </SelectTrigger>
@@ -544,6 +565,21 @@ const ChildrenManagement = () => {
                   <SelectItem value="complete">Complete</SelectItem>
                   <SelectItem value="missing">Missing Docs</SelectItem>
                   <SelectItem value="expired">Expired Docs</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={itemsPerPage.toString()} onValueChange={(value) => {
+                setItemsPerPage(Number(value));
+                setCurrentPage(1);
+              }}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Per page" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="5">5 per page</SelectItem>
+                  <SelectItem value="10">10 per page</SelectItem>
+                  <SelectItem value="20">20 per page</SelectItem>
+                  <SelectItem value="50">50 per page</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -568,7 +604,7 @@ const ChildrenManagement = () => {
             Children List
           </CardTitle>
           <CardDescription>
-            Overview of all enrolled children
+            Overview of all enrolled children • Showing {startIndex + 1}-{Math.min(endIndex, filteredChildren.length)} of {filteredChildren.length} children
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -589,7 +625,7 @@ const ChildrenManagement = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredChildren.map((child) => (
+                  {paginatedChildren.map((child) => (
                     <TableRow key={child.id}>
                       <TableCell>
                         <div className="flex items-center gap-3">
@@ -637,7 +673,7 @@ const ChildrenManagement = () => {
           ) : (
             /* Mobile Card View */
             <div className="space-y-4">
-              {filteredChildren.map((child) => (
+              {paginatedChildren.map((child) => (
                 <Card key={child.id} className="p-4">
                   <div className="space-y-3">
                     <div className="flex items-start justify-between">
@@ -680,6 +716,70 @@ const ChildrenManagement = () => {
                   </div>
                 </Card>
               ))}
+            </div>
+          )}
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between mt-6">
+              <div className="text-sm text-gray-600">
+                Showing {startIndex + 1} to {Math.min(endIndex, filteredChildren.length)} of {filteredChildren.length} children
+              </div>
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious 
+                      onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                      className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                    />
+                  </PaginationItem>
+                  
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                    // Show first page, last page, current page, and pages around current page
+                    const shouldShow = 
+                      page === 1 || 
+                      page === totalPages || 
+                      (page >= currentPage - 1 && page <= currentPage + 1);
+                    
+                    if (!shouldShow && page === 2 && currentPage > 4) {
+                      return (
+                        <PaginationItem key="start-ellipsis">
+                          <span className="px-3 py-2">...</span>
+                        </PaginationItem>
+                      );
+                    }
+                    
+                    if (!shouldShow && page === totalPages - 1 && currentPage < totalPages - 3) {
+                      return (
+                        <PaginationItem key="end-ellipsis">
+                          <span className="px-3 py-2">...</span>
+                        </PaginationItem>
+                      );
+                    }
+                    
+                    if (!shouldShow) return null;
+                    
+                    return (
+                      <PaginationItem key={page}>
+                        <PaginationLink 
+                          onClick={() => setCurrentPage(page)}
+                          isActive={currentPage === page}
+                          className="cursor-pointer"
+                        >
+                          {page}
+                        </PaginationLink>
+                      </PaginationItem>
+                    );
+                  })}
+                  
+                  <PaginationItem>
+                    <PaginationNext 
+                      onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                      className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
             </div>
           )}
         </CardContent>
