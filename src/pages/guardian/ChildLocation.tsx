@@ -1,294 +1,209 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { 
-  MapPin,
-  Clock,
-  Navigation,
-  Phone,
-  Users,
-  Home,
-  TreePine,
-  Utensils,
-  BookOpen,
-  Bed,
-  RefreshCw
-} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { MapPin, Navigation, Clock, User, Phone } from 'lucide-react';
 import { format } from 'date-fns';
-import { nb } from 'date-fns/locale';
+import { nb, enUS } from 'date-fns/locale';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const ChildLocation = () => {
-  const [lastUpdated, setLastUpdated] = useState(new Date());
-  const [isRefreshing, setIsRefreshing] = useState(false);
-
+  const { t, language } = useLanguage();
+  const [selectedView, setSelectedView] = useState('current');
+  
+  const locale = language === 'nb' ? nb : enUS;
+  
   // Mock location data
   const currentLocation = {
-    area: 'Hovedrom - Avd. Blå',
-    specific: 'Lesehjørnet',
-    activity: 'Fri lek og lesing',
+    area: t('guardian.location.areas.playground'),
+    building: t('guardian.location.buildings.main'),
+    room: t('guardian.location.rooms.outdoor'),
+    lastUpdate: new Date(),
     staff: 'Kari Andersen',
-    staffPhone: '+47 123 45 678',
-    children: 8,
-    since: '13:45',
-    nextScheduled: {
-      time: '15:00',
-      area: 'Spisesalen',
-      activity: 'Mellommåltid'
-    }
+    staffPhone: '+47 123 45 678'
   };
 
   const locationHistory = [
-    { time: '13:45', area: 'Hovedrom - Avd. Blå', activity: 'Fri lek og lesing', icon: BookOpen },
-    { time: '13:00', area: 'Hvilerom', activity: 'Hvil og ro', icon: Bed },
-    { time: '11:30', area: 'Spisesalen', activity: 'Lunsj', icon: Utensils },
-    { time: '10:30', area: 'Utebygninger', activity: 'Uteliv', icon: TreePine },
-    { time: '09:00', area: 'Samlingssalen', activity: 'Samling og dagens aktivitet', icon: Users },
-    { time: '08:15', area: 'Hovedrom - Avd. Blå', activity: 'Ankomst og fri lek', icon: Home },
+    {
+      time: '13:45',
+      area: t('guardian.location.areas.playground'),
+      activity: t('guardian.location.activities.outdoorPlay')
+    },
+    {
+      time: '12:30',
+      area: t('guardian.location.areas.diningRoom'),
+      activity: t('guardian.location.activities.lunch')
+    },
+    {
+      time: '11:00',
+      area: t('guardian.location.areas.classroom'),
+      activity: t('guardian.location.activities.learningTime')
+    },
+    {
+      time: '09:30',
+      area: t('guardian.location.areas.playground'),
+      activity: t('guardian.location.activities.morningPlay')
+    },
+    {
+      time: '08:15',
+      area: t('guardian.location.areas.mainEntrance'),
+      activity: t('guardian.location.activities.arrival')
+    }
   ];
 
-  const kindergartenMap = {
-    areas: [
-      { id: 'main-blue', name: 'Hovedrom - Avd. Blå', x: 20, y: 30, current: true },
-      { id: 'dining', name: 'Spisesalen', x: 60, y: 20 },
-      { id: 'rest', name: 'Hvilerom', x: 80, y: 40 },
-      { id: 'gathering', name: 'Samlingssalen', x: 40, y: 60 },
-      { id: 'outdoor', name: 'Utebygninger', x: 20, y: 80 },
-      { id: 'activity', name: 'Aktivitetsrom', x: 70, y: 70 },
-    ]
-  };
-
-  const handleRefresh = async () => {
-    setIsRefreshing(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setLastUpdated(new Date());
-    setIsRefreshing(false);
-  };
-
-  useEffect(() => {
-    // Auto-refresh every 5 minutes
-    const interval = setInterval(() => {
-      setLastUpdated(new Date());
-    }, 5 * 60 * 1000);
-
-    return () => clearInterval(interval);
-  }, []);
+  const kindergartenMap = [
+    { id: 'entrance', name: t('guardian.location.areas.mainEntrance'), x: 10, y: 80 },
+    { id: 'classroom1', name: t('guardian.location.areas.classroom'), x: 30, y: 30 },
+    { id: 'dining', name: t('guardian.location.areas.diningRoom'), x: 70, y: 30 },
+    { id: 'playground', name: t('guardian.location.areas.playground'), x: 50, y: 70, current: true },
+    { id: 'rest', name: t('guardian.location.areas.restRoom'), x: 30, y: 60 }
+  ];
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Barnets plassering</h1>
-          <p className="text-slate-600 mt-2">Se hvor barnet ditt befinner seg i barnehagen</p>
+          <h1 className="text-3xl font-bold text-slate-900">{t('guardian.location.title')}</h1>
+          <p className="text-slate-600 mt-2">{t('guardian.location.description')}</p>
         </div>
-        <div className="flex items-center gap-3">
-          <Badge variant="outline" className="bg-oslo-blue/5 text-oslo-blue border-oslo-blue/20">
-            <MapPin className="w-4 h-4 mr-2" />
-            Live plassering
-          </Badge>
-          <Button variant="outline" size="sm" onClick={handleRefresh} disabled={isRefreshing}>
-            <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
-            Oppdater
+        <div className="flex gap-2">
+          <Button 
+            variant={selectedView === 'current' ? 'default' : 'outline'}
+            onClick={() => setSelectedView('current')}
+          >
+            {t('guardian.location.currentLocation')}
+          </Button>
+          <Button 
+            variant={selectedView === 'history' ? 'default' : 'outline'}
+            onClick={() => setSelectedView('history')}
+          >
+            {t('guardian.location.locationHistory')}
           </Button>
         </div>
       </div>
 
       {/* Current Location */}
-      <Card className="border-green-200 bg-green-50">
+      <Card className="border-l-4 border-l-oslo-blue">
         <CardHeader>
-          <CardTitle className="text-green-800 flex items-center gap-2">
-            <MapPin className="w-5 h-5" />
-            Nåværende plassering
+          <CardTitle className="flex items-center gap-2">
+            <MapPin className="w-5 h-5 text-oslo-blue" />
+            {t('guardian.location.currentLocation')}
           </CardTitle>
-          <CardDescription className="text-green-700">
-            Sist oppdatert: {format(lastUpdated, 'HH:mm', { locale: nb })}
+          <CardDescription>
+            {t('guardian.location.lastUpdated')}: {format(currentLocation.lastUpdate, 'HH:mm', { locale })}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <div>
-                <h3 className="font-semibold text-green-800 text-lg">{currentLocation.area}</h3>
-                <p className="text-green-700">{currentLocation.specific}</p>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-oslo-blue rounded-full flex items-center justify-center text-white">
+                  <MapPin className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="font-semibold text-lg">{currentLocation.area}</p>
+                  <p className="text-sm text-slate-600">
+                    {currentLocation.building} - {currentLocation.room}
+                  </p>
+                </div>
               </div>
               
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-green-600" />
-                  <span className="text-sm">Siden kl. {currentLocation.since}</span>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white">
+                  <User className="w-5 h-5" />
                 </div>
-                
-                <div className="flex items-center gap-2">
-                  <BookOpen className="w-4 h-4 text-green-600" />
-                  <span className="text-sm">{currentLocation.activity}</span>
-                </div>
-                
-                <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-green-600" />
-                  <span className="text-sm">{currentLocation.children} barn i området</span>
+                <div>
+                  <p className="text-sm text-slate-600">{t('guardian.location.responsibleStaff')}</p>
+                  <p className="font-semibold">{currentLocation.staff}</p>
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-green-200">
-                <h4 className="font-medium text-green-800 mb-2">Ansvarlig personal</h4>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">{currentLocation.staff}</span>
-                  <Button variant="outline" size="sm" className="text-green-700 border-green-300">
-                    <Phone className="w-4 h-4 mr-1" />
-                    Ring
-                  </Button>
-                </div>
-              </div>
+              <Button className="w-full mt-4">
+                <Phone className="w-4 h-4 mr-2" />
+                {t('guardian.location.contactStaff')}
+              </Button>
             </div>
-
-            {/* Next Location */}
-            <div className="bg-white p-4 rounded-lg border border-green-200">
-              <h4 className="font-medium text-green-800 mb-3">Neste planlagte aktivitet</h4>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-slate-500" />
-                  <span className="text-sm">Kl. {currentLocation.nextScheduled.time}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-slate-500" />
-                  <span className="text-sm">{currentLocation.nextScheduled.area}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Utensils className="w-4 h-4 text-slate-500" />
-                  <span className="text-sm">{currentLocation.nextScheduled.activity}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Kindergarten Map */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Barnehagekart</CardTitle>
-          <CardDescription>
-            Oversikt over barnehagens områder og barnet ditt sin plassering
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="relative bg-slate-50 rounded-lg p-6 h-80">
-            {/* Map areas */}
-            {kindergartenMap.areas.map((area) => (
-              <div
-                key={area.id}
-                className={`absolute transform -translate-x-1/2 -translate-y-1/2 ${
-                  area.current 
-                    ? 'bg-green-500 text-white shadow-lg ring-4 ring-green-200' 
-                    : 'bg-white border-2 border-slate-300 text-slate-700'
-                } rounded-lg px-3 py-2 text-sm font-medium cursor-pointer hover:shadow-md transition-all`}
-                style={{ left: `${area.x}%`, top: `${area.y}%` }}
-              >
-                {area.current && <MapPin className="w-4 h-4 inline mr-1" />}
-                {area.name}
-              </div>
-            ))}
             
-            {/* Current location indicator */}
-            <div className="absolute top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1">
-              <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-              Barnet ditt
-            </div>
-          </div>
-          
-          <div className="mt-4 flex items-center gap-4 text-sm text-slate-600">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-green-500 rounded"></div>
-              <span>Nåværende plassering</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-white border-2 border-slate-300 rounded"></div>
-              <span>Andre områder</span>
+            {/* Simple Map View */}
+            <div className="bg-slate-50 rounded-lg p-4 relative h-64">
+              <div className="text-sm font-medium mb-2 text-center">
+                {t('guardian.location.kindergartenMap')}
+              </div>
+              <div className="relative w-full h-48 bg-white rounded border">
+                {kindergartenMap.map((location) => (
+                  <div
+                    key={location.id}
+                    className={`absolute w-3 h-3 rounded-full transform -translate-x-1/2 -translate-y-1/2 ${
+                      location.current ? 'bg-oslo-blue animate-pulse' : 'bg-slate-300'
+                    }`}
+                    style={{ 
+                      left: `${location.x}%`, 
+                      top: `${location.y}%` 
+                    }}
+                    title={location.name}
+                  >
+                    {location.current && (
+                      <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-oslo-blue text-white text-xs px-2 py-1 rounded whitespace-nowrap">
+                        {location.name}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Location History */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Dagens bevegelser</CardTitle>
-          <CardDescription>
-            Tidslinje over hvor barnet har vært i dag
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {locationHistory.map((location, index) => (
-              <div
-                key={index}
-                className={`flex items-center gap-4 p-3 rounded-lg ${
-                  index === 0 ? 'bg-green-50 border border-green-200' : 'border border-slate-200'
-                }`}
-              >
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                  index === 0 ? 'bg-green-500 text-white' : 'bg-slate-100 text-slate-600'
-                }`}>
-                  <location.icon className="w-5 h-5" />
-                </div>
-                
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-sm font-medium">
-                      {location.time}
-                    </span>
-                    {index === 0 && (
-                      <Badge className="bg-green-500 text-xs">Nå</Badge>
-                    )}
+      {selectedView === 'history' && (
+        <Card>
+          <CardHeader>
+            <CardTitle>{t('guardian.location.locationHistory')}</CardTitle>
+            <CardDescription>{t('guardian.location.historyDescription')}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {locationHistory.map((entry, index) => (
+                <div key={index} className="flex items-center gap-4 p-4 border rounded-lg">
+                  <div className="text-sm font-mono text-slate-600 w-16">
+                    {entry.time}
                   </div>
-                  <h3 className="font-semibold">{location.area}</h3>
-                  <p className="text-sm text-slate-600">{location.activity}</p>
+                  <div className="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center">
+                    <MapPin className="w-5 h-5 text-slate-600" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-medium">{entry.area}</h3>
+                    <p className="text-sm text-slate-600">{entry.activity}</p>
+                  </div>
+                  {index === 0 && (
+                    <Badge className="bg-oslo-blue">
+                      {t('guardian.location.current')}
+                    </Badge>
+                  )}
                 </div>
-                
-                <div className="w-px h-8 bg-slate-200"></div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
-      {/* Pickup Assistance */}
-      <Card>
+      {/* Pickup Instructions */}
+      <Card className="bg-green-50 border-green-200">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-green-800">
             <Navigation className="w-5 h-5" />
-            Hentehjelp
+            {t('guardian.location.pickupInstructions')}
           </CardTitle>
-          <CardDescription>
-            Praktisk informasjon for henting
-          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <h4 className="font-medium">Rute til barnet</h4>
-              <p className="text-sm text-slate-600">
-                Hovedinngang → Gang høyre → {currentLocation.area}
-              </p>
-            </div>
-            
-            <div className="space-y-2">
-              <h4 className="font-medium">Estimert tid</h4>
-              <p className="text-sm text-slate-600">
-                Ca. 2 minutter å gå til barnet
-              </p>
-            </div>
-            
-            <div className="space-y-2">
-              <h4 className="font-medium">Kontakt personal</h4>
-              <Button variant="outline" size="sm" className="w-full">
-                <Phone className="w-4 h-4 mr-2" />
-                Ring {currentLocation.staff}
-              </Button>
-            </div>
+          <div className="space-y-2 text-green-800">
+            <p>• {t('guardian.location.instructions.enterMain')}</p>
+            <p>• {t('guardian.location.instructions.askStaff')}</p>
+            <p>• {t('guardian.location.instructions.waitArea')}</p>
+            <p>• {t('guardian.location.instructions.signOut')}</p>
           </div>
         </CardContent>
       </Card>

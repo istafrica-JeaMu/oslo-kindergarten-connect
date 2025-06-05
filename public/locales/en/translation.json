@@ -49,6 +49,161 @@
       "recentMessages": "Recent Messages",
       "paymentOverview": "Payment Overview"
     },
+    "dailySchedule": {
+      "title": "Daily Schedule",
+      "description": "View your child's daily timetable and activities",
+      "currentActivity": "Currently Active",
+      "schedule": "Today's Schedule",
+      "viewWeek": "View Full Week",
+      "activities": {
+        "arrival": "Arrival",
+        "breakfast": "Breakfast",
+        "outdoorPlay": "Outdoor Play",
+        "learningTime": "Learning Time",
+        "lunch": "Lunch",
+        "restTime": "Rest Time",
+        "pickup": "Pickup"
+      },
+      "locations": {
+        "mainRoom": "Main Room",
+        "diningRoom": "Dining Room",
+        "playground": "Playground",
+        "classroom": "Classroom",
+        "restRoom": "Rest Room"
+      },
+      "status": {
+        "current": "Current",
+        "completed": "Completed",
+        "upcoming": "Upcoming"
+      }
+    },
+    "absence": {
+      "title": "Absence",
+      "description": "Report when your child cannot attend kindergarten",
+      "quickReport": "Quick Report - Today",
+      "scheduleAbsence": "Schedule Absence",
+      "scheduleNew": "Schedule New",
+      "scheduleDescription": "Plan future absences",
+      "recentAbsences": "Recent Absences",
+      "recentDescription": "Overview of reported absences",
+      "reportAbsence": "Report Absence",
+      "additionalInfo": "Additional Info",
+      "additionalInfoPlaceholder": "Describe the reason in detail...",
+      "reportedAt": "Reported at",
+      "reasons": {
+        "sick": "Sickness",
+        "doctor": "Doctor Appointment",
+        "emergency": "Family Emergency",
+        "other": "Other"
+      },
+      "status": {
+        "approved": "Approved",
+        "pending": "Pending"
+      }
+    },
+    "attendance": {
+      "title": "Attendance",
+      "description": "See when your child is checked in and out",
+      "todayStatus": "Today's Status",
+      "weeklyOverview": "Weekly Overview",
+      "weeklyDescription": "Attendance this week",
+      "viewHistory": "View History",
+      "checkedInAt": "Checked in",
+      "expectedCheckout": "Expected checkout",
+      "duration": "Duration",
+      "in": "In",
+      "out": "Out",
+      "status": {
+        "present": "Present",
+        "absent": "Absent",
+        "completed": "Completed"
+      },
+      "stats": {
+        "attendanceRate": "Attendance Rate",
+        "averageDaily": "Average Daily",
+        "absencesThisMonth": "Absences This Month"
+      }
+    },
+    "location": {
+      "title": "Location",
+      "description": "See where your child is - practical when picking up",
+      "currentLocation": "Current Location",
+      "locationHistory": "Location History",
+      "historyDescription": "Today's movements",
+      "lastUpdated": "Last updated",
+      "responsibleStaff": "Responsible Staff",
+      "contactStaff": "Contact Staff",
+      "kindergartenMap": "Kindergarten Map",
+      "current": "Current",
+      "pickupInstructions": "Pickup Instructions",
+      "areas": {
+        "playground": "Playground",
+        "diningRoom": "Dining Room",
+        "classroom": "Classroom",
+        "mainEntrance": "Main Entrance",
+        "restRoom": "Rest Room"
+      },
+      "buildings": {
+        "main": "Main Building"
+      },
+      "rooms": {
+        "outdoor": "Outdoor"
+      },
+      "activities": {
+        "outdoorPlay": "Outdoor Play",
+        "lunch": "Lunch",
+        "learningTime": "Learning Time",
+        "morningPlay": "Morning Play",
+        "arrival": "Arrival"
+      },
+      "instructions": {
+        "enterMain": "Enter through main entrance",
+        "askStaff": "Ask staff about your child",
+        "waitArea": "Wait in pickup area",
+        "signOut": "Remember to sign out your child"
+      }
+    },
+    "pickup": {
+      "title": "Pickup",
+      "description": "Manage who can pick up your child",
+      "addAuthorized": "Add Authorized Person",
+      "emergencyToday": "Emergency Pickup Today",
+      "selectPerson": "Select Person",
+      "pickupTime": "Pickup Time",
+      "emergencyReason": "Emergency Reason",
+      "notifyEmergency": "Send Emergency Notice",
+      "authorizedPersons": "Authorized Persons",
+      "authorizedDescription": "People who can pick up your child",
+      "validUntil": "Valid Until",
+      "emergency": "Emergency Contact",
+      "recentEmergency": "Recent Emergency Pickups",
+      "recentDescription": "Overview of emergency pickups",
+      "requestedAt": "Requested at",
+      "addNewPerson": "Add New Person",
+      "fullName": "Full Name",
+      "enterName": "Enter name",
+      "relationship": "Relationship",
+      "selectRelationship": "Select relationship",
+      "phoneNumber": "Phone Number",
+      "markAsEmergency": "Mark as emergency contact",
+      "addPerson": "Add Person",
+      "relationships": {
+        "father": "Father",
+        "mother": "Mother",
+        "grandmother": "Grandmother",
+        "grandfather": "Grandfather",
+        "friend": "Friend",
+        "other": "Other"
+      },
+      "emergencyReasons": {
+        "parentIll": "Parent Ill"
+      },
+      "status": {
+        "active": "Active",
+        "temporary": "Temporary",
+        "approved": "Approved"
+      }
+    },
     "newApplication": {
       "title": "New Kindergarten Application",
       "description": "Complete the information below to apply for a kindergarten place",
@@ -152,32 +307,6 @@
       "addStar": "Add star",
       "removeStar": "Remove star",
       "attachments": "Attachments"
-    },
-    "dailySchedule": {
-      "title": "Daily Schedule",
-      "description": "View your child's daily timetable and activities",
-      "currentActivity": "Currently Active",
-      "schedule": "Today's Schedule",
-      "viewWeek": "View Full Week",
-      "activityTypes": {
-        "meal": "Meal",
-        "activity": "Activity",
-        "outdoor": "Outdoor",
-        "rest": "Rest",
-        "arrival": "Arrival",
-        "departure": "Pickup"
-      }
-    },
-    "absence": {
-      "title": "Absence",
-      "description": "Report when your child cannot attend kindergarten",
-      "quickReport": "Quick Report - Today",
-      "reasons": {
-        "sick": "Sickness",
-        "doctor": "Doctor Appointment",
-        "emergency": "Family Emergency",
-        "other": "Other"
-      }
     }
   },
   "caseworker": {

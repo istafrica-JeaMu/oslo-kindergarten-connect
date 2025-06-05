@@ -49,6 +49,161 @@
       "recentMessages": "Siste meldinger",
       "paymentOverview": "Betalingsoversikt"
     },
+    "dailySchedule": {
+      "title": "Dagsplan",
+      "description": "Se ditt barns daglige timeplan og aktiviteter",
+      "currentActivity": "Nå pågår",
+      "schedule": "Dagens timeplan",
+      "viewWeek": "Se hele uken",
+      "activities": {
+        "arrival": "Ankomst",
+        "breakfast": "Frokost",
+        "outdoorPlay": "Uteleking",
+        "learningTime": "Læringstid",
+        "lunch": "Lunsj",
+        "restTime": "Hviletid",
+        "pickup": "Henting"
+      },
+      "locations": {
+        "mainRoom": "Hovedrom",
+        "diningRoom": "Spisesal",
+        "playground": "Lekeplass",
+        "classroom": "Klasserom",
+        "restRoom": "Hvilerom"
+      },
+      "status": {
+        "current": "Pågår",
+        "completed": "Fullført",
+        "upcoming": "Kommende"
+      }
+    },
+    "absence": {
+      "title": "Fravær",
+      "description": "Rapporter når barnet ditt ikke kan møte i barnehagen",
+      "quickReport": "Rask rapportering - I dag",
+      "scheduleAbsence": "Planlegg fravær",
+      "scheduleNew": "Planlegg nytt",
+      "scheduleDescription": "Planlegg fremtidig fravær",
+      "recentAbsences": "Siste fravær",
+      "recentDescription": "Oversikt over rapportert fravær",
+      "reportAbsence": "Rapporter fravær",
+      "additionalInfo": "Tilleggsinfo",
+      "additionalInfoPlaceholder": "Beskriv årsaken nærmere...",
+      "reportedAt": "Rapportert kl",
+      "reasons": {
+        "sick": "Sykdom",
+        "doctor": "Legetime",
+        "emergency": "Familienødstilfelle",
+        "other": "Annet"
+      },
+      "status": {
+        "approved": "Godkjent",
+        "pending": "Venter"
+      }
+    },
+    "attendance": {
+      "title": "Oppmøte",
+      "description": "Se når barnet ditt sjekkes inn og ut",
+      "todayStatus": "Status i dag",
+      "weeklyOverview": "Ukeoversikt",
+      "weeklyDescription": "Oppmøte denne uken",
+      "viewHistory": "Se historikk",
+      "checkedInAt": "Sjekket inn",
+      "expectedCheckout": "Forventet utsjekking",
+      "duration": "Varighet",
+      "in": "Inn",
+      "out": "Ut",
+      "status": {
+        "present": "Tilstede",
+        "absent": "Fraværende",
+        "completed": "Fullført"
+      },
+      "stats": {
+        "attendanceRate": "Oppmøteprosent",
+        "averageDaily": "Gjennomsnitt daglig",
+        "absencesThisMonth": "Fravær denne måneden"
+      }
+    },
+    "location": {
+      "title": "Plassering",
+      "description": "Se hvor barnet ditt er - praktisk ved henting",
+      "currentLocation": "Nåværende plassering",
+      "locationHistory": "Plasseringshistorikk",
+      "historyDescription": "Dagens bevegelser",
+      "lastUpdated": "Sist oppdatert",
+      "responsibleStaff": "Ansvarlig ansatt",
+      "contactStaff": "Kontakt ansatt",
+      "kindergartenMap": "Barnehagekart",
+      "current": "Nåværende",
+      "pickupInstructions": "Henteinstrukser",
+      "areas": {
+        "playground": "Lekeplass",
+        "diningRoom": "Spisesal",
+        "classroom": "Klasserom",
+        "mainEntrance": "Hovedinngang",
+        "restRoom": "Hvilerom"
+      },
+      "buildings": {
+        "main": "Hovedbygg"
+      },
+      "rooms": {
+        "outdoor": "Utendørs"
+      },
+      "activities": {
+        "outdoorPlay": "Uteleking",
+        "lunch": "Lunsj",
+        "learningTime": "Læringstid",
+        "morningPlay": "Morgenlek",
+        "arrival": "Ankomst"
+      },
+      "instructions": {
+        "enterMain": "Gå inn hovedinngangen",
+        "askStaff": "Spør personalet om barnet ditt",
+        "waitArea": "Vent i henteområdet",
+        "signOut": "Husk å signere ut barnet"
+      }
+    },
+    "pickup": {
+      "title": "Henting",
+      "description": "Administrer hvem som kan hente barnet ditt",
+      "addAuthorized": "Legg til henteberettiget",
+      "emergencyToday": "Nødhenting i dag",
+      "selectPerson": "Velg person",
+      "pickupTime": "Hentetid",
+      "emergencyReason": "Årsak til nødhenting",
+      "notifyEmergency": "Send nødvarsel",
+      "authorizedPersons": "Henteberettigede personer",
+      "authorizedDescription": "Personer som kan hente barnet ditt",
+      "validUntil": "Gyldig til",
+      "emergency": "Nødkontakt",
+      "recentEmergency": "Siste nødhentinger",
+      "recentDescription": "Oversikt over nødhentinger",
+      "requestedAt": "Forespurt kl",
+      "addNewPerson": "Legg til ny person",
+      "fullName": "Fullt navn",
+      "enterName": "Skriv inn navn",
+      "relationship": "Relasjon",
+      "selectRelationship": "Velg relasjon",
+      "phoneNumber": "Telefonnummer",
+      "markAsEmergency": "Merk som nødkontakt",
+      "addPerson": "Legg til person",
+      "relationships": {
+        "father": "Far",
+        "mother": "Mor",
+        "grandmother": "Bestemor",
+        "grandfather": "Bestefar",
+        "friend": "Venn",
+        "other": "Annet"
+      },
+      "emergencyReasons": {
+        "parentIll": "Forelder syk"
+      },
+      "status": {
+        "active": "Aktiv",
+        "temporary": "Midlertidig",
+        "approved": "Godkjent"
+      }
+    },
     "newApplication": {
       "title": "Ny barnehagesøknad",
       "description": "Fyll ut informasjonen nedenfor for å søke om barnehageplass",
@@ -152,32 +307,6 @@
       "addStar": "Legg til stjerne",
       "removeStar": "Fjern stjerne",
       "attachments": "Vedlegg"
-    },
-    "dailySchedule": {
-      "title": "Dagsplan",
-      "description": "Se ditt barns daglige timeplan og aktiviteter",
-      "currentActivity": "Nå pågår",
-      "schedule": "Dagens timeplan",
-      "viewWeek": "Se hele uken",
-      "activityTypes": {
-        "meal": "Måltid",
-        "activity": "Aktivitet",
-        "outdoor": "Utebygninger",
-        "rest": "Hvil",
-        "arrival": "Ankomst",
-        "departure": "Henting"
-      }
-    },
-    "absence": {
-      "title": "Fravær",
-      "description": "Rapporter når barnet ditt ikke kan møte i barnehagen",
-      "quickReport": "Rask rapportering - I dag",
-      "reasons": {
-        "sick": "Sykdom",
-        "doctor": "Legetime",
-        "emergency": "Familienødstilfelle",
-        "other": "Annet"
-      }
     }
   },
   "caseworker": {
