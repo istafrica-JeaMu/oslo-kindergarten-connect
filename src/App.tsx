@@ -32,6 +32,7 @@ import PublicKindergartenDashboard from "./pages/staff/PublicKindergartenDashboa
 import PrivateKindergartenDashboard from "./pages/staff/PrivateKindergartenDashboard";
 import ChildrenManagement from "./pages/staff/ChildrenManagement";
 import EducatorAttendance from "./pages/staff/EducatorAttendance";
+import EducatorDashboard from "./pages/educator/EducatorDashboard";
 
 const queryClient = new QueryClient();
 
@@ -81,6 +82,19 @@ const App = () => (
                 <Route index element={<AdminDashboard />} />
                 <Route path="reports" element={<Reports />} />
                 <Route path="settings" element={<SystemSettings />} />
+              </Route>
+
+              {/* Educator Routes */}
+              <Route path="/educator" element={
+                <ProtectedRoute allowedRoles={['educator']}>
+                  <Layout />
+                </ProtectedRoute>
+              }>
+                <Route index element={<EducatorDashboard />} />
+                <Route path="attendance" element={<EducatorAttendance />} />
+                <Route path="children" element={<ChildrenManagement />} />
+                <Route path="messages" element={<Messages />} />
+                <Route path="reports" element={<KindergartenReports />} />
               </Route>
 
               {/* Staff Routes (Legacy) */}

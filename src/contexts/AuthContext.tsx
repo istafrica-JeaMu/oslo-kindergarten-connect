@@ -1,7 +1,6 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type UserRole = 'guardian' | 'caseworker' | 'admin' | 'staff' | 'partner' | 'district-admin';
+export type UserRole = 'guardian' | 'caseworker' | 'admin' | 'staff' | 'partner' | 'district-admin' | 'educator';
 
 export interface User {
   id: string;
@@ -87,6 +86,15 @@ const mockUsers: Record<string, User> = {
     email: 'district@oslo.kommune.no',
     role: 'district-admin',
     district: 'Bydel Sentrum',
+    authMethod: 'entra-id'
+  },
+  'educator@oslo.kommune.no': {
+    id: '8',
+    name: 'Maria Educator',
+    email: 'educator@oslo.kommune.no',
+    role: 'educator',
+    organization: 'Sunshine Kindergarten',
+    kindergartenId: 'sunshine-kg',
     authMethod: 'entra-id'
   }
 };

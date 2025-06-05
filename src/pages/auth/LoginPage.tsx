@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -50,6 +49,9 @@ const LoginPage = () => {
         break;
       case 'district-admin':
         redirectPath = '/district-admin';
+        break;
+      case 'educator':
+        redirectPath = '/educator';
         break;
     }
     return <Navigate to={redirectPath} replace />;
@@ -342,6 +344,21 @@ const LoginPage = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => setEmail('caseworker@oslo.kommune.no')}
+                    className="text-xs"
+                  >
+                    Use
+                  </Button>
+                </div>
+
+                <div className="flex justify-between items-center p-2 bg-white rounded border">
+                  <div>
+                    <p className="text-xs font-medium">Educator (Entra ID)</p>
+                    <p className="text-xs text-slate-600">educator@oslo.kommune.no</p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setEmail('educator@oslo.kommune.no')}
                     className="text-xs"
                   >
                     Use

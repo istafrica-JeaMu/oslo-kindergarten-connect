@@ -20,6 +20,7 @@ const Header = () => {
       case 'guardian': return 'Guardian';
       case 'caseworker': return 'Case Worker';
       case 'admin': return 'Administrator';
+      case 'educator': return 'Educator';
       case 'staff': return 'Public Kindergarten Staff';
       case 'partner': return 'Private Kindergarten Staff';
       case 'district-admin': return 'District Administrator';
@@ -51,6 +52,28 @@ const Header = () => {
             variant: 'outline' as const,
             icon: <Shield className="w-3 h-3 mr-1" />,
             className: 'border-oslo-blue/30 text-oslo-blue bg-oslo-blue/5 backdrop-blur-sm'
+          }
+        ]
+      };
+    }
+
+    if (user?.role === 'educator') {
+      return {
+        title: `Welcome, ${user?.name}`,
+        subtitle: 'Educator Portal',
+        description: 'Manage daily attendance and activities for your children',
+        badges: [
+          { 
+            text: user?.organization || 'Kindergarten', 
+            variant: 'default' as const,
+            icon: <GraduationCap className="w-3 h-3 mr-1" />,
+            className: 'bg-gradient-to-r from-green-500 to-green-600 text-white border-0 shadow-md'
+          },
+          { 
+            text: 'Active Session', 
+            variant: 'default' as const,
+            icon: <CheckCircle className="w-3 h-3 mr-1" />,
+            className: 'bg-gradient-to-r from-blue-500 to-blue-600 text-white border-0 shadow-md'
           }
         ]
       };

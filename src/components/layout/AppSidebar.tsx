@@ -9,7 +9,9 @@ import {
   Settings,
   BarChart3,
   FolderOpen,
-  GraduationCap
+  GraduationCap,
+  ClipboardList,
+  Calendar
 } from 'lucide-react';
 
 import {
@@ -109,6 +111,40 @@ export function AppSidebar() {
           },
         ];
 
+      case 'educator':
+        return [
+          {
+            title: 'Dashboard',
+            url: baseUrl,
+            icon: Home,
+          },
+          {
+            title: 'Daily Attendance',
+            url: `${baseUrl}/attendance`,
+            icon: ClipboardList,
+          },
+          {
+            title: 'Children',
+            url: `${baseUrl}/children`,
+            icon: Users,
+          },
+          {
+            title: 'Messages',
+            url: `${baseUrl}/messages`,
+            icon: MessageSquare,
+          },
+          {
+            title: 'Reports',
+            url: `${baseUrl}/reports`,
+            icon: BarChart3,
+          },
+          {
+            title: 'Calendar',
+            url: `${baseUrl}/calendar`,
+            icon: Calendar,
+          },
+        ];
+
       case 'staff':
       case 'partner':
         return [
@@ -175,6 +211,8 @@ export function AppSidebar() {
         return 'Case Worker Dashboard';
       case 'admin':
         return 'Administrator Panel';
+      case 'educator':
+        return 'Educator Portal';
       case 'staff':
         return 'Public Kindergarten';
       case 'partner':
