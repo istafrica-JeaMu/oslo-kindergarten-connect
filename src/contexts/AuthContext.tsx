@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type UserRole = 'guardian' | 'caseworker' | 'admin' | 'staff' | 'partner' | 'district-admin';
@@ -198,7 +197,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const loginWithIDPorten = async (): Promise<boolean> => {
-    // Open ID-Porten in new tab
+    // Simulate opening ID-Porten in new tab
     const idPortenWindow = window.open('https://login.idporten.no/authorize/selector', '_blank');
     
     // Simulate successful authentication after a delay
@@ -207,14 +206,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         idPortenWindow.close();
       }
       // Redirect current tab directly to guardian portal
-      window.location.href = window.location.origin + '/guardian?id-porten-auth=success';
+      window.location.href = window.location.origin + '/?id-porten-auth=success';
     }, 3000);
     
     return true;
   };
 
   const loginWithEntraID = async (email?: string): Promise<boolean> => {
-    // Open Entra ID in new tab
+    // Simulate opening Entra ID in new tab
     const entraIdWindow = window.open('https://login.microsoftonline.com/common/oauth2/authorize', '_blank');
     
     // Simulate successful authentication after a delay
@@ -224,23 +223,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       // Redirect current tab directly to appropriate portal with email
       const emailParam = email ? `&email=${encodeURIComponent(email)}` : '';
-      
-      // Determine the correct redirect path based on email
-      let redirectPath = '/caseworker';
-      if (email) {
-        const domain = email.split('@')[1]?.toLowerCase();
-        if (DOMAIN_CONFIG.admin.includes(domain)) {
-          redirectPath = '/admin';
-        } else if (DOMAIN_CONFIG.publicStaff.includes(domain) || DOMAIN_CONFIG.privateStaff.includes(domain)) {
-          if (email.includes('staff') || email.includes('partner')) {
-            redirectPath = '/kindergarten';
-          }
-        } else if (email.includes('district')) {
-          redirectPath = '/district-admin';
-        }
-      }
-      
-      window.location.href = window.location.origin + `${redirectPath}?entra-id-auth=success${emailParam}`;
+      window.location.href = window.location.origin + `/?entra-id-auth=success${emailParam}`;
     }, 3000);
     
     return true;
