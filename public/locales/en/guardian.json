@@ -17,6 +17,43 @@
     "recentMessages": "Recent Messages",
     "paymentOverview": "Payment Overview"
   },
+  "dailySchedule": {
+    "title": "Daily Schedule",
+    "description": "View your child's daily activities and schedule",
+    "viewWeek": "View Week",
+    "currentActivity": "Current Activity",
+    "schedule": "Today's Schedule",
+    "activities": {
+      "arrival": "Arrival",
+      "breakfast": "Breakfast",
+      "outdoorPlay": "Outdoor Play",
+      "learningTime": "Learning Time",
+      "lunch": "Lunch",
+      "restTime": "Rest Time",
+      "pickup": "Pickup",
+      "morningPlay": "Morning Play"
+    },
+    "locations": {
+      "mainRoom": "Main Room",
+      "diningRoom": "Dining Room",
+      "playground": "Playground",
+      "classroom": "Classroom",
+      "restRoom": "Rest Room"
+    },
+    "status": {
+      "completed": "Completed",
+      "current": "Current",
+      "upcoming": "Upcoming"
+    }
+  },
+  "absence": {
+    "title": "Absence Reporting",
+    "description": "Report when your child will be absent from kindergarten"
+  },
+  "attendance": {
+    "title": "Attendance Tracking",
+    "description": "View your child's attendance history and statistics"
+  },
   "location": {
     "title": "Child Location",
     "description": "See where your child is currently located in the kindergarten",

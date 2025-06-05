@@ -17,6 +17,43 @@
     "recentMessages": "Siste meldinger",
     "paymentOverview": "Betalingsoversikt"
   },
+  "dailySchedule": {
+    "title": "Dagsplan",
+    "description": "Se barnets daglige aktiviteter og timeplan",
+    "viewWeek": "Se uke",
+    "currentActivity": "Pågående aktivitet",
+    "schedule": "Dagens program",
+    "activities": {
+      "arrival": "Ankomst",
+      "breakfast": "Frokost",
+      "outdoorPlay": "Utelek",
+      "learningTime": "Læringstid",
+      "lunch": "Lunsj",
+      "restTime": "Hvile",
+      "pickup": "Henting",
+      "morningPlay": "Morgenlek"
+    },
+    "locations": {
+      "mainRoom": "Hovedrom",
+      "diningRoom": "Spiserom",
+      "playground": "Lekeplass",
+      "classroom": "Klasserom",
+      "restRoom": "Hvilerom"
+    },
+    "status": {
+      "completed": "Fullført",
+      "current": "Pågående",
+      "upcoming": "Kommende"
+    }
+  },
+  "absence": {
+    "title": "Fraværsmelding",
+    "description": "Meld fra når barnet ditt ikke kommer i barnehagen"
+  },
+  "attendance": {
+    "title": "Oppmøteoversikt",
+    "description": "Se barnets oppmøtehistorikk og statistikk"
+  },
   "location": {
     "title": "Barnets plassering",
     "description": "Se hvor barnet ditt befinner seg i barnehagen",
