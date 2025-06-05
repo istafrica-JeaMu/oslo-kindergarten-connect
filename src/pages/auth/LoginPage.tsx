@@ -1,14 +1,15 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Loader2, Eye, EyeOff, GraduationCap } from 'lucide-react';
+import { Loader2, Eye, EyeOff, GraduationCap, Shield, Building2, ExternalLink, Mail } from 'lucide-react';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -16,56 +17,90 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [validationErrors, setValidationErrors] = useState<{email?: string; password?: string}>({});
+  const [loginStep, setLoginStep] = useState<'email' | 'staff-auth' | 'id-porten'>('email');
+  const [domainType, setDomainType] = useState<'guardian' | 'public-staff' | 'private-staff' | 'unknown'>('guardian');
   
-  const { user, login } = useAuth();
+  const { user, login, loginWithIDPorten, checkDomainType } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (email) {
+      const type = checkDomainType(email);
+      setDomainType(type);
+      setError('');
+    }
+  }, [email, checkDomainType]);
+
   if (user) {
-    const redirectPath = `/${user.role}`;
+    let redirectPath = '/';
+    switch (user.role) {
+      case 'guardian':
+        redirectPath = '/guardian';
+        break;
+      case 'caseworker':
+        redirectPath = '/caseworker';
+        break;
+      case 'admin':
+        redirectPath = '/admin';
+        break;
+      case 'staff':
+        redirectPath = '/staff';
+        break;
+      case 'partner':
+        redirectPath = '/partner';
+        break;
+    }
     return <Navigate to={redirectPath} replace />;
   }
 
-  const validateForm = () => {
-    const errors: {email?: string; password?: string} = {};
-    
+  const handleEmailSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     if (!email) {
-      errors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      errors.email = 'Please enter a valid email address';
+      setError('Please enter your email address');
+      return;
     }
+
+    const type = checkDomainType(email);
     
-    if (!password) {
-      errors.password = 'Password is required';
-    } else if (password.length < 6) {
-      errors.password = 'Password must be at least 6 characters';
+    if (type === 'unknown') {
+      setError('Your organization is not currently supported. Please contact support for access.');
+      return;
     }
-    
-    setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
+
+    if (type === 'guardian') {
+      setLoginStep('id-porten');
+    } else {
+      setLoginStep('staff-auth');
+    }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleIDPortenLogin = async () => {
+    setIsLoading(true);
+    try {
+      await loginWithIDPorten();
+    } catch (err) {
+      setError('Failed to connect to ID-Porten. Please try again.');
+      setIsLoading(false);
+    }
+  };
+
+  const handleStaffLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setValidationErrors({});
     
-    if (!validateForm()) {
+    if (!password) {
+      setError('Password is required');
       return;
     }
     
     setIsLoading(true);
     
     try {
-      // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       const success = await login(email, password);
-      if (success) {
-        // Success feedback will be handled by redirect
-        console.log('Login successful');
-      } else {
+      if (!success) {
         setError('Invalid email or password. Please try again.');
       }
     } catch (err) {
@@ -75,191 +110,257 @@ const LoginPage = () => {
     }
   };
 
-  const handleDemoLogin = async (demoEmail: string, demoPassword: string) => {
-    setEmail(demoEmail);
-    setPassword(demoPassword);
-    setError('');
-    setValidationErrors({});
-    setIsLoading(true);
-    
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      const success = await login(demoEmail, demoPassword);
-      if (!success) {
-        setError('Demo login failed. Please try again.');
-      }
-    } catch (err) {
-      setError('An error occurred during demo login.');
-    } finally {
-      setIsLoading(false);
+  const getDomainBadge = () => {
+    switch (domainType) {
+      case 'public-staff':
+        return <Badge className="bg-blue-100 text-blue-800 border-blue-200">Public Staff</Badge>;
+      case 'private-staff':
+        return <Badge className="bg-purple-100 text-purple-800 border-purple-200">Private Staff</Badge>;
+      case 'guardian':
+        return <Badge className="bg-green-100 text-green-800 border-green-200">Guardian</Badge>;
+      default:
+        return null;
+    }
+  };
+
+  const getOrganizationName = () => {
+    const domain = email.split('@')[1]?.toLowerCase();
+    switch (domain) {
+      case 'oslo.kommune.no':
+        return 'Oslo Kommune';
+      case 'ist.com':
+        return 'IST Private Kindergarten';
+      case 'privbarnehage.no':
+        return 'Private Barnehage AS';
+      default:
+        return 'Guardian Portal';
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center p-6">
       <Card className="w-full max-w-md shadow-xl border-0 bg-white/95 backdrop-blur-sm">
-        <CardHeader className="text-center space-y-8 pb-8">
-          <div className="mx-auto w-20 h-20 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl flex items-center justify-center shadow-lg ring-4 ring-blue-100">
-            <GraduationCap className="w-10 h-10 text-white" />
+        <CardHeader className="text-center space-y-6 pb-6">
+          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl flex items-center justify-center shadow-lg">
+            <GraduationCap className="w-8 h-8 text-white" />
           </div>
-          <div className="space-y-3">
-            <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-700 bg-clip-text text-transparent">
-              {t('auth.login')}
+          <div className="space-y-2">
+            <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-700 bg-clip-text text-transparent">
+              IST Platform Login
             </CardTitle>
-            <CardDescription className="text-slate-600 text-base font-medium">
-              Sign in to access the IST Platform
+            <CardDescription className="text-slate-600">
+              {loginStep === 'email' && "Enter your email to continue"}
+              {loginStep === 'id-porten' && "Continue with ID-Porten"}
+              {loginStep === 'staff-auth' && `Sign in to ${getOrganizationName()}`}
             </CardDescription>
           </div>
         </CardHeader>
-        <CardContent className="space-y-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-3">
-              <Label htmlFor="email" className="text-sm font-semibold text-slate-800">
-                {t('auth.email')} *
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  if (validationErrors.email) {
-                    setValidationErrors(prev => ({...prev, email: undefined}));
-                  }
-                }}
-                required
-                placeholder="Enter your email address"
-                className={`h-12 border-2 transition-all duration-200 ${
-                  validationErrors.email 
-                    ? 'border-red-400 focus:border-red-500 bg-red-50' 
-                    : 'border-slate-200 focus:border-blue-500 hover:border-slate-300'
-                }`}
-                disabled={isLoading}
-                aria-describedby={validationErrors.email ? "email-error" : undefined}
-              />
-              {validationErrors.email && (
-                <p id="email-error" className="text-sm text-red-600 font-medium flex items-center gap-1" role="alert">
-                  {validationErrors.email}
-                </p>
-              )}
-            </div>
-            
-            <div className="space-y-3">
-              <Label htmlFor="password" className="text-sm font-semibold text-slate-800">
-                {t('auth.password')} *
-              </Label>
-              <div className="relative">
+
+        <CardContent className="space-y-6">
+          {/* Email Step */}
+          {loginStep === 'email' && (
+            <form onSubmit={handleEmailSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-sm font-semibold text-slate-800">
+                  Email Address
+                </Label>
                 <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    if (validationErrors.password) {
-                      setValidationErrors(prev => ({...prev, password: undefined}));
-                    }
-                  }}
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email address"
+                  className="h-12 border-2 focus:border-blue-500"
                   required
-                  placeholder="Enter your password"
-                  className={`h-12 pr-12 border-2 transition-all duration-200 ${
-                    validationErrors.password 
-                      ? 'border-red-400 focus:border-red-500 bg-red-50' 
-                      : 'border-slate-200 focus:border-blue-500 hover:border-slate-300'
-                  }`}
-                  disabled={isLoading}
-                  aria-describedby={validationErrors.password ? "password-error" : undefined}
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700 transition-colors p-1 rounded-md hover:bg-slate-100"
-                  disabled={isLoading}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                >
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                </button>
+                {email && getDomainBadge() && (
+                  <div className="flex items-center gap-2 mt-2">
+                    {getDomainBadge()}
+                    <span className="text-xs text-slate-600">
+                      {domainType === 'guardian' ? 'Will use ID-Porten' : 'Staff login required'}
+                    </span>
+                  </div>
+                )}
               </div>
-              {validationErrors.password && (
-                <p id="password-error" className="text-sm text-red-600 font-medium flex items-center gap-1" role="alert">
-                  {validationErrors.password}
-                </p>
+
+              {error && (
+                <Alert variant="destructive" className="border-red-200 bg-red-50/80">
+                  <AlertDescription className="text-red-800 font-medium">
+                    {error}
+                    {domainType === 'unknown' && (
+                      <div className="mt-2 pt-2 border-t border-red-200">
+                        <p className="text-sm">Contact support: <a href="mailto:support@ist.com" className="underline">support@ist.com</a></p>
+                      </div>
+                    )}
+                  </AlertDescription>
+                </Alert>
               )}
+
+              <Button 
+                type="submit" 
+                className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800"
+                disabled={!email || domainType === 'unknown'}
+              >
+                Continue
+              </Button>
+            </form>
+          )}
+
+          {/* ID-Porten Step */}
+          {loginStep === 'id-porten' && (
+            <div className="space-y-4">
+              <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
+                <Shield className="w-8 h-8 text-green-600 mx-auto mb-2" />
+                <h3 className="font-semibold text-green-800 mb-1">Secure Login with ID-Porten</h3>
+                <p className="text-sm text-green-700">You'll be redirected to ID-Porten for secure authentication</p>
+              </div>
+
+              <Button 
+                onClick={handleIDPortenLogin}
+                className="w-full h-12 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    Redirecting...
+                  </>
+                ) : (
+                  <>
+                    Continue with ID-Porten
+                    <ExternalLink className="ml-2 h-4 w-4" />
+                  </>
+                )}
+              </Button>
+
+              <Button 
+                variant="ghost" 
+                onClick={() => setLoginStep('email')}
+                className="w-full"
+                disabled={isLoading}
+              >
+                Back to email
+              </Button>
             </div>
+          )}
 
-            {error && (
-              <Alert variant="destructive" className="border-red-200 bg-red-50/80 backdrop-blur-sm">
-                <AlertDescription className="text-red-800 font-medium">{error}</AlertDescription>
-              </Alert>
-            )}
+          {/* Staff Authentication Step */}
+          {loginStep === 'staff-auth' && (
+            <form onSubmit={handleStaffLogin} className="space-y-4">
+              <div className="text-center p-3 bg-blue-50 rounded-lg border border-blue-200 mb-4">
+                <Building2 className="w-6 h-6 text-blue-600 mx-auto mb-1" />
+                <p className="text-sm font-medium text-blue-800">{getOrganizationName()}</p>
+                <p className="text-xs text-blue-600">{email}</p>
+              </div>
 
-            <Button 
-              type="submit" 
-              className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Signing in...
-                </>
-              ) : (
-                t('auth.loginButton')
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-sm font-semibold text-slate-800">
+                  Password
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter your password"
+                    className="h-12 pr-12 border-2 focus:border-blue-500"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700"
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
+              </div>
+
+              {error && (
+                <Alert variant="destructive" className="border-red-200 bg-red-50/80">
+                  <AlertDescription className="text-red-800 font-medium">{error}</AlertDescription>
+                </Alert>
               )}
-            </Button>
-          </form>
 
-          <div className="mt-8 p-6 bg-gradient-to-br from-slate-50 to-blue-50/50 rounded-xl border border-slate-100">
-            <p className="text-sm font-semibold text-slate-800 mb-4">Demo Accounts:</p>
-            <div className="space-y-3">
-              <div className="flex justify-between items-center p-3 bg-white rounded-lg border border-slate-100 shadow-sm">
-                <div>
-                  <p className="text-sm font-semibold text-slate-900">Guardian Account</p>
-                  <p className="text-xs text-slate-600">guardian@example.com</p>
+              <Button 
+                type="submit" 
+                className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    Signing in...
+                  </>
+                ) : (
+                  'Sign In'
+                )}
+              </Button>
+
+              <Button 
+                variant="ghost" 
+                onClick={() => setLoginStep('email')}
+                className="w-full"
+                disabled={isLoading}
+              >
+                Back to email
+              </Button>
+            </form>
+          )}
+
+          {/* Demo Accounts Section */}
+          {loginStep === 'email' && (
+            <div className="mt-6 p-4 bg-gradient-to-br from-slate-50 to-blue-50/50 rounded-lg border border-slate-100">
+              <p className="text-sm font-semibold text-slate-800 mb-3">Demo Accounts:</p>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center p-2 bg-white rounded border">
+                  <div>
+                    <p className="text-xs font-medium">Guardian (ID-Porten)</p>
+                    <p className="text-xs text-slate-600">guardian@example.com</p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setEmail('guardian@example.com')}
+                    className="text-xs"
+                  >
+                    Use
+                  </Button>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleDemoLogin('guardian@example.com', 'password')}
-                  disabled={isLoading}
-                  className="text-xs border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200"
-                >
-                  Try Demo
-                </Button>
-              </div>
-              
-              <div className="flex justify-between items-center p-3 bg-white rounded-lg border border-slate-100 shadow-sm">
-                <div>
-                  <p className="text-sm font-semibold text-slate-900">Case Worker</p>
-                  <p className="text-xs text-slate-600">caseworker@oslo.kommune.no</p>
+                
+                <div className="flex justify-between items-center p-2 bg-white rounded border">
+                  <div>
+                    <p className="text-xs font-medium">Public Staff</p>
+                    <p className="text-xs text-slate-600">staff@oslo.kommune.no</p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setEmail('staff@oslo.kommune.no')}
+                    className="text-xs"
+                  >
+                    Use
+                  </Button>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleDemoLogin('caseworker@oslo.kommune.no', 'password')}
-                  disabled={isLoading}
-                  className="text-xs border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200"
-                >
-                  Try Demo
-                </Button>
-              </div>
-              
-              <div className="flex justify-between items-center p-3 bg-white rounded-lg border border-slate-100 shadow-sm">
-                <div>
-                  <p className="text-sm font-semibold text-slate-900">Administrator</p>
-                  <p className="text-xs text-slate-600">admin@oslo.kommune.no</p>
+                
+                <div className="flex justify-between items-center p-2 bg-white rounded border">
+                  <div>
+                    <p className="text-xs font-medium">Private Partner</p>
+                    <p className="text-xs text-slate-600">partner@ist.com</p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setEmail('partner@ist.com')}
+                    className="text-xs"
+                  >
+                    Use
+                  </Button>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleDemoLogin('admin@oslo.kommune.no', 'password')}
-                  disabled={isLoading}
-                  className="text-xs border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200"
-                >
-                  Try Demo
-                </Button>
               </div>
             </div>
-          </div>
+          )}
         </CardContent>
       </Card>
     </div>

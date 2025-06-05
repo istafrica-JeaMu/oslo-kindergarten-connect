@@ -21,6 +21,8 @@ import PlacementManagement from "./pages/caseworker/PlacementManagement";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import Reports from "./pages/admin/Reports";
 import SystemSettings from "./pages/admin/SystemSettings";
+import StaffDashboard from "./pages/staff/StaffDashboard";
+import PartnerDashboard from "./pages/partner/PartnerDashboard";
 import NotFound from "./pages/NotFound";
 import './i18n';
 
@@ -72,6 +74,24 @@ const App = () => (
                 <Route index element={<AdminDashboard />} />
                 <Route path="reports" element={<Reports />} />
                 <Route path="settings" element={<SystemSettings />} />
+              </Route>
+
+              {/* Staff Routes */}
+              <Route path="/staff" element={
+                <ProtectedRoute allowedRoles={['staff']}>
+                  <Layout />
+                </ProtectedRoute>
+              }>
+                <Route index element={<StaffDashboard />} />
+              </Route>
+
+              {/* Partner Routes */}
+              <Route path="/partner" element={
+                <ProtectedRoute allowedRoles={['partner']}>
+                  <Layout />
+                </ProtectedRoute>
+              }>
+                <Route index element={<PartnerDashboard />} />
               </Route>
 
               <Route path="*" element={<NotFound />} />
