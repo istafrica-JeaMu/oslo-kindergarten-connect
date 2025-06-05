@@ -15,6 +15,18 @@ import { User, LogOut, Settings, GraduationCap, CheckCircle, Shield } from 'luci
 const Header = () => {
   const { user, logout } = useAuth();
 
+  const getRoleLabel = (role?: string) => {
+    switch(role) {
+      case 'guardian': return 'Guardian';
+      case 'caseworker': return 'Case Worker';
+      case 'admin': return 'Administrator';
+      case 'staff': return 'Public Kindergarten Staff';
+      case 'partner': return 'Private Kindergarten Staff';
+      case 'district-admin': return 'District Administrator';
+      default: return '';
+    }
+  };
+
   const getRoleSpecificContent = () => {
     if (user?.role === 'caseworker') {
       return {
@@ -107,7 +119,10 @@ const Header = () => {
               <div className="w-9 h-9 bg-gradient-to-br from-oslo-blue/10 to-oslo-blue/20 rounded-full flex items-center justify-center shadow-sm">
                 <User className="h-5 w-5 text-oslo-blue" />
               </div>
-              <span className="hidden md:inline font-semibold">{user?.name}</span>
+              <div className="hidden md:flex flex-col items-start">
+                <span className="font-semibold text-sm leading-tight">{user?.name}</span>
+                <span className="text-xs text-slate-600">{getRoleLabel(user?.role)}</span>
+              </div>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56 bg-white border border-slate-200 shadow-lg z-50 rounded-lg">
