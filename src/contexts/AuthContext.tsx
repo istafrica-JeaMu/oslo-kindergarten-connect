@@ -225,15 +225,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Determine the correct redirect path based on email and redirect directly
       let redirectPath = '/caseworker';
       if (email) {
-        const domain = email.split('@')[1]?.toLowerCase();
-        if (DOMAIN_CONFIG.admin.includes(domain)) {
-          redirectPath = '/admin';
-        } else if (DOMAIN_CONFIG.publicStaff.includes(domain) || DOMAIN_CONFIG.privateStaff.includes(domain)) {
-          if (email.includes('staff') || email.includes('partner')) {
+        const user = mockUsers[email];
+        if (user) {
+          if (user.role === 'admin') {
+            redirectPath = '/admin';
+          } else if (user.role === 'staff' || user.role === 'partner') {
+            redirectPath = '/kindergarten';
+          } else if (user.role === 'district-admin') {
+            redirectPath = '/district-admin';
+          }
+        } else {
+          // Fallback based on domain
+          const domain = email.split('@')[1]?.toLowerCase();
+          if (DOMAIN_CONFIG.admin.includes(domain)) {
+            redirectPath = '/admin';
+          } else if (DOMAIN_CONFIG.publicStaff.includes(domain) || DOMAIN_CONFIG.privateStaff.includes(domain)) {
             redirectPath = '/kindergarten';
           }
-        } else if (email.includes('district')) {
-          redirectPath = '/district-admin';
         }
       }
       
