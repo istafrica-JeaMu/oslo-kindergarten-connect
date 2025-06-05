@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type UserRole = 'guardian' | 'caseworker' | 'admin' | 'staff' | 'partner' | 'district-admin';
@@ -156,7 +157,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(guardianUser);
     localStorage.setItem('user', JSON.stringify(guardianUser));
     
-    // Clean up URL and redirect to guardian dashboard
+    // Clean up URL and redirect directly to guardian dashboard
     window.history.replaceState({}, document.title, '/guardian');
     setIsLoading(false);
   };
@@ -182,7 +183,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(staffUser);
     localStorage.setItem('user', JSON.stringify(staffUser));
     
-    // Clean up URL and redirect based on role
+    // Clean up URL and redirect based on role directly
     let redirectPath = '/caseworker';
     if (staffUser.role === 'admin') {
       redirectPath = '/admin';
@@ -205,8 +206,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (idPortenWindow) {
         idPortenWindow.close();
       }
-      // Redirect current tab to success URL
-      window.location.href = window.location.origin + '/?id-porten-auth=success';
+      // Redirect current tab directly to guardian portal
+      window.location.href = window.location.origin + '/guardian?id-porten-auth=success';
     }, 3000);
     
     return true;
@@ -221,9 +222,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (entraIdWindow) {
         entraIdWindow.close();
       }
-      // Redirect current tab to success URL with email
+      // Redirect current tab directly to appropriate portal with email
       const emailParam = email ? `&email=${encodeURIComponent(email)}` : '';
-      window.location.href = window.location.origin + `/?entra-id-auth=success${emailParam}`;
+      
+      // Determine the correct redirect path based on email
+      let redirectPath = '/caseworker';
+      if (email) {
+        const domain = email.split('@')[1]?.toLowerCase();
+        if (DOMAIN_CONFIG.admin.includes(domain)) {
+          redirectPath = '/admin';
+        } else if (DOMAIN_CONFIG.publicStaff.includes(domain) || DOMAIN_CONFIG.privateStaff.includes(domain)) {
+          if (email.includes('staff') || email.includes('partner')) {
+            redirectPath = '/kindergarten';
+          }
+        } else if (email.includes('district')) {
+          redirectPath = '/district-admin';
+        }
+      }
+      
+      window.location.href = window.location.origin + `${redirectPath}?entra-id-auth=success${emailParam}`;
     }, 3000);
     
     return true;
