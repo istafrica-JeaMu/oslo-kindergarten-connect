@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -95,14 +96,24 @@ const LoginPage = () => {
     }
   };
 
+  const handleGuardianDemo = async () => {
+    setIsLoading(true);
+    try {
+      await loginWithIDPorten();
+    } catch (err) {
+      setError('Failed to connect to ID-Porten. Please try again.');
+      setIsLoading(false);
+    }
+  };
+
   const getDomainBadge = () => {
     switch (domainType) {
       case 'admin':
         return <Badge className="bg-red-100 text-red-800 border-red-200">Admin</Badge>;
       case 'public-staff':
-        return <Badge className="bg-blue-100 text-blue-800 border-blue-200">Public Staff</Badge>;
+        return <Badge className="bg-blue-100 text-blue-800 border-blue-200">Public Kindergarten Staff</Badge>;
       case 'private-staff':
-        return <Badge className="bg-purple-100 text-purple-800 border-purple-200">Private Staff</Badge>;
+        return <Badge className="bg-purple-100 text-purple-800 border-purple-200">Private Kindergarten Staff</Badge>;
       case 'guardian':
         return <Badge className="bg-green-100 text-green-800 border-green-200">Guardian</Badge>;
       default:
@@ -131,6 +142,15 @@ const LoginPage = () => {
   const getAuthMethod = () => {
     return domainType === 'guardian' ? 'ID-Porten' : 'Microsoft Entra ID';
   };
+
+  const MicrosoftLogo = () => (
+    <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="1" width="9" height="9" fill="#F25022"/>
+      <rect x="11" y="1" width="9" height="9" fill="#7FBA00"/>
+      <rect x="1" y="11" width="9" height="9" fill="#00A4EF"/>
+      <rect x="11" y="11" width="9" height="9" fill="#FFB900"/>
+    </svg>
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center p-6">
@@ -248,12 +268,12 @@ const LoginPage = () => {
                 <p className="text-xs text-blue-600">{email}</p>
               </div>
 
-              <div className="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <div className="w-8 h-8 bg-blue-600 rounded mx-auto mb-2 flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">MS</span>
+              <div className="text-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
+                <div className="flex items-center justify-center mb-3">
+                  <MicrosoftLogo />
                 </div>
-                <h3 className="font-semibold text-blue-800 mb-1">Microsoft Entra ID Login</h3>
-                <p className="text-sm text-blue-700">A new tab will open for secure authentication. This tab will redirect automatically.</p>
+                <h3 className="font-semibold text-slate-800 mb-1">Microsoft</h3>
+                <p className="text-sm text-slate-600">A new tab will open for secure authentication. This tab will redirect automatically.</p>
               </div>
 
               {error && (
@@ -264,7 +284,7 @@ const LoginPage = () => {
 
               <Button 
                 onClick={handleEntraIDLogin}
-                className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800"
+                className="w-full h-12 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-900 hover:to-black text-white shadow-lg hover:shadow-xl transition-all duration-200 border border-slate-700"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -273,10 +293,11 @@ const LoginPage = () => {
                     Authenticating...
                   </>
                 ) : (
-                  <>
-                    Continue with Microsoft Entra ID
-                    <ExternalLink className="ml-2 h-4 w-4" />
-                  </>
+                  <div className="flex items-center justify-center gap-3">
+                    <MicrosoftLogo />
+                    <span className="font-medium">Sign in with Microsoft</span>
+                    <ExternalLink className="h-4 w-4" />
+                  </div>
                 )}
               </Button>
 
@@ -299,15 +320,16 @@ const LoginPage = () => {
                 <div className="flex justify-between items-center p-2 bg-white rounded border">
                   <div>
                     <p className="text-xs font-medium">Guardian (ID-Porten)</p>
-                    <p className="text-xs text-slate-600">guardian@example.com</p>
+                    <p className="text-xs text-slate-600">No email required</p>
                   </div>
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => setEmail('guardian@example.com')}
+                    onClick={handleGuardianDemo}
                     className="text-xs"
+                    disabled={isLoading}
                   >
-                    Use
+                    {isLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Use'}
                   </Button>
                 </div>
                 
@@ -328,7 +350,7 @@ const LoginPage = () => {
                 
                 <div className="flex justify-between items-center p-2 bg-white rounded border">
                   <div>
-                    <p className="text-xs font-medium">Public Staff (Entra ID)</p>
+                    <p className="text-xs font-medium">Public Kindergarten Staff (Entra ID)</p>
                     <p className="text-xs text-slate-600">staff@oslo.kommune.no</p>
                   </div>
                   <Button
@@ -343,7 +365,7 @@ const LoginPage = () => {
                 
                 <div className="flex justify-between items-center p-2 bg-white rounded border">
                   <div>
-                    <p className="text-xs font-medium">Private Partner (Entra ID)</p>
+                    <p className="text-xs font-medium">Private Kindergarten Staff (Entra ID)</p>
                     <p className="text-xs text-slate-600">partner@ist.com</p>
                   </div>
                   <Button
