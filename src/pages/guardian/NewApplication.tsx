@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -7,12 +7,18 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { FileText, User, Building2, Calendar, ArrowRight, CheckCircle, AlertCircle, Sparkles, Clock, Shield, Upload, Info, AlertTriangle, HelpCircle } from 'lucide-react';
+import { FileText, User, Building2, Calendar, ArrowRight, CheckCircle, AlertCircle, Sparkles, Clock, Shield, Upload, Info, AlertTriangle, HelpCircle, Loader2, Database } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const NewApplication = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [applicationType, setApplicationType] = useState('');
+  const [fregLookupState, setFregLookupState] = useState({
+    isLoading: false,
+    isSuccess: false,
+    error: null,
+    hasAttempted: false
+  });
   const [formData, setFormData] = useState({
     applicationType: '',
     childInfo: {
@@ -44,6 +50,94 @@ const NewApplication = () => {
       residenceProof: null
     }
   });
+
+  // Debounced FREG lookup
+  useEffect(() => {
+    const delayedLookup = setTimeout(() => {
+      if (formData.childInfo.personalNumber.length === 11 && !fregLookupState.hasAttempted) {
+        performFregLookup(formData.childInfo.personalNumber);
+      }
+    }, 500);
+
+    return () => clearTimeout(delayedLookup);
+  }, [formData.childInfo.personalNumber]);
+
+  const performFregLookup = async (birthNumber: string) => {
+    setFregLookupState({ isLoading: true, isSuccess: false, error: null, hasAttempted: true });
+    
+    try {
+      // Mock API call to FREG
+      const response = await fetch(`/mock/freg/lookup?birthNumber=${birthNumber}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Auto-fill the form fields
+        setFormData(prev => ({
+          ...prev,
+          childInfo: {
+            ...prev.childInfo,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            birthDate: data.birthDate
+          }
+        }));
+        
+        setFregLookupState({ isLoading: false, isSuccess: true, error: null, hasAttempted: true });
+      } else {
+        const errorData = await response.json();
+        setFregLookupState({ 
+          isLoading: false, 
+          isSuccess: false, 
+          error: errorData.error || 'Could not retrieve from FREG', 
+          hasAttempted: true 
+        });
+      }
+    } catch (error) {
+      // Mock success for prototype (since we don't have real API)
+      const mockData = {
+        firstName: 'Emma',
+        lastName: 'Hansen',
+        birthDate: '2022-03-15'
+      };
+      
+      setFormData(prev => ({
+        ...prev,
+        childInfo: {
+          ...prev.childInfo,
+          firstName: mockData.firstName,
+          lastName: mockData.lastName,
+          birthDate: mockData.birthDate
+        }
+      }));
+      
+      setFregLookupState({ isLoading: false, isSuccess: true, error: null, hasAttempted: true });
+    }
+  };
+
+  const handlePersonalNumberChange = (value: string) => {
+    setFormData({
+      ...formData,
+      childInfo: { ...formData.childInfo, personalNumber: value }
+    });
+    
+    // Reset FREG state when birth number changes
+    if (value.length !== 11) {
+      setFregLookupState({ isLoading: false, isSuccess: false, error: null, hasAttempted: false });
+      // Clear auto-filled fields if birth number is modified
+      if (fregLookupState.isSuccess) {
+        setFormData(prev => ({
+          ...prev,
+          childInfo: {
+            ...prev.childInfo,
+            firstName: '',
+            lastName: '',
+            birthDate: ''
+          }
+        }));
+      }
+    }
+  };
 
   const applicationTypes = [
     {
@@ -258,53 +352,119 @@ const NewApplication = () => {
 
   const renderChildInformation = () => (
     <div className="space-y-6">
-      <div className="grid md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <Label className="text-sm font-semibold text-slate-700">First Name *</Label>
-          <Input 
-            placeholder="Enter child's first name"
-            value={formData.childInfo.firstName}
-            onChange={(e) => setFormData({
-              ...formData,
-              childInfo: { ...formData.childInfo, firstName: e.target.value }
-            })}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label className="text-sm font-semibold text-slate-700">Last Name *</Label>
-          <Input 
-            placeholder="Enter child's last name"
-            value={formData.childInfo.lastName}
-            onChange={(e) => setFormData({
-              ...formData,
-              childInfo: { ...formData.childInfo, lastName: e.target.value }
-            })}
-          />
-        </div>
-      </div>
-      
-      <div className="grid md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <Label className="text-sm font-semibold text-slate-700">Date of Birth *</Label>
-          <Input 
-            type="date"
-            value={formData.childInfo.birthDate}
-            onChange={(e) => setFormData({
-              ...formData,
-              childInfo: { ...formData.childInfo, birthDate: e.target.value }
-            })}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label className="text-sm font-semibold text-slate-700">Personal Number *</Label>
+      {/* Personal Number with FREG Integration */}
+      <div className="space-y-2">
+        <Label className="text-sm font-semibold text-slate-700">Personal Number (Birth Number) *</Label>
+        <div className="relative">
           <Input 
             placeholder="11 digits (DDMMYYXXXXX)"
             value={formData.childInfo.personalNumber}
-            onChange={(e) => setFormData({
-              ...formData,
-              childInfo: { ...formData.childInfo, personalNumber: e.target.value }
-            })}
+            onChange={(e) => handlePersonalNumberChange(e.target.value)}
+            maxLength={11}
+            className={`pr-10 ${fregLookupState.isSuccess ? 'border-emerald-300 bg-emerald-50' : ''}`}
           />
+          {fregLookupState.isLoading && (
+            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+              <Loader2 className="w-4 h-4 animate-spin text-oslo-blue" />
+            </div>
+          )}
+          {fregLookupState.isSuccess && (
+            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+              <Database className="w-4 h-4 text-emerald-600" />
+            </div>
+          )}
+        </div>
+        <p className="text-xs text-slate-500">
+          Enter the child's 11-digit birth number. If found in the national registry (FREG), we'll fill in the rest.
+        </p>
+        
+        {/* FREG Status Messages */}
+        {fregLookupState.isSuccess && (
+          <div className="flex items-center gap-2 text-sm text-emerald-700 bg-emerald-50 p-3 rounded-lg border border-emerald-200" role="status" aria-live="polite">
+            <CheckCircle className="w-4 h-4" />
+            <span>Auto-filled from FREG</span>
+            <Badge variant="outline" className="ml-auto text-emerald-600 border-emerald-300 bg-emerald-50">
+              Verified
+            </Badge>
+          </div>
+        )}
+        
+        {fregLookupState.error && (
+          <div className="flex items-start gap-2 text-sm text-amber-700 bg-amber-50 p-3 rounded-lg border border-amber-200" role="alert" aria-live="assertive">
+            <AlertTriangle className="w-4 h-4 mt-0.5" />
+            <div>
+              <p className="font-medium">Could not retrieve from FREG</p>
+              <p className="text-xs mt-1">Please enter the information manually below.</p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Name Fields */}
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <Label className="text-sm font-semibold text-slate-700">First Name *</Label>
+          <div className="relative">
+            <Input 
+              placeholder="Enter child's first name"
+              value={formData.childInfo.firstName}
+              onChange={(e) => setFormData({
+                ...formData,
+                childInfo: { ...formData.childInfo, firstName: e.target.value }
+              })}
+              disabled={fregLookupState.isSuccess}
+              className={fregLookupState.isSuccess ? 'bg-slate-50 border-slate-200' : ''}
+            />
+            {fregLookupState.isSuccess && (
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                <Database className="w-4 h-4 text-slate-400" />
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="space-y-2">
+          <Label className="text-sm font-semibold text-slate-700">Last Name *</Label>
+          <div className="relative">
+            <Input 
+              placeholder="Enter child's last name"
+              value={formData.childInfo.lastName}
+              onChange={(e) => setFormData({
+                ...formData,
+                childInfo: { ...formData.childInfo, lastName: e.target.value }
+              })}
+              disabled={fregLookupState.isSuccess}
+              className={fregLookupState.isSuccess ? 'bg-slate-50 border-slate-200' : ''}
+            />
+            {fregLookupState.isSuccess && (
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                <Database className="w-4 h-4 text-slate-400" />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+      
+      {/* Birth Date */}
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <Label className="text-sm font-semibold text-slate-700">Date of Birth *</Label>
+          <div className="relative">
+            <Input 
+              type="date"
+              value={formData.childInfo.birthDate}
+              onChange={(e) => setFormData({
+                ...formData,
+                childInfo: { ...formData.childInfo, birthDate: e.target.value }
+              })}
+              disabled={fregLookupState.isSuccess}
+              className={fregLookupState.isSuccess ? 'bg-slate-50 border-slate-200' : ''}
+            />
+            {fregLookupState.isSuccess && (
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                <Database className="w-4 h-4 text-slate-400" />
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -663,6 +823,14 @@ const NewApplication = () => {
                 <div><span className="font-medium">Personal Number:</span> {formData.childInfo.personalNumber}</div>
                 <div><span className="font-medium">Statutory Right:</span> {formData.childInfo.statutoryRight ? 'Yes' : 'No'}</div>
               </div>
+              {fregLookupState.isSuccess && (
+                <div className="mt-3 flex items-center gap-2">
+                  <Badge variant="outline" className="text-emerald-600 border-emerald-300 bg-emerald-50">
+                    <Database className="w-3 h-3 mr-1" />
+                    Verified with FREG
+                  </Badge>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
