@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -32,6 +31,7 @@ import './i18n';
 import PublicKindergartenDashboard from "./pages/staff/PublicKindergartenDashboard";
 import PrivateKindergartenDashboard from "./pages/staff/PrivateKindergartenDashboard";
 import ChildrenManagement from "./pages/staff/ChildrenManagement";
+import EducatorAttendance from "./pages/staff/EducatorAttendance";
 
 const queryClient = new QueryClient();
 
@@ -90,6 +90,7 @@ const App = () => (
                 </ProtectedRoute>
               }>
                 <Route index element={<StaffDashboard />} />
+                <Route path="educator-attendance" element={<EducatorAttendance />} />
               </Route>
 
               {/* Partner Routes (Legacy) */}
@@ -99,6 +100,7 @@ const App = () => (
                 </ProtectedRoute>
               }>
                 <Route index element={<PartnerDashboard />} />
+                <Route path="educator-attendance" element={<EducatorAttendance />} />
               </Route>
 
               {/* Kindergarten Routes (Public & Private Staff) */}
@@ -112,6 +114,7 @@ const App = () => (
                 <Route path="private" element={<PrivateKindergartenDashboard />} />
                 <Route path="children" element={<ChildrenManagement />} />
                 <Route path="attendance" element={<KindergartenAttendance />} />
+                <Route path="educator-attendance" element={<EducatorAttendance />} />
                 <Route path="reports" element={<KindergartenReports />} />
                 <Route path="messages" element={<Messages />} />
               </Route>
