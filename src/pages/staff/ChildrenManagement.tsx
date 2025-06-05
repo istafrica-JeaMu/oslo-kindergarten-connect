@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -8,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { 
   Search, 
   Filter, 
@@ -21,21 +21,33 @@ import {
   FileCheck,
   UserCheck,
   AlertTriangle,
-  Eye
+  Eye,
+  FilterX
 } from 'lucide-react';
 
 const ChildrenManagement = () => {
   const { user } = useAuth();
+  const isMobile = useIsMobile();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterDepartment, setFilterDepartment] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
+  const [filterAgeGroup, setFilterAgeGroup] = useState('all');
+  const [filterDocumentStatus, setFilterDocumentStatus] = useState('all');
   const [selectedChild, setSelectedChild] = useState<string | null>(null);
+
+  const getAgeGroup = (age: string) => {
+    const ageNum = parseInt(age);
+    if (ageNum <= 2) return 'Toddlers (0-2)';
+    if (ageNum <= 4) return 'Preschool (3-4)';
+    return 'Kindergarten (5+)';
+  };
 
   const children = [
     {
       id: '1',
       name: 'Emma Larsen',
       age: '3 years',
+      ageGroup: getAgeGroup('3'),
       department: 'Sunshine Room',
       guardian: 'Anna Larsen',
       phone: '+47 123 45 678',
@@ -48,6 +60,7 @@ const ChildrenManagement = () => {
       id: '2',
       name: 'Oliver Hansen',
       age: '4 years',
+      ageGroup: getAgeGroup('4'),
       department: 'Rainbow Group',
       guardian: 'Erik Hansen',
       phone: '+47 987 65 432',
@@ -60,6 +73,7 @@ const ChildrenManagement = () => {
       id: '3',
       name: 'Maja Andersen',
       age: '2 years',
+      ageGroup: getAgeGroup('2'),
       department: 'Star Class',
       guardian: 'Ingrid Andersen',
       phone: '+47 555 44 333',
@@ -67,6 +81,32 @@ const ChildrenManagement = () => {
       address: 'Kirkegata 42, 0153 Oslo',
       medicalAlerts: ['Diabetes', 'Lactose Intolerant'],
       documents: { valid: 9, expired: 0, missing: 0 }
+    },
+    {
+      id: '4',
+      name: 'Lucas Berg',
+      age: '5 years',
+      ageGroup: getAgeGroup('5'),
+      department: 'Adventure Group',
+      guardian: 'Maria Berg',
+      phone: '+47 777 88 999',
+      status: 'Present',
+      address: 'Holmenkollen 8, 0787 Oslo',
+      medicalAlerts: [],
+      documents: { valid: 6, expired: 2, missing: 1 }
+    },
+    {
+      id: '5',
+      name: 'Astrid Holm',
+      age: '1 year',
+      ageGroup: getAgeGroup('1'),
+      department: 'Baby Room',
+      guardian: 'Per Holm',
+      phone: '+47 666 55 444',
+      status: 'Absent',
+      address: 'Grünerløkka 23, 0554 Oslo',
+      medicalAlerts: ['Food allergies'],
+      documents: { valid: 5, expired: 0, missing: 3 }
     }
   ];
 
@@ -75,9 +115,27 @@ const ChildrenManagement = () => {
                          child.guardian.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesDepartment = filterDepartment === 'all' || child.department === filterDepartment;
     const matchesStatus = filterStatus === 'all' || child.status === filterStatus;
+    const matchesAgeGroup = filterAgeGroup === 'all' || child.ageGroup === filterAgeGroup;
     
-    return matchesSearch && matchesDepartment && matchesStatus;
+    let matchesDocumentStatus = true;
+    if (filterDocumentStatus === 'complete') {
+      matchesDocumentStatus = child.documents.missing === 0 && child.documents.expired === 0;
+    } else if (filterDocumentStatus === 'missing') {
+      matchesDocumentStatus = child.documents.missing > 0;
+    } else if (filterDocumentStatus === 'expired') {
+      matchesDocumentStatus = child.documents.expired > 0;
+    }
+    
+    return matchesSearch && matchesDepartment && matchesStatus && matchesAgeGroup && matchesDocumentStatus;
   });
+
+  const clearFilters = () => {
+    setSearchTerm('');
+    setFilterDepartment('all');
+    setFilterStatus('all');
+    setFilterAgeGroup('all');
+    setFilterDocumentStatus('all');
+  };
 
   const getStatusBadge = (status: string) => {
     return (
@@ -91,6 +149,20 @@ const ChildrenManagement = () => {
     if (docs.missing > 0) return <Badge variant="destructive">Missing: {docs.missing}</Badge>;
     if (docs.expired > 0) return <Badge variant="outline">Expired: {docs.expired}</Badge>;
     return <Badge className="bg-green-100 text-green-800">Complete</Badge>;
+  };
+
+  const getAgeGroupBadge = (ageGroup: string) => {
+    const colors = {
+      'Toddlers (0-2)': 'bg-pink-100 text-pink-800 border-pink-200',
+      'Preschool (3-4)': 'bg-blue-100 text-blue-800 border-blue-200',
+      'Kindergarten (5+)': 'bg-purple-100 text-purple-800 border-purple-200'
+    };
+    
+    return (
+      <Badge className={colors[ageGroup as keyof typeof colors] || 'bg-gray-100 text-gray-800'}>
+        {ageGroup}
+      </Badge>
+    );
   };
 
   if (selectedChild) {
@@ -397,7 +469,7 @@ const ChildrenManagement = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Children Management</h1>
           <p className="text-slate-600 mt-2">
@@ -409,47 +481,86 @@ const ChildrenManagement = () => {
         </Badge>
       </div>
 
-      {/* Filters */}
+      {/* Advanced Filters */}
       <Card>
         <CardContent className="p-6">
-          <div className="flex flex-wrap gap-4">
-            <div className="flex-1 min-w-64">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <Input
-                  placeholder="Search by child name or guardian..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
+          <div className="space-y-4">
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Input
+                placeholder="Search by child name or guardian..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
             </div>
-            <Select value={filterDepartment} onValueChange={setFilterDepartment}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Filter by department" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Departments</SelectItem>
-                <SelectItem value="Sunshine Room">Sunshine Room</SelectItem>
-                <SelectItem value="Rainbow Group">Rainbow Group</SelectItem>
-                <SelectItem value="Star Class">Star Class</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={filterStatus} onValueChange={setFilterStatus}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="Present">Present</SelectItem>
-                <SelectItem value="Absent">Absent</SelectItem>
-              </SelectContent>
-            </Select>
+            
+            {/* Filter Row */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              <Select value={filterDepartment} onValueChange={setFilterDepartment}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Department" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Departments</SelectItem>
+                  <SelectItem value="Sunshine Room">Sunshine Room</SelectItem>
+                  <SelectItem value="Rainbow Group">Rainbow Group</SelectItem>
+                  <SelectItem value="Star Class">Star Class</SelectItem>
+                  <SelectItem value="Adventure Group">Adventure Group</SelectItem>
+                  <SelectItem value="Baby Room">Baby Room</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={filterAgeGroup} onValueChange={setFilterAgeGroup}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Age Group" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Age Groups</SelectItem>
+                  <SelectItem value="Toddlers (0-2)">Toddlers (0-2)</SelectItem>
+                  <SelectItem value="Preschool (3-4)">Preschool (3-4)</SelectItem>
+                  <SelectItem value="Kindergarten (5+)">Kindergarten (5+)</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              <Select value={filterStatus} onValueChange={setFilterStatus}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="Present">Present</SelectItem>
+                  <SelectItem value="Absent">Absent</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={filterDocumentStatus} onValueChange={setFilterDocumentStatus}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Documents" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Documents</SelectItem>
+                  <SelectItem value="complete">Complete</SelectItem>
+                  <SelectItem value="missing">Missing Docs</SelectItem>
+                  <SelectItem value="expired">Expired Docs</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Button 
+                variant="outline" 
+                onClick={clearFilters}
+                className="flex items-center gap-2"
+              >
+                <FilterX className="w-4 h-4" />
+                Clear Filters
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Children Table */}
+      {/* Children Table/Cards */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -461,62 +572,116 @@ const ChildrenManagement = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Child</TableHead>
-                <TableHead>Age</TableHead>
-                <TableHead>Department</TableHead>
-                <TableHead>Guardian</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Documents</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredChildren.map((child) => (
-                <TableRow key={child.id}>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                        {child.name.split(' ').map(n => n[0]).join('')}
-                      </div>
-                      <div>
-                        <p className="font-medium">{child.name}</p>
-                        {child.medicalAlerts.length > 0 && (
-                          <div className="flex items-center gap-1 mt-1">
-                            <AlertTriangle className="w-3 h-3 text-red-500" />
-                            <span className="text-xs text-red-600">Medical Alert</span>
+          {/* Desktop Table View */}
+          {!isMobile ? (
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Child</TableHead>
+                    <TableHead>Age</TableHead>
+                    <TableHead>Age Group</TableHead>
+                    <TableHead>Department</TableHead>
+                    <TableHead>Guardian</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Documents</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredChildren.map((child) => (
+                    <TableRow key={child.id}>
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                            {child.name.split(' ').map(n => n[0]).join('')}
                           </div>
-                        )}
+                          <div>
+                            <p className="font-medium">{child.name}</p>
+                            {child.medicalAlerts.length > 0 && (
+                              <div className="flex items-center gap-1 mt-1">
+                                <AlertTriangle className="w-3 h-3 text-red-500" />
+                                <span className="text-xs text-red-600">Medical Alert</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>{child.age}</TableCell>
+                      <TableCell>{getAgeGroupBadge(child.ageGroup)}</TableCell>
+                      <TableCell>{child.department}</TableCell>
+                      <TableCell>
+                        <div>
+                          <p className="font-medium">{child.guardian}</p>
+                          <p className="text-sm text-slate-600">{child.phone}</p>
+                        </div>
+                      </TableCell>
+                      <TableCell>{getStatusBadge(child.status)}</TableCell>
+                      <TableCell>{getDocumentStatus(child.documents)}</TableCell>
+                      <TableCell>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setSelectedChild(child.id)}
+                          className="flex items-center gap-1"
+                        >
+                          <Eye className="w-3 h-3" />
+                          View
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          ) : (
+            /* Mobile Card View */
+            <div className="space-y-4">
+              {filteredChildren.map((child) => (
+                <Card key={child.id} className="p-4">
+                  <div className="space-y-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+                          {child.name.split(' ').map(n => n[0]).join('')}
+                        </div>
+                        <div>
+                          <p className="font-medium">{child.name}</p>
+                          <p className="text-sm text-slate-600">{child.age} • {child.department}</p>
+                        </div>
                       </div>
+                      {getStatusBadge(child.status)}
                     </div>
-                  </TableCell>
-                  <TableCell>{child.age}</TableCell>
-                  <TableCell>{child.department}</TableCell>
-                  <TableCell>
-                    <div>
-                      <p className="font-medium">{child.guardian}</p>
-                      <p className="text-sm text-slate-600">{child.phone}</p>
+                    
+                    <div className="flex items-center gap-2">
+                      {getAgeGroupBadge(child.ageGroup)}
+                      {child.medicalAlerts.length > 0 && (
+                        <Badge variant="outline" className="bg-red-50 text-red-600 border-red-200">
+                          <AlertTriangle className="w-3 h-3 mr-1" />
+                          Medical
+                        </Badge>
+                      )}
                     </div>
-                  </TableCell>
-                  <TableCell>{getStatusBadge(child.status)}</TableCell>
-                  <TableCell>{getDocumentStatus(child.documents)}</TableCell>
-                  <TableCell>
+                    
+                    <div className="space-y-1">
+                      <p className="text-sm"><span className="font-medium">Guardian:</span> {child.guardian}</p>
+                      <p className="text-sm"><span className="font-medium">Documents:</span> {getDocumentStatus(child.documents)}</p>
+                    </div>
+                    
                     <Button
                       size="sm"
                       variant="outline"
                       onClick={() => setSelectedChild(child.id)}
-                      className="flex items-center gap-1"
+                      className="w-full flex items-center gap-2"
                     >
-                      <Eye className="w-3 h-3" />
-                      View
+                      <Eye className="w-4 h-4" />
+                      View Details
                     </Button>
-                  </TableCell>
-                </TableRow>
+                  </div>
+                </Card>
               ))}
-            </TableBody>
-          </Table>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
