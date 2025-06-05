@@ -1,7 +1,9 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
+import { AnimatedAvatar } from '@/components/ui/animated-avatar';
 import { 
   Users, 
   FileText, 
@@ -11,7 +13,10 @@ import {
   Calendar,
   AlertTriangle,
   TrendingUp,
-  School
+  School,
+  MessageSquare,
+  Send,
+  Plus
 } from 'lucide-react';
 
 const KindergartenDashboard = () => {
@@ -51,6 +56,73 @@ const KindergartenDashboard = () => {
       color: 'bg-purple-50 text-purple-600'
     }
   ];
+
+  // Mock recent messages for kindergarten dashboard
+  const recentMessages = [
+    {
+      id: 1,
+      sender: {
+        name: 'Emma Hansen',
+        role: 'Guardian',
+        avatar: null,
+        online: false
+      },
+      message: 'Hi, I wanted to discuss Emma\'s progress in the social activities...',
+      timestamp: '2024-03-18T10:30:00',
+      unread: true
+    },
+    {
+      id: 2,
+      sender: {
+        name: 'Lars Andersen',
+        role: 'Guardian',
+        avatar: null,
+        online: true
+      },
+      message: 'Thank you for the update on Oliver\'s behavior improvements.',
+      timestamp: '2024-03-18T09:15:00',
+      unread: false
+    },
+    {
+      id: 3,
+      sender: {
+        name: 'Oslo Municipality',
+        role: 'System',
+        avatar: '/oslo-logo.svg',
+        online: true
+      },
+      message: 'New guidelines for kindergarten safety protocols are available.',
+      timestamp: '2024-03-17T14:20:00',
+      unread: true
+    }
+  ];
+
+  const formatTime = (timestamp: string) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) {
+      return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    } else if (diffDays < 7) {
+      return date.toLocaleDateString('en-US', { weekday: 'short' });
+    } else {
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+  };
+
+  const getRoleBadge = (role: string) => {
+    switch (role.toLowerCase()) {
+      case 'system':
+        return <Badge variant="outline" className="text-blue-600 border-blue-200 bg-blue-50 text-xs font-medium">System</Badge>;
+      case 'guardian':
+        return <Badge variant="outline" className="text-green-600 border-green-200 bg-green-50 text-xs font-medium">Guardian</Badge>;
+      default:
+        return <Badge variant="outline" className="text-gray-600 border-gray-200 bg-gray-50 text-xs font-medium">Staff</Badge>;
+    }
+  };
+
+  const unreadCount = recentMessages.filter(msg => msg.unread).length;
 
   return (
     <div className="space-y-8">
@@ -102,14 +174,14 @@ const KindergartenDashboard = () => {
       {/* Main Content Grid */}
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Recent Activities */}
-        <Card className="lg:col-span-2">
+        <Card className="lg:col-span-1">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="w-5 h-5" />
               Recent Activities
             </CardTitle>
             <CardDescription>
-              Latest updates and activities in your kindergarten
+              Latest updates and activities
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -140,6 +212,88 @@ const KindergartenDashboard = () => {
                   </Badge>
                 </div>
               ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Messages Section */}
+        <Card className="lg:col-span-1">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center gap-2">
+                <MessageSquare className="w-5 h-5" />
+                Recent Messages
+                {unreadCount > 0 && (
+                  <Badge className="bg-red-500 text-white text-xs ml-2">
+                    {unreadCount}
+                  </Badge>
+                )}
+              </CardTitle>
+              <Button variant="outline" size="sm">
+                <Plus className="w-4 h-4 mr-2" />
+                New
+              </Button>
+            </div>
+            <CardDescription>
+              Latest messages from guardians and staff
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {recentMessages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`p-4 border rounded-lg cursor-pointer transition-all duration-200 hover:shadow-sm ${
+                    message.unread ? 'bg-blue-50/50 border-blue-200' : 'hover:bg-slate-50'
+                  }`}
+                >
+                  <div className="flex items-start space-x-3">
+                    <AnimatedAvatar
+                      name={message.sender.name}
+                      role={message.sender.role}
+                      online={message.sender.online}
+                      size="sm"
+                      context="message"
+                      enableAnimation={false}
+                    />
+                    
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center space-x-2">
+                          <h4 className={`text-sm font-semibold text-gray-900 truncate ${
+                            message.unread ? 'text-blue-600' : ''
+                          }`}>
+                            {message.sender.name}
+                          </h4>
+                          {getRoleBadge(message.sender.role)}
+                        </div>
+                        <span className="text-xs text-gray-500 font-medium">
+                          {formatTime(message.timestamp)}
+                        </span>
+                      </div>
+                      
+                      <p className={`text-sm text-gray-600 truncate leading-relaxed ${
+                        message.unread ? 'font-semibold text-gray-800' : ''
+                      }`}>
+                        {message.message}
+                      </p>
+                      
+                      {message.unread && (
+                        <div className="flex justify-end mt-2">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="mt-4 pt-4 border-t">
+              <Button variant="outline" className="w-full" onClick={() => window.location.href = '/kindergarten/messages'}>
+                <MessageSquare className="w-4 h-4 mr-2" />
+                View All Messages
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -175,12 +329,15 @@ const KindergartenDashboard = () => {
                 </div>
               </button>
               
-              <button className="w-full p-3 text-left border rounded-lg hover:bg-purple-50 hover:border-purple-200 transition-colors">
+              <button 
+                className="w-full p-3 text-left border rounded-lg hover:bg-purple-50 hover:border-purple-200 transition-colors"
+                onClick={() => window.location.href = '/kindergarten/messages'}
+              >
                 <div className="flex items-center gap-3">
-                  <FileText className="w-5 h-5 text-purple-600" />
+                  <MessageSquare className="w-5 h-5 text-purple-600" />
                   <div>
-                    <p className="font-medium text-slate-900">Reports</p>
-                    <p className="text-sm text-slate-600">Generate monthly</p>
+                    <p className="font-medium text-slate-900">Messages</p>
+                    <p className="text-sm text-slate-600">{unreadCount} unread</p>
                   </div>
                 </div>
               </button>
