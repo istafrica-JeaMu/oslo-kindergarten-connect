@@ -8,6 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import MinimalNoticeBoard from '@/components/guardian/MinimalNoticeBoard';
+import PriorityActions from '@/components/guardian/PriorityActions';
 import { 
   FileText, 
   Clock, 
@@ -186,6 +187,9 @@ const GuardianDashboard = () => {
 
   return (
     <div className="space-y-8 animate-fade-in">
+      {/* Priority Actions Section - NEW */}
+      <PriorityActions />
+
       {/* Enhanced Notice Board - Full Width */}
       <MinimalNoticeBoard />
 
