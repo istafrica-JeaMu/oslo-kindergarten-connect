@@ -72,7 +72,26 @@
   },
   "attendance": {
     "title": "Oppmøteoversikt",
-    "description": "Se barnets oppmøtehistorikk og statistikk"
+    "description": "Se barnets oppmøtehistorikk og statistikk",
+    "viewHistory": "Se historikk",
+    "todayStatus": "Status i dag",
+    "checkedInAt": "Ankomst kl",
+    "expectedCheckout": "Forventet avgang",
+    "duration": "Varighet",
+    "weeklyOverview": "Ukeoversikt",
+    "weeklyDescription": "Barnets oppmøte denne uken",
+    "in": "Inn",
+    "out": "Ut",
+    "stats": {
+      "attendanceRate": "Oppmøteprosent",
+      "averageDaily": "Gjennomsnittlig daglig tid",
+      "absencesThisMonth": "Fravær denne måneden"
+    },
+    "status": {
+      "present": "Tilstede",
+      "completed": "Fullført",
+      "absent": "Fraværende"
+    }
   },
   "location": {
     "title": "Barnets plassering",
@@ -220,6 +239,48 @@
     "toast": {
       "title": "Boordning oppdatert",
       "description": "Endringene er lagret og delt med barnehagen."
+    }
+  },
+  "holidayRegistration": {
+    "title": "Ferieregistrering",
+    "description": "Registrer ferieplaner for å hjelpe barnehagen med planlegging",
+    "badge": "Ferieplanlegging",
+    "registerHolidays": "Registrer ferier",
+    "holidayPeriod": "Ferieperiode",
+    "startDate": "Startdato",
+    "endDate": "Sluttdato",
+    "selectStartDate": "Velg startdato",
+    "selectEndDate": "Velg sluttdato",
+    "holidayType": "Ferietype",
+    "selectHolidayType": "Velg ferietype",
+    "additionalNotes": "Tilleggsmerknader",
+    "notesPlaceholder": "Spesielle avtaler eller merknader...",
+    "registerHoliday": "Registrer ferie",
+    "upcomingHolidays": "Kommende ferier",
+    "registeredHolidays": "Dine registrerte ferieperioder",
+    "noUpcomingHolidays": "Ingen kommende ferier registrert",
+    "registerFirst": "Registrer din første ferieperiode",
+    "pastHolidays": "Tidligere ferier",
+    "holidayHistory": "Din feriehistorikk",
+    "registeredOn": "Registrert den",
+    "types": {
+      "summer": "Sommerferie",
+      "winter": "Vinterferie",
+      "easter": "Påskeferie",
+      "autumn": "Høstferie",
+      "other": "Annen ferie"
+    },
+    "status": {
+      "registered": "Registrert",
+      "confirmed": "Bekreftet",
+      "cancelled": "Avbrutt"
+    },
+    "importantInfo": "Viktig informasjon",
+    "info": {
+      "advance": "Registrer ferier minst 2 uker på forhånd",
+      "billing": "Ferieregistrering påvirker din månedlige fakturering",
+      "changes": "Endringer i registrerte ferier må gjøres minst 1 uke før ferien starter",
+      "confirmation": "Du vil motta bekreftelse innen 2 virkedager"
     }
   },
   "noticeBoard": {

@@ -72,7 +72,26 @@
   },
   "attendance": {
     "title": "Attendance Tracking",
-    "description": "View your child's attendance history and statistics"
+    "description": "View your child's attendance history and statistics",
+    "viewHistory": "View History",
+    "todayStatus": "Today's Status",
+    "checkedInAt": "Checked in at",
+    "expectedCheckout": "Expected checkout",
+    "duration": "Duration",
+    "weeklyOverview": "Weekly Overview",
+    "weeklyDescription": "Your child's attendance this week",
+    "in": "In",
+    "out": "Out",
+    "stats": {
+      "attendanceRate": "Attendance Rate",
+      "averageDaily": "Average Daily Time",
+      "absencesThisMonth": "Absences This Month"
+    },
+    "status": {
+      "present": "Present",
+      "completed": "Completed",
+      "absent": "Absent"
+    }
   },
   "location": {
     "title": "Child Location",
@@ -220,6 +239,48 @@
     "toast": {
       "title": "Living arrangement updated",
       "description": "Changes have been saved and shared with the kindergarten."
+    }
+  },
+  "holidayRegistration": {
+    "title": "Holiday Registration",
+    "description": "Register your holiday plans to help kindergarten planning",
+    "badge": "Holiday Planning",
+    "registerHolidays": "Register Holidays",
+    "holidayPeriod": "Holiday Period",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "selectStartDate": "Select start date",
+    "selectEndDate": "Select end date",
+    "holidayType": "Holiday Type",
+    "selectHolidayType": "Select holiday type",
+    "additionalNotes": "Additional Notes",
+    "notesPlaceholder": "Any special arrangements or notes...",
+    "registerHoliday": "Register Holiday",
+    "upcomingHolidays": "Upcoming Holidays",
+    "registeredHolidays": "Your registered holiday periods",
+    "noUpcomingHolidays": "No upcoming holidays registered",
+    "registerFirst": "Register your first holiday period",
+    "pastHolidays": "Past Holidays",
+    "holidayHistory": "Your holiday history",
+    "registeredOn": "Registered on",
+    "types": {
+      "summer": "Summer Holiday",
+      "winter": "Winter Holiday",
+      "easter": "Easter Holiday",
+      "autumn": "Autumn Holiday",
+      "other": "Other Holiday"
+    },
+    "status": {
+      "registered": "Registered",
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled"
+    },
+    "importantInfo": "Important Information",
+    "info": {
+      "advance": "Register holidays at least 2 weeks in advance",
+      "billing": "Holiday registration affects your monthly billing",
+      "changes": "Changes to registered holidays must be made at least 1 week before the holiday starts",
+      "confirmation": "You will receive confirmation within 2 business days"
     }
   },
   "noticeBoard": {
