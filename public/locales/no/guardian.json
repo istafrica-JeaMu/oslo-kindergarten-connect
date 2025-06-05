@@ -1,4 +1,3 @@
-
 {
   "dashboard": {
     "title": "Min oversikt",
@@ -245,7 +244,9 @@
     "title": "Ferieregistrering",
     "description": "Registrer ferieplaner for å hjelpe barnehagen med planlegging",
     "badge": "Ferieplanlegging",
+    "planningBadge": "Ferieplanlegging",
     "registerHolidays": "Registrer ferier",
+    "registerAbsence": "Registrer fravær",
     "holidayPeriod": "Ferieperiode",
     "startDate": "Startdato",
     "endDate": "Sluttdato",
@@ -258,22 +259,75 @@
     "registerHoliday": "Registrer ferie",
     "upcomingHolidays": "Kommende ferier",
     "registeredHolidays": "Dine registrerte ferieperioder",
+    "registeredAbsences": "Registrerte fravær",
+    "absencesOverview": "Oversikt over dine registrerte fraværsperioder",
     "noUpcomingHolidays": "Ingen kommende ferier registrert",
     "registerFirst": "Registrer din første ferieperiode",
     "pastHolidays": "Tidligere ferier",
     "holidayHistory": "Din feriehistorikk",
     "registeredOn": "Registrert den",
+    "registered": "Registrert",
+    "importantDeadlines": "Viktige frister",
+    "note": "Merk",
+    "minimumNotice": "Registrer ferier minst 14 dager på forhånd for godkjenning",
+    "deadlines": {
+      "summer": "Frist for sommerferie-registrering",
+      "summerDate": "Må være registrert innen 1. mai",
+      "christmas": "Frist for juleferie-registrering",
+      "christmasDate": "Må være registrert innen 15. november"
+    },
+    "absenceType": "Fraværstype",
+    "firstAbsenceDay": "Første fraværsdag",
+    "lastAbsenceDay": "Siste fraværsdag",
+    "minimumDays": "Minimum 14 dagers forhåndsvarsel påkrevd",
+    "descriptionOptional": "Beskrivelse (Valgfritt)",
+    "descriptionPlaceholder": "Beskriv ferieplanene dine...",
+    "contactOptional": "Nødkontakt (Valgfritt)",
+    "contactPlaceholder": "Telefonnummer for nødstilfeller under ferien",
+    "sending": "Sender...",
+    "formDescription": "Fyll ut skjemaet under for å registrere barnets fraværsperiode",
+    "kindergartenCalendar": "Barnehagens feriekalender",
+    "closedDaysOverview": "Dager når barnehagen er stengt",
+    "kindergartenClosed": "Barnehagen stengt",
+    "closedDays": {
+      "easter": "Påskeferie",
+      "easterDates": "10.-16. april 2024",
+      "summer": "Sommerferie",
+      "summerDates": "1. juli - 15. august 2024",
+      "planning": "Planleggingsdag",
+      "planningDate": "15. september 2024",
+      "christmas": "Juleferie",
+      "christmasDates": "23. desember 2024 - 7. januar 2025"
+    },
+    "policyTitle": "Retningslinjer for ferieregistrering",
+    "policy": {
+      "minimum14Days": "Registrer ferier minst 14 dager på forhånd",
+      "summerDeadline": "Sommerferier må registreres innen 1. mai",
+      "christmasDeadline": "Juleferier må registreres innen 15. november",
+      "dispensation": "Spesiell dispensasjon kan gis for nødsituasjoner",
+      "planning": "Tidlig registrering hjelper oss med å planlegge bemanning og aktiviteter bedre"
+    },
+    "lessThan14Days": "Mindre enn 14 dagers varsel",
     "types": {
       "summer": "Sommerferie",
       "winter": "Vinterferie",
       "easter": "Påskeferie",
       "autumn": "Høstferie",
-      "other": "Annen ferie"
+      "other": "Annen ferie",
+      "vacation": "Ferie",
+      "travel": "Reise",
+      "family": "Familiebesøk"
     },
     "status": {
       "registered": "Registrert",
       "confirmed": "Bekreftet",
-      "cancelled": "Avbrutt"
+      "cancelled": "Avbrutt",
+      "pending": "Venter",
+      "approved": "Godkjent"
+    },
+    "examples": {
+      "summerVacation": "Sommerferie til Spania",
+      "easterVacation": "Påskeferie hos besteforeldre"
     },
     "importantInfo": "Viktig informasjon",
     "info": {
@@ -281,6 +335,10 @@
       "billing": "Ferieregistrering påvirker din månedlige fakturering",
       "changes": "Endringer i registrerte ferier må gjøres minst 1 uke før ferien starter",
       "confirmation": "Du vil motta bekreftelse innen 2 virkedager"
+    },
+    "toast": {
+      "title": "Ferie registrert",
+      "description": "Din ferieregistrering er sendt til godkjenning."
     }
   },
   "noticeBoard": {

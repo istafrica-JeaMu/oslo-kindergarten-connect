@@ -245,7 +245,9 @@
     "title": "Holiday Registration",
     "description": "Register your holiday plans to help kindergarten planning",
     "badge": "Holiday Planning",
+    "planningBadge": "Holiday Planning",
     "registerHolidays": "Register Holidays",
+    "registerAbsence": "Register Absence",
     "holidayPeriod": "Holiday Period",
     "startDate": "Start Date",
     "endDate": "End Date",
@@ -258,22 +260,75 @@
     "registerHoliday": "Register Holiday",
     "upcomingHolidays": "Upcoming Holidays",
     "registeredHolidays": "Your registered holiday periods",
+    "registeredAbsences": "Registered Absences",
+    "absencesOverview": "Overview of your registered absence periods",
     "noUpcomingHolidays": "No upcoming holidays registered",
     "registerFirst": "Register your first holiday period",
     "pastHolidays": "Past Holidays",
     "holidayHistory": "Your holiday history",
     "registeredOn": "Registered on",
+    "registered": "Registered",
+    "importantDeadlines": "Important Deadlines",
+    "note": "Note",
+    "minimumNotice": "Register holidays at least 14 days in advance for approval",
+    "deadlines": {
+      "summer": "Summer holiday registration deadline",
+      "summerDate": "Must be registered by May 1st",
+      "christmas": "Christmas holiday registration deadline", 
+      "christmasDate": "Must be registered by November 15th"
+    },
+    "absenceType": "Absence Type",
+    "firstAbsenceDay": "First Absence Day",
+    "lastAbsenceDay": "Last Absence Day",
+    "minimumDays": "Minimum 14 days advance notice required",
+    "descriptionOptional": "Description (Optional)",
+    "descriptionPlaceholder": "Describe your holiday plans...",
+    "contactOptional": "Emergency Contact (Optional)",
+    "contactPlaceholder": "Phone number for emergencies during holiday",
+    "sending": "Sending...",
+    "formDescription": "Fill out the form below to register your child's absence period",
+    "kindergartenCalendar": "Kindergarten Holiday Calendar",
+    "closedDaysOverview": "Days when the kindergarten is closed",
+    "kindergartenClosed": "Kindergarten Closed",
+    "closedDays": {
+      "easter": "Easter Holiday",
+      "easterDates": "April 10-16, 2024",
+      "summer": "Summer Holiday",
+      "summerDates": "July 1 - August 15, 2024",
+      "planning": "Planning Day",
+      "planningDate": "September 15, 2024",
+      "christmas": "Christmas Holiday",
+      "christmasDates": "December 23, 2024 - January 7, 2025"
+    },
+    "policyTitle": "Holiday Registration Policy",
+    "policy": {
+      "minimum14Days": "Register holidays at least 14 days in advance",
+      "summerDeadline": "Summer holidays must be registered by May 1st",
+      "christmasDeadline": "Christmas holidays must be registered by November 15th",
+      "dispensation": "Special dispensation may be granted for emergency situations",
+      "planning": "Early registration helps us plan staffing and activities better"
+    },
+    "lessThan14Days": "Less than 14 days notice",
     "types": {
       "summer": "Summer Holiday",
       "winter": "Winter Holiday",
       "easter": "Easter Holiday",
       "autumn": "Autumn Holiday",
-      "other": "Other Holiday"
+      "other": "Other Holiday",
+      "vacation": "Vacation",
+      "travel": "Travel",
+      "family": "Family Visit"
     },
     "status": {
       "registered": "Registered",
       "confirmed": "Confirmed",
-      "cancelled": "Cancelled"
+      "cancelled": "Cancelled",
+      "pending": "Pending",
+      "approved": "Approved"
+    },
+    "examples": {
+      "summerVacation": "Summer vacation to Spain",
+      "easterVacation": "Easter holiday with grandparents"
     },
     "importantInfo": "Important Information",
     "info": {
@@ -281,6 +336,10 @@
       "billing": "Holiday registration affects your monthly billing",
       "changes": "Changes to registered holidays must be made at least 1 week before the holiday starts",
       "confirmation": "You will receive confirmation within 2 business days"
+    },
+    "toast": {
+      "title": "Holiday registered",
+      "description": "Your holiday registration has been submitted for approval."
     }
   },
   "noticeBoard": {
