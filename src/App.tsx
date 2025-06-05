@@ -24,6 +24,8 @@ import SystemSettings from "./pages/admin/SystemSettings";
 import StaffDashboard from "./pages/staff/StaffDashboard";
 import PartnerDashboard from "./pages/partner/PartnerDashboard";
 import KindergartenDashboard from "./pages/kindergarten/KindergartenDashboard";
+import KindergartenAttendance from "./pages/kindergarten/KindergartenAttendance";
+import KindergartenReports from "./pages/kindergarten/KindergartenReports";
 import DistrictAdminDashboard from "./pages/district-admin/DistrictAdminDashboard";
 import NotFound from "./pages/NotFound";
 import './i18n';
@@ -109,6 +111,8 @@ const App = () => (
                 <Route path="public" element={<PublicKindergartenDashboard />} />
                 <Route path="private" element={<PrivateKindergartenDashboard />} />
                 <Route path="children" element={<ChildrenManagement />} />
+                <Route path="attendance" element={<KindergartenAttendance />} />
+                <Route path="reports" element={<KindergartenReports />} />
                 <Route path="messages" element={<Messages />} />
               </Route>
 
