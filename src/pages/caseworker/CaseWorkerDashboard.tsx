@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -231,7 +230,7 @@ const CaseWorkerDashboard = () => {
         </CardContent>
       </Card>
 
-      {/* Enhanced Statistics Cards */}
+      {/* Guardian-style Statistics Cards */}
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card className="relative overflow-hidden border-0 shadow-xl hover:shadow-2xl transition-all duration-300 group transform hover:-translate-y-1">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-600"></div>
