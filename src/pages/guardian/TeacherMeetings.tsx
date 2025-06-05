@@ -6,9 +6,11 @@ import { Badge } from '@/components/ui/badge';
 import { Calendar, Clock, User, BookOpen, Plus, Edit, Trash2 } from 'lucide-react';
 import { format, addDays } from 'date-fns';
 import { nb } from 'date-fns/locale';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const TeacherMeetings = () => {
   const [selectedDate, setSelectedDate] = useState('');
+  const { t } = useLanguage();
   
   // Mock meetings data
   const upcomingMeetings = [
@@ -20,7 +22,7 @@ const TeacherMeetings = () => {
       type: 'Utviklingssamtale',
       duration: 30,
       status: 'confirmed',
-      agenda: 'Diskutere Emmas sosiale utvikling og læring'
+      agenda: t('guardian.meetings.examples.socialDevelopment')
     },
     {
       id: 2,
@@ -30,7 +32,7 @@ const TeacherMeetings = () => {
       type: 'Bekymringssamtale',
       duration: 45,
       status: 'pending',
-      agenda: 'Oppfølging etter incident på lekeplassen'
+      agenda: t('guardian.meetings.examples.playgroundIncident')
     }
   ];
 
@@ -45,20 +47,20 @@ const TeacherMeetings = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Lærersamtaler</h1>
-          <p className="text-slate-600 mt-2">Book møter med barnets lærere og pedagoger</p>
+          <h1 className="text-3xl font-bold text-slate-900">{t('guardian.meetings.title')}</h1>
+          <p className="text-slate-600 mt-2">{t('guardian.meetings.description')}</p>
         </div>
         <Button>
           <Plus className="w-4 h-4 mr-2" />
-          Book ny samtale
+          {t('guardian.meetings.bookNew')}
         </Button>
       </div>
 
       {/* Upcoming Meetings */}
       <Card>
         <CardHeader>
-          <CardTitle>Kommende møter</CardTitle>
-          <CardDescription>Dine planlagte lærersamtaler</CardDescription>
+          <CardTitle>{t('guardian.meetings.upcomingMeetings')}</CardTitle>
+          <CardDescription>{t('guardian.meetings.plannedMeetings')}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -71,14 +73,14 @@ const TeacherMeetings = () => {
                   <div>
                     <h3 className="font-semibold">{meeting.type}</h3>
                     <p className="text-sm text-slate-600">
-                      {format(new Date(meeting.date), 'EEEE d. MMMM', { locale: nb })} kl. {meeting.time}
+                      {format(new Date(meeting.date), 'EEEE d. MMMM', { locale: nb })} {t('guardian.meetings.at')} {meeting.time}
                     </p>
-                    <p className="text-sm text-slate-600">Med {meeting.teacher}</p>
+                    <p className="text-sm text-slate-600">{t('guardian.meetings.with')} {meeting.teacher}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <Badge className={meeting.status === 'confirmed' ? 'bg-green-500' : 'bg-yellow-500'}>
-                    {meeting.status === 'confirmed' ? 'Bekreftet' : 'Venter'}
+                    {meeting.status === 'confirmed' ? t('guardian.meetings.status.confirmed') : t('guardian.meetings.status.pending')}
                   </Badge>
                   <Button variant="ghost" size="sm">
                     <Edit className="w-4 h-4" />
@@ -93,8 +95,8 @@ const TeacherMeetings = () => {
       {/* Available Time Slots */}
       <Card>
         <CardHeader>
-          <CardTitle>Ledige tider</CardTitle>
-          <CardDescription>Velg en ledig tid for ny samtale</CardDescription>
+          <CardTitle>{t('guardian.meetings.availableSlots')}</CardTitle>
+          <CardDescription>{t('guardian.meetings.selectTime')}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid md:grid-cols-3 gap-4">

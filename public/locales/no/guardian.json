@@ -1,0 +1,214 @@
+
+{
+  "dashboard": {
+    "title": "Min oversikt",
+    "welcome": "Velkommen",
+    "overview": "Oversikt over dine barnehagesøknader og informasjon",
+    "newApplication": "Ny søknad",
+    "newApplicationDesc": "Start ny barnehagesøknad",
+    "applicationStatus": "Søknadsstatus",
+    "applicationStatusDesc": "Se søknadsfremdrift",
+    "messages": "Meldinger",
+    "messagesDesc": "uleste meldinger",
+    "payments": "Betalinger",
+    "paymentsDesc": "Fakturaer og avgifter",
+    "myApplications": "Mine søknader",
+    "applicationsOverview": "Oversikt over alle dine barnehagesøknader",
+    "recentMessages": "Siste meldinger",
+    "paymentOverview": "Betalingsoversikt"
+  },
+  "meetings": {
+    "title": "Lærersamtaler",
+    "description": "Book møter med barnets lærere og pedagoger",
+    "bookNew": "Book ny samtale",
+    "upcomingMeetings": "Kommende møter",
+    "plannedMeetings": "Dine planlagte lærersamtaler",
+    "availableSlots": "Ledige tider",
+    "selectTime": "Velg en ledig tid for ny samtale",
+    "at": "kl.",
+    "with": "Med",
+    "status": {
+      "confirmed": "Bekreftet",
+      "pending": "Venter"
+    },
+    "examples": {
+      "socialDevelopment": "Diskutere Emmas sosiale utvikling og læring",
+      "playgroundIncident": "Oppfølging etter incident på lekeplassen"
+    }
+  },
+  "livingArrangements": {
+    "title": "Boordning",
+    "description": "Administrer hvor barnet ditt bor og hentes fra",
+    "badge": "Boordning",
+    "arrangementType": "Type boordning",
+    "edit": "Endre",
+    "types": {
+      "shared": "Delt bosted",
+      "fixed": "Fast bosted",
+      "fixedDesc": "Ett hjem",
+      "other": "Annen ordning",
+      "otherDesc": "Spesiell avtale"
+    },
+    "selected": "Valgt",
+    "primaryAddress": "Primær adresse",
+    "primaryAddressDesc": "Hovedadresse for barnet",
+    "secondaryAddress": "Sekundær adresse",
+    "secondaryAddressDesc": "Alternativ adresse for barnet",
+    "streetAddress": "Gateadresse",
+    "postalCode": "Postnummer",
+    "city": "Sted",
+    "resident": "Beboer",
+    "schedule": "Tidsskjema",
+    "custodyTitle": "Foreldreansvar og dokumentasjon",
+    "custodyDesc": "Last opp juridiske dokumenter om foreldreansvar eller boordning",
+    "custodyAgreement": "Avtale om delt omsorg",
+    "download": "Last ned",
+    "uploadDocuments": "Last opp dokumenter",
+    "specialNotes": "Spesielle merknader",
+    "saveChanges": "Lagre endringer",
+    "importantInfo": "Viktig informasjon",
+    "info": {
+      "affects": "Boordning påvirker automatisk hvor beskjeder og fakturaer sendes",
+      "pickup": "Henting og levering følger boordningskalendaren",
+      "custody": "All endring av foreldreansvar må dokumenteres med offisielle papirer",
+      "processing": "Ved endringer kan det ta 1-2 virkedager før alle systemer er oppdatert"
+    },
+    "examples": {
+      "motherAnna": "Mor (Anna Hansen)",
+      "fatherLars": "Far (Lars Andersen)",
+      "mondayThursday": "Mandag-Torsdag",
+      "fridaySunday": "Fredag-Søndag",
+      "holidayRotation": "Annenhver ferie hos mor/far etter avtale."
+    },
+    "toast": {
+      "title": "Boordning oppdatert",
+      "description": "Endringene er lagret og delt med barnehagen."
+    }
+  },
+  "noticeBoard": {
+    "title": "Oppslagstavle",
+    "description": "Se siste nyheter, bilder og planer fra barnehagen",
+    "badge": "Nyheter og oppdateringer",
+    "filters": {
+      "all": "Alle innlegg"
+    },
+    "categories": {
+      "activities": "Aktiviteter",
+      "menu": "Menyer",
+      "curriculum": "Læreplaner",
+      "events": "Arrangementer"
+    },
+    "download": "Last ned",
+    "share": "Del",
+    "loadMore": "Last flere innlegg",
+    "posts": {
+      "springFlowers": {
+        "title": "Vårblomster i hagen",
+        "content": "Barna plantet nye blomster i barnehagens have i dag. De lærte om forskjellige plantetyper og hvordan man tar vare på dem."
+      },
+      "weeklyMenu": {
+        "title": "Ny ukemeny - Uke 12",
+        "content": "Vi har oppdatert ukemenyen med flere økologiske alternativer og tatt hensyn til nye allergier."
+      },
+      "monthlyPlan": {
+        "title": "Månedsplan April 2024",
+        "content": "Se hva vi har planlagt for april måned! Mye spennende utforaktiviteter og læring om insekter og småkryp.",
+        "author": "Pedagogisk team"
+      },
+      "fleaMarket": {
+        "title": "Loppemarked 5. april",
+        "content": "Årlig loppemarked hvor foreldre kan kjøpe og selge leker, klær og utstyr. Overskuddet går til nye leker i barnehagen.",
+        "author": "Foreldrerådet"
+      }
+    }
+  },
+  "consents": {
+    "title": "Samtykker og skjemaer",
+    "description": "Administrer tillatelser og nødvendige skjemaer",
+    "badge": "Digitale samtykker",
+    "actionsRequired": "Handlinger påkrevd",
+    "pendingMessage": "Du har 1 samtykke som venter på signatur og 1 som utløper snart.",
+    "completeMissing": "Fullfør manglende samtykker",
+    "allConsents": "Alle samtykker",
+    "consentOverview": "Oversikt over samtykker og skjemaer for barnet ditt",
+    "signed": "Signert",
+    "expires": "Utløper",
+    "sign": "Signer",
+    "importantInfo": "Viktig informasjon om samtykker",
+    "types": {
+      "photo": {
+        "title": "Foto- og videokonsent",
+        "description": "Tillatelse til å ta og publisere bilder av barnet"
+      },
+      "medical": {
+        "title": "Medisinsk behandling",
+        "description": "Akutt medisinsk behandling ved skade eller sykdom"
+      },
+      "trips": {
+        "title": "Utflukter og turer",
+        "description": "Delta på utflukter utenfor barnehagens område"
+      },
+      "data": {
+        "title": "Databehandling",
+        "description": "Behandling av personopplysninger og kommunikasjon"
+      }
+    },
+    "status": {
+      "active": "Aktiv",
+      "expires_soon": "Utløper snart",
+      "expired": "Utløpt",
+      "pending": "Venter signatur"
+    },
+    "info": {
+      "legally": "Alle samtykker er juridisk bindende og kan trekkes tilbake når som helst",
+      "reminder": "Du får påminnelse 30 dager før samtykker utløper",
+      "participation": "Manglende samtykker kan påvirke barnets deltakelse i aktiviteter",
+      "digital": "Digital signatur har samme gyldighet som håndskrift"
+    }
+  },
+  "documents": {
+    "title": "Dokumenter",
+    "description": "Tilgang til alle publiserte dokumenter fra barnehagen",
+    "badge": "Dokumentarkiv",
+    "search": "Søk i dokumenter...",
+    "filter": "Filter",
+    "categoriesTitle": "Kategorier",
+    "documentsTitle": "Dokumenter",
+    "of": "av",
+    "documentsCount": "dokumenter",
+    "recentUpdates": "Nylige oppdateringer",
+    "recentDescription": "Sist publiserte dokumenter",
+    "published": "Publisert",
+    "download": "Last ned",
+    "categories": {
+      "all": "Alle dokumenter",
+      "curriculum": "Læreplan",
+      "menu": "Menyer",
+      "safety": "Sikkerhet",
+      "handbook": "Håndbøker",
+      "personal": "Personlige"
+    },
+    "examples": {
+      "yearPlan": {
+        "title": "Årsplan 2024",
+        "description": "Pedagogisk årsplan og læremål for 2024"
+      },
+      "weeklyMenu": {
+        "title": "Ukemeny Mars 2024",
+        "description": "Komplett meny for mars måned med allergener"
+      },
+      "safety": {
+        "title": "Sikkerhetsprosedyrer",
+        "description": "Oppdaterte rutiner for brannsikkerhet og evakuering"
+      },
+      "handbook": {
+        "title": "Foreldrehåndbok 2024",
+        "description": "Komplett guide for foreldre med alle praktiske opplysninger"
+      },
+      "development": {
+        "title": "Emmas utviklingsrapport Q1",
+        "description": "Kvartalsrapport om Emmas utvikling og læring"
+      }
+    }
+  }
+}

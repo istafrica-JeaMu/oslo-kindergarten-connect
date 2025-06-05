@@ -6,15 +6,18 @@ import { Badge } from '@/components/ui/badge';
 import { Heart, MessageCircle, Share, Calendar, Camera, FileText, Users, Utensils } from 'lucide-react';
 import { format, subDays } from 'date-fns';
 import { nb } from 'date-fns/locale';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const NoticeBoard = () => {
+  const { t } = useLanguage();
+
   // Mock posts data
   const posts = [
     {
       id: 1,
       type: 'photos',
-      title: 'Vårblomster i hagen',
-      content: 'Barna plantet nye blomster i barnehagens have i dag. De lærte om forskjellige plantetyper og hvordan man tar vare på dem.',
+      title: t('guardian.noticeBoard.posts.springFlowers.title'),
+      content: t('guardian.noticeBoard.posts.springFlowers.content'),
       author: 'Kari Andersen',
       date: '2024-03-18T14:30:00',
       images: ['/placeholder.svg', '/placeholder.svg', '/placeholder.svg'],
@@ -25,8 +28,8 @@ const NoticeBoard = () => {
     {
       id: 2,
       type: 'menu',
-      title: 'Ny ukemeny - Uke 12',
-      content: 'Vi har oppdatert ukemenyen med flere økologiske alternativer og tatt hensyn til nye allergier.',
+      title: t('guardian.noticeBoard.posts.weeklyMenu.title'),
+      content: t('guardian.noticeBoard.posts.weeklyMenu.content'),
       author: 'Oslo Barnehage',
       date: '2024-03-17T09:00:00',
       attachment: 'ukemeny-uke12.pdf',
@@ -37,9 +40,9 @@ const NoticeBoard = () => {
     {
       id: 3,
       type: 'announcement',
-      title: 'Månedsplan April 2024',
-      content: 'Se hva vi har planlagt for april måned! Mye spennende utforaktiviteter og læring om insekter og småkryp.',
-      author: 'Pedagogisk team',
+      title: t('guardian.noticeBoard.posts.monthlyPlan.title'),
+      content: t('guardian.noticeBoard.posts.monthlyPlan.content'),
+      author: t('guardian.noticeBoard.posts.monthlyPlan.author'),
       date: '2024-03-16T16:45:00',
       attachment: 'manedsplan-april-2024.pdf',
       likes: 15,
@@ -49,9 +52,9 @@ const NoticeBoard = () => {
     {
       id: 4,
       type: 'event',
-      title: 'Loppemarked 5. april',
-      content: 'Årlig loppemarked hvor foreldre kan kjøpe og selge leker, klær og utstyr. Overskuddet går til nye leker i barnehagen.',
-      author: 'Foreldrerådet',
+      title: t('guardian.noticeBoard.posts.fleaMarket.title'),
+      content: t('guardian.noticeBoard.posts.fleaMarket.content'),
+      author: t('guardian.noticeBoard.posts.fleaMarket.author'),
       date: '2024-03-15T12:20:00',
       eventDate: '2024-04-05',
       likes: 23,
@@ -81,13 +84,7 @@ const NoticeBoard = () => {
   };
 
   const getCategoryLabel = (category: string) => {
-    switch (category) {
-      case 'activities': return 'Aktiviteter';
-      case 'menu': return 'Meny';
-      case 'curriculum': return 'Læreplan';
-      case 'events': return 'Arrangementer';
-      default: return 'Annet';
-    }
+    return t(`guardian.noticeBoard.categories.${category}`);
   };
 
   return (
@@ -95,12 +92,12 @@ const NoticeBoard = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Oppslagstavle</h1>
-          <p className="text-slate-600 mt-2">Se siste nyheter, bilder og planer fra barnehagen</p>
+          <h1 className="text-3xl font-bold text-slate-900">{t('guardian.noticeBoard.title')}</h1>
+          <p className="text-slate-600 mt-2">{t('guardian.noticeBoard.description')}</p>
         </div>
         <Badge variant="outline" className="bg-oslo-blue/5 text-oslo-blue border-oslo-blue/20">
           <Calendar className="w-4 h-4 mr-2" />
-          Nyheter og oppdateringer
+          {t('guardian.noticeBoard.badge')}
         </Badge>
       </div>
 
@@ -108,22 +105,22 @@ const NoticeBoard = () => {
       <Card>
         <CardContent className="p-4">
           <div className="flex flex-wrap gap-2">
-            <Button variant="default" size="sm">Alle innlegg</Button>
+            <Button variant="default" size="sm">{t('guardian.noticeBoard.filters.all')}</Button>
             <Button variant="outline" size="sm">
               <Users className="w-4 h-4 mr-1" />
-              Aktiviteter
+              {t('guardian.noticeBoard.categories.activities')}
             </Button>
             <Button variant="outline" size="sm">
               <Utensils className="w-4 h-4 mr-1" />
-              Menyer
+              {t('guardian.noticeBoard.categories.menu')}
             </Button>
             <Button variant="outline" size="sm">
               <FileText className="w-4 h-4 mr-1" />
-              Læreplaner
+              {t('guardian.noticeBoard.categories.curriculum')}
             </Button>
             <Button variant="outline" size="sm">
               <Calendar className="w-4 h-4 mr-1" />
-              Arrangementer
+              {t('guardian.noticeBoard.categories.events')}
             </Button>
           </div>
         </CardContent>
@@ -181,7 +178,7 @@ const NoticeBoard = () => {
                       <FileText className="w-5 h-5 text-slate-600" />
                       <span className="text-sm font-medium">{post.attachment}</span>
                       <Button variant="ghost" size="sm" className="ml-auto">
-                        Last ned
+                        {t('guardian.noticeBoard.download')}
                       </Button>
                     </div>
                   )}
@@ -211,7 +208,7 @@ const NoticeBoard = () => {
                     
                     <Button variant="ghost" size="sm">
                       <Share className="w-4 h-4 mr-2" />
-                      Del
+                      {t('guardian.noticeBoard.share')}
                     </Button>
                   </div>
                 </div>
@@ -224,7 +221,7 @@ const NoticeBoard = () => {
       {/* Load More */}
       <div className="flex justify-center">
         <Button variant="outline">
-          Last flere innlegg
+          {t('guardian.noticeBoard.loadMore')}
         </Button>
       </div>
     </div>

@@ -7,67 +7,69 @@ import { Input } from '@/components/ui/input';
 import { FolderOpen, FileText, Download, Search, Filter, Eye, Calendar } from 'lucide-react';
 import { format } from 'date-fns';
 import { nb } from 'date-fns/locale';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Documents = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const { t } = useLanguage();
 
   // Mock documents data
   const documents = [
     {
       id: 1,
-      title: 'Årsplan 2024',
+      title: t('guardian.documents.examples.yearPlan.title'),
       category: 'curriculum',
       type: 'pdf',
       size: '2.4 MB',
       date: '2024-01-08',
-      description: 'Pedagogisk årsplan og læremål for 2024'
+      description: t('guardian.documents.examples.yearPlan.description')
     },
     {
       id: 2,
-      title: 'Ukemeny Mars 2024',
+      title: t('guardian.documents.examples.weeklyMenu.title'),
       category: 'menu',
       type: 'pdf',
       size: '580 KB',
       date: '2024-03-01',
-      description: 'Komplett meny for mars måned med allergener'
+      description: t('guardian.documents.examples.weeklyMenu.description')
     },
     {
       id: 3,
-      title: 'Sikkerhetsprosedyrer',
+      title: t('guardian.documents.examples.safety.title'),
       category: 'safety',
       type: 'pdf',
       size: '1.2 MB',
       date: '2024-02-15',
-      description: 'Oppdaterte rutiner for brannsikkerhet og evakuering'
+      description: t('guardian.documents.examples.safety.description')
     },
     {
       id: 4,
-      title: 'Foreldrehåndbok 2024',
+      title: t('guardian.documents.examples.handbook.title'),
       category: 'handbook',
       type: 'pdf',
       size: '3.1 MB',
       date: '2024-01-10',
-      description: 'Komplett guide for foreldre med alle praktiske opplysninger'
+      description: t('guardian.documents.examples.handbook.description')
     },
     {
       id: 5,
-      title: 'Emmas utviklingsrapport Q1',
+      title: t('guardian.documents.examples.development.title'),
       category: 'personal',
       type: 'pdf',
       size: '890 KB',
       date: '2024-03-15',
-      description: 'Kvartalsrapport om Emmas utvikling og læring'
+      description: t('guardian.documents.examples.development.description')
     }
   ];
 
   const categories = [
-    { id: 'all', label: 'Alle dokumenter', count: documents.length },
-    { id: 'curriculum', label: 'Læreplan', count: 1 },
-    { id: 'menu', label: 'Menyer', count: 1 },
-    { id: 'safety', label: 'Sikkerhet', count: 1 },
-    { id: 'handbook', label: 'Håndbøker', count: 1 },
-    { id: 'personal', label: 'Personlige', count: 1 }
+    { id: 'all', label: t('guardian.documents.categories.all'), count: documents.length },
+    { id: 'curriculum', label: t('guardian.documents.categories.curriculum'), count: 1 },
+    { id: 'menu', label: t('guardian.documents.categories.menu'), count: 1 },
+    { id: 'safety', label: t('guardian.documents.categories.safety'), count: 1 },
+    { id: 'handbook', label: t('guardian.documents.categories.handbook'), count: 1 },
+    { id: 'personal', label: t('guardian.documents.categories.personal'), count: 1 }
   ];
 
   const getCategoryColor = (category: string) => {
@@ -98,12 +100,12 @@ const Documents = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Dokumenter</h1>
-          <p className="text-slate-600 mt-2">Tilgang til alle publiserte dokumenter fra barnehagen</p>
+          <h1 className="text-3xl font-bold text-slate-900">{t('guardian.documents.title')}</h1>
+          <p className="text-slate-600 mt-2">{t('guardian.documents.description')}</p>
         </div>
         <Badge variant="outline" className="bg-oslo-blue/5 text-oslo-blue border-oslo-blue/20">
           <FolderOpen className="w-4 h-4 mr-2" />
-          Dokumentarkiv
+          {t('guardian.documents.badge')}
         </Badge>
       </div>
 
@@ -115,7 +117,7 @@ const Documents = () => {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
                 <Input
-                  placeholder="Søk i dokumenter..."
+                  placeholder={t('guardian.documents.search')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10"
@@ -124,7 +126,7 @@ const Documents = () => {
             </div>
             <Button variant="outline">
               <Filter className="w-4 h-4 mr-2" />
-              Filter
+              {t('guardian.documents.filter')}
             </Button>
           </div>
         </CardContent>
@@ -133,7 +135,7 @@ const Documents = () => {
       {/* Categories */}
       <Card>
         <CardHeader>
-          <CardTitle>Kategorier</CardTitle>
+          <CardTitle>{t('guardian.documents.categoriesTitle')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
@@ -154,9 +156,9 @@ const Documents = () => {
       {/* Documents List */}
       <Card>
         <CardHeader>
-          <CardTitle>Dokumenter</CardTitle>
+          <CardTitle>{t('guardian.documents.documentsTitle')}</CardTitle>
           <CardDescription>
-            {filteredDocuments.length} av {documents.length} dokumenter
+            {filteredDocuments.length} {t('guardian.documents.of')} {documents.length} {t('guardian.documents.documentsCount')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -205,8 +207,8 @@ const Documents = () => {
       {/* Recent Updates */}
       <Card>
         <CardHeader>
-          <CardTitle>Nylige oppdateringer</CardTitle>
-          <CardDescription>Sist publiserte dokumenter</CardDescription>
+          <CardTitle>{t('guardian.documents.recentUpdates')}</CardTitle>
+          <CardDescription>{t('guardian.documents.recentDescription')}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
@@ -215,12 +217,12 @@ const Documents = () => {
                 <div>
                   <h4 className="font-medium">{document.title}</h4>
                   <p className="text-sm text-slate-600">
-                    Publisert {format(new Date(document.date), 'd. MMMM', { locale: nb })}
+                    {t('guardian.documents.published')} {format(new Date(document.date), 'd. MMMM', { locale: nb })}
                   </p>
                 </div>
                 <Button variant="outline" size="sm">
                   <Download className="w-4 h-4 mr-1" />
-                  Last ned
+                  {t('guardian.documents.download')}
                 </Button>
               </div>
             ))}

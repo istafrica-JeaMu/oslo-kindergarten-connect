@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -19,10 +18,12 @@ import {
   Check
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const LivingArrangements = () => {
   const [isEditing, setIsEditing] = useState(false);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   // Mock data
   const livingArrangement = {
@@ -31,25 +32,25 @@ const LivingArrangements = () => {
       street: 'Trondheimsveien 235',
       postalCode: '0586',
       city: 'Oslo',
-      resident: 'Mor (Anna Hansen)',
-      schedule: 'Mandag-Torsdag'
+      resident: t('guardian.livingArrangements.examples.motherAnna'),
+      schedule: t('guardian.livingArrangements.examples.mondayThursday')
     },
     secondaryAddress: {
       street: 'Colbjørnsens gate 12',
       postalCode: '0256',
       city: 'Oslo',
-      resident: 'Far (Lars Andersen)',
-      schedule: 'Fredag-Søndag'
+      resident: t('guardian.livingArrangements.examples.fatherLars'),
+      schedule: t('guardian.livingArrangements.examples.fridaySunday')
     },
     custodyDocument: 'custody-agreement.pdf',
-    specialNotes: 'Annenhver ferie hos mor/far etter avtale.'
+    specialNotes: t('guardian.livingArrangements.examples.holidayRotation')
   };
 
   const handleSave = () => {
     setIsEditing(false);
     toast({
-      title: "Boordning oppdatert",
-      description: "Endringene er lagret og delt med barnehagen.",
+      title: t('guardian.livingArrangements.toast.title'),
+      description: t('guardian.livingArrangements.toast.description'),
     });
   };
 
@@ -58,12 +59,12 @@ const LivingArrangements = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Boordning</h1>
-          <p className="text-slate-600 mt-2">Administrer hvor barnet ditt bor og hentes fra</p>
+          <h1 className="text-3xl font-bold text-slate-900">{t('guardian.livingArrangements.title')}</h1>
+          <p className="text-slate-600 mt-2">{t('guardian.livingArrangements.description')}</p>
         </div>
         <Badge variant="outline" className="bg-oslo-blue/5 text-oslo-blue border-oslo-blue/20">
           <Home className="w-4 h-4 mr-2" />
-          Boordning
+          {t('guardian.livingArrangements.badge')}
         </Badge>
       </div>
 
@@ -71,11 +72,11 @@ const LivingArrangements = () => {
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>Type boordning</CardTitle>
+            <CardTitle>{t('guardian.livingArrangements.arrangementType')}</CardTitle>
             {!isEditing && (
               <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
                 <Edit className="w-4 h-4 mr-2" />
-                Endre
+                {t('guardian.livingArrangements.edit')}
               </Button>
             )}
           </div>
@@ -85,20 +86,20 @@ const LivingArrangements = () => {
             <div className={`grid grid-cols-3 gap-3 ${isEditing ? 'opacity-100' : 'opacity-60'}`}>
               <div className="border rounded-lg p-4 flex flex-col items-center text-center gap-2 bg-oslo-blue/5 border-oslo-blue">
                 <Home className="w-6 h-6 text-oslo-blue" />
-                <p className="font-medium">Delt bosted</p>
-                <Badge className="bg-oslo-blue">Valgt</Badge>
+                <p className="font-medium">{t('guardian.livingArrangements.types.shared')}</p>
+                <Badge className="bg-oslo-blue">{t('guardian.livingArrangements.selected')}</Badge>
               </div>
               
               <div className="border rounded-lg p-4 flex flex-col items-center text-center gap-2">
                 <Home className="w-6 h-6" />
-                <p className="font-medium">Fast bosted</p>
-                <span className="text-xs text-slate-500">Ett hjem</span>
+                <p className="font-medium">{t('guardian.livingArrangements.types.fixed')}</p>
+                <span className="text-xs text-slate-500">{t('guardian.livingArrangements.types.fixedDesc')}</span>
               </div>
               
               <div className="border rounded-lg p-4 flex flex-col items-center text-center gap-2">
                 <Home className="w-6 h-6" />
-                <p className="font-medium">Annen ordning</p>
-                <span className="text-xs text-slate-500">Spesiell avtale</span>
+                <p className="font-medium">{t('guardian.livingArrangements.types.other')}</p>
+                <span className="text-xs text-slate-500">{t('guardian.livingArrangements.types.otherDesc')}</span>
               </div>
             </div>
           </div>
@@ -108,9 +109,9 @@ const LivingArrangements = () => {
       {/* Primary Address */}
       <Card>
         <CardHeader>
-          <CardTitle>Primær adresse</CardTitle>
+          <CardTitle>{t('guardian.livingArrangements.primaryAddress')}</CardTitle>
           <CardDescription>
-            Hovedadresse for barnet
+            {t('guardian.livingArrangements.primaryAddressDesc')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -118,14 +119,14 @@ const LivingArrangements = () => {
             <div className="space-y-4">
               <div className="grid md:grid-cols-3 gap-4">
                 <div className="col-span-2">
-                  <Label htmlFor="street1">Gateadresse</Label>
+                  <Label htmlFor="street1">{t('guardian.livingArrangements.streetAddress')}</Label>
                   <Input
                     id="street1"
                     defaultValue={livingArrangement.primaryAddress.street}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="postal1">Postnummer</Label>
+                  <Label htmlFor="postal1">{t('guardian.livingArrangements.postalCode')}</Label>
                   <Input
                     id="postal1"
                     defaultValue={livingArrangement.primaryAddress.postalCode}
@@ -134,14 +135,14 @@ const LivingArrangements = () => {
               </div>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="city1">Sted</Label>
+                  <Label htmlFor="city1">{t('guardian.livingArrangements.city')}</Label>
                   <Input
                     id="city1"
                     defaultValue={livingArrangement.primaryAddress.city}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="resident1">Beboer</Label>
+                  <Label htmlFor="resident1">{t('guardian.livingArrangements.resident')}</Label>
                   <Input
                     id="resident1"
                     defaultValue={livingArrangement.primaryAddress.resident}
@@ -149,7 +150,7 @@ const LivingArrangements = () => {
                 </div>
               </div>
               <div>
-                <Label htmlFor="schedule1">Tidsskjema</Label>
+                <Label htmlFor="schedule1">{t('guardian.livingArrangements.schedule')}</Label>
                 <Input
                   id="schedule1"
                   defaultValue={livingArrangement.primaryAddress.schedule}
@@ -195,9 +196,9 @@ const LivingArrangements = () => {
       {/* Secondary Address */}
       <Card>
         <CardHeader>
-          <CardTitle>Sekundær adresse</CardTitle>
+          <CardTitle>{t('guardian.livingArrangements.secondaryAddress')}</CardTitle>
           <CardDescription>
-            Alternativ adresse for barnet
+            {t('guardian.livingArrangements.secondaryAddressDesc')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -205,14 +206,14 @@ const LivingArrangements = () => {
             <div className="space-y-4">
               <div className="grid md:grid-cols-3 gap-4">
                 <div className="col-span-2">
-                  <Label htmlFor="street2">Gateadresse</Label>
+                  <Label htmlFor="street2">{t('guardian.livingArrangements.streetAddress')}</Label>
                   <Input
                     id="street2"
                     defaultValue={livingArrangement.secondaryAddress.street}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="postal2">Postnummer</Label>
+                  <Label htmlFor="postal2">{t('guardian.livingArrangements.postalCode')}</Label>
                   <Input
                     id="postal2"
                     defaultValue={livingArrangement.secondaryAddress.postalCode}
@@ -221,14 +222,14 @@ const LivingArrangements = () => {
               </div>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="city2">Sted</Label>
+                  <Label htmlFor="city2">{t('guardian.livingArrangements.city')}</Label>
                   <Input
                     id="city2"
                     defaultValue={livingArrangement.secondaryAddress.city}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="resident2">Beboer</Label>
+                  <Label htmlFor="resident2">{t('guardian.livingArrangements.resident')}</Label>
                   <Input
                     id="resident2"
                     defaultValue={livingArrangement.secondaryAddress.resident}
@@ -236,7 +237,7 @@ const LivingArrangements = () => {
                 </div>
               </div>
               <div>
-                <Label htmlFor="schedule2">Tidsskjema</Label>
+                <Label htmlFor="schedule2">{t('guardian.livingArrangements.schedule')}</Label>
                 <Input
                   id="schedule2"
                   defaultValue={livingArrangement.secondaryAddress.schedule}
@@ -282,9 +283,9 @@ const LivingArrangements = () => {
       {/* Custody Documents */}
       <Card>
         <CardHeader>
-          <CardTitle>Foreldreansvar og dokumentasjon</CardTitle>
+          <CardTitle>{t('guardian.livingArrangements.custodyTitle')}</CardTitle>
           <CardDescription>
-            Last opp juridiske dokumenter om foreldreansvar eller boordning
+            {t('guardian.livingArrangements.custodyDesc')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -295,25 +296,25 @@ const LivingArrangements = () => {
                   <FileUp className="w-5 h-5 text-slate-600" />
                   <div>
                     <h3 className="font-medium">{livingArrangement.custodyDocument}</h3>
-                    <p className="text-sm text-slate-600">Avtale om delt omsorg</p>
+                    <p className="text-sm text-slate-600">{t('guardian.livingArrangements.custodyAgreement')}</p>
                   </div>
                 </div>
                 <Button variant="ghost" size="sm">
-                  Last ned
+                  {t('guardian.livingArrangements.download')}
                 </Button>
               </div>
             ) : (
               <div className="flex items-center justify-center p-8 bg-slate-50 rounded-lg border border-dashed">
                 <Button variant="outline">
                   <FileUp className="w-4 h-4 mr-2" />
-                  Last opp dokumenter
+                  {t('guardian.livingArrangements.uploadDocuments')}
                 </Button>
               </div>
             )}
             
             {isEditing && (
               <div>
-                <Label htmlFor="notes">Spesielle merknader</Label>
+                <Label htmlFor="notes">{t('guardian.livingArrangements.specialNotes')}</Label>
                 <Textarea
                   id="notes"
                   defaultValue={livingArrangement.specialNotes}
@@ -324,7 +325,7 @@ const LivingArrangements = () => {
             
             {!isEditing && livingArrangement.specialNotes && (
               <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <h3 className="font-medium text-blue-800 mb-2">Spesielle merknader</h3>
+                <h3 className="font-medium text-blue-800 mb-2">{t('guardian.livingArrangements.specialNotes')}</h3>
                 <p className="text-sm text-blue-700">{livingArrangement.specialNotes}</p>
               </div>
             )}
@@ -336,11 +337,11 @@ const LivingArrangements = () => {
       {isEditing && (
         <div className="flex justify-end gap-3">
           <Button variant="outline" onClick={() => setIsEditing(false)}>
-            Avbryt
+            {t('common.cancel')}
           </Button>
           <Button onClick={handleSave}>
             <Save className="w-4 h-4 mr-2" />
-            Lagre endringer
+            {t('guardian.livingArrangements.saveChanges')}
           </Button>
         </div>
       )}
@@ -350,15 +351,15 @@ const LivingArrangements = () => {
         <CardHeader>
           <CardTitle className="text-blue-800 flex items-center gap-2">
             <Check className="w-5 h-5" />
-            Viktig informasjon
+            {t('guardian.livingArrangements.importantInfo')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2 text-sm text-blue-700">
-            <p>• Boordning påvirker automatisk hvor beskjeder og fakturaer sendes</p>
-            <p>• Henting og levering følger boordningskalendaren</p>
-            <p>• All endring av foreldreansvar må dokumenteres med offisielle papirer</p>
-            <p>• Ved endringer kan det ta 1-2 virkedager før alle systemer er oppdatert</p>
+            <p>• {t('guardian.livingArrangements.info.affects')}</p>
+            <p>• {t('guardian.livingArrangements.info.pickup')}</p>
+            <p>• {t('guardian.livingArrangements.info.custody')}</p>
+            <p>• {t('guardian.livingArrangements.info.processing')}</p>
           </div>
         </CardContent>
       </Card>

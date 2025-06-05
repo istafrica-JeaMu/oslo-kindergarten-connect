@@ -1,0 +1,214 @@
+
+{
+  "dashboard": {
+    "title": "My Dashboard",
+    "welcome": "Welcome",
+    "overview": "Overview of your kindergarten applications and information",
+    "newApplication": "New Application",
+    "newApplicationDesc": "Start new kindergarten application",
+    "applicationStatus": "Application Status",
+    "applicationStatusDesc": "View application progress",
+    "messages": "Messages",
+    "messagesDesc": "unread messages",
+    "payments": "Payments",
+    "paymentsDesc": "Invoices and fees",
+    "myApplications": "My Applications",
+    "applicationsOverview": "Overview of all your kindergarten applications",
+    "recentMessages": "Recent Messages",
+    "paymentOverview": "Payment Overview"
+  },
+  "meetings": {
+    "title": "Teacher Meetings",
+    "description": "Book meetings with your child's teachers and educators",
+    "bookNew": "Book New Meeting",
+    "upcomingMeetings": "Upcoming Meetings",
+    "plannedMeetings": "Your scheduled teacher meetings",
+    "availableSlots": "Available Time Slots",
+    "selectTime": "Select an available time for new meeting",
+    "at": "at",
+    "with": "With",
+    "status": {
+      "confirmed": "Confirmed",
+      "pending": "Pending"
+    },
+    "examples": {
+      "socialDevelopment": "Discuss Emma's social development and learning",
+      "playgroundIncident": "Follow-up after playground incident"
+    }
+  },
+  "livingArrangements": {
+    "title": "Living Arrangements",
+    "description": "Manage where your child lives and is picked up from",
+    "badge": "Living Arrangements",
+    "arrangementType": "Arrangement Type",
+    "edit": "Edit",
+    "types": {
+      "shared": "Shared Custody",
+      "fixed": "Fixed Residence",
+      "fixedDesc": "One home",
+      "other": "Other Arrangement",
+      "otherDesc": "Special agreement"
+    },
+    "selected": "Selected",
+    "primaryAddress": "Primary Address",
+    "primaryAddressDesc": "Main address for the child",
+    "secondaryAddress": "Secondary Address",
+    "secondaryAddressDesc": "Alternative address for the child",
+    "streetAddress": "Street Address",
+    "postalCode": "Postal Code",
+    "city": "City",
+    "resident": "Resident",
+    "schedule": "Schedule",
+    "custodyTitle": "Custody and Documentation",
+    "custodyDesc": "Upload legal documents about custody or living arrangements",
+    "custodyAgreement": "Shared custody agreement",
+    "download": "Download",
+    "uploadDocuments": "Upload Documents",
+    "specialNotes": "Special Notes",
+    "saveChanges": "Save Changes",
+    "importantInfo": "Important Information",
+    "info": {
+      "affects": "Living arrangements automatically affect where messages and invoices are sent",
+      "pickup": "Pickup and delivery follows the custody calendar",
+      "custody": "All changes to parental responsibility must be documented with official papers",
+      "processing": "Changes may take 1-2 business days before all systems are updated"
+    },
+    "examples": {
+      "motherAnna": "Mother (Anna Hansen)",
+      "fatherLars": "Father (Lars Andersen)",
+      "mondayThursday": "Monday-Thursday",
+      "fridaySunday": "Friday-Sunday",
+      "holidayRotation": "Alternating holidays with mother/father by agreement."
+    },
+    "toast": {
+      "title": "Living arrangement updated",
+      "description": "Changes have been saved and shared with the kindergarten."
+    }
+  },
+  "noticeBoard": {
+    "title": "Notice Board",
+    "description": "See latest news, photos and plans from the kindergarten",
+    "badge": "News and Updates",
+    "filters": {
+      "all": "All Posts"
+    },
+    "categories": {
+      "activities": "Activities",
+      "menu": "Menus",
+      "curriculum": "Curriculum",
+      "events": "Events"
+    },
+    "download": "Download",
+    "share": "Share",
+    "loadMore": "Load More Posts",
+    "posts": {
+      "springFlowers": {
+        "title": "Spring Flowers in the Garden",
+        "content": "The children planted new flowers in the kindergarten garden today. They learned about different plant types and how to care for them."
+      },
+      "weeklyMenu": {
+        "title": "New Weekly Menu - Week 12",
+        "content": "We have updated the weekly menu with more organic alternatives and accommodated new allergies."
+      },
+      "monthlyPlan": {
+        "title": "Monthly Plan April 2024",
+        "content": "See what we have planned for April! Lots of exciting outdoor activities and learning about insects and small creatures.",
+        "author": "Pedagogical Team"
+      },
+      "fleaMarket": {
+        "title": "Flea Market April 5th",
+        "content": "Annual flea market where parents can buy and sell toys, clothes and equipment. Proceeds go to new toys for the kindergarten.",
+        "author": "Parent Council"
+      }
+    }
+  },
+  "consents": {
+    "title": "Consents and Forms",
+    "description": "Manage permissions and necessary forms",
+    "badge": "Digital Consents",
+    "actionsRequired": "Actions Required",
+    "pendingMessage": "You have 1 consent awaiting signature and 1 expiring soon.",
+    "completeMissing": "Complete Missing Consents",
+    "allConsents": "All Consents",
+    "consentOverview": "Overview of consents and forms for your child",
+    "signed": "Signed",
+    "expires": "Expires",
+    "sign": "Sign",
+    "importantInfo": "Important Information About Consents",
+    "types": {
+      "photo": {
+        "title": "Photo and Video Consent",
+        "description": "Permission to take and publish photos of the child"
+      },
+      "medical": {
+        "title": "Medical Treatment",
+        "description": "Emergency medical treatment in case of injury or illness"
+      },
+      "trips": {
+        "title": "Excursions and Trips",
+        "description": "Participate in excursions outside the kindergarten area"
+      },
+      "data": {
+        "title": "Data Processing",
+        "description": "Processing of personal data and communication"
+      }
+    },
+    "status": {
+      "active": "Active",
+      "expires_soon": "Expires Soon",
+      "expired": "Expired",
+      "pending": "Awaiting Signature"
+    },
+    "info": {
+      "legally": "All consents are legally binding and can be withdrawn at any time",
+      "reminder": "You receive reminders 30 days before consents expire",
+      "participation": "Missing consents may affect the child's participation in activities",
+      "digital": "Digital signature has the same validity as handwritten signature"
+    }
+  },
+  "documents": {
+    "title": "Documents",
+    "description": "Access to all published documents from the kindergarten",
+    "badge": "Document Archive",
+    "search": "Search documents...",
+    "filter": "Filter",
+    "categoriesTitle": "Categories",
+    "documentsTitle": "Documents",
+    "of": "of",
+    "documentsCount": "documents",
+    "recentUpdates": "Recent Updates",
+    "recentDescription": "Latest published documents",
+    "published": "Published",
+    "download": "Download",
+    "categories": {
+      "all": "All Documents",
+      "curriculum": "Curriculum",
+      "menu": "Menus",
+      "safety": "Safety",
+      "handbook": "Handbooks",
+      "personal": "Personal"
+    },
+    "examples": {
+      "yearPlan": {
+        "title": "Annual Plan 2024",
+        "description": "Pedagogical annual plan and learning objectives for 2024"
+      },
+      "weeklyMenu": {
+        "title": "Weekly Menu March 2024",
+        "description": "Complete menu for March with allergens"
+      },
+      "safety": {
+        "title": "Safety Procedures",
+        "description": "Updated routines for fire safety and evacuation"
+      },
+      "handbook": {
+        "title": "Parent Handbook 2024",
+        "description": "Complete guide for parents with all practical information"
+      },
+      "development": {
+        "title": "Emma's Development Report Q1",
+        "description": "Quarterly report on Emma's development and learning"
+      }
+    }
+  }
+}

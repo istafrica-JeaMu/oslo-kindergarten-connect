@@ -6,15 +6,18 @@ import { Badge } from '@/components/ui/badge';
 import { FileCheck, Camera, MapPin, Stethoscope, Clock, Download, Edit } from 'lucide-react';
 import { format } from 'date-fns';
 import { nb } from 'date-fns/locale';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Consents = () => {
+  const { t } = useLanguage();
+
   // Mock consents data
   const consents = [
     {
       id: 1,
       type: 'photo',
-      title: 'Foto- og videokonsent',
-      description: 'Tillatelse til å ta og publisere bilder av barnet',
+      title: t('guardian.consents.types.photo.title'),
+      description: t('guardian.consents.types.photo.description'),
       status: 'active',
       signed: '2024-01-15',
       expires: '2024-12-31',
@@ -23,8 +26,8 @@ const Consents = () => {
     {
       id: 2,
       type: 'medical',
-      title: 'Medisinsk behandling',
-      description: 'Akutt medisinsk behandling ved skade eller sykdom',
+      title: t('guardian.consents.types.medical.title'),
+      description: t('guardian.consents.types.medical.description'),
       status: 'active',
       signed: '2024-01-15',
       expires: '2025-01-15',
@@ -33,8 +36,8 @@ const Consents = () => {
     {
       id: 3,
       type: 'trips',
-      title: 'Utflukter og turer',
-      description: 'Delta på utflukter utenfor barnehagens område',
+      title: t('guardian.consents.types.trips.title'),
+      description: t('guardian.consents.types.trips.description'),
       status: 'expires_soon',
       signed: '2024-01-15',
       expires: '2024-04-01',
@@ -43,8 +46,8 @@ const Consents = () => {
     {
       id: 4,
       type: 'data',
-      title: 'Databehandling',
-      description: 'Behandling av personopplysninger og kommunikasjon',
+      title: t('guardian.consents.types.data.title'),
+      description: t('guardian.consents.types.data.description'),
       status: 'pending',
       signed: null,
       expires: null,
@@ -63,13 +66,7 @@ const Consents = () => {
   };
 
   const getStatusText = (status: string) => {
-    switch (status) {
-      case 'active': return 'Aktiv';
-      case 'expires_soon': return 'Utløper snart';
-      case 'expired': return 'Utløpt';
-      case 'pending': return 'Venter signatur';
-      default: return 'Ukjent';
-    }
+    return t(`guardian.consents.status.${status}`);
   };
 
   return (
@@ -77,12 +74,12 @@ const Consents = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Samtykker og skjemaer</h1>
-          <p className="text-slate-600 mt-2">Administrer tillatelser og nødvendige skjemaer</p>
+          <h1 className="text-3xl font-bold text-slate-900">{t('guardian.consents.title')}</h1>
+          <p className="text-slate-600 mt-2">{t('guardian.consents.description')}</p>
         </div>
         <Badge variant="outline" className="bg-oslo-blue/5 text-oslo-blue border-oslo-blue/20">
           <FileCheck className="w-4 h-4 mr-2" />
-          Digitale samtykker
+          {t('guardian.consents.badge')}
         </Badge>
       </div>
 
@@ -91,15 +88,15 @@ const Consents = () => {
         <CardHeader>
           <CardTitle className="text-yellow-800 flex items-center gap-2">
             <Clock className="w-5 h-5" />
-            Handlinger påkrevd
+            {t('guardian.consents.actionsRequired')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-yellow-700 mb-4">
-            Du har 1 samtykke som venter på signatur og 1 som utløper snart.
+            {t('guardian.consents.pendingMessage')}
           </p>
           <Button className="bg-yellow-600 hover:bg-yellow-700">
-            Fullfør manglende samtykker
+            {t('guardian.consents.completeMissing')}
           </Button>
         </CardContent>
       </Card>
@@ -107,8 +104,8 @@ const Consents = () => {
       {/* Consents List */}
       <Card>
         <CardHeader>
-          <CardTitle>Alle samtykker</CardTitle>
-          <CardDescription>Oversikt over samtykker og skjemaer for barnet ditt</CardDescription>
+          <CardTitle>{t('guardian.consents.allConsents')}</CardTitle>
+          <CardDescription>{t('guardian.consents.consentOverview')}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -123,9 +120,9 @@ const Consents = () => {
                     <p className="text-sm text-slate-600">{consent.description}</p>
                     {consent.signed && (
                       <p className="text-xs text-slate-500 mt-1">
-                        Signert: {format(new Date(consent.signed), 'd. MMM yyyy', { locale: nb })}
+                        {t('guardian.consents.signed')}: {format(new Date(consent.signed), 'd. MMM yyyy', { locale: nb })}
                         {consent.expires && (
-                          <> • Utløper: {format(new Date(consent.expires), 'd. MMM yyyy', { locale: nb })}</>
+                          <> • {t('guardian.consents.expires')}: {format(new Date(consent.expires), 'd. MMM yyyy', { locale: nb })}</>
                         )}
                       </p>
                     )}
@@ -141,7 +138,7 @@ const Consents = () => {
                     {consent.status === 'pending' ? (
                       <Button size="sm">
                         <Edit className="w-4 h-4 mr-1" />
-                        Signer
+                        {t('guardian.consents.sign')}
                       </Button>
                     ) : (
                       <>
@@ -164,14 +161,14 @@ const Consents = () => {
       {/* Important Information */}
       <Card className="border-blue-200 bg-blue-50">
         <CardHeader>
-          <CardTitle className="text-blue-800">Viktig informasjon om samtykker</CardTitle>
+          <CardTitle className="text-blue-800">{t('guardian.consents.importantInfo')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2 text-sm text-blue-700">
-            <p>• Alle samtykker er juridisk bindende og kan trekkes tilbake når som helst</p>
-            <p>• Du får påminnelse 30 dager før samtykker utløper</p>
-            <p>• Manglende samtykker kan påvirke barnets deltakelse i aktiviteter</p>
-            <p>• Digital signatur har samme gyldighet som håndskrift</p>
+            <p>• {t('guardian.consents.info.legally')}</p>
+            <p>• {t('guardian.consents.info.reminder')}</p>
+            <p>• {t('guardian.consents.info.participation')}</p>
+            <p>• {t('guardian.consents.info.digital')}</p>
           </div>
         </CardContent>
       </Card>
