@@ -18,7 +18,7 @@ export const useGuardianNavigation = () => {
   return {
     primary: [
       {
-        title: t('nav.dashboard'),
+        title: t('nav.dashboard', 'Dashboard'),
         url: '/guardian',
         icon: Home,
         description: "Overview of today's activities"
@@ -36,7 +36,7 @@ export const useGuardianNavigation = () => {
         description: "Check-in status and absence reporting"
       },
       {
-        title: t('nav.messages'),
+        title: t('nav.messages', 'Messages'),
         url: '/guardian/messages',
         icon: MessageSquare,
         description: "Chat with teachers and staff"
@@ -62,7 +62,7 @@ export const useGuardianNavigation = () => {
         description: "Living arrangements and pickup settings"
       },
       {
-        title: t('nav.payments'),
+        title: t('nav.payments', 'Payments'),
         url: '/guardian/payments',
         icon: CreditCard,
         description: "Billing and payment status"

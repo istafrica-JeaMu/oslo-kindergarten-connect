@@ -50,22 +50,22 @@ export function AppSidebar() {
       case 'caseworker':
         return [
           {
-            title: t('nav.dashboard'),
+            title: t('nav.dashboard', 'Dashboard'),
             url: baseUrl,
             icon: Home,
           },
           {
-            title: t('nav.reviewQueue'),
+            title: t('nav.reviewQueue', 'Review Queue'),
             url: `${baseUrl}/review-queue`,
             icon: FolderOpen,
           },
           {
-            title: t('nav.placementManagement'),
+            title: t('nav.placementManagement', 'Placement Management'),
             url: `${baseUrl}/placement-management`,
             icon: Users,
           },
           {
-            title: t('nav.messages'),
+            title: t('nav.messages', 'Messages'),
             url: `${baseUrl}/messages`,
             icon: MessageSquare,
           },
@@ -74,17 +74,17 @@ export function AppSidebar() {
       case 'admin':
         return [
           {
-            title: t('nav.dashboard'),
+            title: t('nav.dashboard', 'Dashboard'),
             url: baseUrl,
             icon: Home,
           },
           {
-            title: t('nav.reports'),
+            title: t('nav.reports', 'Reports'),
             url: `${baseUrl}/reports`,
             icon: BarChart3,
           },
           {
-            title: t('nav.settings'),
+            title: t('nav.settings', 'Settings'),
             url: `${baseUrl}/settings`,
             icon: Settings,
           },
@@ -169,7 +169,7 @@ export function AppSidebar() {
       case 'district-admin':
         return [
           {
-            title: t('nav.dashboard'),
+            title: t('nav.dashboard', 'Dashboard'),
             url: baseUrl,
             icon: Home,
           },
