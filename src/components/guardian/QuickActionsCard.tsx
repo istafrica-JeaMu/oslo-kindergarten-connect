@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { AlertCircle, MessageSquare, Calendar, Phone } from 'lucide-react';
+import { AlertCircle, MessageSquare, Calendar, Phone, CloudSun } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const QuickActionsCard = () => {
@@ -38,6 +38,14 @@ const QuickActionsCard = () => {
       url: '/guardian/emergency-contacts',
       variant: 'destructive' as const,
       urgent: true
+    },
+    {
+      title: 'Weather & Outdoor',
+      description: 'Check weather for activities',
+      icon: CloudSun,
+      url: '/guardian/weather',
+      variant: 'outline' as const,
+      urgent: false
     }
   ];
 
