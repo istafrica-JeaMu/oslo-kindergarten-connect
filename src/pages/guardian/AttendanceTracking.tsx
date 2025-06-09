@@ -199,8 +199,8 @@ const AttendanceTracking = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">{t('guardian.attendance.title')}</h1>
-          <p className="text-slate-600 mt-2">{t('guardian.attendance.description')}</p>
+          <h1 className="text-3xl font-bold text-slate-900">{t('guardian.attendance.title', 'Attendance Tracking')}</h1>
+          <p className="text-slate-600 mt-2">{t('guardian.attendance.description', 'Track your child\'s daily attendance and check-in times')}</p>
         </div>
         <div className="flex items-center gap-4">
           <Select value={selectedChild} onValueChange={setSelectedChild}>
@@ -252,7 +252,7 @@ const AttendanceTracking = () => {
             ) : (
               <AlertCircle className="w-5 h-5 text-red-500" />
             )}
-            {t('guardian.attendance.todayStatus')}
+            {t('guardian.attendance.todayStatus', 'Today\'s Status')}
           </CardTitle>
           <CardDescription>
             {format(new Date(), 'EEEE d. MMMM yyyy', { locale })}
@@ -268,8 +268,8 @@ const AttendanceTracking = () => {
                   <Clock className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="text-sm text-slate-600">{t('guardian.attendance.checkedInAt')}</p>
-                  <p className="font-semibold text-lg">{currentData.today.checkIn || 'Not checked in'}</p>
+                  <p className="text-sm text-slate-600">{t('guardian.attendance.checkedInAt', 'Checked in at')}</p>
+                  <p className="font-semibold text-lg">{currentData.today.checkIn || t('guardian.attendance.notCheckedIn', 'Not checked in')}</p>
                 </div>
               </div>
               
@@ -278,7 +278,7 @@ const AttendanceTracking = () => {
                   <Clock className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="text-sm text-slate-600">{t('guardian.attendance.expectedCheckout')}</p>
+                  <p className="text-sm text-slate-600">{t('guardian.attendance.expectedCheckout', 'Expected checkout')}</p>
                   <p className="font-semibold text-lg">{currentData.today.expectedCheckOut}</p>
                 </div>
               </div>
@@ -291,12 +291,12 @@ const AttendanceTracking = () => {
                   currentData.today.status === 'not-arrived' ? 'bg-yellow-500 text-lg px-4 py-2' :
                   'bg-red-500 text-lg px-4 py-2'
                 }>
-                  {currentData.today.status === 'present' ? t('guardian.attendance.status.present') :
-                   currentData.today.status === 'not-arrived' ? 'Not Arrived' :
-                   'Absent'}
+                  {currentData.today.status === 'present' ? t('guardian.attendance.status.present', 'Present') :
+                   currentData.today.status === 'not-arrived' ? t('guardian.attendance.status.notArrived', 'Not Arrived') :
+                   t('guardian.attendance.status.absent', 'Absent')}
                 </Badge>
                 <p className="text-sm text-slate-600 mt-2">
-                  {t('guardian.attendance.duration')}: {currentData.today.duration}
+                  {t('guardian.attendance.duration', 'Duration')}: {currentData.today.duration}
                 </p>
               </div>
             </div>
@@ -309,7 +309,7 @@ const AttendanceTracking = () => {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>{t('guardian.attendance.weeklyOverview')}</CardTitle>
+              <CardTitle>{t('guardian.attendance.weeklyOverview', 'Weekly Overview')}</CardTitle>
               <CardDescription>{getWeekDateRange().start} - {getWeekDateRange().end}</CardDescription>
             </div>
             <div className="flex items-center gap-2">
@@ -322,10 +322,10 @@ const AttendanceTracking = () => {
                 <ChevronLeft className="w-4 h-4" />
               </Button>
               <span className="text-sm font-medium px-3">
-                {selectedWeek === 0 ? 'This Week' : 
-                 selectedWeek === -1 ? 'Last Week' :
-                 selectedWeek > 0 ? `${selectedWeek} weeks ahead` :
-                 `${Math.abs(selectedWeek)} weeks ago`}
+                {selectedWeek === 0 ? t('guardian.attendance.thisWeek', 'This Week') : 
+                 selectedWeek === -1 ? t('guardian.attendance.lastWeek', 'Last Week') :
+                 selectedWeek > 0 ? t('guardian.attendance.weeksAhead', `${selectedWeek} weeks ahead`) :
+                 t('guardian.attendance.weeksAgo', `${Math.abs(selectedWeek)} weeks ago`)}
               </span>
               <Button
                 variant="outline"
@@ -353,13 +353,13 @@ const AttendanceTracking = () => {
                     </h3>
                     <div className="flex items-center gap-4 text-sm text-slate-600">
                       {day.checkIn && (
-                        <span>{t('guardian.attendance.in')}: {day.checkIn}</span>
+                        <span>{t('guardian.attendance.in', 'In')}: {day.checkIn}</span>
                       )}
                       {day.checkOut && (
-                        <span>{t('guardian.attendance.out')}: {day.checkOut}</span>
+                        <span>{t('guardian.attendance.out', 'Out')}: {day.checkOut}</span>
                       )}
                       {!day.checkIn && !day.checkOut && (
-                        <span>{t('guardian.attendance.status.absent')}</span>
+                        <span>{t('guardian.attendance.status.absent', 'Absent')}</span>
                       )}
                     </div>
                   </div>
@@ -370,7 +370,11 @@ const AttendanceTracking = () => {
                     day.status === 'completed' ? 'bg-blue-500' :
                     'bg-red-500'
                   }>
-                    {t(`guardian.attendance.status.${day.status}`)}
+                    {t(`guardian.attendance.status.${day.status}`, 
+                      day.status === 'present' ? 'Present' :
+                      day.status === 'completed' ? 'Completed' :
+                      'Absent'
+                    )}
                   </Badge>
                   <p className="text-sm text-slate-600 mt-1">{day.duration}</p>
                 </div>
@@ -388,7 +392,7 @@ const AttendanceTracking = () => {
               {selectedChild === 'oliver' ? '95%' : 
                selectedChild === 'emma' ? '88%' : '76%'}
             </div>
-            <p className="text-sm text-slate-600">{t('guardian.attendance.stats.attendanceRate')}</p>
+            <p className="text-sm text-slate-600">{t('guardian.attendance.stats.attendanceRate', 'Attendance Rate')}</p>
           </CardContent>
         </Card>
         <Card>
@@ -397,7 +401,7 @@ const AttendanceTracking = () => {
               {selectedChild === 'oliver' ? '7h 25m' : 
                selectedChild === 'emma' ? '7h 15m' : '6h 45m'}
             </div>
-            <p className="text-sm text-slate-600">{t('guardian.attendance.stats.averageDaily')}</p>
+            <p className="text-sm text-slate-600">{t('guardian.attendance.stats.averageDaily', 'Average Daily Hours')}</p>
           </CardContent>
         </Card>
         <Card>
@@ -406,7 +410,7 @@ const AttendanceTracking = () => {
               {selectedChild === 'oliver' ? '2' : 
                selectedChild === 'emma' ? '3' : '5'}
             </div>
-            <p className="text-sm text-slate-600">{t('guardian.attendance.stats.absencesThisMonth')}</p>
+            <p className="text-sm text-slate-600">{t('guardian.attendance.stats.absencesThisMonth', 'Absences This Month')}</p>
           </CardContent>
         </Card>
       </div>
