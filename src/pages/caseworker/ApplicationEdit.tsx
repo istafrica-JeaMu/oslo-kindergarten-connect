@@ -56,7 +56,7 @@ const ApplicationEdit = () => {
             <CardTitle>Application Form</CardTitle>
           </CardHeader>
           <CardContent>
-            <ManualApplicationForm initialData={application} />
+            <ManualApplicationForm />
           </CardContent>
         </Card>
       </div>
