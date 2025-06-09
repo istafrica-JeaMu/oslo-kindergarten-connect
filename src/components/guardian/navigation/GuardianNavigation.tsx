@@ -31,7 +31,7 @@ export const useGuardianNavigation = () => {
       },
       {
         title: 'Attendance',
-        url: '/guardian/attendance',
+        url: '/guardian/attendance-tracking',
         icon: UserCheck,
         description: "Check-in status and absence reporting"
       },
