@@ -9,9 +9,7 @@ import {
   FileText,
   User,
   CreditCard,
-  FolderOpen,
-  AlertCircle,
-  Phone
+  FolderOpen
 } from 'lucide-react';
 
 export const useGuardianNavigation = () => {
@@ -74,22 +72,6 @@ export const useGuardianNavigation = () => {
         url: '/guardian/documents',
         icon: FolderOpen,
         description: "Consents and important documents"
-      }
-    ],
-    quickActions: [
-      {
-        title: 'Report Absence',
-        url: '/guardian/absence',
-        icon: AlertCircle,
-        urgent: true,
-        description: "Quick absence reporting"
-      },
-      {
-        title: 'Emergency Contact',
-        url: '/guardian/emergency',
-        icon: Phone,
-        urgent: true,
-        description: "Emergency contact information"
       }
     ]
   };

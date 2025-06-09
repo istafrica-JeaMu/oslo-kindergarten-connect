@@ -1,4 +1,3 @@
-
 import {
   Home,
   FileText,
@@ -214,37 +213,6 @@ export function AppSidebar() {
 
     return (
       <>
-        {/* Quick Actions - Always visible at top */}
-        {guardianMenuItems.quickActions && guardianMenuItems.quickActions.length > 0 && (
-          <SidebarGroup>
-            <SidebarGroupLabel className="text-red-600 font-bold text-xs mb-2 px-3 flex items-center gap-2">
-              <AlertCircle className="w-4 h-4" />
-              Quick Actions
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu className="space-y-1">
-                {guardianMenuItems.quickActions.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton 
-                      asChild 
-                      isActive={location.pathname === item.url}
-                      className="rounded-lg hover:bg-red-50 data-[active=true]:bg-red-500 data-[active=true]:text-white transition-colors duration-200 border border-red-200 min-h-[48px]"
-                    >
-                      <Link to={item.url} className="flex items-center gap-3 px-3 py-2 w-full">
-                        <item.icon className="h-4 w-4 flex-shrink-0" />
-                        <span className="font-medium text-sm">{item.title}</span>
-                        {item.urgent && <Badge variant="destructive" className="ml-auto flex-shrink-0">!</Badge>}
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        )}
-
-        <Separator className="my-3" />
-
         {/* Primary Navigation - Daily Essentials */}
         <SidebarGroup>
           <SidebarGroupLabel className="text-oslo-blue font-semibold text-xs mb-2 px-3">
