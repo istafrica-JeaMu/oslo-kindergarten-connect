@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -32,10 +31,13 @@ import {
   AlertCircle,
   CheckCircle,
   Clock,
-  Save
+  Save,
+  Printer,
+  Download
 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 interface ManualApplicationData {
   applicationType: string;
@@ -62,7 +64,9 @@ const ManualApplicationForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [tempGuardianId, setTempGuardianId] = useState('');
   const [tempChildId, setTempChildId] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const form = useForm<ManualApplicationData>({
     defaultValues: {
@@ -78,10 +82,42 @@ const ManualApplicationForm = () => {
     return prefix + randomId;
   };
 
-  const onSubmit = (data: ManualApplicationData) => {
-    console.log('Manual application submitted:', data);
-    // Here you would typically send the data to your backend
-    navigate('/caseworker/applications/submitted');
+  const onSubmit = async (data: ManualApplicationData) => {
+    setIsSubmitting(true);
+    
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      const submissionData = {
+        ...data,
+        submittedBy: 'caseworker',
+        manualEntry: true,
+        reviewed: true,
+        submittedAt: new Date().toISOString(),
+        tempIds: {
+          guardian: !data.guardianHasNationalId ? data.guardianNationalId : null,
+          child: !data.childHasNationalId ? data.childNationalId : null,
+        }
+      };
+      
+      console.log('Manual application submitted:', submissionData);
+      
+      toast({
+        title: "Application Submitted Successfully",
+        description: "The manual application has been submitted for processing.",
+      });
+      
+      navigate('/caseworker/applications/submitted');
+    } catch (error) {
+      toast({
+        title: "Submission Failed",
+        description: "There was an error submitting the application. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const steps = [
@@ -91,6 +127,24 @@ const ManualApplicationForm = () => {
     { number: 4, title: 'Preferences', icon: MapPin },
     { number: 5, title: 'Review & Submit', icon: CheckCircle }
   ];
+
+  const getKindergartenName = (value: string) => {
+    const kindergartens = {
+      'lovenskiold': 'Løvenskiold Kindergarten',
+      'sinsen': 'Sinsen Kindergarten',
+      'torshov': 'Torshov Kindergarten'
+    };
+    return kindergartens[value as keyof typeof kindergartens] || value;
+  };
+
+  const getApplicationTypeName = (value: string) => {
+    const types = {
+      'full-time': 'Full-time placement',
+      'part-time': 'Part-time placement',
+      'emergency': 'Emergency placement'
+    };
+    return types[value as keyof typeof types] || value;
+  };
 
   const renderStepIndicator = () => (
     <Card className="mb-6">
@@ -524,61 +578,196 @@ const ManualApplicationForm = () => {
     const formData = form.watch();
     
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3">
-            <CheckCircle className="h-6 w-6 text-green-600" />
-            Review & Submit Application
-          </CardTitle>
-          <CardDescription>
-            Review all information before submitting the manual application
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <AlertCircle className="h-5 w-5 text-orange-600" />
-              <span className="font-semibold text-orange-800">Manual Submission Notice</span>
-            </div>
-            <p className="text-sm text-orange-700">
-              This application was submitted by a caseworker manually for a guardian without digital ID. 
-              Additional verification may be required.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <h4 className="font-semibold text-lg">Guardian Information</h4>
-              <div className="space-y-2 text-sm">
-                <p><strong>Name:</strong> {formData.guardianFirstName} {formData.guardianLastName}</p>
-                <p><strong>ID:</strong> {formData.guardianNationalId}</p>
-                <p><strong>Email:</strong> {formData.guardianEmail}</p>
-                <p><strong>Phone:</strong> {formData.guardianPhone}</p>
+      <div className="space-y-6">
+        {/* Submission Notice */}
+        <Card className="border-orange-200 bg-orange-50">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <AlertCircle className="h-6 w-6 text-orange-600" />
+              <div>
+                <h3 className="font-semibold text-orange-800">Manual Submission Notice</h3>
+                <p className="text-sm text-orange-700">
+                  You are submitting this application on behalf of a guardian without digital ID.
+                </p>
               </div>
             </div>
+          </CardContent>
+        </Card>
 
-            <div className="space-y-4">
-              <h4 className="font-semibold text-lg">Child Information</h4>
-              <div className="space-y-2 text-sm">
-                <p><strong>Name:</strong> {formData.childFirstName} {formData.childLastName}</p>
-                <p><strong>ID:</strong> {formData.childNationalId}</p>
-                <p><strong>Birth Date:</strong> {formData.childBirthDate}</p>
+        {/* Application Overview */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3">
+              <FileText className="h-5 w-5 text-oslo-blue" />
+              📋 Application Overview
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <Label className="text-sm font-medium text-gray-600">Application Type</Label>
+                <p className="text-sm">{getApplicationTypeName(formData.applicationType)}</p>
+              </div>
+              <div>
+                <Label className="text-sm font-medium text-gray-600">Submission Method</Label>
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary">Manual Entry</Badge>
+                  <span className="text-sm text-gray-600">Caseworker Assisted</span>
+                </div>
               </div>
             </div>
-          </div>
+          </CardContent>
+        </Card>
 
-          <div className="space-y-4">
-            <h4 className="font-semibold text-lg">Application Details</h4>
-            <div className="space-y-2 text-sm">
-              <p><strong>Type:</strong> {formData.applicationType}</p>
-              <p><strong>First Choice:</strong> {formData.kindergartenPreference1}</p>
+        {/* Guardian Details */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3">
+              <User className="h-5 w-5 text-oslo-blue" />
+              👤 Guardian Details
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <Label className="text-sm font-medium text-gray-600">Full Name</Label>
+                <p className="text-sm">{formData.guardianFirstName} {formData.guardianLastName}</p>
+              </div>
+              <div>
+                <Label className="text-sm font-medium text-gray-600">Identification</Label>
+                <div className="flex items-center gap-2">
+                  <p className="text-sm">{formData.guardianNationalId}</p>
+                  {!formData.guardianHasNationalId && (
+                    <Badge variant="outline" className="text-orange-600 border-orange-300">
+                      Temporary ID
+                    </Badge>
+                  )}
+                </div>
+              </div>
+              <div>
+                <Label className="text-sm font-medium text-gray-600">Email</Label>
+                <p className="text-sm">{formData.guardianEmail || 'Not provided'}</p>
+              </div>
+              <div>
+                <Label className="text-sm font-medium text-gray-600">Phone</Label>
+                <p className="text-sm">{formData.guardianPhone || 'Not provided'}</p>
+              </div>
+            </div>
+            <div>
+              <Label className="text-sm font-medium text-gray-600">Address</Label>
+              <p className="text-sm">{formData.guardianAddress || 'Not provided'}</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Child Details */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3">
+              <Baby className="h-5 w-5 text-oslo-blue" />
+              🧒 Child Details
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <Label className="text-sm font-medium text-gray-600">Full Name</Label>
+                <p className="text-sm">{formData.childFirstName} {formData.childLastName}</p>
+              </div>
+              <div>
+                <Label className="text-sm font-medium text-gray-600">Identification</Label>
+                <div className="flex items-center gap-2">
+                  <p className="text-sm">{formData.childNationalId}</p>
+                  {!formData.childHasNationalId && (
+                    <Badge variant="outline" className="text-orange-600 border-orange-300">
+                      Temporary ID
+                    </Badge>
+                  )}
+                </div>
+              </div>
+              <div>
+                <Label className="text-sm font-medium text-gray-600">Birth Date</Label>
+                <p className="text-sm">{formData.childBirthDate || 'Not provided'}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Kindergarten Preferences */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3">
+              <MapPin className="h-5 w-5 text-oslo-blue" />
+              🏫 Kindergarten Preferences
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-3">
+              <div>
+                <Label className="text-sm font-medium text-gray-600">First Choice</Label>
+                <p className="text-sm">{getKindergartenName(formData.kindergartenPreference1) || 'Not selected'}</p>
+              </div>
               {formData.kindergartenPreference2 && (
-                <p><strong>Second Choice:</strong> {formData.kindergartenPreference2}</p>
+                <div>
+                  <Label className="text-sm font-medium text-gray-600">Second Choice</Label>
+                  <p className="text-sm">{getKindergartenName(formData.kindergartenPreference2)}</p>
+                </div>
+              )}
+              {formData.specialNeeds && (
+                <div>
+                  <Label className="text-sm font-medium text-gray-600">Special Needs</Label>
+                  <p className="text-sm">{formData.specialNeeds}</p>
+                </div>
+              )}
+              {formData.additionalNotes && (
+                <div>
+                  <Label className="text-sm font-medium text-gray-600">Additional Notes</Label>
+                  <p className="text-sm">{formData.additionalNotes}</p>
+                </div>
               )}
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+
+        {/* Documents Section */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3">
+              <Upload className="h-5 w-5 text-oslo-blue" />
+              📎 Attached Documents
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center py-8 text-gray-500">
+              <Upload className="h-8 w-8 mx-auto mb-2 text-gray-300" />
+              <p className="text-sm">No documents uploaded</p>
+              <p className="text-xs text-gray-400">Document upload feature coming soon</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Action Buttons */}
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex justify-between items-center">
+              <div className="flex gap-3">
+                <Button variant="outline" size="sm">
+                  <Printer className="h-4 w-4 mr-2" />
+                  Print Copy
+                </Button>
+                <Button variant="outline" size="sm">
+                  <Download className="h-4 w-4 mr-2" />
+                  Download PDF
+                </Button>
+              </div>
+              
+              <div className="text-xs text-gray-500">
+                Review all details carefully before submission
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     );
   };
 
@@ -625,6 +814,7 @@ const ManualApplicationForm = () => {
                     type="button" 
                     variant="outline" 
                     onClick={() => setCurrentStep(currentStep - 1)}
+                    disabled={isSubmitting}
                   >
                     Previous
                   </Button>
@@ -642,10 +832,20 @@ const ManualApplicationForm = () => {
                   ) : (
                     <Button 
                       type="submit"
+                      disabled={isSubmitting}
                       className="bg-green-600 hover:bg-green-700"
                     >
-                      <Save className="h-4 w-4 mr-2" />
-                      Submit Application
+                      {isSubmitting ? (
+                        <>
+                          <Clock className="h-4 w-4 mr-2 animate-spin" />
+                          Submitting...
+                        </>
+                      ) : (
+                        <>
+                          <Save className="h-4 w-4 mr-2" />
+                          Submit Application
+                        </>
+                      )}
                     </Button>
                   )}
                 </div>
