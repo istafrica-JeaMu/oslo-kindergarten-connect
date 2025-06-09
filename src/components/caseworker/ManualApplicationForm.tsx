@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -37,7 +38,7 @@ import {
   UserPlus,
   Trash2,
   School,
-  RefreshCcw,
+  ArrowRightLeft,
   Timer
 } from 'lucide-react';
 import { useForm, useFieldArray } from 'react-hook-form';
@@ -336,7 +337,7 @@ const ManualApplicationForm = () => {
                       <CardContent className="p-6">
                         <div className="flex items-start gap-4">
                           <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                            <RefreshCcw className="h-6 w-6 text-orange-600" />
+                            <ArrowRightLeft className="h-6 w-6 text-orange-600" />
                           </div>
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-2">
