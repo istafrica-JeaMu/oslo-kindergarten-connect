@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -33,21 +34,28 @@ import {
   Clock,
   Save,
   Printer,
-  Download
+  Download,
+  UserPlus,
+  Trash2
 } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
+interface GuardianData {
+  firstName: string;
+  lastName: string;
+  nationalId: string;
+  hasNationalId: boolean;
+  email: string;
+  phone: string;
+  address: string;
+  relationship: string;
+}
+
 interface ManualApplicationData {
   applicationType: string;
-  guardianFirstName: string;
-  guardianLastName: string;
-  guardianNationalId: string;
-  guardianHasNationalId: boolean;
-  guardianEmail: string;
-  guardianPhone: string;
-  guardianAddress: string;
+  guardians: GuardianData[];
   childFirstName: string;
   childLastName: string;
   childNationalId: string;
@@ -62,8 +70,6 @@ interface ManualApplicationData {
 
 const ManualApplicationForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [tempGuardianId, setTempGuardianId] = useState('');
-  const [tempChildId, setTempChildId] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSavingDraft, setIsSavingDraft] = useState(false);
   const navigate = useNavigate();
@@ -72,15 +78,48 @@ const ManualApplicationForm = () => {
   const form = useForm<ManualApplicationData>({
     defaultValues: {
       applicationType: 'full-time',
-      guardianHasNationalId: true,
+      guardians: [{
+        firstName: '',
+        lastName: '',
+        nationalId: '',
+        hasNationalId: true,
+        email: '',
+        phone: '',
+        address: '',
+        relationship: 'parent'
+      }],
       childHasNationalId: true,
     }
   });
 
-  const generateTempId = (type: 'guardian' | 'child') => {
-    const prefix = type === 'guardian' ? 'TEMP-GUARDIAN-' : 'TEMP-CHILD-';
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "guardians"
+  });
+
+  const generateTempId = (type: 'guardian' | 'child', index?: number) => {
+    const prefix = type === 'guardian' ? `TEMP-GUARDIAN-${index + 1}-` : 'TEMP-CHILD-';
     const randomId = Math.random().toString(36).substr(2, 4).toUpperCase();
     return prefix + randomId;
+  };
+
+  const addGuardian = () => {
+    append({
+      firstName: '',
+      lastName: '',
+      nationalId: '',
+      hasNationalId: true,
+      email: '',
+      phone: '',
+      address: '',
+      relationship: 'parent'
+    });
+  };
+
+  const removeGuardian = (index: number) => {
+    if (fields.length > 1) {
+      remove(index);
+    }
   };
 
   const saveDraft = async () => {
@@ -96,10 +135,6 @@ const ManualApplicationForm = () => {
         submittedBy: 'caseworker',
         manualEntry: true,
         lastSavedAt: new Date().toISOString(),
-        tempIds: {
-          guardian: !form.getValues('guardianHasNationalId') ? form.getValues('guardianNationalId') : null,
-          child: !form.getValues('childHasNationalId') ? form.getValues('childNationalId') : null,
-        }
       };
       
       console.log('Application draft saved:', draftData);
@@ -132,10 +167,6 @@ const ManualApplicationForm = () => {
         manualEntry: true,
         reviewed: true,
         submittedAt: new Date().toISOString(),
-        tempIds: {
-          guardian: !data.guardianHasNationalId ? data.guardianNationalId : null,
-          child: !data.childHasNationalId ? data.childNationalId : null,
-        }
       };
       
       console.log('Manual application submitted:', submissionData);
@@ -258,22 +289,33 @@ const ManualApplicationForm = () => {
     </Card>
   );
 
-  const renderStep2 = () => (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-3">
-          <User className="h-6 w-6 text-oslo-blue" />
-          Guardian Information
+  const renderGuardianForm = (index: number) => (
+    <Card key={index} className="border-2 border-slate-200">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <User className="h-5 w-5 text-oslo-blue" />
+            Guardian #{index + 1}
+          </div>
+          {fields.length > 1 && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => removeGuardian(index)}
+              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+            >
+              <Trash2 className="h-4 w-4 mr-1" />
+              Remove
+            </Button>
+          )}
         </CardTitle>
-        <CardDescription>
-          Enter the guardian's personal details
-        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid md:grid-cols-2 gap-6">
           <FormField
             control={form.control}
-            name="guardianFirstName"
+            name={`guardians.${index}.firstName`}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>First Name</FormLabel>
@@ -287,7 +329,7 @@ const ManualApplicationForm = () => {
           
           <FormField
             control={form.control}
-            name="guardianLastName"
+            name={`guardians.${index}.lastName`}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Last Name</FormLabel>
@@ -302,7 +344,7 @@ const ManualApplicationForm = () => {
 
         <FormField
           control={form.control}
-          name="guardianHasNationalId"
+          name={`guardians.${index}.hasNationalId`}
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
@@ -317,12 +359,10 @@ const ManualApplicationForm = () => {
                   onCheckedChange={(checked) => {
                     field.onChange(checked);
                     if (!checked) {
-                      const tempId = generateTempId('guardian');
-                      setTempGuardianId(tempId);
-                      form.setValue('guardianNationalId', tempId);
+                      const tempId = generateTempId('guardian', index);
+                      form.setValue(`guardians.${index}.nationalId`, tempId);
                     } else {
-                      setTempGuardianId('');
-                      form.setValue('guardianNationalId', '');
+                      form.setValue(`guardians.${index}.nationalId`, '');
                     }
                   }}
                 />
@@ -333,20 +373,20 @@ const ManualApplicationForm = () => {
 
         <FormField
           control={form.control}
-          name="guardianNationalId"
+          name={`guardians.${index}.nationalId`}
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                {form.watch('guardianHasNationalId') ? 'National ID Number' : 'Temporary ID'}
+                {form.watch(`guardians.${index}.hasNationalId`) ? 'National ID Number' : 'Temporary ID'}
               </FormLabel>
               <FormControl>
                 <Input 
-                  placeholder={form.watch('guardianHasNationalId') ? "Enter national ID" : "Auto-generated temporary ID"} 
+                  placeholder={form.watch(`guardians.${index}.hasNationalId`) ? "Enter national ID" : "Auto-generated temporary ID"} 
                   {...field}
-                  disabled={!form.watch('guardianHasNationalId')}
+                  disabled={!form.watch(`guardians.${index}.hasNationalId`)}
                 />
               </FormControl>
-              {!form.watch('guardianHasNationalId') && (
+              {!form.watch(`guardians.${index}.hasNationalId`) && (
                 <FormDescription className="text-orange-600">
                   <AlertCircle className="h-4 w-4 inline mr-1" />
                   Temporary ID generated - verification documents required
@@ -360,7 +400,7 @@ const ManualApplicationForm = () => {
         <div className="grid md:grid-cols-2 gap-6">
           <FormField
             control={form.control}
-            name="guardianEmail"
+            name={`guardians.${index}.email`}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email Address</FormLabel>
@@ -374,7 +414,7 @@ const ManualApplicationForm = () => {
           
           <FormField
             control={form.control}
-            name="guardianPhone"
+            name={`guardians.${index}.phone`}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Phone Number</FormLabel>
@@ -389,7 +429,7 @@ const ManualApplicationForm = () => {
 
         <FormField
           control={form.control}
-          name="guardianAddress"
+          name={`guardians.${index}.address`}
           render={({ field }) => (
             <FormItem>
               <FormLabel>Address</FormLabel>
@@ -400,8 +440,62 @@ const ManualApplicationForm = () => {
             </FormItem>
           )}
         />
+
+        <FormField
+          control={form.control}
+          name={`guardians.${index}.relationship`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Relationship to Child</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select relationship" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="parent">Parent</SelectItem>
+                  <SelectItem value="legal-guardian">Legal Guardian</SelectItem>
+                  <SelectItem value="foster-parent">Foster Parent</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </CardContent>
     </Card>
+  );
+
+  const renderStep2 = () => (
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-3">
+            <User className="h-6 w-6 text-oslo-blue" />
+            Guardian Information
+          </CardTitle>
+          <CardDescription>
+            Enter the guardian(s) personal details. You may add one or more guardians. At least one is required.
+          </CardDescription>
+        </CardHeader>
+      </Card>
+
+      {fields.map((field, index) => renderGuardianForm(index))}
+
+      <div className="flex justify-center">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={addGuardian}
+          className="flex items-center gap-2"
+        >
+          <UserPlus className="h-4 w-4" />
+          Add Another Guardian
+        </Button>
+      </div>
+    </div>
   );
 
   const renderStep3 = () => (
@@ -464,10 +558,8 @@ const ManualApplicationForm = () => {
                     field.onChange(checked);
                     if (!checked) {
                       const tempId = generateTempId('child');
-                      setTempChildId(tempId);
                       form.setValue('childNationalId', tempId);
                     } else {
-                      setTempChildId('');
                       form.setValue('childNationalId', '');
                     }
                   }}
@@ -661,39 +753,48 @@ const ManualApplicationForm = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-3">
               <User className="h-5 w-5 text-oslo-blue" />
-              👤 Guardian Details
+              👤 Guardian Details ({formData.guardians?.length || 0} Guardian{formData.guardians?.length > 1 ? 's' : ''})
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <Label className="text-sm font-medium text-gray-600">Full Name</Label>
-                <p className="text-sm">{formData.guardianFirstName} {formData.guardianLastName}</p>
-              </div>
-              <div>
-                <Label className="text-sm font-medium text-gray-600">Identification</Label>
-                <div className="flex items-center gap-2">
-                  <p className="text-sm">{formData.guardianNationalId}</p>
-                  {!formData.guardianHasNationalId && (
-                    <Badge variant="outline" className="text-orange-600 border-orange-300">
-                      Temporary ID
-                    </Badge>
-                  )}
+          <CardContent className="space-y-6">
+            {formData.guardians?.map((guardian, index) => (
+              <div key={index} className="border rounded-lg p-4">
+                <h4 className="font-medium text-gray-900 mb-3">Guardian #{index + 1}</h4>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-sm font-medium text-gray-600">Full Name</Label>
+                    <p className="text-sm">{guardian.firstName} {guardian.lastName}</p>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium text-gray-600">Identification</Label>
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm">{guardian.nationalId}</p>
+                      {!guardian.hasNationalId && (
+                        <Badge variant="outline" className="text-orange-600 border-orange-300">
+                          Temporary ID
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium text-gray-600">Email</Label>
+                    <p className="text-sm">{guardian.email || 'Not provided'}</p>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium text-gray-600">Phone</Label>
+                    <p className="text-sm">{guardian.phone || 'Not provided'}</p>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium text-gray-600">Relationship</Label>
+                    <p className="text-sm capitalize">{guardian.relationship?.replace('-', ' ') || 'Not specified'}</p>
+                  </div>
+                </div>
+                <div className="mt-3">
+                  <Label className="text-sm font-medium text-gray-600">Address</Label>
+                  <p className="text-sm">{guardian.address || 'Not provided'}</p>
                 </div>
               </div>
-              <div>
-                <Label className="text-sm font-medium text-gray-600">Email</Label>
-                <p className="text-sm">{formData.guardianEmail || 'Not provided'}</p>
-              </div>
-              <div>
-                <Label className="text-sm font-medium text-gray-600">Phone</Label>
-                <p className="text-sm">{formData.guardianPhone || 'Not provided'}</p>
-              </div>
-            </div>
-            <div>
-              <Label className="text-sm font-medium text-gray-600">Address</Label>
-              <p className="text-sm">{formData.guardianAddress || 'Not provided'}</p>
-            </div>
+            ))}
           </CardContent>
         </Card>
 
