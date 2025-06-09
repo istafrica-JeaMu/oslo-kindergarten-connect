@@ -18,50 +18,50 @@ const DailySchedule = () => {
   const todaySchedule = [
     {
       time: '08:00',
-      activity: t('guardian.dailySchedule.activities.arrival'),
-      location: t('guardian.dailySchedule.locations.mainRoom'),
+      activity: t('guardian.dailySchedule.activities.arrival', 'Arrival'),
+      location: t('guardian.dailySchedule.locations.mainRoom', 'Main Room'),
       icon: Users,
       status: 'completed'
     },
     {
       time: '08:30',
-      activity: t('guardian.dailySchedule.activities.breakfast'),
-      location: t('guardian.dailySchedule.locations.diningRoom'),
+      activity: t('guardian.dailySchedule.activities.breakfast', 'Breakfast'),
+      location: t('guardian.dailySchedule.locations.diningRoom', 'Dining Room'),
       icon: Utensils,
       status: 'completed'
     },
     {
       time: '09:30',
-      activity: t('guardian.dailySchedule.activities.outdoorPlay'),
-      location: t('guardian.dailySchedule.locations.playground'),
+      activity: t('guardian.dailySchedule.activities.outdoorPlay', 'Outdoor Play'),
+      location: t('guardian.dailySchedule.locations.playground', 'Playground'),
       icon: MapPin,
       status: 'current'
     },
     {
       time: '11:00',
-      activity: t('guardian.dailySchedule.activities.learningTime'),
-      location: t('guardian.dailySchedule.locations.classroom'),
+      activity: t('guardian.dailySchedule.activities.learningTime', 'Learning Time'),
+      location: t('guardian.dailySchedule.locations.classroom', 'Classroom'),
       icon: Users,
       status: 'upcoming'
     },
     {
       time: '12:00',
-      activity: t('guardian.dailySchedule.activities.lunch'),
-      location: t('guardian.dailySchedule.locations.diningRoom'),
+      activity: t('guardian.dailySchedule.activities.lunch', 'Lunch'),
+      location: t('guardian.dailySchedule.locations.diningRoom', 'Dining Room'),
       icon: Utensils,
       status: 'upcoming'
     },
     {
       time: '13:00',
-      activity: t('guardian.dailySchedule.activities.restTime'),
-      location: t('guardian.dailySchedule.locations.restRoom'),
+      activity: t('guardian.dailySchedule.activities.restTime', 'Rest Time'),
+      location: t('guardian.dailySchedule.locations.restRoom', 'Rest Room'),
       icon: Moon,
       status: 'upcoming'
     },
     {
       time: '14:30',
-      activity: t('guardian.dailySchedule.activities.pickup'),
-      location: t('guardian.dailySchedule.locations.mainRoom'),
+      activity: t('guardian.dailySchedule.activities.pickup', 'Pickup'),
+      location: t('guardian.dailySchedule.locations.mainRoom', 'Main Room'),
       icon: Users,
       status: 'upcoming'
     }
@@ -78,12 +78,12 @@ const DailySchedule = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">{t('guardian.dailySchedule.title')}</h1>
-          <p className="text-slate-600 mt-2">{t('guardian.dailySchedule.description')}</p>
+          <h1 className="text-3xl font-bold text-slate-900">{t('guardian.dailySchedule.title', 'Daily Schedule')}</h1>
+          <p className="text-slate-600 mt-2">{t('guardian.dailySchedule.description', 'View your child\'s daily activities and schedule')}</p>
         </div>
         <Button variant="outline">
           <Calendar className="w-4 h-4 mr-2" />
-          {t('guardian.dailySchedule.viewWeek')}
+          {t('guardian.dailySchedule.viewWeek', 'View Week')}
         </Button>
       </div>
 
@@ -93,7 +93,7 @@ const DailySchedule = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Clock className="w-5 h-5 text-oslo-blue" />
-              {t('guardian.dailySchedule.currentActivity')}
+              {t('guardian.dailySchedule.currentActivity', 'Current Activity')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -113,7 +113,7 @@ const DailySchedule = () => {
       {/* Today's Schedule */}
       <Card>
         <CardHeader>
-          <CardTitle>{t('guardian.dailySchedule.schedule')}</CardTitle>
+          <CardTitle>{t('guardian.dailySchedule.schedule', 'Today\'s Schedule')}</CardTitle>
           <CardDescription>
             {format(selectedDate, 'EEEE d. MMMM yyyy', { locale })}
           </CardDescription>
@@ -148,7 +148,7 @@ const DailySchedule = () => {
                   item.status === 'completed' ? 'outline' :
                   'secondary'
                 }>
-                  {t(`guardian.dailySchedule.status.${item.status}`)}
+                  {t(`guardian.dailySchedule.status.${item.status}`, item.status === 'current' ? 'Current' : item.status === 'completed' ? 'Completed' : 'Upcoming')}
                 </Badge>
               </div>
             ))}
