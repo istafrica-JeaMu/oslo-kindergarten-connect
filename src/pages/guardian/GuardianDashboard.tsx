@@ -102,7 +102,7 @@ const GuardianDashboard = () => {
   const stats = [
     { label: 'Active Applications', value: '2', change: '+1', trend: 'up' },
     { label: 'Placed Children', value: '1', change: '0', trend: 'stable' },
-    { label: 'Pending Payments', value: '1', change: '+1', trend: 'up' },
+    { label: 'Pending Payments', value: '1', change: '+1', trend: 'stable' },
     { label: 'Unread Messages', value: '1', change: '+1', trend: 'up' }
   ];
 
@@ -241,19 +241,20 @@ const GuardianDashboard = () => {
         </div>
       </div>
 
-      {/* Main Dashboard Grid - Improved Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {/* Today's Status - Takes full height */}
-        <div className="lg:col-span-1">
+      {/* Priority Cards - Responsive Grid Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-6">
+        {/* Today's Status */}
+        <div className="xl:col-span-3">
           <TodaysStatusCard />
         </div>
         
-        {/* Right Column - Quick Actions and Notice Board */}
-        <div className="lg:col-span-1 xl:col-span-2 space-y-6">
-          {/* Quick Actions */}
+        {/* Quick Actions */}
+        <div className="xl:col-span-3">
           <QuickActionsCard />
-          
-          {/* Notice Board */}
+        </div>
+        
+        {/* Notice Board - Takes full width on mobile/tablet, remaining space on xl screens */}
+        <div className="md:col-span-2 xl:col-span-6">
           <NoticeBoardPreviewCard />
         </div>
       </div>
