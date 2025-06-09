@@ -18,12 +18,14 @@ import Payments from "./pages/guardian/Payments";
 import DailySchedule from "./pages/guardian/DailySchedule";
 import AbsenceReporting from "./pages/guardian/AbsenceReporting";
 import AttendanceTracking from "./pages/guardian/AttendanceTracking";
+import EmergencyContacts from "./pages/guardian/EmergencyContacts";
 import ChildLocation from "./pages/guardian/ChildLocation";
 import PickupAuthorization from "./pages/guardian/PickupAuthorization";
 import TeacherMeetings from "./pages/guardian/TeacherMeetings";
 import Consents from "./pages/guardian/Consents";
 import Documents from "./pages/guardian/Documents";
 import NoticeBoard from "./pages/guardian/NoticeBoard";
+import PostDetail from "./pages/guardian/PostDetail";
 import LivingArrangements from "./pages/guardian/LivingArrangements";
 import HolidayRegistration from "./pages/guardian/HolidayRegistration";
 import CaseWorkerDashboard from "./pages/caseworker/CaseWorkerDashboard";
@@ -73,16 +75,19 @@ const App = () => (
                 <Route index element={<GuardianDashboard />} />
                 <Route path="new-application" element={<NewApplication />} />
                 <Route path="application-status" element={<ApplicationStatus />} />
+                <Route path="application-status/:id" element={<ApplicationStatus />} />
                 <Route path="daily-schedule" element={<DailySchedule />} />
-                <Route path="absence" element={<AbsenceReporting />} />
-                <Route path="attendance" element={<AttendanceTracking />} />
+                <Route path="absence-reporting" element={<AbsenceReporting />} />
+                <Route path="attendance-tracking" element={<AttendanceTracking />} />
+                <Route path="emergency-contacts" element={<EmergencyContacts />} />
                 <Route path="location" element={<ChildLocation />} />
                 <Route path="pickup" element={<PickupAuthorization />} />
                 <Route path="messages" element={<Messages />} />
-                <Route path="meetings" element={<TeacherMeetings />} />
+                <Route path="teacher-meetings" element={<TeacherMeetings />} />
                 <Route path="consents" element={<Consents />} />
                 <Route path="documents" element={<Documents />} />
                 <Route path="notice-board" element={<NoticeBoard />} />
+                <Route path="notice-board/post/:id" element={<PostDetail />} />
                 <Route path="living-arrangements" element={<LivingArrangements />} />
                 <Route path="holiday-registration" element={<HolidayRegistration />} />
                 <Route path="payments" element={<Payments />} />

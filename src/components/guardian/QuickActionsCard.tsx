@@ -33,9 +33,9 @@ const QuickActionsCard = () => {
     },
     {
       title: 'Emergency Contact',
-      description: 'Urgent contact needed',
+      description: 'Manage emergency contacts',
       icon: Phone,
-      url: '/guardian/messages',
+      url: '/guardian/emergency-contacts',
       variant: 'destructive' as const,
       urgent: true
     }
