@@ -53,13 +53,13 @@ export const useGuardianNavigation = () => {
     secondary: [
       {
         title: 'Applications',
-        url: '/guardian/applications',
+        url: '/guardian/application-status',
         icon: FileText,
-        description: "New applications and status tracking"
+        description: "Application status and new applications"
       },
       {
         title: 'Child Profile',
-        url: '/guardian/child-profile',
+        url: '/guardian/living-arrangements',
         icon: User,
         description: "Living arrangements and pickup settings"
       },

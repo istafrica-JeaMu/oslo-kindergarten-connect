@@ -208,30 +208,32 @@ export function AppSidebar() {
   };
 
   const renderGuardianNavigation = () => {
-    if (!isGuardianNavigation(menuItems)) return null;
+    const guardianMenuItems = guardianNavigation;
+    
+    if (!isGuardianNavigation(guardianMenuItems)) return null;
 
     return (
       <>
         {/* Quick Actions - Always visible at top */}
-        {menuItems.quickActions && menuItems.quickActions.length > 0 && (
+        {guardianMenuItems.quickActions && guardianMenuItems.quickActions.length > 0 && (
           <SidebarGroup>
-            <SidebarGroupLabel className="text-red-600 font-bold text-sm mb-3 px-3 flex items-center gap-2">
+            <SidebarGroupLabel className="text-red-600 font-bold text-xs mb-2 px-3 flex items-center gap-2">
               <AlertCircle className="w-4 h-4" />
               Quick Actions
             </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu className="space-y-1">
-                {menuItems.quickActions.map((item) => (
+                {guardianMenuItems.quickActions.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton 
                       asChild 
                       isActive={location.pathname === item.url}
-                      className="rounded-lg hover:bg-red-50 data-[active=true]:bg-red-500 data-[active=true]:text-white transition-colors duration-200 border border-red-200"
+                      className="rounded-lg hover:bg-red-50 data-[active=true]:bg-red-500 data-[active=true]:text-white transition-colors duration-200 border border-red-200 min-h-[48px]"
                     >
-                      <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
-                        <item.icon className="h-5 w-5" />
-                        <span className="font-medium">{item.title}</span>
-                        {item.urgent && <Badge variant="destructive" className="ml-auto">!</Badge>}
+                      <Link to={item.url} className="flex items-center gap-3 px-3 py-2 w-full">
+                        <item.icon className="h-4 w-4 flex-shrink-0" />
+                        <span className="font-medium text-sm truncate">{item.title}</span>
+                        {item.urgent && <Badge variant="destructive" className="ml-auto flex-shrink-0">!</Badge>}
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -241,28 +243,28 @@ export function AppSidebar() {
           </SidebarGroup>
         )}
 
-        <Separator className="my-4" />
+        <Separator className="my-3" />
 
         {/* Primary Navigation - Daily Essentials */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-oslo-blue font-semibold text-sm mb-3 px-3">
+          <SidebarGroupLabel className="text-oslo-blue font-semibold text-xs mb-2 px-3">
             Daily Essentials
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
-              {menuItems.primary?.map((item) => (
+              {guardianMenuItems.primary?.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton 
                     asChild 
                     isActive={location.pathname === item.url}
-                    className="rounded-lg hover:bg-oslo-blue/10 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200"
+                    className="rounded-lg hover:bg-oslo-blue/10 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 min-h-[52px]"
                   >
-                    <Link to={item.url} className="flex items-center gap-3 px-3 py-3">
-                      <item.icon className="h-5 w-5" />
-                      <div className="flex-1">
-                        <span className="font-medium text-base">{item.title}</span>
+                    <Link to={item.url} className="flex items-center gap-3 px-3 py-2 w-full">
+                      <item.icon className="h-4 w-4 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <span className="font-medium text-sm block truncate">{item.title}</span>
                         {item.description && (
-                          <p className="text-xs text-slate-500 mt-0.5">{item.description}</p>
+                          <p className="text-xs text-slate-500 mt-0.5 truncate">{item.description}</p>
                         )}
                       </div>
                     </Link>
@@ -273,25 +275,25 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <Separator className="my-4" />
+        <Separator className="my-3" />
 
         {/* Secondary Navigation - Administrative */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-slate-600 font-medium text-sm mb-3 px-3">
+          <SidebarGroupLabel className="text-slate-600 font-medium text-xs mb-2 px-3">
             Administrative
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
-              {menuItems.secondary?.map((item) => (
+              {guardianMenuItems.secondary?.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton 
                     asChild 
                     isActive={location.pathname === item.url}
-                    className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-slate-200 data-[active=true]:text-slate-900 transition-colors duration-200"
+                    className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-slate-200 data-[active=true]:text-slate-900 transition-colors duration-200 min-h-[44px]"
                   >
-                    <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
-                      <item.icon className="h-4 w-4 text-slate-600" />
-                      <span className="font-medium text-sm">{item.title}</span>
+                    <Link to={item.url} className="flex items-center gap-3 px-3 py-2 w-full">
+                      <item.icon className="h-4 w-4 text-slate-600 flex-shrink-0" />
+                      <span className="font-medium text-sm truncate">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -329,6 +331,8 @@ export function AppSidebar() {
     </SidebarGroup>
   );
 
+  const menuItems = getMenuItems();
+
   return (
     <Sidebar className="border-r border-slate-200 bg-white">
       <SidebarHeader className="border-b border-slate-200 p-6">
@@ -336,14 +340,14 @@ export function AppSidebar() {
           <div className="w-10 h-10 bg-gradient-to-br from-oslo-blue to-blue-700 rounded-xl flex items-center justify-center shadow-md">
             <GraduationCap className="w-6 h-6 text-white" />
           </div>
-          <div>
-            <h2 className="text-lg font-bold text-oslo-blue">IST Platform</h2>
-            <p className="text-xs text-slate-600 -mt-1">Oslo Municipality</p>
+          <div className="min-w-0 flex-1">
+            <h2 className="text-lg font-bold text-oslo-blue truncate">IST Platform</h2>
+            <p className="text-xs text-slate-600 -mt-1 truncate">Oslo Municipality</p>
           </div>
         </div>
       </SidebarHeader>
       <SidebarContent className="p-4">
-        {user?.role === 'guardian' && isGuardianNavigation(menuItems) 
+        {user?.role === 'guardian' 
           ? renderGuardianNavigation() 
           : renderStandardNavigation(Array.isArray(menuItems) ? menuItems : [])}
       </SidebarContent>
