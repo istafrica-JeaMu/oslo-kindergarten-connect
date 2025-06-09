@@ -27,6 +27,7 @@ import {
   GraduationCap,
   Shield
 } from 'lucide-react';
+import ManualApplicationCard from '@/components/caseworker/ManualApplicationCard';
 
 const CaseWorkerDashboard = () => {
   const { t } = useTranslation();
@@ -38,7 +39,6 @@ const CaseWorkerDashboard = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Enhanced mock dashboard data with trends
   const stats = {
     newApplications: { value: 23, trend: 'up', change: '+5' },
     urgentTasks: { value: 5, trend: 'down', change: '-2' },
@@ -179,7 +179,6 @@ const CaseWorkerDashboard = () => {
 
   return (
     <div className="space-y-8">
-      {/* Clean Header Section - matching Guardian design */}
       <Card className="border-0 shadow-lg bg-white">
         <CardContent className="p-8">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
@@ -230,7 +229,6 @@ const CaseWorkerDashboard = () => {
         </CardContent>
       </Card>
 
-      {/* Guardian-style Statistics Cards */}
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card className="relative overflow-hidden border-0 shadow-xl hover:shadow-2xl transition-all duration-300 group transform hover:-translate-y-1">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-600"></div>
@@ -329,7 +327,6 @@ const CaseWorkerDashboard = () => {
         </Card>
       </div>
 
-      {/* Enhanced Quick Actions */}
       <Card className="shadow-xl border-0 overflow-hidden">
         <div className="bg-gradient-to-r from-oslo-blue/5 to-blue-50">
           <CardHeader>
@@ -354,6 +351,9 @@ const CaseWorkerDashboard = () => {
         </div>
         <CardContent className="p-8">
           <div className="space-y-6">
+            {/* Manual Application Card - Featured */}
+            <ManualApplicationCard />
+
             {/* Primary Action */}
             {quickActions.filter(action => action.isPrimary).map((action, index) => (
               <Link key={index} to={action.link} className="group block">
@@ -413,7 +413,6 @@ const CaseWorkerDashboard = () => {
         </CardContent>
       </Card>
 
-      {/* Enhanced Recent Activity */}
       <Card className="shadow-xl border-0 overflow-hidden">
         <div className="bg-gradient-to-r from-purple-50 to-indigo-50">
           <CardHeader>

@@ -32,6 +32,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useGuardianNavigation } from '@/components/guardian/navigation/GuardianNavigation';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import ApplicationsSidebar from '@/components/caseworker/ApplicationsSidebar';
 
 export function AppSidebar() {
   const { user } = useAuth();
@@ -273,6 +274,44 @@ export function AppSidebar() {
     );
   };
 
+  const renderCaseworkerNavigation = (items: any[]) => (
+    <>
+      {/* Main Navigation */}
+      <SidebarGroup>
+        <SidebarGroupLabel className="text-oslo-blue font-semibold text-sm mb-3 px-3">
+          {getSidebarTitle()}
+        </SidebarGroupLabel>
+        <SidebarGroupContent>
+          <SidebarMenu className="space-y-1">
+            {items.map((item) => (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton 
+                  asChild 
+                  isActive={location.pathname === item.url}
+                  className="rounded-lg hover:bg-oslo-blue/10 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200"
+                >
+                  <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
+                    <item.icon className="h-5 w-5" />
+                    <span className="font-medium">{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+
+      <Separator className="my-3" />
+
+      {/* Applications Section */}
+      <SidebarGroup>
+        <SidebarGroupContent>
+          <ApplicationsSidebar />
+        </SidebarGroupContent>
+      </SidebarGroup>
+    </>
+  );
+
   const renderStandardNavigation = (items: any[]) => (
     <SidebarGroup>
       <SidebarGroupLabel className="text-oslo-blue font-semibold text-sm mb-3 px-3">
@@ -315,6 +354,8 @@ export function AppSidebar() {
       <SidebarContent className="p-4">
         {user?.role === 'guardian' 
           ? renderGuardianNavigation() 
+          : user?.role === 'caseworker'
+          ? renderCaseworkerNavigation(Array.isArray(menuItems) ? menuItems : [])
           : renderStandardNavigation(Array.isArray(menuItems) ? menuItems : [])}
       </SidebarContent>
     </Sidebar>
