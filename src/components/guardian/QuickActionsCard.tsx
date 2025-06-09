@@ -42,7 +42,7 @@ const QuickActionsCard = () => {
   ];
 
   const getButtonClassName = (action: typeof quickActions[0]) => {
-    const baseClasses = "w-full h-auto p-4 flex items-center gap-4 text-left hover:scale-[1.02] transition-all duration-300 min-h-[70px] shadow-lg hover:shadow-xl rounded-lg";
+    const baseClasses = "w-full h-auto p-3 flex items-center gap-3 text-left hover:scale-[1.02] transition-all duration-300 min-h-[60px] shadow-lg hover:shadow-xl rounded-lg";
     
     if (action.variant === 'destructive') {
       return `${baseClasses} bg-red-100 hover:bg-red-200 text-red-700 border border-red-200 hover:border-red-300`;
@@ -54,9 +54,9 @@ const QuickActionsCard = () => {
   };
 
   return (
-    <Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+    <Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
       <div className="absolute inset-0 bg-gradient-to-br from-white via-green-50/30 to-green-100/20" />
-      <CardHeader className="relative pb-4">
+      <CardHeader className="relative pb-3">
         <CardTitle className="flex items-center gap-3">
           <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center">
             <AlertCircle className="h-6 w-6 text-green-600" />
@@ -67,9 +67,9 @@ const QuickActionsCard = () => {
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent className="relative">
+      <CardContent className="relative flex-1 flex flex-col">
         <TooltipProvider>
-          <div className="space-y-3">
+          <div className="space-y-2 flex-1">
             {quickActions.map((action) => (
               <Tooltip key={action.title}>
                 <TooltipTrigger asChild>
@@ -77,10 +77,10 @@ const QuickActionsCard = () => {
                     <button
                       className={getButtonClassName(action)}
                     >
-                      <action.icon className={`h-6 w-6 flex-shrink-0 ${action.urgent ? 'animate-pulse' : ''}`} />
-                      <div className="flex flex-col gap-1 flex-1 min-w-0">
-                        <div className="font-semibold text-base leading-tight">{action.title}</div>
-                        <div className="text-sm opacity-90 leading-tight">{action.description}</div>
+                      <action.icon className={`h-5 w-5 flex-shrink-0 ${action.urgent ? 'animate-pulse' : ''}`} />
+                      <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                        <div className="font-semibold text-sm leading-tight">{action.title}</div>
+                        <div className="text-xs opacity-90 leading-tight">{action.description}</div>
                       </div>
                     </button>
                   </Link>
