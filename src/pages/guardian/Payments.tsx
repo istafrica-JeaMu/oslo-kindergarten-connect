@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -104,15 +105,15 @@ const Payments = () => {
 
   const handlePaymentClick = (amount: number, type: string = 'full') => {
     toast({
-      title: "Payment Initiated",
-      description: `Redirecting to secure payment portal for ${formatCurrency(amount)}...`,
+      title: t('guardian.payments.paymentInitiated', "Payment Initiated"),
+      description: t('guardian.payments.redirectingToPayment', `Redirecting to secure payment portal for ${formatCurrency(amount)}...`),
     });
     
     // Simulate redirect delay
     setTimeout(() => {
       toast({
-        title: "Payment Portal",
-        description: "This is a demo - payment functionality would redirect to your bank or payment provider.",
+        title: t('guardian.payments.paymentPortal', "Payment Portal"),
+        description: t('guardian.payments.demoMessage', "This is a demo - payment functionality would redirect to your bank or payment provider."),
         variant: "default",
       });
     }, 2000);
@@ -120,29 +121,29 @@ const Payments = () => {
 
   const handleQuickPayment = (amount: number, type: string) => {
     toast({
-      title: `${type} Payment Selected`,
-      description: `Processing payment of ${formatCurrency(amount)}...`,
+      title: t('guardian.payments.paymentSelected', `${type} Payment Selected`),
+      description: t('guardian.payments.processingPayment', `Processing payment of ${formatCurrency(amount)}...`),
     });
   };
 
   const handleInvoiceView = (invoiceId: string) => {
     toast({
-      title: "Opening Invoice",
-      description: `Loading detailed view for ${invoiceId}...`,
+      title: t('guardian.payments.openingInvoice', "Opening Invoice"),
+      description: t('guardian.payments.loadingInvoiceView', `Loading detailed view for ${invoiceId}...`),
     });
   };
 
   const handleInvoiceDownload = (invoiceId: string) => {
     toast({
-      title: "Download Started",
-      description: `Downloading invoice ${invoiceId} as PDF...`,
+      title: t('guardian.payments.downloadStarted', "Download Started"),
+      description: t('guardian.payments.downloadingInvoice', `Downloading invoice ${invoiceId} as PDF...`),
     });
   };
 
   const handleExportAll = () => {
     toast({
-      title: "Export Started",
-      description: "Preparing payment history export. This may take a few moments...",
+      title: t('guardian.payments.exportStarted', "Export Started"),
+      description: t('guardian.payments.preparingExport', "Preparing payment history export. This may take a few moments..."),
     });
   };
 
@@ -152,28 +153,28 @@ const Payments = () => {
         return (
           <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 font-medium">
             <CheckCircle className="h-3 w-3 mr-1" />
-            {t('common.status.paid')}
+            {t('common.status.paid', 'Paid')}
           </Badge>
         );
       case 'due':
         return (
           <Badge className="bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100 font-medium">
             <Clock className="h-3 w-3 mr-1" />
-            {t('common.status.due')}
+            {t('common.status.due', 'Due')}
           </Badge>
         );
       case 'overdue':
         return (
           <Badge className="bg-red-50 text-red-700 border-red-200 hover:bg-red-100 font-medium">
             <AlertTriangle className="h-3 w-3 mr-1" />
-            {t('common.status.overdue')}
+            {t('common.status.overdue', 'Overdue')}
           </Badge>
         );
       case 'pending':
         return (
           <Badge className="bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100 font-medium">
             <Calendar className="h-3 w-3 mr-1" />
-            {t('common.status.pending')}
+            {t('common.status.pending', 'Pending')}
           </Badge>
         );
       default:
@@ -228,8 +229,8 @@ const Payments = () => {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">{t('guardian.payments.title')}</h1>
-        <p className="text-gray-600 mt-2">{t('guardian.payments.description')}</p>
+        <h1 className="text-3xl font-bold text-gray-900">{t('guardian.payments.title', 'Payments')}</h1>
+        <p className="text-gray-600 mt-2">{t('guardian.payments.description', 'Manage your kindergarten payments and invoices')}</p>
       </div>
 
       {/* Enhanced Outstanding Balance Card */}
@@ -243,10 +244,10 @@ const Payments = () => {
               </div>
               <div>
                 <h3 className={`font-bold ${isOverdue ? 'text-red-800' : 'text-amber-800'}`}>
-                  {isOverdue ? 'Payment Overdue' : 'Payment Due Soon'}
+                  {isOverdue ? t('guardian.payments.paymentOverdue', 'Payment Overdue') : t('guardian.payments.paymentDueSoon', 'Payment Due Soon')}
                 </h3>
                 <p className={`text-sm ${isOverdue ? 'text-red-700' : 'text-amber-700'}`}>
-                  {isOverdue ? 'Late fees may apply' : `${timeUntilDue.days} days remaining`}
+                  {isOverdue ? t('guardian.payments.lateFeesApply', 'Late fees may apply') : t('guardian.payments.daysRemaining', `${timeUntilDue.days} days remaining`)}
                 </p>
               </div>
             </div>
@@ -261,7 +262,7 @@ const Payments = () => {
                 </div>
                 <div>
                   <p className={`text-sm font-semibold ${isOverdue ? 'text-red-700' : isUrgent ? 'text-amber-700' : 'text-blue-700'} uppercase tracking-wide mb-1`}>
-                    Outstanding Balance
+                    {t('guardian.payments.outstandingBalance', 'Outstanding Balance')}
                   </p>
                   <h2 className={`text-4xl font-bold ${isOverdue ? 'text-red-800' : isUrgent ? 'text-amber-800' : 'text-blue-800'} leading-tight`}>
                     {formatCurrency(paymentSummary.currentBalance)}
@@ -273,11 +274,11 @@ const Payments = () => {
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <Calendar className="h-4 w-4" />
-                  <span>Due: {formatDate(paymentSummary.nextPaymentDue)}</span>
+                  <span>{t('guardian.payments.due', 'Due')}: {formatDate(paymentSummary.nextPaymentDue)}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <FileText className="h-4 w-4" />
-                  <span>2 unpaid invoices</span>
+                  <span>{t('guardian.payments.unpaidInvoices', '2 unpaid invoices')}</span>
                 </div>
               </div>
 
@@ -285,7 +286,7 @@ const Payments = () => {
               {!isOverdue && (
                 <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg ${isUrgent ? 'bg-amber-200 text-amber-800' : 'bg-blue-200 text-blue-800'} text-sm font-medium`}>
                   <Clock className="h-4 w-4" />
-                  <span>{timeUntilDue.days}d {timeUntilDue.hours}h remaining</span>
+                  <span>{timeUntilDue.days}d {timeUntilDue.hours}h {t('guardian.payments.remaining', 'remaining')}</span>
                 </div>
               )}
             </div>
@@ -304,7 +305,7 @@ const Payments = () => {
                       <Zap className="h-5 w-5" />
                     </div>
                     <div className="text-left">
-                      <div className="font-bold text-lg">Pay Full Amount</div>
+                      <div className="font-bold text-lg">{t('guardian.payments.payFullAmount', 'Pay Full Amount')}</div>
                       <div className="text-sm opacity-90">{formatCurrency(paymentSummary.currentBalance)}</div>
                     </div>
                   </div>
@@ -321,7 +322,7 @@ const Payments = () => {
                 className="text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
                 onClick={() => setShowQuickPayOptions(!showQuickPayOptions)}
               >
-                <span>More Payment Options</span>
+                <span>{t('guardian.payments.morePaymentOptions', 'More Payment Options')}</span>
                 <ChevronDown className={`h-4 w-4 ml-2 transition-transform ${showQuickPayOptions ? 'rotate-180' : ''}`} />
               </Button>
 
@@ -334,7 +335,7 @@ const Payments = () => {
                     className="w-full justify-between text-gray-600 hover:bg-gray-50 hover:border-gray-300"
                     onClick={() => handleQuickPayment(2220, 'Single Invoice')}
                   >
-                    <span>Pay Single Invoice</span>
+                    <span>{t('guardian.payments.paySingleInvoice', 'Pay Single Invoice')}</span>
                     <span className="font-semibold">{formatCurrency(2220)}</span>
                   </Button>
                   <Button 
@@ -343,7 +344,7 @@ const Payments = () => {
                     className="w-full justify-between text-gray-600 hover:bg-gray-50 hover:border-gray-300"
                     onClick={() => handleQuickPayment(paymentSummary.currentBalance / 2, 'Partial')}
                   >
-                    <span>Pay Partial Amount</span>
+                    <span>{t('guardian.payments.payPartialAmount', 'Pay Partial Amount')}</span>
                     <span className="font-semibold">{formatCurrency(paymentSummary.currentBalance / 2)}</span>
                   </Button>
                 </div>
@@ -353,12 +354,12 @@ const Payments = () => {
               <div className="flex items-center justify-center gap-4 pt-2">
                 <div className="flex items-center gap-1 text-xs text-gray-500">
                   <Shield className="h-3 w-3" />
-                  <span>Bank Secured</span>
+                  <span>{t('guardian.payments.bankSecured', 'Bank Secured')}</span>
                 </div>
                 <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
                 <div className="flex items-center gap-1 text-xs text-gray-500">
                   <CheckCircle className="h-3 w-3" />
-                  <span>SSL Protected</span>
+                  <span>{t('guardian.payments.sslProtected', 'SSL Protected')}</span>
                 </div>
               </div>
             </div>
@@ -380,7 +381,7 @@ const Payments = () => {
                     <Wallet className="h-6 w-6 text-blue-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-blue-600 font-semibold uppercase tracking-wider">Monthly Fee</p>
+                    <p className="text-xs text-blue-600 font-semibold uppercase tracking-wider">{t('guardian.payments.monthlyFee', 'Monthly Fee')}</p>
                   </div>
                 </div>
                 <div className="space-y-3">
@@ -390,7 +391,7 @@ const Payments = () => {
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-gray-500 line-through">{formatCurrency(paymentSummary.originalMonthlyFee)}</span>
                     <Badge className="bg-green-100 text-green-700 border-green-200 text-xs px-2 py-1 font-medium">
-                      {Math.round(((paymentSummary.originalMonthlyFee - paymentSummary.monthlyFeeAfterReduction) / paymentSummary.originalMonthlyFee) * 100)}% off
+                      {Math.round(((paymentSummary.originalMonthlyFee - paymentSummary.monthlyFeeAfterReduction) / paymentSummary.originalMonthlyFee) * 100)}% {t('guardian.payments.off', 'off')}
                     </Badge>
                   </div>
                 </div>
@@ -405,7 +406,7 @@ const Payments = () => {
                     <CheckCircle className="h-6 w-6 text-emerald-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-emerald-600 font-semibold uppercase tracking-wider">Paid in 2024</p>
+                    <p className="text-xs text-emerald-600 font-semibold uppercase tracking-wider">{t('guardian.payments.paidIn2024', 'Paid in 2024')}</p>
                   </div>
                 </div>
                 <div className="space-y-3">
@@ -413,7 +414,7 @@ const Payments = () => {
                     {formatCurrency(paymentSummary.totalPaidThisYear)}
                   </p>
                   <p className="text-sm text-emerald-600 flex items-center gap-2">
-                    <span>3 payments completed</span>
+                    <span>{t('guardian.payments.paymentsCompleted', '3 payments completed')}</span>
                     <CheckCircle className="h-4 w-4" />
                   </p>
                 </div>
@@ -428,7 +429,7 @@ const Payments = () => {
                     <TrendingDown className="h-6 w-6 text-purple-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-purple-600 font-semibold uppercase tracking-wider">Total Saved</p>
+                    <p className="text-xs text-purple-600 font-semibold uppercase tracking-wider">{t('guardian.payments.totalSaved', 'Total Saved')}</p>
                   </div>
                 </div>
                 <div className="space-y-3">
@@ -436,7 +437,7 @@ const Payments = () => {
                     {formatCurrency(paymentSummary.totalSavedThisYear)}
                   </p>
                   <p className="text-sm text-purple-600">
-                    Since fee reduction approval
+                    {t('guardian.payments.sinceFeeReduction', 'Since fee reduction approval')}
                   </p>
                 </div>
               </CardContent>
@@ -448,9 +449,9 @@ const Payments = () => {
             <Alert className="border-green-200 bg-green-50">
               <CheckCircle className="h-5 w-5 text-green-600" />
               <div>
-                <h4 className="text-green-800 font-semibold">{t('guardian.payments.reducedPayment')}</h4>
+                <h4 className="text-green-800 font-semibold">{t('guardian.payments.reducedPayment', 'Reduced Payment Active')}</h4>
                 <AlertDescription className="text-green-700">
-                  {t('guardian.payments.applicationApproved')} You're saving {formatCurrency(paymentSummary.originalMonthlyFee - paymentSummary.monthlyFeeAfterReduction)} per month.
+                  {t('guardian.payments.applicationApproved', 'Your fee reduction application has been approved.')} {t('guardian.payments.savingAmount', `You're saving ${formatCurrency(paymentSummary.originalMonthlyFee - paymentSummary.monthlyFeeAfterReduction)} per month.`)}
                 </AlertDescription>
               </div>
             </Alert>
@@ -475,8 +476,8 @@ const Payments = () => {
                 <FileText className="h-5 w-5 text-oslo-blue" />
               </div>
               <div>
-                <CardTitle className="text-gray-900">Payment History</CardTitle>
-                <CardDescription>Your complete invoice and payment records</CardDescription>
+                <CardTitle className="text-gray-900">{t('guardian.payments.paymentHistory', 'Payment History')}</CardTitle>
+                <CardDescription>{t('guardian.payments.paymentHistoryDescription', 'Your complete invoice and payment records')}</CardDescription>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -487,7 +488,7 @@ const Payments = () => {
                 onClick={handleExportAll}
               >
                 <Download className="h-4 w-4 mr-2" />
-                Export All
+                {t('guardian.payments.exportAll', 'Export All')}
               </Button>
             </div>
           </div>
@@ -497,11 +498,11 @@ const Payments = () => {
             <Table>
               <TableHeader>
                 <TableRow className="bg-gray-50/50 border-b border-gray-200">
-                  <TableHead className="font-semibold text-gray-700 px-6 py-4">Period</TableHead>
-                  <TableHead className="font-semibold text-gray-700 px-4 py-4">Amount</TableHead>
-                  <TableHead className="font-semibold text-gray-700 px-4 py-4">Due Date</TableHead>
-                  <TableHead className="font-semibold text-gray-700 px-4 py-4">Status</TableHead>
-                  <TableHead className="font-semibold text-gray-700 px-4 py-4 text-right">Actions</TableHead>
+                  <TableHead className="font-semibold text-gray-700 px-6 py-4">{t('guardian.payments.period', 'Period')}</TableHead>
+                  <TableHead className="font-semibold text-gray-700 px-4 py-4">{t('guardian.payments.amount', 'Amount')}</TableHead>
+                  <TableHead className="font-semibold text-gray-700 px-4 py-4">{t('guardian.payments.dueDate', 'Due Date')}</TableHead>
+                  <TableHead className="font-semibold text-gray-700 px-4 py-4">{t('guardian.payments.status', 'Status')}</TableHead>
+                  <TableHead className="font-semibold text-gray-700 px-4 py-4 text-right">{t('guardian.payments.actions', 'Actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -541,7 +542,7 @@ const Payments = () => {
                       <div className="space-y-1">
                         <p className="font-medium text-gray-700">{formatDate(invoice.dueDate)}</p>
                         {invoice.status === 'paid' && invoice.paidDate && (
-                          <p className="text-xs text-green-600">Paid {formatDate(invoice.paidDate)}</p>
+                          <p className="text-xs text-green-600">{t('guardian.payments.paid', 'Paid')} {formatDate(invoice.paidDate)}</p>
                         )}
                       </div>
                     </TableCell>
@@ -557,7 +558,7 @@ const Payments = () => {
                             onClick={() => handlePaymentClick(invoice.amountDue, 'individual')}
                           >
                             <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
-                            Pay Now
+                            {t('guardian.payments.payNow', 'Pay Now')}
                           </Button>
                         )}
                         <div className="flex items-center gap-1">
@@ -595,7 +596,7 @@ const Payments = () => {
             <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center">
               <Info className="h-4 w-4 text-slate-600" />
             </div>
-            Important Payment Information
+            {t('guardian.payments.importantInfo', 'Important Payment Information')}
           </CardTitle>
         </CardHeader>
         <CardContent>

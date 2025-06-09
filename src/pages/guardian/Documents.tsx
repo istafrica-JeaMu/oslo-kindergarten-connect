@@ -18,58 +18,58 @@ const Documents = () => {
   const documents = [
     {
       id: 1,
-      title: t('guardian.documents.examples.yearPlan.title'),
+      title: t('guardian.documents.examples.yearPlan.title', 'Annual Activity Plan 2024'),
       category: 'curriculum',
       type: 'pdf',
       size: '2.4 MB',
       date: '2024-01-08',
-      description: t('guardian.documents.examples.yearPlan.description')
+      description: t('guardian.documents.examples.yearPlan.description', 'Comprehensive plan for learning activities throughout the year')
     },
     {
       id: 2,
-      title: t('guardian.documents.examples.weeklyMenu.title'),
+      title: t('guardian.documents.examples.weeklyMenu.title', 'Weekly Menu Plan'),
       category: 'menu',
       type: 'pdf',
       size: '580 KB',
       date: '2024-03-01',
-      description: t('guardian.documents.examples.weeklyMenu.description')
+      description: t('guardian.documents.examples.weeklyMenu.description', 'Nutritious meals planned for the week ahead')
     },
     {
       id: 3,
-      title: t('guardian.documents.examples.safety.title'),
+      title: t('guardian.documents.examples.safety.title', 'Safety Guidelines'),
       category: 'safety',
       type: 'pdf',
       size: '1.2 MB',
       date: '2024-02-15',
-      description: t('guardian.documents.examples.safety.description')
+      description: t('guardian.documents.examples.safety.description', 'Important safety procedures and emergency protocols')
     },
     {
       id: 4,
-      title: t('guardian.documents.examples.handbook.title'),
+      title: t('guardian.documents.examples.handbook.title', 'Parent Handbook'),
       category: 'handbook',
       type: 'pdf',
       size: '3.1 MB',
       date: '2024-01-10',
-      description: t('guardian.documents.examples.handbook.description')
+      description: t('guardian.documents.examples.handbook.description', 'Complete guide for parents with policies and procedures')
     },
     {
       id: 5,
-      title: t('guardian.documents.examples.development.title'),
+      title: t('guardian.documents.examples.development.title', 'Child Development Report'),
       category: 'personal',
       type: 'pdf',
       size: '890 KB',
       date: '2024-03-15',
-      description: t('guardian.documents.examples.development.description')
+      description: t('guardian.documents.examples.development.description', 'Individual progress and development assessment')
     }
   ];
 
   const categories = [
-    { id: 'all', label: t('guardian.documents.categories.all'), count: documents.length },
-    { id: 'curriculum', label: t('guardian.documents.categories.curriculum'), count: 1 },
-    { id: 'menu', label: t('guardian.documents.categories.menu'), count: 1 },
-    { id: 'safety', label: t('guardian.documents.categories.safety'), count: 1 },
-    { id: 'handbook', label: t('guardian.documents.categories.handbook'), count: 1 },
-    { id: 'personal', label: t('guardian.documents.categories.personal'), count: 1 }
+    { id: 'all', label: t('guardian.documents.categories.all', 'All Documents'), count: documents.length },
+    { id: 'curriculum', label: t('guardian.documents.categories.curriculum', 'Curriculum'), count: 1 },
+    { id: 'menu', label: t('guardian.documents.categories.menu', 'Menu'), count: 1 },
+    { id: 'safety', label: t('guardian.documents.categories.safety', 'Safety'), count: 1 },
+    { id: 'handbook', label: t('guardian.documents.categories.handbook', 'Handbook'), count: 1 },
+    { id: 'personal', label: t('guardian.documents.categories.personal', 'Personal'), count: 1 }
   ];
 
   const getCategoryColor = (category: string) => {
@@ -100,12 +100,12 @@ const Documents = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">{t('guardian.documents.title')}</h1>
-          <p className="text-slate-600 mt-2">{t('guardian.documents.description')}</p>
+          <h1 className="text-3xl font-bold text-slate-900">{t('guardian.documents.title', 'Documents')}</h1>
+          <p className="text-slate-600 mt-2">{t('guardian.documents.description', 'Access important documents and forms')}</p>
         </div>
         <Badge variant="outline" className="bg-oslo-blue/5 text-oslo-blue border-oslo-blue/20">
           <FolderOpen className="w-4 h-4 mr-2" />
-          {t('guardian.documents.badge')}
+          {t('guardian.documents.badge', 'Document Library')}
         </Badge>
       </div>
 
@@ -117,7 +117,7 @@ const Documents = () => {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
                 <Input
-                  placeholder={t('guardian.documents.search')}
+                  placeholder={t('guardian.documents.search', 'Search documents...')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10"
@@ -126,7 +126,7 @@ const Documents = () => {
             </div>
             <Button variant="outline">
               <Filter className="w-4 h-4 mr-2" />
-              {t('guardian.documents.filter')}
+              {t('guardian.documents.filter', 'Filter')}
             </Button>
           </div>
         </CardContent>
@@ -135,7 +135,7 @@ const Documents = () => {
       {/* Categories */}
       <Card>
         <CardHeader>
-          <CardTitle>{t('guardian.documents.categoriesTitle')}</CardTitle>
+          <CardTitle>{t('guardian.documents.categoriesTitle', 'Categories')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
@@ -156,9 +156,9 @@ const Documents = () => {
       {/* Documents List */}
       <Card>
         <CardHeader>
-          <CardTitle>{t('guardian.documents.documentsTitle')}</CardTitle>
+          <CardTitle>{t('guardian.documents.documentsTitle', 'Available Documents')}</CardTitle>
           <CardDescription>
-            {filteredDocuments.length} {t('guardian.documents.of')} {documents.length} {t('guardian.documents.documentsCount')}
+            {filteredDocuments.length} {t('guardian.documents.of', 'of')} {documents.length} {t('guardian.documents.documentsCount', 'documents')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -207,8 +207,8 @@ const Documents = () => {
       {/* Recent Updates */}
       <Card>
         <CardHeader>
-          <CardTitle>{t('guardian.documents.recentUpdates')}</CardTitle>
-          <CardDescription>{t('guardian.documents.recentDescription')}</CardDescription>
+          <CardTitle>{t('guardian.documents.recentUpdates', 'Recent Updates')}</CardTitle>
+          <CardDescription>{t('guardian.documents.recentDescription', 'Latest documents and updates')}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
@@ -217,12 +217,12 @@ const Documents = () => {
                 <div>
                   <h4 className="font-medium">{document.title}</h4>
                   <p className="text-sm text-slate-600">
-                    {t('guardian.documents.published')} {format(new Date(document.date), 'd. MMMM', { locale: nb })}
+                    {t('guardian.documents.published', 'Published')} {format(new Date(document.date), 'd. MMMM', { locale: nb })}
                   </p>
                 </div>
                 <Button variant="outline" size="sm">
                   <Download className="w-4 h-4 mr-1" />
-                  {t('guardian.documents.download')}
+                  {t('guardian.documents.download', 'Download')}
                 </Button>
               </div>
             ))}

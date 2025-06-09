@@ -16,8 +16,8 @@ const NoticeBoard = () => {
     {
       id: 1,
       type: 'photos',
-      title: t('guardian.noticeBoard.posts.springFlowers.title'),
-      content: t('guardian.noticeBoard.posts.springFlowers.content'),
+      title: t('guardian.noticeBoard.posts.springFlowers.title', 'Spring Flowers Discovery'),
+      content: t('guardian.noticeBoard.posts.springFlowers.content', 'The children had a wonderful time discovering spring flowers in the kindergarten garden today.'),
       author: 'Kari Andersen',
       date: '2024-03-18T14:30:00',
       images: ['/placeholder.svg', '/placeholder.svg', '/placeholder.svg'],
@@ -28,8 +28,8 @@ const NoticeBoard = () => {
     {
       id: 2,
       type: 'menu',
-      title: t('guardian.noticeBoard.posts.weeklyMenu.title'),
-      content: t('guardian.noticeBoard.posts.weeklyMenu.content'),
+      title: t('guardian.noticeBoard.posts.weeklyMenu.title', 'Weekly Menu'),
+      content: t('guardian.noticeBoard.posts.weeklyMenu.content', 'This week\'s menu includes healthy meals with fresh vegetables and seasonal ingredients.'),
       author: 'Oslo Barnehage',
       date: '2024-03-17T09:00:00',
       attachment: 'ukemeny-uke12.pdf',
@@ -40,9 +40,9 @@ const NoticeBoard = () => {
     {
       id: 3,
       type: 'announcement',
-      title: t('guardian.noticeBoard.posts.monthlyPlan.title'),
-      content: t('guardian.noticeBoard.posts.monthlyPlan.content'),
-      author: t('guardian.noticeBoard.posts.monthlyPlan.author'),
+      title: t('guardian.noticeBoard.posts.monthlyPlan.title', 'Monthly Activity Plan'),
+      content: t('guardian.noticeBoard.posts.monthlyPlan.content', 'April activities will focus on nature exploration and creative arts.'),
+      author: t('guardian.noticeBoard.posts.monthlyPlan.author', 'Activity Coordinator'),
       date: '2024-03-16T16:45:00',
       attachment: 'manedsplan-april-2024.pdf',
       likes: 15,
@@ -52,9 +52,9 @@ const NoticeBoard = () => {
     {
       id: 4,
       type: 'event',
-      title: t('guardian.noticeBoard.posts.fleaMarket.title'),
-      content: t('guardian.noticeBoard.posts.fleaMarket.content'),
-      author: t('guardian.noticeBoard.posts.fleaMarket.author'),
+      title: t('guardian.noticeBoard.posts.fleaMarket.title', 'Spring Flea Market'),
+      content: t('guardian.noticeBoard.posts.fleaMarket.content', 'Join us for our annual spring flea market. Donations welcome!'),
+      author: t('guardian.noticeBoard.posts.fleaMarket.author', 'Parent Committee'),
       date: '2024-03-15T12:20:00',
       eventDate: '2024-04-05',
       likes: 23,
@@ -84,7 +84,7 @@ const NoticeBoard = () => {
   };
 
   const getCategoryLabel = (category: string) => {
-    return t(`guardian.noticeBoard.categories.${category}`);
+    return t(`guardian.noticeBoard.categories.${category}`, category);
   };
 
   return (
@@ -92,12 +92,12 @@ const NoticeBoard = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">{t('guardian.noticeBoard.title')}</h1>
-          <p className="text-slate-600 mt-2">{t('guardian.noticeBoard.description')}</p>
+          <h1 className="text-3xl font-bold text-slate-900">{t('guardian.noticeBoard.title', 'Notice Board')}</h1>
+          <p className="text-slate-600 mt-2">{t('guardian.noticeBoard.description', 'Latest posts and announcements from the kindergarten')}</p>
         </div>
         <Badge variant="outline" className="bg-oslo-blue/5 text-oslo-blue border-oslo-blue/20">
           <Calendar className="w-4 h-4 mr-2" />
-          {t('guardian.noticeBoard.badge')}
+          {t('guardian.noticeBoard.badge', 'Latest Updates')}
         </Badge>
       </div>
 
@@ -105,22 +105,22 @@ const NoticeBoard = () => {
       <Card>
         <CardContent className="p-4">
           <div className="flex flex-wrap gap-2">
-            <Button variant="default" size="sm">{t('guardian.noticeBoard.filters.all')}</Button>
+            <Button variant="default" size="sm">{t('guardian.noticeBoard.filters.all', 'All Posts')}</Button>
             <Button variant="outline" size="sm">
               <Users className="w-4 h-4 mr-1" />
-              {t('guardian.noticeBoard.categories.activities')}
+              {t('guardian.noticeBoard.categories.activities', 'Activities')}
             </Button>
             <Button variant="outline" size="sm">
               <Utensils className="w-4 h-4 mr-1" />
-              {t('guardian.noticeBoard.categories.menu')}
+              {t('guardian.noticeBoard.categories.menu', 'Menu')}
             </Button>
             <Button variant="outline" size="sm">
               <FileText className="w-4 h-4 mr-1" />
-              {t('guardian.noticeBoard.categories.curriculum')}
+              {t('guardian.noticeBoard.categories.curriculum', 'Curriculum')}
             </Button>
             <Button variant="outline" size="sm">
               <Calendar className="w-4 h-4 mr-1" />
-              {t('guardian.noticeBoard.categories.events')}
+              {t('guardian.noticeBoard.categories.events', 'Events')}
             </Button>
           </div>
         </CardContent>
@@ -178,7 +178,7 @@ const NoticeBoard = () => {
                       <FileText className="w-5 h-5 text-slate-600" />
                       <span className="text-sm font-medium">{post.attachment}</span>
                       <Button variant="ghost" size="sm" className="ml-auto">
-                        {t('guardian.noticeBoard.download')}
+                        {t('guardian.noticeBoard.download', 'Download')}
                       </Button>
                     </div>
                   )}
@@ -208,7 +208,7 @@ const NoticeBoard = () => {
                     
                     <Button variant="ghost" size="sm">
                       <Share className="w-4 h-4 mr-2" />
-                      {t('guardian.noticeBoard.share')}
+                      {t('guardian.noticeBoard.share', 'Share')}
                     </Button>
                   </div>
                 </div>
@@ -221,7 +221,7 @@ const NoticeBoard = () => {
       {/* Load More */}
       <div className="flex justify-center">
         <Button variant="outline">
-          {t('guardian.noticeBoard.loadMore')}
+          {t('guardian.noticeBoard.loadMore', 'Load More Posts')}
         </Button>
       </div>
     </div>
