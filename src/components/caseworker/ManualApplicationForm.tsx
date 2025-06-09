@@ -37,7 +37,7 @@ import {
   Download,
   UserPlus,
   Trash2,
-  School,
+  Home,
   ArrowRightLeft,
   Timer
 } from 'lucide-react';
@@ -286,39 +286,44 @@ const ManualApplicationForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <div className="grid gap-4">
+                  <div className="space-y-4">
                     {/* New Admission */}
                     <Card 
-                      className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
+                      className={`cursor-pointer transition-all duration-200 hover:shadow-md border-2 ${
                         field.value === 'new-admission' 
-                          ? 'ring-2 ring-oslo-blue bg-blue-50' 
-                          : 'hover:bg-gray-50'
+                          ? 'border-oslo-blue bg-blue-50' 
+                          : 'border-gray-200 hover:border-gray-300'
                       }`}
                       onClick={() => field.onChange('new-admission')}
                     >
                       <CardContent className="p-6">
-                        <div className="flex items-start gap-4">
-                          <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <School className="h-6 w-6 text-blue-600" />
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <h3 className="font-semibold text-gray-900">🏫 New Admission</h3>
-                              <Badge variant="secondary" className="bg-green-100 text-green-700">
-                                Most Common
-                              </Badge>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
+                              <Home className="h-6 w-6 text-white" />
                             </div>
-                            <p className="text-sm text-gray-600">
-                              For children without a current kindergarten placement
-                            </p>
+                            <div className="flex-1">
+                              <div className="flex items-center gap-3 mb-1">
+                                <h3 className="text-lg font-semibold text-gray-900">New Admission</h3>
+                                <Badge className="bg-green-100 text-green-700 border-green-200">
+                                  Most Common
+                                </Badge>
+                              </div>
+                              <p className="text-gray-600 mb-1">
+                                For children without a current kindergarten placement
+                              </p>
+                              <p className="text-sm text-gray-500">
+                                First-time application for kindergarten placement in Oslo
+                              </p>
+                            </div>
                           </div>
-                          <div className={`w-5 h-5 rounded-full border-2 transition-colors ${
+                          <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
                             field.value === 'new-admission'
-                              ? 'bg-oslo-blue border-oslo-blue'
+                              ? 'border-oslo-blue bg-oslo-blue'
                               : 'border-gray-300'
                           }`}>
                             {field.value === 'new-admission' && (
-                              <div className="w-full h-full rounded-full bg-white scale-50"></div>
+                              <CheckCircle className="w-4 h-4 text-white" />
                             )}
                           </div>
                         </div>
@@ -327,33 +332,38 @@ const ManualApplicationForm = () => {
 
                     {/* Transfer Request */}
                     <Card 
-                      className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
+                      className={`cursor-pointer transition-all duration-200 hover:shadow-md border-2 ${
                         field.value === 'transfer' 
-                          ? 'ring-2 ring-oslo-blue bg-blue-50' 
-                          : 'hover:bg-gray-50'
+                          ? 'border-oslo-blue bg-blue-50' 
+                          : 'border-gray-200 hover:border-gray-300'
                       }`}
                       onClick={() => field.onChange('transfer')}
                     >
                       <CardContent className="p-6">
-                        <div className="flex items-start gap-4">
-                          <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                            <ArrowRightLeft className="h-6 w-6 text-orange-600" />
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <h3 className="font-semibold text-gray-900">🔄 Transfer Request</h3>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center">
+                              <ArrowRightLeft className="h-6 w-6 text-white" />
                             </div>
-                            <p className="text-sm text-gray-600">
-                              For changing from one kindergarten to another
-                            </p>
+                            <div className="flex-1">
+                              <div className="flex items-center gap-3 mb-1">
+                                <h3 className="text-lg font-semibold text-gray-900">Transfer Request</h3>
+                              </div>
+                              <p className="text-gray-600 mb-1">
+                                For changing from one kindergarten to another
+                              </p>
+                              <p className="text-sm text-gray-500">
+                                Moving your child from their current kindergarten to a new one
+                              </p>
+                            </div>
                           </div>
-                          <div className={`w-5 h-5 rounded-full border-2 transition-colors ${
+                          <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
                             field.value === 'transfer'
-                              ? 'bg-oslo-blue border-oslo-blue'
+                              ? 'border-oslo-blue bg-oslo-blue'
                               : 'border-gray-300'
                           }`}>
                             {field.value === 'transfer' && (
-                              <div className="w-full h-full rounded-full bg-white scale-50"></div>
+                              <CheckCircle className="w-4 h-4 text-white" />
                             )}
                           </div>
                         </div>
@@ -362,33 +372,38 @@ const ManualApplicationForm = () => {
 
                     {/* Late/Ongoing */}
                     <Card 
-                      className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
+                      className={`cursor-pointer transition-all duration-200 hover:shadow-md border-2 ${
                         field.value === 'late-ongoing' 
-                          ? 'ring-2 ring-oslo-blue bg-blue-50' 
-                          : 'hover:bg-gray-50'
+                          ? 'border-oslo-blue bg-blue-50' 
+                          : 'border-gray-200 hover:border-gray-300'
                       }`}
                       onClick={() => field.onChange('late-ongoing')}
                     >
                       <CardContent className="p-6">
-                        <div className="flex items-start gap-4">
-                          <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                            <Timer className="h-6 w-6 text-purple-600" />
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <h3 className="font-semibold text-gray-900">⏱️ Late/Ongoing</h3>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 bg-orange-600 rounded-xl flex items-center justify-center">
+                              <Timer className="h-6 w-6 text-white" />
                             </div>
-                            <p className="text-sm text-gray-600">
-                              For applying after main deadlines or under special circumstances
-                            </p>
+                            <div className="flex-1">
+                              <div className="flex items-center gap-3 mb-1">
+                                <h3 className="text-lg font-semibold text-gray-900">Late/Ongoing Application</h3>
+                              </div>
+                              <p className="text-gray-600 mb-1">
+                                For applying after main deadlines or under special circumstances
+                              </p>
+                              <p className="text-sm text-gray-500">
+                                Applications submitted outside standard deadlines or for immediate placement needs
+                              </p>
+                            </div>
                           </div>
-                          <div className={`w-5 h-5 rounded-full border-2 transition-colors ${
+                          <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
                             field.value === 'late-ongoing'
-                              ? 'bg-oslo-blue border-oslo-blue'
+                              ? 'border-oslo-blue bg-oslo-blue'
                               : 'border-gray-300'
                           }`}>
                             {field.value === 'late-ongoing' && (
-                              <div className="w-full h-full rounded-full bg-white scale-50"></div>
+                              <CheckCircle className="w-4 h-4 text-white" />
                             )}
                           </div>
                         </div>
