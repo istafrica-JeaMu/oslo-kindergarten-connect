@@ -48,9 +48,9 @@ const NoticeBoardPreviewCard = () => {
   };
 
   return (
-    <Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+    <Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
       <div className="absolute inset-0 bg-gradient-to-br from-white via-purple-50/30 to-purple-100/20" />
-      <CardHeader className="relative pb-4">
+      <CardHeader className="relative pb-3">
         <CardTitle className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl flex items-center justify-center">
@@ -69,41 +69,43 @@ const NoticeBoardPreviewCard = () => {
           </Link>
         </CardTitle>
       </CardHeader>
-      <CardContent className="relative space-y-3">
-        {recentPosts.slice(0, 3).map((post) => (
-          <Link key={post.id} to={`/guardian/notice-board/post/${post.id}`}>
-            <div className="group cursor-pointer">
-              <div className="p-4 rounded-lg border border-slate-200 hover:border-purple-300 hover:bg-gradient-to-r hover:from-purple-50 hover:to-transparent transition-all duration-300">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex-1 space-y-2">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <h4 className="font-semibold text-slate-900 group-hover:text-purple-600 transition-colors line-clamp-1">
-                        {post.title}
-                      </h4>
-                      <Badge className={`text-xs ${getPostTypeColor(post.type, post.urgent)}`}>
-                        {post.urgent ? 'Urgent' : post.type}
-                      </Badge>
-                    </div>
-                    <p className="text-sm text-slate-600 line-clamp-2">{post.preview}</p>
-                    <div className="flex items-center gap-3 text-xs text-slate-500">
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
-                        {post.date}
-                      </span>
-                      {post.hasImages && (
+      <CardContent className="relative flex-1 flex flex-col">
+        <div className="space-y-2 flex-1">
+          {recentPosts.slice(0, 3).map((post) => (
+            <Link key={post.id} to={`/guardian/notice-board/post/${post.id}`}>
+              <div className="group cursor-pointer">
+                <div className="p-3 rounded-lg border border-slate-200 hover:border-purple-300 hover:bg-gradient-to-r hover:from-purple-50 hover:to-transparent transition-all duration-300">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1 space-y-1.5">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h4 className="font-semibold text-slate-900 group-hover:text-purple-600 transition-colors line-clamp-1 text-sm leading-tight">
+                          {post.title}
+                        </h4>
+                        <Badge className={`text-xs ${getPostTypeColor(post.type, post.urgent)}`}>
+                          {post.urgent ? 'Urgent' : post.type}
+                        </Badge>
+                      </div>
+                      <p className="text-xs text-slate-600 line-clamp-2 leading-tight">{post.preview}</p>
+                      <div className="flex items-center gap-3 text-xs text-slate-500">
                         <span className="flex items-center gap-1">
-                          <Image className="w-3 h-3" />
-                          Photos
+                          <Calendar className="w-3 h-3" />
+                          {post.date}
                         </span>
-                      )}
+                        {post.hasImages && (
+                          <span className="flex items-center gap-1">
+                            <Image className="w-3 h-3" />
+                            Photos
+                          </span>
+                        )}
+                      </div>
                     </div>
+                    <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-purple-600 group-hover:translate-x-1 transition-all duration-300 flex-shrink-0 mt-1" />
                   </div>
-                  <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-purple-600 group-hover:translate-x-1 transition-all duration-300 flex-shrink-0 mt-1" />
                 </div>
               </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          ))}
+        </div>
       </CardContent>
     </Card>
   );
