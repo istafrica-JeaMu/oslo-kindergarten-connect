@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useTranslation } from 'react-i18next';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
 import { 
@@ -30,7 +30,7 @@ import {
 import ManualApplicationCard from '@/components/caseworker/ManualApplicationCard';
 
 const CaseWorkerDashboard = () => {
-  const { t } = useTranslation();
+  const { t } = useLanguage();
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -91,7 +91,7 @@ const CaseWorkerDashboard = () => {
 
   const quickActions = [
     {
-      title: t('caseworker.dashboard.reviewApplications'),
+      title: t('caseworker.dashboard.reviewApplications', 'Review Applications'),
       description: 'Process pending applications',
       icon: FolderOpen,
       link: '/caseworker/review-queue',
@@ -102,7 +102,7 @@ const CaseWorkerDashboard = () => {
       count: 23
     },
     {
-      title: t('caseworker.dashboard.managePlacements'),
+      title: t('caseworker.dashboard.managePlacements', 'Manage Placements'),
       description: 'Manage kindergarten placements',
       icon: Users,
       link: '/caseworker/placement-management',
@@ -113,7 +113,7 @@ const CaseWorkerDashboard = () => {
       count: 8
     },
     {
-      title: t('caseworker.dashboard.sendMessages'),
+      title: t('caseworker.dashboard.sendMessages', 'Send Messages'),
       description: 'Communicate with families',
       icon: MessageSquare,
       link: '/caseworker/messages',
@@ -124,7 +124,7 @@ const CaseWorkerDashboard = () => {
       count: 12
     },
     {
-      title: t('caseworker.dashboard.generateReports'),
+      title: t('caseworker.dashboard.generateReports', 'Generate Reports'),
       description: 'Create status reports',
       icon: BarChart3,
       link: '/caseworker/reports',
@@ -248,7 +248,7 @@ const CaseWorkerDashboard = () => {
               </div>
             </div>
             <div>
-              <p className="text-sm text-gray-600 font-medium mb-2">{t('caseworker.dashboard.newApplications')}</p>
+              <p className="text-sm text-gray-600 font-medium mb-2">{t('caseworker.dashboard.newApplications', 'New Applications')}</p>
               <p className="text-5xl font-black text-gray-900 leading-none">{stats.newApplications.value}</p>
             </div>
           </CardContent>
@@ -272,7 +272,7 @@ const CaseWorkerDashboard = () => {
               </div>
             </div>
             <div>
-              <p className="text-sm text-gray-600 font-medium mb-2">{t('caseworker.dashboard.urgentTasks')}</p>
+              <p className="text-sm text-gray-600 font-medium mb-2">{t('caseworker.dashboard.urgentTasks', 'Urgent Tasks')}</p>
               <p className="text-5xl font-black text-red-600 leading-none">{stats.urgentTasks.value}</p>
             </div>
           </CardContent>
@@ -296,7 +296,7 @@ const CaseWorkerDashboard = () => {
               </div>
             </div>
             <div>
-              <p className="text-sm text-gray-600 font-medium mb-2">{t('caseworker.dashboard.averageProcessing')}</p>
+              <p className="text-sm text-gray-600 font-medium mb-2">{t('caseworker.dashboard.averageProcessing', 'Average Processing')}</p>
               <p className="text-5xl font-black text-yellow-600 leading-none">{stats.averageProcessingDays.value}d</p>
             </div>
           </CardContent>
@@ -320,7 +320,7 @@ const CaseWorkerDashboard = () => {
               </div>
             </div>
             <div>
-              <p className="text-sm text-gray-600 font-medium mb-2">{t('caseworker.dashboard.completionRate')}</p>
+              <p className="text-sm text-gray-600 font-medium mb-2">{t('caseworker.dashboard.completionRate', 'Completion Rate')}</p>
               <p className="text-5xl font-black text-green-600 leading-none">{stats.completionRate.value}%</p>
             </div>
           </CardContent>
@@ -336,9 +336,9 @@ const CaseWorkerDashboard = () => {
                   <Zap className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <CardTitle className="text-2xl">{t('caseworker.dashboard.quickActions')}</CardTitle>
+                  <CardTitle className="text-2xl">{t('caseworker.dashboard.quickActions', 'Quick Actions')}</CardTitle>
                   <CardDescription className="text-base">
-                    {t('caseworker.reviewQueue.quickActionsDesc')}
+                    {t('caseworker.reviewQueue.quickActionsDesc', 'Access frequently used caseworker tools and workflows')}
                   </CardDescription>
                 </div>
               </div>
@@ -422,7 +422,7 @@ const CaseWorkerDashboard = () => {
                   <Clock className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <CardTitle className="text-2xl">{t('caseworker.dashboard.recentActivity')}</CardTitle>
+                  <CardTitle className="text-2xl">{t('caseworker.dashboard.recentActivity', 'Recent Activity')}</CardTitle>
                   <CardDescription className="text-base">Latest updates requiring your attention</CardDescription>
                 </div>
               </div>

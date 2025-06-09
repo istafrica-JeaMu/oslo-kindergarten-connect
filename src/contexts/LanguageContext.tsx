@@ -7,13 +7,13 @@ type Language = 'nb' | 'en';
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: string) => string;
+  t: (key: string, fallback?: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { i18n, t } = useTranslation();
+  const { i18n, t: i18nT } = useTranslation();
 
   const setLanguage = (lang: Language) => {
     const langCode = lang === 'nb' ? 'no' : 'en';
@@ -21,6 +21,21 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const language: Language = i18n.language === 'no' ? 'nb' : 'en';
+
+  // Enhanced t function with fallback support
+  const t = (key: string, fallback?: string) => {
+    try {
+      const translation = i18nT(key);
+      // If translation equals the key, it means no translation was found
+      if (translation === key && fallback) {
+        return fallback;
+      }
+      return translation;
+    } catch (error) {
+      console.warn('Translation error for key:', key, error);
+      return fallback || key;
+    }
+  };
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t }}>

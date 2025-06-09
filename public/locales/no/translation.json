@@ -40,6 +40,23 @@
     "warning": "Advarsel",
     "info": "Informasjon"
   },
+  "caseworker": {
+    "dashboard": {
+      "quickActions": "Hurtighandlinger",
+      "reviewApplications": "Gjennomgå søknader",
+      "managePlacements": "Administrer plasseringer",
+      "sendMessages": "Send meldinger",
+      "generateReports": "Generer rapporter",
+      "newApplications": "Nye søknader",
+      "urgentTasks": "Hastesaker",
+      "averageProcessing": "Gjennomsnittlig behandlingstid",
+      "completionRate": "Fullføringsrate",
+      "recentActivity": "Nylig aktivitet"
+    },
+    "reviewQueue": {
+      "quickActionsDesc": "Tilgang til ofte brukte saksbehandlerverktøy og arbeidsflyter"
+    }
+  },
   "holidayRegistration": {
     "title": "Ferieregistrering",
     "description": "Registrer barnets ferieperioder",

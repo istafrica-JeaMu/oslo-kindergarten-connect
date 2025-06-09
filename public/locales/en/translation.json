@@ -40,6 +40,23 @@
     "warning": "Warning",
     "info": "Information"
   },
+  "caseworker": {
+    "dashboard": {
+      "quickActions": "Quick Actions",
+      "reviewApplications": "Review Applications",
+      "managePlacements": "Manage Placements",
+      "sendMessages": "Send Messages",
+      "generateReports": "Generate Reports",
+      "newApplications": "New Applications",
+      "urgentTasks": "Urgent Tasks",
+      "averageProcessing": "Average Processing",
+      "completionRate": "Completion Rate",
+      "recentActivity": "Recent Activity"
+    },
+    "reviewQueue": {
+      "quickActionsDesc": "Access frequently used caseworker tools and workflows"
+    }
+  },
   "holidayRegistration": {
     "title": "Holiday Registration",
     "description": "Register your child's holiday periods",
