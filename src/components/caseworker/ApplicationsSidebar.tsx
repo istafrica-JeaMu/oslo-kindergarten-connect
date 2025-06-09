@@ -27,7 +27,6 @@ const ApplicationsSidebar = () => {
       title: 'New Application (Manual Entry)',
       url: '/caseworker/manual-application',
       icon: Plus,
-      description: 'For guardians without e-ID',
       count: null,
       color: 'text-orange-600'
     },
@@ -35,7 +34,6 @@ const ApplicationsSidebar = () => {
       title: 'In Progress',
       url: '/caseworker/applications/in-progress',
       icon: Clock,
-      description: 'Applications being processed',
       count: 8,
       color: 'text-blue-600'
     },
@@ -43,7 +41,6 @@ const ApplicationsSidebar = () => {
       title: 'Submitted',
       url: '/caseworker/applications/submitted',
       icon: CheckCircle,
-      description: 'Completed applications',
       count: 45,
       color: 'text-green-600'
     },
@@ -51,7 +48,6 @@ const ApplicationsSidebar = () => {
       title: 'Needs Follow-up',
       url: '/caseworker/applications/follow-up',
       icon: AlertTriangle,
-      description: 'Requires additional attention',
       count: 3,
       color: 'text-red-600'
     }
@@ -93,18 +89,11 @@ const ApplicationsSidebar = () => {
                   <item.icon className={`h-4 w-4 flex-shrink-0 ${
                     location.pathname === item.url ? 'text-white' : item.color
                   }`} />
-                  <div className="flex-1 min-w-0">
-                    <span className={`font-medium text-sm block truncate ${
-                      location.pathname === item.url ? 'text-white' : 'text-slate-900'
-                    }`}>
-                      {item.title}
-                    </span>
-                    <p className={`text-xs mt-0.5 truncate ${
-                      location.pathname === item.url ? 'text-white/80' : 'text-slate-500'
-                    }`}>
-                      {item.description}
-                    </p>
-                  </div>
+                  <span className={`font-medium text-sm block truncate ${
+                    location.pathname === item.url ? 'text-white' : 'text-slate-900'
+                  }`}>
+                    {item.title}
+                  </span>
                 </div>
                 {item.count && (
                   <Badge 
