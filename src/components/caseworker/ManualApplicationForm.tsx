@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -36,7 +35,10 @@ import {
   Printer,
   Download,
   UserPlus,
-  Trash2
+  Trash2,
+  School,
+  RefreshCcw,
+  Timer
 } from 'lucide-react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -77,7 +79,7 @@ const ManualApplicationForm = () => {
 
   const form = useForm<ManualApplicationData>({
     defaultValues: {
-      applicationType: 'full-time',
+      applicationType: '',
       guardians: [{
         firstName: '',
         lastName: '',
@@ -98,7 +100,7 @@ const ManualApplicationForm = () => {
   });
 
   const generateTempId = (type: 'guardian' | 'child', index?: number) => {
-    const prefix = type === 'guardian' ? `TEMP-GUARDIAN-${index + 1}-` : 'TEMP-CHILD-';
+    const prefix = type === 'guardian' ? `TEMP-GUARDIAN-${index !== undefined ? index + 1 : ''}-` : 'TEMP-CHILD-';
     const randomId = Math.random().toString(36).substr(2, 4).toUpperCase();
     return prefix + randomId;
   };
@@ -190,8 +192,8 @@ const ManualApplicationForm = () => {
 
   const steps = [
     { number: 1, title: 'Application Type', icon: FileText },
-    { number: 2, title: 'Guardian Information', icon: User },
-    { number: 3, title: 'Child Information', icon: Baby },
+    { number: 2, title: 'Child Information', icon: Baby },
+    { number: 3, title: 'Guardian Information', icon: User },
     { number: 4, title: 'Preferences', icon: MapPin },
     { number: 5, title: 'Review & Submit', icon: CheckCircle }
   ];
@@ -207,9 +209,9 @@ const ManualApplicationForm = () => {
 
   const getApplicationTypeName = (value: string) => {
     const types = {
-      'full-time': 'Full-time placement',
-      'part-time': 'Part-time placement',
-      'emergency': 'Emergency placement'
+      'new-admission': 'New Admission',
+      'transfer': 'Transfer Request',
+      'late-ongoing': 'Late/Ongoing'
     };
     return types[value as keyof typeof types] || value;
   };
@@ -252,41 +254,154 @@ const ManualApplicationForm = () => {
   );
 
   const renderStep1 = () => (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-3">
-          <FileText className="h-6 w-6 text-oslo-blue" />
-          Application Type
-        </CardTitle>
-        <CardDescription>
-          Select the type of kindergarten application
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <FormField
-          control={form.control}
-          name="applicationType"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Application Type</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+    <div className="space-y-6">
+      {/* Caseworker Banner */}
+      <Card className="border-l-4 border-l-blue-500 bg-blue-50">
+        <CardContent className="p-4">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="h-5 w-5 text-blue-600" />
+            <p className="text-sm font-medium text-blue-800">
+              Caseworker Submission Mode: You are submitting this on behalf of a guardian.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Application Type Selection */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-3">
+            <FileText className="h-6 w-6 text-oslo-blue" />
+            Application Type
+          </CardTitle>
+          <CardDescription>
+            Choose the option that best describes your situation. The system will automatically determine the appropriate processing period based on your child's age and submission date.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <FormField
+            control={form.control}
+            name="applicationType"
+            render={({ field }) => (
+              <FormItem>
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select application type" />
-                  </SelectTrigger>
+                  <div className="grid gap-4">
+                    {/* New Admission */}
+                    <Card 
+                      className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
+                        field.value === 'new-admission' 
+                          ? 'ring-2 ring-oslo-blue bg-blue-50' 
+                          : 'hover:bg-gray-50'
+                      }`}
+                      onClick={() => field.onChange('new-admission')}
+                    >
+                      <CardContent className="p-6">
+                        <div className="flex items-start gap-4">
+                          <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <School className="h-6 w-6 text-blue-600" />
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <h3 className="font-semibold text-gray-900">🏫 New Admission</h3>
+                              <Badge variant="secondary" className="bg-green-100 text-green-700">
+                                Most Common
+                              </Badge>
+                            </div>
+                            <p className="text-sm text-gray-600">
+                              For children without a current kindergarten placement
+                            </p>
+                          </div>
+                          <div className={`w-5 h-5 rounded-full border-2 transition-colors ${
+                            field.value === 'new-admission'
+                              ? 'bg-oslo-blue border-oslo-blue'
+                              : 'border-gray-300'
+                          }`}>
+                            {field.value === 'new-admission' && (
+                              <div className="w-full h-full rounded-full bg-white scale-50"></div>
+                            )}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Transfer Request */}
+                    <Card 
+                      className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
+                        field.value === 'transfer' 
+                          ? 'ring-2 ring-oslo-blue bg-blue-50' 
+                          : 'hover:bg-gray-50'
+                      }`}
+                      onClick={() => field.onChange('transfer')}
+                    >
+                      <CardContent className="p-6">
+                        <div className="flex items-start gap-4">
+                          <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                            <RefreshCcw className="h-6 w-6 text-orange-600" />
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <h3 className="font-semibold text-gray-900">🔄 Transfer Request</h3>
+                            </div>
+                            <p className="text-sm text-gray-600">
+                              For changing from one kindergarten to another
+                            </p>
+                          </div>
+                          <div className={`w-5 h-5 rounded-full border-2 transition-colors ${
+                            field.value === 'transfer'
+                              ? 'bg-oslo-blue border-oslo-blue'
+                              : 'border-gray-300'
+                          }`}>
+                            {field.value === 'transfer' && (
+                              <div className="w-full h-full rounded-full bg-white scale-50"></div>
+                            )}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Late/Ongoing */}
+                    <Card 
+                      className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
+                        field.value === 'late-ongoing' 
+                          ? 'ring-2 ring-oslo-blue bg-blue-50' 
+                          : 'hover:bg-gray-50'
+                      }`}
+                      onClick={() => field.onChange('late-ongoing')}
+                    >
+                      <CardContent className="p-6">
+                        <div className="flex items-start gap-4">
+                          <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <Timer className="h-6 w-6 text-purple-600" />
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <h3 className="font-semibold text-gray-900">⏱️ Late/Ongoing</h3>
+                            </div>
+                            <p className="text-sm text-gray-600">
+                              For applying after main deadlines or under special circumstances
+                            </p>
+                          </div>
+                          <div className={`w-5 h-5 rounded-full border-2 transition-colors ${
+                            field.value === 'late-ongoing'
+                              ? 'bg-oslo-blue border-oslo-blue'
+                              : 'border-gray-300'
+                          }`}>
+                            {field.value === 'late-ongoing' && (
+                              <div className="w-full h-full rounded-full bg-white scale-50"></div>
+                            )}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
                 </FormControl>
-                <SelectContent>
-                  <SelectItem value="full-time">Full-time placement</SelectItem>
-                  <SelectItem value="part-time">Part-time placement</SelectItem>
-                  <SelectItem value="emergency">Emergency placement</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </CardContent>
-    </Card>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </CardContent>
+      </Card>
+    </div>
   );
 
   const renderGuardianForm = (index: number) => (
@@ -469,36 +584,6 @@ const ManualApplicationForm = () => {
   );
 
   const renderStep2 = () => (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3">
-            <User className="h-6 w-6 text-oslo-blue" />
-            Guardian Information
-          </CardTitle>
-          <CardDescription>
-            Enter the guardian(s) personal details. You may add one or more guardians. At least one is required.
-          </CardDescription>
-        </CardHeader>
-      </Card>
-
-      {fields.map((field, index) => renderGuardianForm(index))}
-
-      <div className="flex justify-center">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={addGuardian}
-          className="flex items-center gap-2"
-        >
-          <UserPlus className="h-4 w-4" />
-          Add Another Guardian
-        </Button>
-      </div>
-    </div>
-  );
-
-  const renderStep3 = () => (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-3">
@@ -606,6 +691,36 @@ const ManualApplicationForm = () => {
         </div>
       </CardContent>
     </Card>
+  );
+
+  const renderStep3 = () => (
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-3">
+            <User className="h-6 w-6 text-oslo-blue" />
+            Guardian Information
+          </CardTitle>
+          <CardDescription>
+            Enter the guardian(s) personal details. You may add one or more guardians. At least one is required.
+          </CardDescription>
+        </CardHeader>
+      </Card>
+
+      {fields.map((field, index) => renderGuardianForm(index))}
+
+      <div className="flex justify-center">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={addGuardian}
+          className="flex items-center gap-2"
+        >
+          <UserPlus className="h-4 w-4" />
+          Add Another Guardian
+        </Button>
+      </div>
+    </div>
   );
 
   const renderStep4 = () => (
