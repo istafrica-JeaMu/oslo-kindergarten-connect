@@ -1,3 +1,4 @@
+
 import {
   Home,
   FileText,
@@ -175,7 +176,7 @@ export function AppSidebar() {
         ];
       
       default:
-        return { primary: [], secondary: [], quickActions: [] };
+        return [];
     }
   };
 
@@ -202,28 +203,68 @@ export function AppSidebar() {
     }
   };
 
-  const renderGuardianNavigation = () => (
-    <>
-      {/* Quick Actions - Always visible at top */}
-      {menuItems.quickActions && menuItems.quickActions.length > 0 && (
+  const isGuardianNavigation = (items: any): items is { primary: any[], secondary: any[], quickActions: any[] } => {
+    return items && typeof items === 'object' && 'primary' in items && 'secondary' in items && 'quickActions' in items;
+  };
+
+  const renderGuardianNavigation = () => {
+    if (!isGuardianNavigation(menuItems)) return null;
+
+    return (
+      <>
+        {/* Quick Actions - Always visible at top */}
+        {menuItems.quickActions && menuItems.quickActions.length > 0 && (
+          <SidebarGroup>
+            <SidebarGroupLabel className="text-red-600 font-bold text-sm mb-3 px-3 flex items-center gap-2">
+              <AlertCircle className="w-4 h-4" />
+              Quick Actions
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu className="space-y-1">
+                {menuItems.quickActions.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton 
+                      asChild 
+                      isActive={location.pathname === item.url}
+                      className="rounded-lg hover:bg-red-50 data-[active=true]:bg-red-500 data-[active=true]:text-white transition-colors duration-200 border border-red-200"
+                    >
+                      <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
+                        <item.icon className="h-5 w-5" />
+                        <span className="font-medium">{item.title}</span>
+                        {item.urgent && <Badge variant="destructive" className="ml-auto">!</Badge>}
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
+
+        <Separator className="my-4" />
+
+        {/* Primary Navigation - Daily Essentials */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-red-600 font-bold text-sm mb-3 px-3 flex items-center gap-2">
-            <AlertCircle className="w-4 h-4" />
-            Quick Actions
+          <SidebarGroupLabel className="text-oslo-blue font-semibold text-sm mb-3 px-3">
+            Daily Essentials
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
-              {menuItems.quickActions.map((item) => (
+              {menuItems.primary?.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton 
                     asChild 
                     isActive={location.pathname === item.url}
-                    className="rounded-lg hover:bg-red-50 data-[active=true]:bg-red-500 data-[active=true]:text-white transition-colors duration-200 border border-red-200"
+                    className="rounded-lg hover:bg-oslo-blue/10 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200"
                   >
-                    <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
+                    <Link to={item.url} className="flex items-center gap-3 px-3 py-3">
                       <item.icon className="h-5 w-5" />
-                      <span className="font-medium">{item.title}</span>
-                      {item.urgent && <Badge variant="destructive" className="ml-auto">!</Badge>}
+                      <div className="flex-1">
+                        <span className="font-medium text-base">{item.title}</span>
+                        {item.description && (
+                          <p className="text-xs text-slate-500 mt-0.5">{item.description}</p>
+                        )}
+                      </div>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -231,70 +272,38 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-      )}
 
-      <Separator className="my-4" />
+        <Separator className="my-4" />
 
-      {/* Primary Navigation - Daily Essentials */}
-      <SidebarGroup>
-        <SidebarGroupLabel className="text-oslo-blue font-semibold text-sm mb-3 px-3">
-          Daily Essentials
-        </SidebarGroupLabel>
-        <SidebarGroupContent>
-          <SidebarMenu className="space-y-1">
-            {menuItems.primary?.map((item) => (
-              <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton 
-                  asChild 
-                  isActive={location.pathname === item.url}
-                  className="rounded-lg hover:bg-oslo-blue/10 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200"
-                >
-                  <Link to={item.url} className="flex items-center gap-3 px-3 py-3">
-                    <item.icon className="h-5 w-5" />
-                    <div className="flex-1">
-                      <span className="font-medium text-base">{item.title}</span>
-                      {item.description && (
-                        <p className="text-xs text-slate-500 mt-0.5">{item.description}</p>
-                      )}
-                    </div>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
+        {/* Secondary Navigation - Administrative */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-slate-600 font-medium text-sm mb-3 px-3">
+            Administrative
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="space-y-1">
+              {menuItems.secondary?.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton 
+                    asChild 
+                    isActive={location.pathname === item.url}
+                    className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-slate-200 data-[active=true]:text-slate-900 transition-colors duration-200"
+                  >
+                    <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
+                      <item.icon className="h-4 w-4 text-slate-600" />
+                      <span className="font-medium text-sm">{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </>
+    );
+  };
 
-      <Separator className="my-4" />
-
-      {/* Secondary Navigation - Administrative */}
-      <SidebarGroup>
-        <SidebarGroupLabel className="text-slate-600 font-medium text-sm mb-3 px-3">
-          Administrative
-        </SidebarGroupLabel>
-        <SidebarGroupContent>
-          <SidebarMenu className="space-y-1">
-            {menuItems.secondary?.map((item) => (
-              <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton 
-                  asChild 
-                  isActive={location.pathname === item.url}
-                  className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-slate-200 data-[active=true]:text-slate-900 transition-colors duration-200"
-                >
-                  <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
-                    <item.icon className="h-4 w-4 text-slate-600" />
-                    <span className="font-medium text-sm">{item.title}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
-    </>
-  );
-
-  const renderStandardNavigation = (items) => (
+  const renderStandardNavigation = (items: any[]) => (
     <SidebarGroup>
       <SidebarGroupLabel className="text-oslo-blue font-semibold text-sm mb-3 px-3">
         {getSidebarTitle()}
@@ -334,7 +343,9 @@ export function AppSidebar() {
         </div>
       </SidebarHeader>
       <SidebarContent className="p-4">
-        {user?.role === 'guardian' ? renderGuardianNavigation() : renderStandardNavigation(menuItems)}
+        {user?.role === 'guardian' && isGuardianNavigation(menuItems) 
+          ? renderGuardianNavigation() 
+          : renderStandardNavigation(Array.isArray(menuItems) ? menuItems : [])}
       </SidebarContent>
     </Sidebar>
   );
