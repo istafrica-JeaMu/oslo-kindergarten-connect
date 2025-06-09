@@ -1,4 +1,3 @@
-
 import { Application } from '@/types/application';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -13,6 +12,8 @@ import {
 } from '@/components/ui/table';
 import { Eye, Play, Download, AlertCircle, Clock, CheckCircle } from 'lucide-react';
 import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 interface ApplicationTableProps {
   applications: Application[];
@@ -20,6 +21,26 @@ interface ApplicationTableProps {
 }
 
 const ApplicationTable = ({ applications, showActions = true }: ApplicationTableProps) => {
+  const navigate = useNavigate();
+
+  const handleView = (application: Application) => {
+    navigate(`/caseworker/application/${application.id}/view`);
+  };
+
+  const handleResume = (application: Application) => {
+    navigate(`/caseworker/manual-application/${application.id}/edit`);
+  };
+
+  const handleDownload = (application: Application) => {
+    // Simulate PDF download
+    toast.success(`Downloading PDF for ${application.childName}...`);
+    console.log('Downloading PDF for application:', application.id);
+  };
+
+  const handleReview = (application: Application) => {
+    navigate(`/caseworker/application/${application.id}/view`);
+  };
+
   const getStatusIcon = (status: Application['status']) => {
     switch (status) {
       case 'draft':
@@ -71,11 +92,23 @@ const ApplicationTable = ({ applications, showActions = true }: ApplicationTable
       case 'draft':
         return (
           <>
-            <Button size="sm" variant="outline" className="h-8 gap-1">
+            <Button 
+              size="sm" 
+              variant="outline" 
+              className="h-8 gap-1"
+              onClick={() => handleResume(application)}
+              title="Resume editing this application"
+            >
               <Play className="h-3 w-3" />
               Resume
             </Button>
-            <Button size="sm" variant="ghost" className="h-8 gap-1">
+            <Button 
+              size="sm" 
+              variant="ghost" 
+              className="h-8 gap-1"
+              onClick={() => handleView(application)}
+              title="View application details"
+            >
               <Eye className="h-3 w-3" />
               View
             </Button>
@@ -84,11 +117,23 @@ const ApplicationTable = ({ applications, showActions = true }: ApplicationTable
       case 'submitted':
         return (
           <>
-            <Button size="sm" variant="outline" className="h-8 gap-1">
+            <Button 
+              size="sm" 
+              variant="outline" 
+              className="h-8 gap-1"
+              onClick={() => handleDownload(application)}
+              title="Download PDF of submitted application"
+            >
               <Download className="h-3 w-3" />
               PDF
             </Button>
-            <Button size="sm" variant="ghost" className="h-8 gap-1">
+            <Button 
+              size="sm" 
+              variant="ghost" 
+              className="h-8 gap-1"
+              onClick={() => handleView(application)}
+              title="View application details"
+            >
               <Eye className="h-3 w-3" />
               View
             </Button>
@@ -97,11 +142,23 @@ const ApplicationTable = ({ applications, showActions = true }: ApplicationTable
       case 'flagged':
         return (
           <>
-            <Button size="sm" variant="outline" className="h-8 gap-1">
+            <Button 
+              size="sm" 
+              variant="outline" 
+              className="h-8 gap-1"
+              onClick={() => handleReview(application)}
+              title="Review flagged application"
+            >
               <AlertCircle className="h-3 w-3" />
               Review
             </Button>
-            <Button size="sm" variant="ghost" className="h-8 gap-1">
+            <Button 
+              size="sm" 
+              variant="ghost" 
+              className="h-8 gap-1"
+              onClick={() => handleView(application)}
+              title="View application details"
+            >
               <Eye className="h-3 w-3" />
               View
             </Button>
@@ -109,7 +166,13 @@ const ApplicationTable = ({ applications, showActions = true }: ApplicationTable
         );
       default:
         return (
-          <Button size="sm" variant="ghost" className="h-8 gap-1">
+          <Button 
+            size="sm" 
+            variant="ghost" 
+            className="h-8 gap-1"
+            onClick={() => handleView(application)}
+            title="View application details"
+          >
             <Eye className="h-3 w-3" />
             View
           </Button>
