@@ -42,16 +42,13 @@ const QuickActionsCard = () => {
   ];
 
   const getButtonClassName = (action: typeof quickActions[0]) => {
-    const baseClasses = "w-full h-auto p-3 flex items-center gap-3 text-left hover:scale-105 transition-all duration-300 min-h-[60px] shadow-lg hover:shadow-xl rounded-lg";
+    const baseClasses = "w-full h-auto p-4 flex items-center gap-4 text-left hover:scale-[1.02] transition-all duration-300 min-h-[70px] shadow-lg hover:shadow-xl rounded-lg";
     
     if (action.variant === 'destructive') {
-      // Light red background with reduced contrast
       return `${baseClasses} bg-red-100 hover:bg-red-200 text-red-700 border border-red-200 hover:border-red-300`;
     } else if (action.variant === 'default') {
-      // Gradient blue background like the New Application button
       return `${baseClasses} bg-gradient-to-r from-oslo-blue to-blue-700 hover:from-oslo-blue/90 hover:to-blue-700/90 text-white border border-oslo-blue`;
     } else {
-      // Outline style - gradient border and text
       return `${baseClasses} border-2 border-oslo-blue text-oslo-blue bg-white hover:bg-gradient-to-r hover:from-oslo-blue hover:to-blue-700 hover:text-white`;
     }
   };
@@ -72,18 +69,18 @@ const QuickActionsCard = () => {
       </CardHeader>
       <CardContent className="relative">
         <TooltipProvider>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-3">
+          <div className="space-y-3">
             {quickActions.map((action) => (
               <Tooltip key={action.title}>
                 <TooltipTrigger asChild>
-                  <Link to={action.url} className="group">
+                  <Link to={action.url} className="group block">
                     <button
                       className={getButtonClassName(action)}
                     >
-                      <action.icon className={`h-5 w-5 flex-shrink-0 ${action.urgent ? 'animate-pulse' : ''}`} />
-                      <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-                        <div className="font-semibold text-sm leading-tight truncate">{action.title}</div>
-                        <div className="text-xs opacity-90 leading-tight truncate">{action.description}</div>
+                      <action.icon className={`h-6 w-6 flex-shrink-0 ${action.urgent ? 'animate-pulse' : ''}`} />
+                      <div className="flex flex-col gap-1 flex-1 min-w-0">
+                        <div className="font-semibold text-base leading-tight">{action.title}</div>
+                        <div className="text-sm opacity-90 leading-tight">{action.description}</div>
                       </div>
                     </button>
                   </Link>
