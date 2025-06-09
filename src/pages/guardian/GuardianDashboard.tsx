@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,7 +7,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { 
   FileText, 
   Clock, 
@@ -31,7 +31,7 @@ import QuickActionsCard from '@/components/guardian/QuickActionsCard';
 import ApplicationsSummaryCard from '@/components/guardian/ApplicationsSummaryCard';
 
 const GuardianDashboard = () => {
-  const { t } = useTranslation();
+  const { t } = useLanguage();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
@@ -112,21 +112,21 @@ const GuardianDashboard = () => {
         return (
           <Badge className="bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 border-yellow-300 font-semibold shadow-sm">
             <Clock className="w-3 h-3 mr-1" />
-            {t('common.status.submitted')}
+            {t('common.status.submitted', 'Submitted')}
           </Badge>
         );
       case 'placed':
         return (
           <Badge className="bg-gradient-to-r from-green-100 to-green-200 text-green-800 border-green-300 font-semibold shadow-sm">
             <CheckCircle className="w-3 h-3 mr-1" />
-            {t('common.status.placed')}
+            {t('common.status.placed', 'Placed')}
           </Badge>
         );
       case 'rejected':
         return (
           <Badge className="bg-gradient-to-r from-red-100 to-red-200 text-red-800 border-red-300 font-semibold shadow-sm">
             <AlertCircle className="w-3 h-3 mr-1" />
-            {t('common.status.rejected')}
+            {t('common.status.rejected', 'Rejected')}
           </Badge>
         );
       default:
@@ -208,10 +208,10 @@ const GuardianDashboard = () => {
               </div>
               <div>
                 <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 via-slate-800 to-slate-700 bg-clip-text text-transparent">
-                  {t('guardian.dashboard.welcome')}, {user?.name}
+                  {t('guardian.dashboard.welcome', 'Welcome')}, {user?.name}
                 </h1>
                 <p className="text-slate-600 text-xl font-medium mt-2">
-                  {t('guardian.dashboard.overview')}
+                  {t('guardian.dashboard.overview', 'Overview of your kindergarten applications and information')}
                 </p>
                 <div className="flex items-center gap-3 mt-4">
                   <Badge className="relative overflow-hidden bg-gradient-to-r from-slate-100 via-slate-50 to-white text-slate-700 border-2 border-slate-300 hover:border-oslo-blue/50 font-semibold px-3 py-1.5 shadow-md hover:shadow-lg transition-all duration-300 group cursor-default">
@@ -236,7 +236,7 @@ const GuardianDashboard = () => {
             className="bg-gradient-to-r from-oslo-blue to-blue-700 hover:from-oslo-blue/90 hover:to-blue-700/90 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 px-8 py-6 text-lg font-semibold"
           >
             <Plus className="h-6 w-6 mr-3" />
-            {t('guardian.dashboard.newApplication')}
+            {t('guardian.dashboard.newApplication', 'New Application')}
           </Button>
         </div>
       </div>
@@ -273,7 +273,7 @@ const GuardianDashboard = () => {
                 <MessageSquare className="h-7 w-7 text-blue-600" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-slate-900">{t('guardian.dashboard.recentMessages')}</h3>
+                <h3 className="text-xl font-bold text-slate-900">{t('guardian.dashboard.recentMessages', 'Recent Messages')}</h3>
                 <p className="text-sm text-slate-600 font-normal mt-1">Latest updates and notifications</p>
               </div>
             </CardTitle>
