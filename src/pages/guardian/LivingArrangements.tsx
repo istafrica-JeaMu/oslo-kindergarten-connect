@@ -8,6 +8,20 @@ import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { 
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from '@/components/ui/context-menu';
+import { 
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { 
   Home,
   CalendarRange,
   Users,
@@ -27,7 +41,8 @@ import {
   UserPlus,
   Settings,
   Eye,
-  MoreVertical
+  MoreVertical,
+  Trash2
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -35,6 +50,16 @@ import { useLanguage } from '@/contexts/LanguageContext';
 const LivingArrangements = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedArrangementType, setSelectedArrangementType] = useState('fixed');
+  const [showAddPersonDialog, setShowAddPersonDialog] = useState(false);
+  const [showEditPersonDialog, setShowEditPersonDialog] = useState(false);
+  const [selectedPerson, setSelectedPerson] = useState(null);
+  const [newPersonData, setNewPersonData] = useState({
+    name: '',
+    relationship: '',
+    phone: '',
+    purpose: '',
+    restrictions: ''
+  });
   const { toast } = useToast();
   const { t } = useLanguage();
 
@@ -155,9 +180,58 @@ const LivingArrangements = () => {
   };
 
   const handleAddPerson = () => {
+    setNewPersonData({
+      name: '',
+      relationship: '',
+      phone: '',
+      purpose: '',
+      restrictions: ''
+    });
+    setShowAddPersonDialog(true);
+  };
+
+  const handleSaveNewPerson = () => {
+    // Simulate adding new person
     toast({
-      title: "Add Authorized Person",
-      description: "Opening form to add new authorized pickup person...",
+      title: "Person Added",
+      description: `${newPersonData.name} has been added to authorized pickup list.`,
+    });
+    setShowAddPersonDialog(false);
+    setNewPersonData({
+      name: '',
+      relationship: '',
+      phone: '',
+      purpose: '',
+      restrictions: ''
+    });
+  };
+
+  const handleEditPerson = (person: any) => {
+    setSelectedPerson(person);
+    setNewPersonData({
+      name: person.name,
+      relationship: person.relationship,
+      phone: person.phone,
+      purpose: person.purpose,
+      restrictions: person.restrictions
+    });
+    setShowEditPersonDialog(true);
+  };
+
+  const handleSaveEditPerson = () => {
+    toast({
+      title: "Person Updated",
+      description: `${selectedPerson?.name}'s information has been updated.`,
+    });
+    setShowEditPersonDialog(false);
+    setSelectedPerson(null);
+  };
+
+  const handleDeletePerson = (person: any) => {
+    toast({
+      title: "Person Removed",
+      description: `${person.name} has been removed from authorized pickup list.`,
+      variant: "destructive",
     });
   };
 
@@ -573,7 +647,7 @@ const LivingArrangements = () => {
         </Card>
       )}
 
-      {/* New Authorized Pickup Persons Section */}
+      {/* Enhanced Authorized Pickup Persons Section */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -643,9 +717,26 @@ const LivingArrangements = () => {
                     <p className="text-xs text-slate-600">{person.restrictions}</p>
                   </TableCell>
                   <TableCell>
-                    <Button variant="ghost" size="sm" onClick={() => handleManagePerson(person.id)}>
-                      <MoreVertical className="w-4 h-4" />
-                    </Button>
+                    <ContextMenu>
+                      <ContextMenuTrigger asChild>
+                        <Button variant="ghost" size="sm">
+                          <MoreVertical className="w-4 h-4" />
+                        </Button>
+                      </ContextMenuTrigger>
+                      <ContextMenuContent className="w-40">
+                        <ContextMenuItem onClick={() => handleEditPerson(person)}>
+                          <Edit className="w-4 h-4 mr-2" />
+                          Edit
+                        </ContextMenuItem>
+                        <ContextMenuItem 
+                          onClick={() => handleDeletePerson(person)}
+                          className="text-red-600 focus:text-red-600"
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" />
+                          Delete
+                        </ContextMenuItem>
+                      </ContextMenuContent>
+                    </ContextMenu>
                   </TableCell>
                 </TableRow>
               ))}
@@ -744,6 +835,165 @@ const LivingArrangements = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Add Person Dialog */}
+      <Dialog open={showAddPersonDialog} onOpenChange={setShowAddPersonDialog}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Add Authorized Person</DialogTitle>
+            <DialogDescription>
+              Add someone who can pick up your child from kindergarten.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="name" className="text-right">
+                Name
+              </Label>
+              <Input
+                id="name"
+                value={newPersonData.name}
+                onChange={(e) => setNewPersonData({...newPersonData, name: e.target.value})}
+                className="col-span-3"
+                placeholder="Full name"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="relationship" className="text-right">
+                Relationship
+              </Label>
+              <Input
+                id="relationship"
+                value={newPersonData.relationship}
+                onChange={(e) => setNewPersonData({...newPersonData, relationship: e.target.value})}
+                className="col-span-3"
+                placeholder="e.g., Grandmother"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="phone" className="text-right">
+                Phone
+              </Label>
+              <Input
+                id="phone"
+                value={newPersonData.phone}
+                onChange={(e) => setNewPersonData({...newPersonData, phone: e.target.value})}
+                className="col-span-3"
+                placeholder="+47 XX XX XX XX"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="purpose" className="text-right">
+                Purpose
+              </Label>
+              <Textarea
+                id="purpose"
+                value={newPersonData.purpose}
+                onChange={(e) => setNewPersonData({...newPersonData, purpose: e.target.value})}
+                className="col-span-3"
+                placeholder="When will this person pick up your child?"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="restrictions" className="text-right">
+                Restrictions
+              </Label>
+              <Input
+                id="restrictions"
+                value={newPersonData.restrictions}
+                onChange={(e) => setNewPersonData({...newPersonData, restrictions: e.target.value})}
+                className="col-span-3"
+                placeholder="e.g., Emergency only"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowAddPersonDialog(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveNewPerson}>
+              Add Person
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Person Dialog */}
+      <Dialog open={showEditPersonDialog} onOpenChange={setShowEditPersonDialog}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Edit Authorized Person</DialogTitle>
+            <DialogDescription>
+              Update information for {selectedPerson?.name}.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="edit-name" className="text-right">
+                Name
+              </Label>
+              <Input
+                id="edit-name"
+                value={newPersonData.name}
+                onChange={(e) => setNewPersonData({...newPersonData, name: e.target.value})}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="edit-relationship" className="text-right">
+                Relationship
+              </Label>
+              <Input
+                id="edit-relationship"
+                value={newPersonData.relationship}
+                onChange={(e) => setNewPersonData({...newPersonData, relationship: e.target.value})}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="edit-phone" className="text-right">
+                Phone
+              </Label>
+              <Input
+                id="edit-phone"
+                value={newPersonData.phone}
+                onChange={(e) => setNewPersonData({...newPersonData, phone: e.target.value})}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="edit-purpose" className="text-right">
+                Purpose
+              </Label>
+              <Textarea
+                id="edit-purpose"
+                value={newPersonData.purpose}
+                onChange={(e) => setNewPersonData({...newPersonData, purpose: e.target.value})}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="edit-restrictions" className="text-right">
+                Restrictions
+              </Label>
+              <Input
+                id="edit-restrictions"
+                value={newPersonData.restrictions}
+                onChange={(e) => setNewPersonData({...newPersonData, restrictions: e.target.value})}
+                className="col-span-3"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowEditPersonDialog(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveEditPerson}>
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
