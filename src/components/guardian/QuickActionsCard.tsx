@@ -42,7 +42,7 @@ const QuickActionsCard = () => {
   ];
 
   const getButtonClassName = (action: typeof quickActions[0]) => {
-    const baseClasses = "w-full h-auto p-4 flex flex-col items-center gap-2 text-center hover:scale-105 transition-all duration-300 min-h-[80px] shadow-lg hover:shadow-xl rounded-lg";
+    const baseClasses = "w-full h-auto p-3 flex items-center gap-3 text-left hover:scale-105 transition-all duration-300 min-h-[60px] shadow-lg hover:shadow-xl rounded-lg";
     
     if (action.variant === 'destructive') {
       // Light red background with reduced contrast
@@ -72,8 +72,7 @@ const QuickActionsCard = () => {
       </CardHeader>
       <CardContent className="relative">
         <TooltipProvider>
-          {/* 2x2 Grid Layout */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-3">
             {quickActions.map((action) => (
               <Tooltip key={action.title}>
                 <TooltipTrigger asChild>
@@ -81,10 +80,10 @@ const QuickActionsCard = () => {
                     <button
                       className={getButtonClassName(action)}
                     >
-                      <action.icon className={`h-6 w-6 flex-shrink-0 ${action.urgent ? 'animate-pulse' : ''}`} />
-                      <div className="flex flex-col gap-0.5 items-center">
-                        <div className="font-semibold text-xs leading-tight text-center">{action.title}</div>
-                        <div className="text-xs opacity-90 leading-tight text-center hidden sm:block">{action.description}</div>
+                      <action.icon className={`h-5 w-5 flex-shrink-0 ${action.urgent ? 'animate-pulse' : ''}`} />
+                      <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                        <div className="font-semibold text-sm leading-tight truncate">{action.title}</div>
+                        <div className="text-xs opacity-90 leading-tight truncate">{action.description}</div>
                       </div>
                     </button>
                   </Link>
