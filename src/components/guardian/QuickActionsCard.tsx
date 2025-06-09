@@ -42,14 +42,14 @@ const QuickActionsCard = () => {
   ];
 
   const getButtonClassName = (action: typeof quickActions[0]) => {
-    const baseClasses = "w-full h-auto p-3 flex items-center gap-3 text-left hover:scale-105 transition-all duration-300 min-h-[60px] shadow-lg hover:shadow-xl";
+    const baseClasses = "w-full h-auto p-3 flex items-center gap-3 text-left hover:scale-105 transition-all duration-300 min-h-[60px] shadow-lg hover:shadow-xl rounded-lg";
     
     if (action.variant === 'destructive') {
       // Light red background with reduced contrast
-      return `${baseClasses} bg-red-100 hover:bg-red-200 text-red-700 border-red-200 hover:border-red-300`;
+      return `${baseClasses} bg-red-100 hover:bg-red-200 text-red-700 border border-red-200 hover:border-red-300`;
     } else if (action.variant === 'default') {
       // Gradient blue background like the New Application button
-      return `${baseClasses} bg-gradient-to-r from-oslo-blue to-blue-700 hover:from-oslo-blue/90 hover:to-blue-700/90 text-white border-oslo-blue`;
+      return `${baseClasses} bg-gradient-to-r from-oslo-blue to-blue-700 hover:from-oslo-blue/90 hover:to-blue-700/90 text-white border border-oslo-blue`;
     } else {
       // Outline style - gradient border and text
       return `${baseClasses} border-2 border-oslo-blue text-oslo-blue bg-white hover:bg-gradient-to-r hover:from-oslo-blue hover:to-blue-700 hover:text-white`;
