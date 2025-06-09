@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -35,7 +34,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 
 const LivingArrangements = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedArrangementType, setSelectedArrangementType] = useState('shared');
+  const [selectedArrangementType, setSelectedArrangementType] = useState('fixed');
   const { toast } = useToast();
   const { t } = useLanguage();
 
@@ -308,10 +307,10 @@ const LivingArrangements = () => {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>Arrangement Type</CardTitle>
-            {!isEditing && selectedArrangementType === 'shared' && (
-              <Button variant="ghost" size="sm" onClick={handleConfigureSchedule}>
+            {!isEditing && selectedArrangementType === 'fixed' && (
+              <Button variant="ghost" size="sm" onClick={handleManagePickup}>
                 <Settings className="w-4 h-4 mr-2" />
-                Configure Schedule
+                Manage Pickup Authorization
               </Button>
             )}
           </div>
@@ -376,8 +375,8 @@ const LivingArrangements = () => {
                 )}
               </div>
               <div className="mt-2 text-center">
-                <p className="text-xs text-slate-500">Would show:</p>
-                <p className="text-xs font-medium">3 authorized persons</p>
+                <p className="text-xs text-slate-500">Current setup:</p>
+                <p className="text-xs font-medium">4 authorized persons</p>
                 {selectedArrangementType === 'fixed' && (
                   <Button variant="outline" size="sm" className="mt-2" onClick={handleManagePickup}>
                     Manage Pickup
@@ -427,7 +426,7 @@ const LivingArrangements = () => {
             Primary Address
           </CardTitle>
           <CardDescription>
-            Main residence where child lives Monday through Thursday
+            Main residence where child lives
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -514,7 +513,7 @@ const LivingArrangements = () => {
         </CardContent>
       </Card>
 
-      {/* Enhanced Secondary Address */}
+      {/* Enhanced Secondary Address - Only show if shared custody */}
       {selectedArrangementType === 'shared' && (
         <Card>
           <CardHeader>
