@@ -22,7 +22,7 @@ const TeacherMeetings = () => {
       type: 'Utviklingssamtale',
       duration: 30,
       status: 'confirmed',
-      agenda: t('guardian.meetings.examples.socialDevelopment')
+      agenda: t('guardian.meetings.examples.socialDevelopment', 'Discuss Emma\'s social development and learning')
     },
     {
       id: 2,
@@ -32,7 +32,7 @@ const TeacherMeetings = () => {
       type: 'Bekymringssamtale',
       duration: 45,
       status: 'pending',
-      agenda: t('guardian.meetings.examples.playgroundIncident')
+      agenda: t('guardian.meetings.examples.playgroundIncident', 'Follow-up after playground incident')
     }
   ];
 
@@ -47,20 +47,20 @@ const TeacherMeetings = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">{t('guardian.meetings.title')}</h1>
-          <p className="text-slate-600 mt-2">{t('guardian.meetings.description')}</p>
+          <h1 className="text-3xl font-bold text-slate-900">{t('guardian.meetings.title', 'Teacher Meetings')}</h1>
+          <p className="text-slate-600 mt-2">{t('guardian.meetings.description', 'Book meetings with your child\'s teachers and educators')}</p>
         </div>
         <Button>
           <Plus className="w-4 h-4 mr-2" />
-          {t('guardian.meetings.bookNew')}
+          {t('guardian.meetings.bookNew', 'Book New Meeting')}
         </Button>
       </div>
 
       {/* Upcoming Meetings */}
       <Card>
         <CardHeader>
-          <CardTitle>{t('guardian.meetings.upcomingMeetings')}</CardTitle>
-          <CardDescription>{t('guardian.meetings.plannedMeetings')}</CardDescription>
+          <CardTitle>{t('guardian.meetings.upcomingMeetings', 'Upcoming Meetings')}</CardTitle>
+          <CardDescription>{t('guardian.meetings.plannedMeetings', 'Your scheduled teacher meetings')}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -73,14 +73,14 @@ const TeacherMeetings = () => {
                   <div>
                     <h3 className="font-semibold">{meeting.type}</h3>
                     <p className="text-sm text-slate-600">
-                      {format(new Date(meeting.date), 'EEEE d. MMMM', { locale: nb })} {t('guardian.meetings.at')} {meeting.time}
+                      {format(new Date(meeting.date), 'EEEE d. MMMM', { locale: nb })} {t('guardian.meetings.at', 'at')} {meeting.time}
                     </p>
-                    <p className="text-sm text-slate-600">{t('guardian.meetings.with')} {meeting.teacher}</p>
+                    <p className="text-sm text-slate-600">{t('guardian.meetings.with', 'With')} {meeting.teacher}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <Badge className={meeting.status === 'confirmed' ? 'bg-green-500' : 'bg-yellow-500'}>
-                    {meeting.status === 'confirmed' ? t('guardian.meetings.status.confirmed') : t('guardian.meetings.status.pending')}
+                    {meeting.status === 'confirmed' ? t('guardian.meetings.status.confirmed', 'Confirmed') : t('guardian.meetings.status.pending', 'Pending')}
                   </Badge>
                   <Button variant="ghost" size="sm">
                     <Edit className="w-4 h-4" />
@@ -95,8 +95,8 @@ const TeacherMeetings = () => {
       {/* Available Time Slots */}
       <Card>
         <CardHeader>
-          <CardTitle>{t('guardian.meetings.availableSlots')}</CardTitle>
-          <CardDescription>{t('guardian.meetings.selectTime')}</CardDescription>
+          <CardTitle>{t('guardian.meetings.availableSlots', 'Available Time Slots')}</CardTitle>
+          <CardDescription>{t('guardian.meetings.selectTime', 'Select an available time for new meeting')}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid md:grid-cols-3 gap-4">
