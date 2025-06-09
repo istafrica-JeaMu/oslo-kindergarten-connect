@@ -232,7 +232,7 @@ export function AppSidebar() {
                     >
                       <Link to={item.url} className="flex items-center gap-3 px-3 py-2 w-full">
                         <item.icon className="h-4 w-4 flex-shrink-0" />
-                        <span className="font-medium text-sm truncate">{item.title}</span>
+                        <span className="font-medium text-sm">{item.title}</span>
                         {item.urgent && <Badge variant="destructive" className="ml-auto flex-shrink-0">!</Badge>}
                       </Link>
                     </SidebarMenuButton>
@@ -262,9 +262,9 @@ export function AppSidebar() {
                     <Link to={item.url} className="flex items-center gap-3 px-3 py-2 w-full">
                       <item.icon className="h-4 w-4 flex-shrink-0" />
                       <div className="flex-1 min-w-0">
-                        <span className="font-medium text-sm block truncate">{item.title}</span>
+                        <span className="font-medium text-sm block">{item.title}</span>
                         {item.description && (
-                          <p className="text-xs text-slate-500 mt-0.5 truncate">{item.description}</p>
+                          <p className="text-xs text-slate-500 mt-0.5">{item.description}</p>
                         )}
                       </div>
                     </Link>
@@ -293,7 +293,7 @@ export function AppSidebar() {
                   >
                     <Link to={item.url} className="flex items-center gap-3 px-3 py-2 w-full">
                       <item.icon className="h-4 w-4 text-slate-600 flex-shrink-0" />
-                      <span className="font-medium text-sm truncate">{item.title}</span>
+                      <span className="font-medium text-sm">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -330,8 +330,6 @@ export function AppSidebar() {
       </SidebarGroupContent>
     </SidebarGroup>
   );
-
-  const menuItems = getMenuItems();
 
   return (
     <Sidebar className="border-r border-slate-200 bg-white">
