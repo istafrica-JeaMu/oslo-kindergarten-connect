@@ -29,6 +29,10 @@ import HolidayRegistration from "./pages/guardian/HolidayRegistration";
 import CaseWorkerDashboard from "./pages/caseworker/CaseWorkerDashboard";
 import ReviewQueue from "./pages/caseworker/ReviewQueue";
 import PlacementManagement from "./pages/caseworker/PlacementManagement";
+import ManualApplication from "./pages/caseworker/ManualApplication";
+import ApplicationsInProgress from "./pages/caseworker/ApplicationsInProgress";
+import ApplicationsSubmitted from "./pages/caseworker/ApplicationsSubmitted";
+import ApplicationsFollowUp from "./pages/caseworker/ApplicationsFollowUp";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import Reports from "./pages/admin/Reports";
 import SystemSettings from "./pages/admin/SystemSettings";
@@ -91,6 +95,10 @@ const App = () => (
                 </ProtectedRoute>
               }>
                 <Route index element={<CaseWorkerDashboard />} />
+                <Route path="manual-application" element={<ManualApplication />} />
+                <Route path="applications/in-progress" element={<ApplicationsInProgress />} />
+                <Route path="applications/submitted" element={<ApplicationsSubmitted />} />
+                <Route path="applications/follow-up" element={<ApplicationsFollowUp />} />
                 <Route path="review-queue" element={<ReviewQueue />} />
                 <Route path="placement-management" element={<PlacementManagement />} />
                 <Route path="messages" element={<Messages />} />
