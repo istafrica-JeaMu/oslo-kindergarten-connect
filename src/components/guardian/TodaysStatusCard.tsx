@@ -176,8 +176,8 @@ const TodaysStatusCard = () => {
             
             {children.length > 1 && (
               <>
-                <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 hover:bg-white shadow-lg" />
-                <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 hover:bg-white shadow-lg" />
+                <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-oslo-blue/90 hover:bg-oslo-blue border-oslo-blue text-white shadow-lg hover:shadow-xl" />
+                <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-oslo-blue/90 hover:bg-oslo-blue border-oslo-blue text-white shadow-lg hover:shadow-xl" />
               </>
             )}
           </Carousel>
