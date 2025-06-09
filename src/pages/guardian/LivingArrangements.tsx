@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -34,12 +35,13 @@ import { useLanguage } from '@/contexts/LanguageContext';
 
 const LivingArrangements = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const [selectedArrangementType, setSelectedArrangementType] = useState('shared');
   const { toast } = useToast();
   const { t } = useLanguage();
 
   // Enhanced mock data with comprehensive information
   const livingArrangement = {
-    type: 'shared',
+    type: selectedArrangementType,
     lastUpdated: '2024-03-18',
     nextReview: '2025-09-01',
     verificationStatus: {
@@ -124,6 +126,71 @@ const LivingArrangements = () => {
     });
   };
 
+  const handleArrangementTypeChange = (type: string) => {
+    setSelectedArrangementType(type);
+    toast({
+      title: "Arrangement type changed",
+      description: `Selected ${type === 'shared' ? 'Shared Custody' : type === 'fixed' ? 'Fixed Residence' : 'Other Arrangement'}`,
+    });
+  };
+
+  const handleConfigureSchedule = () => {
+    toast({
+      title: "Schedule Configuration",
+      description: "Opening schedule configuration dialog...",
+    });
+  };
+
+  const handleManagePickup = () => {
+    toast({
+      title: "Pickup Authorization",
+      description: "Opening pickup authorization management...",
+    });
+  };
+
+  const handleSetupCustom = () => {
+    toast({
+      title: "Custom Arrangement",
+      description: "Opening custom arrangement setup...",
+    });
+  };
+
+  const handleAddPerson = () => {
+    toast({
+      title: "Add Authorized Person",
+      description: "Opening form to add new authorized pickup person...",
+    });
+  };
+
+  const handleViewDocument = () => {
+    toast({
+      title: "Document Viewer",
+      description: "Opening custody agreement document...",
+    });
+  };
+
+  const handleUploadDocument = () => {
+    toast({
+      title: "Document Upload",
+      description: "Opening document upload dialog...",
+    });
+  };
+
+  const handleViewContact = (name: string) => {
+    toast({
+      title: "Contact Details",
+      description: `Viewing details for ${name}...`,
+    });
+  };
+
+  const handleManagePerson = (personId: number) => {
+    const person = livingArrangement.authorizedPersons.find(p => p.id === personId);
+    toast({
+      title: "Manage Person",
+      description: `Opening management options for ${person?.name}...`,
+    });
+  };
+
   const getStatusIcon = (verified: boolean) => {
     return verified ? (
       <CheckCircle className="w-4 h-4 text-green-600" />
@@ -198,7 +265,7 @@ const LivingArrangements = () => {
         <div className="flex items-center gap-3">
           <Badge variant="outline" className="bg-oslo-blue/5 text-oslo-blue border-oslo-blue/20">
             <Home className="w-4 h-4 mr-2" />
-            Shared Custody
+            {selectedArrangementType === 'shared' ? 'Shared Custody' : selectedArrangementType === 'fixed' ? 'Fixed Residence' : 'Other Arrangement'}
           </Badge>
           {!isEditing && (
             <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
@@ -241,8 +308,8 @@ const LivingArrangements = () => {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>Arrangement Type</CardTitle>
-            {!isEditing && (
-              <Button variant="ghost" size="sm">
+            {!isEditing && selectedArrangementType === 'shared' && (
+              <Button variant="ghost" size="sm" onClick={handleConfigureSchedule}>
                 <Settings className="w-4 h-4 mr-2" />
                 Configure Schedule
               </Button>
@@ -250,55 +317,102 @@ const LivingArrangements = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <div className={`grid grid-cols-1 md:grid-cols-3 gap-4 ${isEditing ? 'opacity-100' : 'opacity-60'}`}>
-            <div className="border-2 rounded-lg p-6 flex flex-col items-center text-center gap-3 bg-oslo-blue/5 border-oslo-blue transition-all hover:shadow-md">
-              <div className="w-12 h-12 bg-oslo-blue rounded-full flex items-center justify-center">
-                <Home className="w-6 h-6 text-white" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div 
+              className={`border-2 rounded-lg p-6 flex flex-col items-center text-center gap-3 transition-all hover:shadow-md cursor-pointer ${
+                selectedArrangementType === 'shared' 
+                  ? 'bg-oslo-blue/5 border-oslo-blue' 
+                  : 'border-slate-200 hover:border-oslo-blue/50'
+              }`}
+              onClick={() => handleArrangementTypeChange('shared')}
+            >
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                selectedArrangementType === 'shared' ? 'bg-oslo-blue' : 'bg-slate-100'
+              }`}>
+                <Home className={`w-6 h-6 ${selectedArrangementType === 'shared' ? 'text-white' : 'text-slate-500'}`} />
               </div>
               <div>
                 <p className="font-semibold text-lg">Shared Custody</p>
                 <p className="text-sm text-slate-600 mt-1">Child alternates between two homes</p>
-                <Badge className="bg-oslo-blue mt-2">Selected</Badge>
+                {selectedArrangementType === 'shared' && (
+                  <Badge className="bg-oslo-blue mt-2">Selected</Badge>
+                )}
               </div>
-              <div className="mt-2">
-                <p className="text-xs text-slate-500 mb-2">Current Schedule:</p>
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center gap-2 text-xs">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <span>Mon-Thu: Mother</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span>Fri-Sun: Father</span>
+              {selectedArrangementType === 'shared' && (
+                <div className="mt-2">
+                  <p className="text-xs text-slate-500 mb-2">Current Schedule:</p>
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center gap-2 text-xs">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                      <span>Mon-Thu: Mother</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <span>Fri-Sun: Father</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
             
-            <div className="border rounded-lg p-6 flex flex-col items-center text-center gap-3 hover:shadow-md transition-all">
-              <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center">
-                <Home className="w-6 h-6 text-slate-500" />
+            <div 
+              className={`border-2 rounded-lg p-6 flex flex-col items-center text-center gap-3 transition-all hover:shadow-md cursor-pointer ${
+                selectedArrangementType === 'fixed' 
+                  ? 'bg-oslo-blue/5 border-oslo-blue' 
+                  : 'border-slate-200 hover:border-oslo-blue/50'
+              }`}
+              onClick={() => handleArrangementTypeChange('fixed')}
+            >
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                selectedArrangementType === 'fixed' ? 'bg-oslo-blue' : 'bg-slate-100'
+              }`}>
+                <Home className={`w-6 h-6 ${selectedArrangementType === 'fixed' ? 'text-white' : 'text-slate-500'}`} />
               </div>
               <div>
                 <p className="font-semibold text-lg">Fixed Residence</p>
                 <p className="text-sm text-slate-600 mt-1">One primary home with authorized pickup</p>
+                {selectedArrangementType === 'fixed' && (
+                  <Badge className="bg-oslo-blue mt-2">Selected</Badge>
+                )}
               </div>
               <div className="mt-2 text-center">
                 <p className="text-xs text-slate-500">Would show:</p>
                 <p className="text-xs font-medium">3 authorized persons</p>
+                {selectedArrangementType === 'fixed' && (
+                  <Button variant="outline" size="sm" className="mt-2" onClick={handleManagePickup}>
+                    Manage Pickup
+                  </Button>
+                )}
               </div>
             </div>
             
-            <div className="border rounded-lg p-6 flex flex-col items-center text-center gap-3 hover:shadow-md transition-all">
-              <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center">
-                <FileUp className="w-6 h-6 text-slate-500" />
+            <div 
+              className={`border-2 rounded-lg p-6 flex flex-col items-center text-center gap-3 transition-all hover:shadow-md cursor-pointer ${
+                selectedArrangementType === 'other' 
+                  ? 'bg-oslo-blue/5 border-oslo-blue' 
+                  : 'border-slate-200 hover:border-oslo-blue/50'
+              }`}
+              onClick={() => handleArrangementTypeChange('other')}
+            >
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                selectedArrangementType === 'other' ? 'bg-oslo-blue' : 'bg-slate-100'
+              }`}>
+                <FileUp className={`w-6 h-6 ${selectedArrangementType === 'other' ? 'text-white' : 'text-slate-500'}`} />
               </div>
               <div>
                 <p className="font-semibold text-lg">Other Arrangement</p>
                 <p className="text-sm text-slate-600 mt-1">Custom situation requiring documentation</p>
+                {selectedArrangementType === 'other' && (
+                  <Badge className="bg-oslo-blue mt-2">Selected</Badge>
+                )}
               </div>
               <div className="mt-2">
                 <Badge variant="outline" className="text-xs">Documentation Required</Badge>
+                {selectedArrangementType === 'other' && (
+                  <Button variant="outline" size="sm" className="mt-2" onClick={handleSetupCustom}>
+                    Setup Custom
+                  </Button>
+                )}
               </div>
             </div>
           </div>
@@ -318,7 +432,6 @@ const LivingArrangements = () => {
         </CardHeader>
         <CardContent>
           {isEditing ? (
-            
             <div className="space-y-4">
               <div className="grid md:grid-cols-3 gap-4">
                 <div className="col-span-2">
@@ -381,7 +494,7 @@ const LivingArrangements = () => {
                     </div>
                   </div>
                 </div>
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" size="sm" onClick={() => handleViewContact('Anna Hansen')}>
                   <Eye className="w-4 h-4" />
                 </Button>
               </div>
@@ -402,62 +515,64 @@ const LivingArrangements = () => {
       </Card>
 
       {/* Enhanced Secondary Address */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <MapPin className="w-5 h-5 text-green-600" />
-            Secondary Address
-          </CardTitle>
-          <CardDescription>
-            Secondary residence where child lives Friday through Sunday
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-start gap-4 p-4 bg-slate-50 rounded-lg">
-              <Avatar className="w-12 h-12">
-                <AvatarImage src="" />
-                <AvatarFallback className="bg-green-600 text-white">LH</AvatarFallback>
-              </Avatar>
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <h3 className="font-semibold">{livingArrangement.secondaryAddress.resident}</h3>
-                  <Badge className="bg-green-100 text-green-700 text-xs">{livingArrangement.secondaryAddress.relationship}</Badge>
-                  <CheckCircle className="w-4 h-4 text-green-600" />
+      {selectedArrangementType === 'shared' && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <MapPin className="w-5 h-5 text-green-600" />
+              Secondary Address
+            </CardTitle>
+            <CardDescription>
+              Secondary residence where child lives Friday through Sunday
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-start gap-4 p-4 bg-slate-50 rounded-lg">
+                <Avatar className="w-12 h-12">
+                  <AvatarImage src="" />
+                  <AvatarFallback className="bg-green-600 text-white">LH</AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <h3 className="font-semibold">{livingArrangement.secondaryAddress.resident}</h3>
+                    <Badge className="bg-green-100 text-green-700 text-xs">{livingArrangement.secondaryAddress.relationship}</Badge>
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                  </div>
+                  <div className="space-y-1 text-sm text-slate-600">
+                    <div className="flex items-center gap-2">
+                      <MapPin className="w-4 h-4" />
+                      <span>{livingArrangement.secondaryAddress.street}, {livingArrangement.secondaryAddress.postalCode} {livingArrangement.secondaryAddress.city}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Phone className="w-4 h-4" />
+                      <span>{livingArrangement.secondaryAddress.phone}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Mail className="w-4 h-4" />
+                      <span>{livingArrangement.secondaryAddress.email}</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="space-y-1 text-sm text-slate-600">
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4" />
-                    <span>{livingArrangement.secondaryAddress.street}, {livingArrangement.secondaryAddress.postalCode} {livingArrangement.secondaryAddress.city}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Phone className="w-4 h-4" />
-                    <span>{livingArrangement.secondaryAddress.phone}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Mail className="w-4 h-4" />
-                    <span>{livingArrangement.secondaryAddress.email}</span>
-                  </div>
+                <Button variant="ghost" size="sm" onClick={() => handleViewContact('Lars Hansen')}>
+                  <Eye className="w-4 h-4" />
+                </Button>
+              </div>
+              
+              <div className="p-4 border rounded-lg">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-medium flex items-center gap-2">
+                    <Calendar className="w-4 h-4" />
+                    Kindergarten Pickup Schedule
+                  </h4>
+                  {renderWeeklySchedule(livingArrangement.secondaryAddress.schedule, 'bg-green-500')}
                 </div>
+                <p className="text-sm text-slate-600">{livingArrangement.secondaryAddress.schedule}</p>
               </div>
-              <Button variant="ghost" size="sm">
-                <Eye className="w-4 h-4" />
-              </Button>
             </div>
-            
-            <div className="p-4 border rounded-lg">
-              <div className="flex items-center justify-between mb-3">
-                <h4 className="font-medium flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />
-                  Kindergarten Pickup Schedule
-                </h4>
-                {renderWeeklySchedule(livingArrangement.secondaryAddress.schedule, 'bg-green-500')}
-              </div>
-              <p className="text-sm text-slate-600">{livingArrangement.secondaryAddress.schedule}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
 
       {/* New Authorized Pickup Persons Section */}
       <Card>
@@ -472,7 +587,7 @@ const LivingArrangements = () => {
                 People authorized to collect your child when you cannot
               </CardDescription>
             </div>
-            <Button size="sm">
+            <Button size="sm" onClick={handleAddPerson}>
               <UserPlus className="w-4 h-4 mr-2" />
               Add Person
             </Button>
@@ -529,7 +644,7 @@ const LivingArrangements = () => {
                     <p className="text-xs text-slate-600">{person.restrictions}</p>
                   </TableCell>
                   <TableCell>
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" onClick={() => handleManagePerson(person.id)}>
                       <MoreVertical className="w-4 h-4" />
                     </Button>
                   </TableCell>
@@ -568,13 +683,13 @@ const LivingArrangements = () => {
                     </div>
                   </div>
                 </div>
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" size="sm" onClick={handleViewDocument}>
                   View Document
                 </Button>
               </div>
             ) : (
               <div className="flex items-center justify-center p-8 bg-slate-50 rounded-lg border border-dashed">
-                <Button variant="outline">
+                <Button variant="outline" onClick={handleUploadDocument}>
                   <FileUp className="w-4 h-4 mr-2" />
                   Upload Custody Documents
                 </Button>
