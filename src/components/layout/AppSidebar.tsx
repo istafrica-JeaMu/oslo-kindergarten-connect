@@ -202,8 +202,8 @@ export function AppSidebar() {
     }
   };
 
-  const isGuardianNavigation = (items: any): items is { primary: any[], secondary: any[], quickActions: any[] } => {
-    return items && typeof items === 'object' && 'primary' in items && 'secondary' in items && 'quickActions' in items;
+  const isGuardianNavigation = (items: any): items is { primary: any[], secondary: any[] } => {
+    return items && typeof items === 'object' && 'primary' in items && 'secondary' in items;
   };
 
   const renderGuardianNavigation = () => {
