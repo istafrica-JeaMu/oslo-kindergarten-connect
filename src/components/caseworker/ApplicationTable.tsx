@@ -28,7 +28,13 @@ const ApplicationTable = ({ applications, showActions = true }: ApplicationTable
   };
 
   const handleResume = (application: Application) => {
-    navigate(`/caseworker/manual-application/${application.id}/edit`);
+    // Navigate to the standard wizard with prefilled data
+    navigate('/caseworker/manual-application', {
+      state: {
+        prefillData: application,
+        isResuming: true
+      }
+    });
   };
 
   const handleDownload = (application: Application) => {

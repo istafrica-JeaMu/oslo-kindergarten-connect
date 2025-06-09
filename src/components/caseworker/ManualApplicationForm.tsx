@@ -1,5 +1,4 @@
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -44,6 +43,7 @@ import {
 import { useForm, useFieldArray } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { Application } from '@/types/application';
 
 interface GuardianData {
   firstName: string;
@@ -71,15 +71,68 @@ interface ManualApplicationData {
   additionalNotes: string;
 }
 
-const ManualApplicationForm = () => {
+interface ManualApplicationFormProps {
+  prefillData?: Application;
+  isResuming?: boolean;
+}
+
+const ManualApplicationForm = ({ prefillData, isResuming }: ManualApplicationFormProps) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSavingDraft, setIsSavingDraft] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const form = useForm<ManualApplicationData>({
-    defaultValues: {
+  // Convert prefill data to form format
+  const getDefaultValues = (): ManualApplicationData => {
+    if (prefillData) {
+      // Parse child name
+      const nameParts = prefillData.childName.split(' ');
+      const childFirstName = nameParts[0] || '';
+      const childLastName = nameParts.slice(1).join(' ') || '';
+      
+      // Parse guardian name
+      const guardianNameParts = prefillData.guardianName.split(' ');
+      const guardianFirstName = guardianNameParts[0] || '';
+      const guardianLastName = guardianNameParts.slice(1).join(' ') || '';
+
+      // Map application type
+      const applicationTypeMap: Record<string, string> = {
+        'New Registration': 'new-admission',
+        'Transfer': 'transfer',
+        'Extension': 'late-ongoing',
+        'Emergency': 'late-ongoing'
+      };
+
+      return {
+        applicationType: applicationTypeMap[prefillData.applicationType] || 'new-admission',
+        guardians: [{
+          firstName: guardianFirstName,
+          lastName: guardianLastName,
+          nationalId: '',
+          hasNationalId: true,
+          email: '',
+          phone: '',
+          address: '',
+          relationship: 'parent'
+        }],
+        childFirstName,
+        childLastName,
+        childNationalId: '',
+        childHasNationalId: true,
+        childBirthDate: '',
+        kindergartenPreference1: prefillData.kindergartenPreference ? 
+          (prefillData.kindergartenPreference.toLowerCase().includes('løvenskiold') ? 'lovenskiold' :
+           prefillData.kindergartenPreference.toLowerCase().includes('sinsen') ? 'sinsen' :
+           prefillData.kindergartenPreference.toLowerCase().includes('torshov') ? 'torshov' : '') : '',
+        kindergartenPreference2: '',
+        kindergartenPreference3: '',
+        specialNeeds: '',
+        additionalNotes: prefillData.notes || '',
+      };
+    }
+
+    return {
       applicationType: '',
       guardians: [{
         firstName: '',
@@ -92,13 +145,27 @@ const ManualApplicationForm = () => {
         relationship: 'parent'
       }],
       childHasNationalId: true,
-    }
+    } as ManualApplicationData;
+  };
+
+  const form = useForm<ManualApplicationData>({
+    defaultValues: getDefaultValues()
   });
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "guardians"
   });
+
+  // Show resuming notice if this is a resumed application
+  useEffect(() => {
+    if (isResuming && prefillData) {
+      toast({
+        title: "Application Resumed",
+        description: `Resuming application ${prefillData.id} for ${prefillData.childName}`,
+      });
+    }
+  }, [isResuming, prefillData, toast]);
 
   const generateTempId = (type: 'guardian' | 'child', index?: number) => {
     const prefix = type === 'guardian' ? `TEMP-GUARDIAN-${index !== undefined ? index + 1 : ''}-` : 'TEMP-CHILD-';
@@ -138,6 +205,7 @@ const ManualApplicationForm = () => {
         submittedBy: 'caseworker',
         manualEntry: true,
         lastSavedAt: new Date().toISOString(),
+        id: prefillData?.id || undefined, // Include existing ID if resuming
       };
       
       console.log('Application draft saved:', draftData);
@@ -170,6 +238,7 @@ const ManualApplicationForm = () => {
         manualEntry: true,
         reviewed: true,
         submittedAt: new Date().toISOString(),
+        id: prefillData?.id || undefined, // Include existing ID if resuming
       };
       
       console.log('Manual application submitted:', submissionData);
@@ -256,6 +325,25 @@ const ManualApplicationForm = () => {
 
   const renderStep1 = () => (
     <div className="space-y-6">
+      {/* Resuming Banner */}
+      {isResuming && prefillData && (
+        <Card className="border-l-4 border-l-green-500 bg-green-50">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <CheckCircle className="h-5 w-5 text-green-600" />
+              <div>
+                <p className="text-sm font-medium text-green-800">
+                  Resuming Application: {prefillData.id}
+                </p>
+                <p className="text-xs text-green-700">
+                  Child: {prefillData.childName} | Guardian: {prefillData.guardianName}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Caseworker Banner */}
       <Card className="border-l-4 border-l-blue-500 bg-blue-50">
         <CardContent className="p-4">
@@ -845,9 +933,14 @@ const ManualApplicationForm = () => {
             <div className="flex items-center gap-3 mb-4">
               <AlertCircle className="h-6 w-6 text-orange-600" />
               <div>
-                <h3 className="font-semibold text-orange-800">Manual Submission Notice</h3>
+                <h3 className="font-semibold text-orange-800">
+                  {isResuming ? 'Resuming Application Submission' : 'Manual Submission Notice'}
+                </h3>
                 <p className="text-sm text-orange-700">
-                  You are submitting this application on behalf of a guardian without digital ID.
+                  {isResuming 
+                    ? `Completing application ${prefillData?.id} on behalf of a guardian.`
+                    : 'You are submitting this application on behalf of a guardian without digital ID.'
+                  }
                 </p>
               </div>
             </div>
@@ -876,6 +969,18 @@ const ManualApplicationForm = () => {
                 </div>
               </div>
             </div>
+            {isResuming && prefillData && (
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-medium text-gray-600">Application ID</Label>
+                  <p className="text-sm font-mono">{prefillData.id}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-600">Original Status</Label>
+                  <Badge variant="outline">{prefillData.status}</Badge>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -1041,7 +1146,7 @@ const ManualApplicationForm = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6 p-4">
       {/* Header */}
       <Card className="border-l-4 border-l-orange-500 bg-gradient-to-r from-orange-50 to-white">
         <CardContent className="p-6">
@@ -1050,13 +1155,18 @@ const ManualApplicationForm = () => {
               <FileText className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Manual Application Submission</h1>
+              <h1 className="text-2xl font-bold text-gray-900">
+                {isResuming ? 'Resume Application' : 'Manual Application Submission'}
+              </h1>
               <p className="text-gray-600 mt-1">
-                📋 Caseworker Submission Mode — No e-ID Guardian
+                {isResuming 
+                  ? `📋 Resuming ${prefillData?.id} — ${prefillData?.childName}`
+                  : '📋 Caseworker Submission Mode — No e-ID Guardian'
+                }
               </p>
             </div>
             <Badge className="ml-auto bg-orange-100 text-orange-800 border-orange-300">
-              Manual Entry Required
+              {isResuming ? 'Resuming Draft' : 'Manual Entry Required'}
             </Badge>
           </div>
         </CardContent>
@@ -1131,7 +1241,7 @@ const ManualApplicationForm = () => {
                         ) : (
                           <>
                             <CheckCircle className="h-4 w-4 mr-2" />
-                            Submit Application
+                            {isResuming ? 'Complete Application' : 'Submit Application'}
                           </>
                         )}
                       </Button>
