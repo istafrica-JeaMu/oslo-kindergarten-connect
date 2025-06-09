@@ -65,6 +65,7 @@ const ManualApplicationForm = () => {
   const [tempGuardianId, setTempGuardianId] = useState('');
   const [tempChildId, setTempChildId] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSavingDraft, setIsSavingDraft] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -80,6 +81,42 @@ const ManualApplicationForm = () => {
     const prefix = type === 'guardian' ? 'TEMP-GUARDIAN-' : 'TEMP-CHILD-';
     const randomId = Math.random().toString(36).substr(2, 4).toUpperCase();
     return prefix + randomId;
+  };
+
+  const saveDraft = async () => {
+    setIsSavingDraft(true);
+    
+    try {
+      // Simulate API call to save draft
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const draftData = {
+        ...form.getValues(),
+        status: 'draft',
+        submittedBy: 'caseworker',
+        manualEntry: true,
+        lastSavedAt: new Date().toISOString(),
+        tempIds: {
+          guardian: !form.getValues('guardianHasNationalId') ? form.getValues('guardianNationalId') : null,
+          child: !form.getValues('childHasNationalId') ? form.getValues('childNationalId') : null,
+        }
+      };
+      
+      console.log('Application draft saved:', draftData);
+      
+      toast({
+        title: "Draft Saved",
+        description: "Application draft has been saved successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Save Failed",
+        description: "There was an error saving the draft. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSavingDraft(false);
+    }
   };
 
   const onSubmit = async (data: ManualApplicationData) => {
@@ -814,13 +851,13 @@ const ManualApplicationForm = () => {
                     type="button" 
                     variant="outline" 
                     onClick={() => setCurrentStep(currentStep - 1)}
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || isSavingDraft}
                   >
                     Previous
                   </Button>
                 )}
                 
-                <div className="ml-auto">
+                <div className="ml-auto flex gap-3">
                   {currentStep < 5 ? (
                     <Button 
                       type="button" 
@@ -830,23 +867,43 @@ const ManualApplicationForm = () => {
                       Next Step
                     </Button>
                   ) : (
-                    <Button 
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="bg-green-600 hover:bg-green-700"
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <Clock className="h-4 w-4 mr-2 animate-spin" />
-                          Submitting...
-                        </>
-                      ) : (
-                        <>
-                          <Save className="h-4 w-4 mr-2" />
-                          Submit Application
-                        </>
-                      )}
-                    </Button>
+                    <>
+                      <Button 
+                        type="button"
+                        variant="outline"
+                        onClick={saveDraft}
+                        disabled={isSubmitting || isSavingDraft}
+                      >
+                        {isSavingDraft ? (
+                          <>
+                            <Clock className="h-4 w-4 mr-2 animate-spin" />
+                            Saving...
+                          </>
+                        ) : (
+                          <>
+                            <Save className="h-4 w-4 mr-2" />
+                            Save Draft
+                          </>
+                        )}
+                      </Button>
+                      <Button 
+                        type="submit"
+                        disabled={isSubmitting || isSavingDraft}
+                        className="bg-green-600 hover:bg-green-700"
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <Clock className="h-4 w-4 mr-2 animate-spin" />
+                            Submitting...
+                          </>
+                        ) : (
+                          <>
+                            <CheckCircle className="h-4 w-4 mr-2" />
+                            Submit Application
+                          </>
+                        )}
+                      </Button>
+                    </>
                   )}
                 </div>
               </div>
