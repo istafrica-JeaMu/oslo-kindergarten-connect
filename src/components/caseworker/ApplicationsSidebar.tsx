@@ -24,7 +24,8 @@ const ApplicationsSidebar = () => {
 
   const applicationMenuItems = [
     {
-      title: 'New Application (Manual Entry)',
+      title: 'New Application',
+      subtitle: '(Manual Entry)',
       url: '/caseworker/manual-application',
       icon: Plus,
       count: null,
@@ -84,21 +85,30 @@ const ApplicationsSidebar = () => {
                   : 'hover:bg-slate-100'
               }`}
             >
-              <div className="flex items-center justify-between p-3">
+              <div className="flex items-center justify-between p-3 min-h-[48px]">
                 <div className="flex items-center gap-3 flex-1 min-w-0">
                   <item.icon className={`h-4 w-4 flex-shrink-0 ${
                     location.pathname === item.url ? 'text-white' : item.color
                   }`} />
-                  <span className={`font-medium text-sm block truncate ${
-                    location.pathname === item.url ? 'text-white' : 'text-slate-900'
-                  }`}>
-                    {item.title}
-                  </span>
+                  <div className="flex-1 min-w-0">
+                    <span className={`font-medium text-sm block ${
+                      location.pathname === item.url ? 'text-white' : 'text-slate-900'
+                    }`}>
+                      {item.title}
+                    </span>
+                    {item.subtitle && (
+                      <span className={`text-xs ${
+                        location.pathname === item.url ? 'text-white/80' : 'text-slate-500'
+                      }`}>
+                        {item.subtitle}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 {item.count && (
                   <Badge 
                     variant={location.pathname === item.url ? "secondary" : "outline"}
-                    className="ml-2 font-semibold"
+                    className="ml-2 font-semibold flex-shrink-0"
                   >
                     {item.count}
                   </Badge>
