@@ -1,11 +1,17 @@
 
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Phone, Plus, Edit, Trash2, User, Clock } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Phone, Plus, Edit, Trash2, User, Clock, Mail } from 'lucide-react';
 
 const EmergencyContacts = () => {
-  const emergencyContacts = [
+  const [emergencyContacts, setEmergencyContacts] = useState([
     {
       id: 1,
       name: 'Maria Hansen',
@@ -36,7 +42,48 @@ const EmergencyContacts = () => {
       canPickup: false,
       verified: false
     }
-  ];
+  ]);
+
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [newContact, setNewContact] = useState({
+    name: '',
+    relationship: '',
+    phone: '',
+    email: '',
+    canPickup: false
+  });
+
+  const handleAddContact = () => {
+    if (newContact.name && newContact.phone) {
+      const contact = {
+        id: emergencyContacts.length + 1,
+        ...newContact,
+        priority: emergencyContacts.length + 1,
+        verified: false
+      };
+      setEmergencyContacts([...emergencyContacts, contact]);
+      setNewContact({
+        name: '',
+        relationship: '',
+        phone: '',
+        email: '',
+        canPickup: false
+      });
+      setIsAddDialogOpen(false);
+    }
+  };
+
+  const handleCall = (phone: string) => {
+    window.location.href = `tel:${phone}`;
+  };
+
+  const handleEmail = (email: string) => {
+    window.location.href = `mailto:${email}`;
+  };
+
+  const handleDeleteContact = (id: number) => {
+    setEmergencyContacts(emergencyContacts.filter(contact => contact.id !== id));
+  };
 
   return (
     <div className="space-y-6">
@@ -46,10 +93,83 @@ const EmergencyContacts = () => {
           <h1 className="text-3xl font-bold text-slate-900">Emergency Contacts</h1>
           <p className="text-slate-600 mt-2">Manage your child's emergency contact information</p>
         </div>
-        <Button className="bg-oslo-blue hover:bg-oslo-blue/90">
-          <Plus className="w-4 h-4 mr-2" />
-          Add Contact
-        </Button>
+        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+          <DialogTrigger asChild>
+            <Button className="bg-oslo-blue hover:bg-oslo-blue/90">
+              <Plus className="w-4 h-4 mr-2" />
+              Add Contact
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Add Emergency Contact</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="name">Full Name</Label>
+                <Input
+                  id="name"
+                  value={newContact.name}
+                  onChange={(e) => setNewContact({...newContact, name: e.target.value})}
+                  placeholder="Enter full name"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="relationship">Relationship</Label>
+                <Select value={newContact.relationship} onValueChange={(value) => setNewContact({...newContact, relationship: value})}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select relationship" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Mother">Mother</SelectItem>
+                    <SelectItem value="Father">Father</SelectItem>
+                    <SelectItem value="Grandmother">Grandmother</SelectItem>
+                    <SelectItem value="Grandfather">Grandfather</SelectItem>
+                    <SelectItem value="Aunt">Aunt</SelectItem>
+                    <SelectItem value="Uncle">Uncle</SelectItem>
+                    <SelectItem value="Family Friend">Family Friend</SelectItem>
+                    <SelectItem value="Other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="phone">Phone Number</Label>
+                <Input
+                  id="phone"
+                  value={newContact.phone}
+                  onChange={(e) => setNewContact({...newContact, phone: e.target.value})}
+                  placeholder="+47 123 45 678"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email Address</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={newContact.email}
+                  onChange={(e) => setNewContact({...newContact, email: e.target.value})}
+                  placeholder="email@example.com"
+                />
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="canPickup"
+                  checked={newContact.canPickup}
+                  onCheckedChange={(checked) => setNewContact({...newContact, canPickup: checked as boolean})}
+                />
+                <Label htmlFor="canPickup">Authorized to pick up child</Label>
+              </div>
+            </div>
+            <div className="flex justify-end gap-3">
+              <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleAddContact} disabled={!newContact.name || !newContact.phone}>
+                Add Contact
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Important Notice */}
@@ -101,9 +221,22 @@ const EmergencyContacts = () => {
                       <p className="text-slate-600">{contact.relationship}</p>
                       <div className="flex items-center gap-1">
                         <Phone className="w-4 h-4 text-slate-400" />
-                        <span className="text-slate-700">{contact.phone}</span>
+                        <button 
+                          onClick={() => handleCall(contact.phone)}
+                          className="text-oslo-blue hover:text-oslo-blue/80 hover:underline transition-colors"
+                        >
+                          {contact.phone}
+                        </button>
                       </div>
-                      <p className="text-slate-600">{contact.email}</p>
+                      <div className="flex items-center gap-1">
+                        <Mail className="w-4 h-4 text-slate-400" />
+                        <button 
+                          onClick={() => handleEmail(contact.email)}
+                          className="text-oslo-blue hover:text-oslo-blue/80 hover:underline transition-colors"
+                        >
+                          {contact.email}
+                        </button>
+                      </div>
                     </div>
                     <div className="flex items-center gap-4 pt-2">
                       <span className={`text-xs px-2 py-1 rounded-full ${
@@ -121,7 +254,12 @@ const EmergencyContacts = () => {
                     <Edit className="w-4 h-4 mr-1" />
                     Edit
                   </Button>
-                  <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="text-red-600 hover:text-red-700"
+                    onClick={() => handleDeleteContact(contact.id)}
+                  >
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
@@ -132,25 +270,29 @@ const EmergencyContacts = () => {
       </div>
 
       {/* Add Contact Card */}
-      <Card className="border-dashed border-2 border-slate-300 hover:border-oslo-blue transition-colors">
-        <CardContent className="p-8 text-center">
-          <div className="space-y-4">
-            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto">
-              <Plus className="w-8 h-8 text-slate-400" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-slate-900">Add Emergency Contact</h3>
-              <p className="text-slate-600 text-sm mt-1">
-                Add another person who can be contacted in case of emergency
-              </p>
-            </div>
-            <Button variant="outline" className="border-oslo-blue text-oslo-blue hover:bg-oslo-blue/5">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Contact
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+        <DialogTrigger asChild>
+          <Card className="border-dashed border-2 border-slate-300 hover:border-oslo-blue transition-colors cursor-pointer">
+            <CardContent className="p-8 text-center">
+              <div className="space-y-4">
+                <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto">
+                  <Plus className="w-8 h-8 text-slate-400" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900">Add Emergency Contact</h3>
+                  <p className="text-slate-600 text-sm mt-1">
+                    Add another person who can be contacted in case of emergency
+                  </p>
+                </div>
+                <Button variant="outline" className="border-oslo-blue text-oslo-blue hover:bg-oslo-blue/5">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Contact
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </DialogTrigger>
+      </Dialog>
     </div>
   );
 };

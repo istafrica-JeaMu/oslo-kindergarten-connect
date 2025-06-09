@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -103,7 +102,7 @@ const GuardianDashboard = () => {
   const stats = [
     { label: 'Active Applications', value: '2', change: '+1', trend: 'up' },
     { label: 'Placed Children', value: '1', change: '0', trend: 'stable' },
-    { label: 'Pending Payments', value: '1', change: '0', trend: 'stable' },
+    { label: 'Pending Payments', value: '1', change: '+1', trend: 'stable' },
     { label: 'Unread Messages', value: '1', change: '+1', trend: 'up' }
   ];
 
@@ -282,7 +281,7 @@ const GuardianDashboard = () => {
           <CardContent className="relative p-6">
             <div className="space-y-4">
               {messages.slice(0, 3).map((message) => (
-                <div key={message.id} className="group cursor-pointer">
+                <Link key={message.id} to="/guardian/messages" className="group cursor-pointer block">
                   <div className="flex items-start gap-4 p-6 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent transition-all duration-300 border border-transparent hover:border-blue-200 hover:shadow-md">
                     <div className={`w-5 h-5 rounded-full mt-2 shadow-sm ${message.unread ? 'bg-gradient-to-br from-blue-500 to-blue-600 animate-pulse' : 'bg-slate-300'}`} />
                     <div className="flex-1 space-y-2">
@@ -301,8 +300,9 @@ const GuardianDashboard = () => {
                         )}
                       </div>
                     </div>
+                    <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all duration-300" />
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </CardContent>
