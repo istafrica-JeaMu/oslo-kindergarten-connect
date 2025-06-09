@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -241,20 +242,20 @@ const GuardianDashboard = () => {
         </div>
       </div>
 
-      {/* Priority Cards - Updated Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Today's Status - Always first on mobile */}
-        <div className="lg:col-span-3">
+      {/* Priority Cards - Responsive Grid Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-6">
+        {/* Today's Status */}
+        <div className="xl:col-span-3">
           <TodaysStatusCard />
         </div>
         
-        {/* Quick Actions - Second on mobile */}
-        <div className="lg:col-span-3">
+        {/* Quick Actions */}
+        <div className="xl:col-span-3">
           <QuickActionsCard />
         </div>
         
-        {/* Notice Board - Third on mobile, takes more space on large screens */}
-        <div className="lg:col-span-6">
+        {/* Notice Board - Takes full width on mobile/tablet, remaining space on xl screens */}
+        <div className="md:col-span-2 xl:col-span-6">
           <NoticeBoardPreviewCard />
         </div>
       </div>
