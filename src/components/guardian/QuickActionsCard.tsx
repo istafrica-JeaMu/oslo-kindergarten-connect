@@ -1,6 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { AlertCircle, MessageSquare, Calendar, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -10,7 +11,7 @@ const QuickActionsCard = () => {
       title: 'Report Absence',
       description: 'Quick absence notification',
       icon: AlertCircle,
-      url: '/guardian/absence',
+      url: '/guardian/absence-reporting',
       variant: 'destructive' as const,
       urgent: true
     },
@@ -26,7 +27,7 @@ const QuickActionsCard = () => {
       title: 'Schedule Meeting',
       description: 'Book teacher meeting',
       icon: Calendar,
-      url: '/guardian/meetings',
+      url: '/guardian/teacher-meetings',
       variant: 'outline' as const,
       urgent: false
     },
@@ -34,7 +35,7 @@ const QuickActionsCard = () => {
       title: 'Emergency Contact',
       description: 'Urgent contact needed',
       icon: Phone,
-      url: '/guardian/emergency',
+      url: '/guardian/messages',
       variant: 'destructive' as const,
       urgent: true
     }
@@ -55,24 +56,34 @@ const QuickActionsCard = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="relative">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-3">
-          {quickActions.map((action) => (
-            <Link key={action.title} to={action.url} className="group">
-              <Button
-                variant={action.variant}
-                className={`w-full h-auto p-3 flex items-center gap-3 text-left hover:scale-105 transition-all duration-300 min-h-[60px] ${
-                  action.urgent ? 'shadow-lg hover:shadow-xl' : ''
-                }`}
-              >
-                <action.icon className={`h-5 w-5 flex-shrink-0 ${action.urgent ? 'animate-pulse' : ''}`} />
-                <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-                  <div className="font-semibold text-sm leading-tight truncate">{action.title}</div>
-                  <div className="text-xs opacity-90 leading-tight truncate">{action.description}</div>
-                </div>
-              </Button>
-            </Link>
-          ))}
-        </div>
+        <TooltipProvider>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-3">
+            {quickActions.map((action) => (
+              <Tooltip key={action.title}>
+                <TooltipTrigger asChild>
+                  <Link to={action.url} className="group">
+                    <Button
+                      variant={action.variant}
+                      className={`w-full h-auto p-3 flex items-center gap-3 text-left hover:scale-105 transition-all duration-300 min-h-[60px] ${
+                        action.urgent ? 'shadow-lg hover:shadow-xl' : ''
+                      }`}
+                    >
+                      <action.icon className={`h-5 w-5 flex-shrink-0 ${action.urgent ? 'animate-pulse' : ''}`} />
+                      <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                        <div className="font-semibold text-sm leading-tight truncate">{action.title}</div>
+                        <div className="text-xs opacity-90 leading-tight truncate">{action.description}</div>
+                      </div>
+                    </Button>
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="font-medium">{action.title}</p>
+                  <p className="text-sm text-slate-600">{action.description}</p>
+                </TooltipContent>
+              </Tooltip>
+            ))}
+          </div>
+        </TooltipProvider>
       </CardContent>
     </Card>
   );

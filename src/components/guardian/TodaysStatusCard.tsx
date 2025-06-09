@@ -1,28 +1,57 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, Clock, AlertCircle, Bell } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { CheckCircle, Clock, AlertCircle, Bell, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const TodaysStatusCard = () => {
-  // Mock data for demonstration
-  const todayStatus = {
-    attendance: 'checked-in',
-    checkedInAt: '08:15',
-    nextActivity: 'Outdoor Play',
-    nextActivityTime: '10:30',
-    pickupTime: '15:30',
-    urgentNotifications: 1,
-    childName: 'Oliver'
-  };
+  // Mock data for multiple children
+  const children = [
+    {
+      id: 1,
+      name: 'Oliver',
+      attendance: 'checked-in',
+      checkedInAt: '08:15',
+      nextActivity: 'Outdoor Play',
+      nextActivityTime: '10:30',
+      pickupTime: '15:30',
+      urgentNotifications: 1,
+      kindergarten: 'Sinsen Kindergarten'
+    },
+    {
+      id: 2,
+      name: 'Emma',
+      attendance: 'not-arrived',
+      checkedInAt: null,
+      nextActivity: 'Morning Circle',
+      nextActivityTime: '09:00',
+      pickupTime: '16:00',
+      urgentNotifications: 0,
+      kindergarten: 'Løvenskiold Kindergarten'
+    },
+    {
+      id: 3,
+      name: 'Lucas',
+      attendance: 'absent',
+      checkedInAt: null,
+      nextActivity: null,
+      nextActivityTime: null,
+      pickupTime: '15:30',
+      urgentNotifications: 0,
+      kindergarten: 'Frogner Kindergarten'
+    }
+  ];
 
-  const getAttendanceStatus = () => {
-    switch (todayStatus.attendance) {
+  const getAttendanceStatus = (child: typeof children[0]) => {
+    switch (child.attendance) {
       case 'checked-in':
         return (
           <div className="flex items-center gap-2">
             <CheckCircle className="w-5 h-5 text-oslo-green" />
             <span className="text-oslo-green font-semibold">Checked In</span>
-            <span className="text-slate-600 text-sm">at {todayStatus.checkedInAt}</span>
+            <span className="text-slate-600 text-sm">at {child.checkedInAt}</span>
           </div>
         );
       case 'not-arrived':
@@ -44,6 +73,15 @@ const TodaysStatusCard = () => {
     }
   };
 
+  const getStatusColor = (attendance: string) => {
+    switch (attendance) {
+      case 'checked-in': return 'border-oslo-green';
+      case 'not-arrived': return 'border-yellow-500';
+      case 'absent': return 'border-slate-400';
+      default: return 'border-slate-200';
+    }
+  };
+
   return (
     <Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300">
       <div className="absolute inset-0 bg-gradient-to-br from-white via-oslo-blue/5 to-oslo-green/5" />
@@ -54,44 +92,87 @@ const TodaysStatusCard = () => {
           </div>
           <div>
             <h3 className="text-lg font-bold text-slate-900">Today's Status</h3>
-            <p className="text-sm text-slate-600 font-normal mt-0.5">{todayStatus.childName}'s current status</p>
+            <p className="text-sm text-slate-600 font-normal mt-0.5">Children's current status</p>
           </div>
-          {todayStatus.urgentNotifications > 0 && (
-            <Badge className="ml-auto bg-red-500 text-white animate-pulse">
-              <Bell className="w-3 h-3 mr-1" />
-              {todayStatus.urgentNotifications}
-            </Badge>
-          )}
         </CardTitle>
       </CardHeader>
-      <CardContent className="relative space-y-4">
-        {/* Attendance Status */}
-        <div className="space-y-2">
-          <h4 className="font-semibold text-slate-800">Attendance</h4>
-          {getAttendanceStatus()}
-        </div>
+      <CardContent className="relative">
+        <Carousel className="w-full">
+          <CarouselContent>
+            {children.map((child) => (
+              <CarouselItem key={child.id}>
+                <Link to="/guardian/attendance-tracking">
+                  <div className={`p-4 border-l-4 ${getStatusColor(child.attendance)} bg-gradient-to-r from-slate-50/50 to-transparent rounded-lg hover:shadow-md transition-all duration-300 cursor-pointer group`}>
+                    {/* Child Header */}
+                    <div className="flex items-center justify-between mb-4">
+                      <div>
+                        <h4 className="text-xl font-bold text-slate-900 group-hover:text-oslo-blue transition-colors">
+                          {child.name}
+                        </h4>
+                        <p className="text-sm text-slate-600">{child.kindergarten}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {child.urgentNotifications > 0 && (
+                          <Badge className="bg-red-500 text-white animate-pulse">
+                            <Bell className="w-3 h-3 mr-1" />
+                            {child.urgentNotifications}
+                          </Badge>
+                        )}
+                        <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-oslo-blue group-hover:translate-x-1 transition-all duration-300" />
+                      </div>
+                    </div>
 
-        {/* Next Activity */}
-        <div className="space-y-2">
-          <h4 className="font-semibold text-slate-800">Coming Up</h4>
-          <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-            <div>
-              <p className="font-medium text-slate-900">{todayStatus.nextActivity}</p>
-              <p className="text-sm text-slate-600">Starting at {todayStatus.nextActivityTime}</p>
-            </div>
-            <Clock className="w-5 h-5 text-slate-400" />
-          </div>
-        </div>
+                    {/* Attendance Status */}
+                    <div className="space-y-3">
+                      <div>
+                        <h5 className="font-semibold text-slate-800 mb-2">Attendance</h5>
+                        {getAttendanceStatus(child)}
+                      </div>
 
-        {/* Pickup Time */}
-        <div className="space-y-2">
-          <h4 className="font-semibold text-slate-800">Pickup</h4>
-          <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-oslo-blue" />
-            <span className="text-oslo-blue font-semibold">{todayStatus.pickupTime}</span>
-            <span className="text-slate-600 text-sm">Regular pickup time</span>
+                      {/* Next Activity */}
+                      {child.nextActivity && (
+                        <div>
+                          <h5 className="font-semibold text-slate-800 mb-2">Coming Up</h5>
+                          <div className="flex items-center justify-between p-3 bg-slate-100 rounded-lg">
+                            <div>
+                              <p className="font-medium text-slate-900">{child.nextActivity}</p>
+                              <p className="text-sm text-slate-600">Starting at {child.nextActivityTime}</p>
+                            </div>
+                            <Clock className="w-5 h-5 text-slate-400" />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Pickup Time */}
+                      <div>
+                        <h5 className="font-semibold text-slate-800 mb-2">Pickup</h5>
+                        <div className="flex items-center gap-2">
+                          <Clock className="w-4 h-4 text-oslo-blue" />
+                          <span className="text-oslo-blue font-semibold">{child.pickupTime}</span>
+                          <span className="text-slate-600 text-sm">Regular pickup time</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          {children.length > 1 && (
+            <>
+              <CarouselPrevious className="left-2" />
+              <CarouselNext className="right-2" />
+            </>
+          )}
+        </Carousel>
+        
+        {children.length > 1 && (
+          <div className="flex justify-center mt-4">
+            <p className="text-xs text-slate-500">
+              Swipe or use arrows to view all children ({children.length} total)
+            </p>
           </div>
-        </div>
+        )}
       </CardContent>
     </Card>
   );

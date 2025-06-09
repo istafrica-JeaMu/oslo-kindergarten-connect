@@ -65,7 +65,7 @@ const ApplicationsSummaryCard = () => {
               <p className="text-sm text-slate-600 font-normal mt-0.5">Status and progress overview</p>
             </div>
           </div>
-          <Link to="/guardian/applications">
+          <Link to="/guardian/new-application">
             <Button variant="outline" size="sm" className="text-oslo-blue border-oslo-blue hover:bg-oslo-blue/10">
               <Plus className="w-4 h-4 mr-1" />
               New
@@ -82,23 +82,25 @@ const ApplicationsSummaryCard = () => {
               Active Applications
             </h4>
             {applications.active.map((app) => (
-              <div key={app.id} className="p-4 border-2 border-yellow-200 rounded-lg bg-yellow-50/50">
-                <div className="flex items-start justify-between gap-3 mb-3">
-                  <div>
-                    <h5 className="font-bold text-slate-900">{app.childName}</h5>
-                    <p className="text-sm text-slate-600">{app.kindergarten}</p>
+              <Link key={app.id} to={`/guardian/application-status/${app.id}`}>
+                <div className="p-4 border-2 border-yellow-200 rounded-lg bg-yellow-50/50 hover:bg-yellow-100/50 transition-colors cursor-pointer">
+                  <div className="flex items-start justify-between gap-3 mb-3">
+                    <div>
+                      <h5 className="font-bold text-slate-900">{app.childName}</h5>
+                      <p className="text-sm text-slate-600">{app.kindergarten}</p>
+                    </div>
+                    {getStatusBadge(app.status)}
                   </div>
-                  {getStatusBadge(app.status)}
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-600">Progress</span>
-                    <span className="font-semibold text-slate-900">{app.progress}%</span>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-slate-600">Progress</span>
+                      <span className="font-semibold text-slate-900">{app.progress}%</span>
+                    </div>
+                    <Progress value={app.progress} className="h-2" />
+                    <p className="text-sm text-slate-600 mt-2">{app.nextStep}</p>
                   </div>
-                  <Progress value={app.progress} className="h-2" />
-                  <p className="text-sm text-slate-600 mt-2">{app.nextStep}</p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}
@@ -111,13 +113,15 @@ const ApplicationsSummaryCard = () => {
               Completed
             </h4>
             {applications.completed.map((app) => (
-              <div key={app.id} className="p-3 border border-green-200 rounded-lg bg-green-50/50 flex items-center justify-between">
-                <div>
-                  <h5 className="font-semibold text-slate-900">{app.childName}</h5>
-                  <p className="text-sm text-slate-600">{app.kindergarten}</p>
+              <Link key={app.id} to={`/guardian/application-status/${app.id}`}>
+                <div className="p-3 border border-green-200 rounded-lg bg-green-50/50 flex items-center justify-between hover:bg-green-100/50 transition-colors cursor-pointer">
+                  <div>
+                    <h5 className="font-semibold text-slate-900">{app.childName}</h5>
+                    <p className="text-sm text-slate-600">{app.kindergarten}</p>
+                  </div>
+                  {getStatusBadge(app.status)}
                 </div>
-                {getStatusBadge(app.status)}
-              </div>
+              </Link>
             ))}
           </div>
         )}
