@@ -2,118 +2,95 @@
 import { useLanguage } from '@/contexts/LanguageContext';
 import {
   Home,
-  FileText,
-  Clock,
-  MessageSquare,
-  CreditCard,
   Calendar,
   UserCheck,
-  MapPin,
-  Users,
-  BookOpen,
-  FileCheck,
+  MessageSquare,
+  Image,
+  FileText,
+  User,
+  CreditCard,
   FolderOpen,
-  CheckCircle,
-  HouseIcon,
-  Flag,
-  MessageCircle,
-  Image
+  AlertCircle,
+  Phone
 } from 'lucide-react';
 
 export const useGuardianNavigation = () => {
   const { t } = useLanguage();
   
-  return [
-    {
-      title: t('nav.dashboard'),
-      url: '/guardian',
-      icon: Home,
-    },
-    {
-      title: t('nav.newApplication'),
-      url: '/guardian/new-application',
-      icon: FileText,
-    },
-    {
-      title: t('nav.applicationStatus'),
-      url: '/guardian/application-status',
-      icon: Clock,
-    },
-    {
-      title: t('nav.dailySchedule'),
-      url: '/guardian/daily-schedule',
-      icon: Calendar,
-      description: t('guardian.dailySchedule.description'),
-    },
-    {
-      title: t('nav.absence'),
-      url: '/guardian/absence',
-      icon: UserCheck,
-      description: t('guardian.absence.description'),
-    },
-    {
-      title: t('nav.attendance'),
-      url: '/guardian/attendance',
-      icon: CheckCircle,
-      description: t('guardian.attendance.description'),
-    },
-    {
-      title: t('nav.location'),
-      url: '/guardian/location',
-      icon: MapPin,
-      description: t('guardian.location.description'),
-    },
-    {
-      title: t('nav.pickup'),
-      url: '/guardian/pickup',
-      icon: Users,
-      description: t('guardian.pickup.description'),
-    },
-    {
-      title: t('nav.livingArrangements'),
-      url: '/guardian/living-arrangements',
-      icon: HouseIcon,
-      description: t('guardian.livingArrangements.description'),
-    },
-    {
-      title: t('nav.holidayRegistration'),
-      url: '/guardian/holiday-registration',
-      icon: Flag,
-      description: t('holidayRegistration.description'),
-    },
-    {
-      title: t('nav.messages'),
-      url: '/guardian/messages',
-      icon: MessageSquare,
-    },
-    {
-      title: t('nav.meetings'),
-      url: '/guardian/meetings',
-      icon: BookOpen,
-      description: t('guardian.meetings.description'),
-    },
-    {
-      title: t('nav.noticeBoard'),
-      url: '/guardian/notice-board',
-      icon: Image,
-      description: t('guardian.noticeBoard.description'),
-    },
-    {
-      title: t('nav.consents'),
-      url: '/guardian/consents',
-      icon: FileCheck,
-      description: t('guardian.consents.description'),
-    },
-    {
-      title: t('nav.documents'),
-      url: '/guardian/documents',
-      icon: FolderOpen,
-      description: t('guardian.documents.description'),
-    },
-    {
-      title: t('nav.payments'),
-      url: '/guardian/payments',
-      icon: CreditCard,
-    },
-  ];
+  return {
+    primary: [
+      {
+        title: t('nav.dashboard'),
+        url: '/guardian',
+        icon: Home,
+        description: "Overview of today's activities"
+      },
+      {
+        title: 'Daily Schedule',
+        url: '/guardian/daily-schedule',
+        icon: Calendar,
+        description: "Today's timetable and activities"
+      },
+      {
+        title: 'Attendance',
+        url: '/guardian/attendance',
+        icon: UserCheck,
+        description: "Check-in status and absence reporting"
+      },
+      {
+        title: t('nav.messages'),
+        url: '/guardian/messages',
+        icon: MessageSquare,
+        description: "Chat with teachers and staff"
+      },
+      {
+        title: 'Notice Board',
+        url: '/guardian/notice-board',
+        icon: Image,
+        description: "Latest posts and announcements"
+      }
+    ],
+    secondary: [
+      {
+        title: 'Applications',
+        url: '/guardian/applications',
+        icon: FileText,
+        description: "New applications and status tracking"
+      },
+      {
+        title: 'Child Profile',
+        url: '/guardian/child-profile',
+        icon: User,
+        description: "Living arrangements and pickup settings"
+      },
+      {
+        title: t('nav.payments'),
+        url: '/guardian/payments',
+        icon: CreditCard,
+        description: "Billing and payment status"
+      },
+      {
+        title: 'Documents',
+        url: '/guardian/documents',
+        icon: FolderOpen,
+        description: "Consents and important documents"
+      }
+    ],
+    quickActions: [
+      {
+        title: 'Report Absence',
+        url: '/guardian/absence',
+        icon: AlertCircle,
+        urgent: true,
+        description: "Quick absence reporting"
+      },
+      {
+        title: 'Emergency Contact',
+        url: '/guardian/emergency',
+        icon: Phone,
+        urgent: true,
+        description: "Emergency contact information"
+      }
+    ]
+  };
 };
