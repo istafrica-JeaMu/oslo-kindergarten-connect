@@ -241,20 +241,20 @@ const GuardianDashboard = () => {
         </div>
       </div>
 
-      {/* Priority Cards - Mobile-First Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
+      {/* Priority Cards - Updated Grid Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Today's Status - Always first on mobile */}
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-3">
           <TodaysStatusCard />
         </div>
         
         {/* Quick Actions - Second on mobile */}
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-3">
           <QuickActionsCard />
         </div>
         
-        {/* Notice Board - Third on mobile, spans full width on large screens when needed */}
-        <div className="lg:col-span-1 xl:col-span-2">
+        {/* Notice Board - Third on mobile, takes more space on large screens */}
+        <div className="lg:col-span-6">
           <NoticeBoardPreviewCard />
         </div>
       </div>
