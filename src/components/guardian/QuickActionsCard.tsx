@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -71,7 +72,7 @@ const QuickActionsCard = () => {
       </CardHeader>
       <CardContent className="relative">
         <TooltipProvider>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-3">
             {quickActions.map((action) => (
               <Tooltip key={action.title}>
                 <TooltipTrigger asChild>

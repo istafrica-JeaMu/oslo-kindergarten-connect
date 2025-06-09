@@ -241,20 +241,20 @@ const GuardianDashboard = () => {
         </div>
       </div>
 
-      {/* Three-Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Today's Status - Left Column */}
-        <div className="lg:col-span-1">
+      {/* Priority Cards - Responsive Grid Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-6">
+        {/* Today's Status */}
+        <div className="xl:col-span-3">
           <TodaysStatusCard />
         </div>
         
-        {/* Quick Actions - Middle Column */}
-        <div className="lg:col-span-1">
+        {/* Quick Actions */}
+        <div className="xl:col-span-3">
           <QuickActionsCard />
         </div>
         
-        {/* Notice Board - Right Column */}
-        <div className="lg:col-span-1">
+        {/* Notice Board - Takes full width on mobile/tablet, remaining space on xl screens */}
+        <div className="md:col-span-2 xl:col-span-6">
           <NoticeBoardPreviewCard />
         </div>
       </div>
