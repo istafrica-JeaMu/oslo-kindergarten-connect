@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,8 +21,10 @@ import {
   Eye,
   CheckCircle,
   XCircle,
-  Clock
+  Clock,
+  ExternalLink
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const ChildProfile = () => {
   const { childId } = useParams();
@@ -291,8 +292,18 @@ const ChildProfile = () => {
   const renderLivingArrangements = () => (
     <Card>
       <CardHeader>
-        <CardTitle>Living Arrangements</CardTitle>
-        <CardDescription>Primary address and custody information</CardDescription>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle>Living Arrangements</CardTitle>
+            <CardDescription>Primary address and custody information</CardDescription>
+          </div>
+          <Link to="/guardian/living-arrangements">
+            <Button variant="outline" size="sm">
+              <ExternalLink className="w-4 h-4 mr-2" />
+              View More
+            </Button>
+          </Link>
+        </div>
       </CardHeader>
       <CardContent className="space-y-6">
         <div>

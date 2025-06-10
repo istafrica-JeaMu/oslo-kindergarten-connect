@@ -1,4 +1,3 @@
-
 import {
   BrowserRouter as Router,
   Route,
@@ -29,6 +28,7 @@ import GuardianChildProfile from './pages/guardian/ChildProfile';
 import GuardianPayments from './pages/guardian/Payments';
 import GuardianDocuments from './pages/guardian/Documents';
 import GuardianNewApplication from './pages/guardian/NewApplication';
+import GuardianLivingArrangements from './pages/guardian/LivingArrangements';
 import PostDetail from './pages/guardian/PostDetail';
 import LoginPage from './pages/auth/LoginPage';
 import NotFound from './pages/NotFound';
@@ -106,6 +106,7 @@ function App() {
               <Route path="notice-board/post/:id" element={<PostDetail />} />
               <Route path="application-status" element={<GuardianApplicationStatus />} />
               <Route path="child-profile" element={<GuardianChildProfile />} />
+              <Route path="living-arrangements" element={<GuardianLivingArrangements />} />
               <Route path="payments" element={<GuardianPayments />} />
               <Route path="documents" element={<GuardianDocuments />} />
               <Route path="new-application" element={<GuardianNewApplication />} />
