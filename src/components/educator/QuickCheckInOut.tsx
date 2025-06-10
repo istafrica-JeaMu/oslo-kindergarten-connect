@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { 
   Zap, 
   Search, 
@@ -12,8 +13,7 @@ import {
   UserX, 
   CheckCircle, 
   XCircle,
-  Users,
-  SelectAll
+  Users
 } from 'lucide-react';
 import { Child } from '@/pages/educator/EducatorAttendance';
 
@@ -84,7 +84,7 @@ const QuickCheckInOut = ({ children, onQuickAction }: QuickCheckInOutProps) => {
 
   return (
     <div className="space-y-6">
-      {/* Header with Bulk Actions */}
+      {/* Header with Search and Bulk Actions */}
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-lg flex items-center gap-2">
@@ -104,20 +104,12 @@ const QuickCheckInOut = ({ children, onQuickAction }: QuickCheckInOutProps) => {
             />
           </div>
 
-          {/* Bulk Selection Controls */}
-          <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-lg">
-            <div className="flex items-center gap-2">
-              <Checkbox
-                id="select-all"
-                checked={selectedChildren.length === filteredChildren.length && filteredChildren.length > 0}
-                onCheckedChange={handleSelectAll}
-              />
-              <label htmlFor="select-all" className="text-sm font-medium cursor-pointer">
-                Select All ({selectedChildren.length}/{filteredChildren.length})
-              </label>
-            </div>
-            
-            {selectedChildren.length > 0 && (
+          {/* Bulk Actions */}
+          {selectedChildren.length > 0 && (
+            <div className="flex items-center gap-2 p-4 bg-slate-50 rounded-lg">
+              <span className="text-sm font-medium">
+                {selectedChildren.length} children selected
+              </span>
               <div className="flex gap-2 ml-auto">
                 <Button 
                   size="sm" 
@@ -136,89 +128,103 @@ const QuickCheckInOut = ({ children, onQuickAction }: QuickCheckInOutProps) => {
                   Mark Absent ({selectedChildren.length})
                 </Button>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 
-      {/* Children Grid */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredChildren.map((child) => (
-          <Card 
-            key={child.id}
-            className={`transition-all duration-200 hover:shadow-md ${
-              selectedChildren.includes(child.id) 
-                ? 'ring-2 ring-oslo-blue bg-blue-50' 
-                : 'hover:shadow-lg'
-            }`}
-          >
-            <CardContent className="p-4">
-              <div className="space-y-3">
-                {/* Header with checkbox */}
-                <div className="flex items-start gap-3">
+      {/* Children Table */}
+      <Card>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-12">
                   <Checkbox
-                    checked={selectedChildren.includes(child.id)}
-                    onCheckedChange={(checked) => handleSelectChild(child.id, checked as boolean)}
+                    checked={selectedChildren.length === filteredChildren.length && filteredChildren.length > 0}
+                    onCheckedChange={handleSelectAll}
                   />
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                </TableHead>
+                <TableHead>Child</TableHead>
+                <TableHead>Age</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Check In</TableHead>
+                <TableHead>Expected Pickup</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredChildren.map((child) => (
+                <TableRow 
+                  key={child.id}
+                  className={`${
+                    selectedChildren.includes(child.id) 
+                      ? 'bg-blue-50 border-l-4 border-l-oslo-blue' 
+                      : ''
+                  }`}
+                >
+                  <TableCell>
+                    <Checkbox
+                      checked={selectedChildren.includes(child.id)}
+                      onCheckedChange={(checked) => handleSelectChild(child.id, checked as boolean)}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-xs">
                         {child.name.split(' ').map(n => n[0]).join('')}
                       </div>
                       <div>
-                        <h3 className="font-semibold text-slate-900">{child.name}</h3>
-                        <p className="text-sm text-slate-600">{child.age}</p>
+                        <p className="font-medium">{child.name}</p>
+                        <p className="text-sm text-slate-600">{child.guardian}</p>
                       </div>
                     </div>
-                    
-                    <div className="flex items-center justify-between">
-                      {getStatusBadge(child.status)}
-                      {child.status === 'present' && child.checkInTime && (
-                        <span className="text-xs text-slate-500">
-                          In: {child.checkInTime}
-                        </span>
+                  </TableCell>
+                  <TableCell className="text-sm">{child.age}</TableCell>
+                  <TableCell>{getStatusBadge(child.status)}</TableCell>
+                  <TableCell className="text-sm">
+                    {child.checkInTime || '-'}
+                  </TableCell>
+                  <TableCell className="text-sm">
+                    {child.expectedPickupTime || '-'}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex gap-1 justify-end">
+                      {child.status === 'absent' ? (
+                        <Button 
+                          size="sm" 
+                          onClick={() => onQuickAction('check-in', child.id)}
+                          className="h-8 px-3 text-xs bg-green-600 hover:bg-green-700"
+                        >
+                          <UserCheck className="w-3 h-3 mr-1" />
+                          Check In
+                        </Button>
+                      ) : (
+                        <Button 
+                          size="sm" 
+                          onClick={() => onQuickAction('mark-absent', child.id)}
+                          className="h-8 px-3 text-xs bg-red-600 hover:bg-red-700"
+                        >
+                          <UserX className="w-3 h-3 mr-1" />
+                          Mark Absent
+                        </Button>
                       )}
                     </div>
-                  </div>
-                </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
 
-                {/* Quick action buttons for individual children */}
-                <div className="flex gap-2 pt-2">
-                  {child.status === 'absent' ? (
-                    <Button 
-                      size="sm" 
-                      onClick={() => onQuickAction('check-in', child.id)}
-                      className="flex-1 bg-green-600 hover:bg-green-700 h-8 text-xs"
-                    >
-                      <UserCheck className="w-3 h-3 mr-1" />
-                      Check In
-                    </Button>
-                  ) : (
-                    <Button 
-                      size="sm" 
-                      onClick={() => onQuickAction('mark-absent', child.id)}
-                      className="flex-1 bg-red-600 hover:bg-red-700 h-8 text-xs"
-                    >
-                      <UserX className="w-3 h-3 mr-1" />
-                      Mark Absent
-                    </Button>
-                  )}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {filteredChildren.length === 0 && (
-        <Card>
-          <CardContent className="p-12 text-center">
-            <Users className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-slate-900 mb-2">No children found</h3>
-            <p className="text-slate-600">Try adjusting your search terms</p>
-          </CardContent>
-        </Card>
-      )}
+          {filteredChildren.length === 0 && (
+            <div className="p-12 text-center">
+              <Users className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-slate-900 mb-2">No children found</h3>
+              <p className="text-slate-600">Try adjusting your search terms</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };
