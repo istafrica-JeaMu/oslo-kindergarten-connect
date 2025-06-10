@@ -1,9 +1,11 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { 
   Users, 
@@ -17,10 +19,12 @@ import {
   Search,
   LogIn,
   LogOut,
-  Filter
+  Filter,
+  Zap
 } from 'lucide-react';
 import ChildListView from '@/components/educator/ChildListView';
 import QuickActionButtons from '@/components/educator/QuickActionButtons';
+import QuickCheckInOut from '@/components/educator/QuickCheckInOut';
 
 export interface Child {
   id: string;
@@ -46,6 +50,7 @@ const EducatorAttendance = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedChild, setSelectedChild] = useState<Child | null>(null);
+  const [activeTab, setActiveTab] = useState('quick');
 
   const attendanceData: Child[] = [
     {
@@ -230,50 +235,73 @@ const EducatorAttendance = () => {
       {/* Quick Action Buttons */}
       <QuickActionButtons onAction={handleQuickAction} />
 
-      {/* Filters and Search */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Filter Children</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex gap-4 flex-wrap">
-            <div className="flex-1 min-w-64">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <Input
-                  placeholder="Search by child or guardian name..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-            </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-48">
-                <Filter className="w-4 h-4 mr-2" />
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Children</SelectItem>
-                <SelectItem value="present">Present Only</SelectItem>
-                <SelectItem value="absent">Absent Only</SelectItem>
-                <SelectItem value="on-leave">On Leave Only</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Main Content with Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="quick" className="flex items-center gap-2">
+            <Zap className="w-4 h-4" />
+            Quick Check-In/Out
+          </TabsTrigger>
+          <TabsTrigger value="detailed" className="flex items-center gap-2">
+            <Users className="w-4 h-4" />
+            Detailed View
+          </TabsTrigger>
+        </TabsList>
 
-      {/* Children List */}
-      <div>
-        <h2 className="text-xl font-semibold mb-4">Today's Attendance ({filteredChildren.length} children)</h2>
-        <ChildListView 
-          children={filteredChildren}
-          onChildSelect={handleChildSelect}
-          onQuickAction={handleQuickAction}
-          onLocationChange={handleLocationChange}
-        />
-      </div>
+        <TabsContent value="quick" className="space-y-6">
+          <QuickCheckInOut 
+            children={attendanceData}
+            onQuickAction={handleQuickAction}
+          />
+        </TabsContent>
+
+        <TabsContent value="detailed" className="space-y-6">
+          {/* Filters and Search */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Filter Children</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex gap-4 flex-wrap">
+                <div className="flex-1 min-w-64">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      placeholder="Search by child or guardian name..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                </div>
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="w-48">
+                    <Filter className="w-4 h-4 mr-2" />
+                    <SelectValue placeholder="Filter by status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Children</SelectItem>
+                    <SelectItem value="present">Present Only</SelectItem>
+                    <SelectItem value="absent">Absent Only</SelectItem>
+                    <SelectItem value="on-leave">On Leave Only</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Children List */}
+          <div>
+            <h2 className="text-xl font-semibold mb-4">Today's Attendance ({filteredChildren.length} children)</h2>
+            <ChildListView 
+              children={filteredChildren}
+              onChildSelect={handleChildSelect}
+              onQuickAction={handleQuickAction}
+              onLocationChange={handleLocationChange}
+            />
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

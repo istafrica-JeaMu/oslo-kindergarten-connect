@@ -2,380 +2,244 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarContent, AvatarFallback } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  Users,
-  MessageSquare,
-  Bell,
-  FileText,
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { 
+  Users, 
+  MessageSquare, 
+  Bell, 
+  FileText, 
   UserCheck,
-  Calendar,
-  Send,
-  Paperclip,
-  AlertTriangle,
   Clock,
-  CheckCircle
+  Send,
+  AlertTriangle
 } from 'lucide-react';
 
 interface TeamMessage {
   id: string;
-  sender: string;
-  senderAvatar: string;
-  content: string;
+  from: string;
+  message: string;
   timestamp: string;
-  channel: string;
-  urgent: boolean;
-  attachments?: string[];
+  type: 'message' | 'handover' | 'alert';
+  read: boolean;
 }
 
-interface HandoverNote {
+interface StaffMember {
   id: string;
-  author: string;
-  shift: string;
-  date: string;
-  content: string;
-  important: boolean;
-  children: string[];
-}
-
-interface CoverageRequest {
-  id: string;
-  requestedBy: string;
-  date: string;
-  timeSlot: string;
-  reason: string;
-  status: 'pending' | 'covered' | 'declined';
-  coveredBy?: string;
+  name: string;
+  role: string;
+  status: 'available' | 'busy' | 'offline';
+  avatar?: string;
 }
 
 const TeamCollaborationHub = () => {
-  const [selectedChannel, setSelectedChannel] = useState('general');
   const [newMessage, setNewMessage] = useState('');
-  const [newHandoverNote, setNewHandoverNote] = useState('');
+  const [handoverNote, setHandoverNote] = useState('');
 
   const [teamMessages] = useState<TeamMessage[]>([
     {
       id: '1',
-      sender: 'Maria Hansen',
-      senderAvatar: 'MH',
-      content: 'Reminder: We have a fire drill scheduled for tomorrow at 2 PM. Please prepare the children.',
-      timestamp: '2024-01-15T09:30:00',
-      channel: 'general',
-      urgent: true
+      from: 'Sarah Peterson',
+      message: 'Emma Larsen had a small incident during playground time. Documented in her notes.',
+      timestamp: '14:30',
+      type: 'alert',
+      read: false
     },
     {
       id: '2',
-      sender: 'Erik Larsen',
-      senderAvatar: 'EL',
-      content: 'The playground equipment inspection is complete. All equipment is safe to use.',
-      timestamp: '2024-01-15T08:15:00',
-      channel: 'safety',
-      urgent: false
-    }
-  ]);
-
-  const [handoverNotes] = useState<HandoverNote[]>([
-    {
-      id: '1',
-      author: 'Sarah Peterson',
-      shift: 'Morning Shift',
-      date: '2024-01-15',
-      content: 'Emma had a minor scrape on her knee during outdoor play. Cleaned and bandaged. Parents informed via message.',
-      important: true,
-      children: ['Emma Larsen']
+      from: 'Maria Hansen',
+      message: 'All children are back from outdoor activities. Everyone accounted for.',
+      timestamp: '14:15',
+      type: 'handover',
+      read: true
     },
     {
-      id: '2',
-      author: 'Lars Andersen',
-      shift: 'Afternoon Shift',
-      date: '2024-01-14',
-      content: 'Oliver completed his reading assessment. Shows good progress in letter recognition.',
-      important: false,
-      children: ['Oliver Hansen']
+      id: '3',
+      from: 'Erik Larsen',
+      message: 'New art supplies arrived and stored in Art Room cabinet.',
+      timestamp: '13:45',
+      type: 'message',
+      read: true
     }
   ]);
 
-  const [coverageRequests] = useState<CoverageRequest[]>([
-    {
-      id: '1',
-      requestedBy: 'Anna Nilsen',
-      date: '2024-01-18',
-      timeSlot: '08:00 - 12:00',
-      reason: 'Medical appointment',
-      status: 'pending'
-    },
-    {
-      id: '2',
-      requestedBy: 'Per Olsen',
-      date: '2024-01-20',
-      timeSlot: '13:00 - 16:00',
-      reason: 'Family emergency',
-      status: 'covered',
-      coveredBy: 'Maria Hansen'
-    }
+  const [staffMembers] = useState<StaffMember[]>([
+    { id: '1', name: 'Sarah Peterson', role: 'Lead Educator', status: 'available' },
+    { id: '2', name: 'Maria Hansen', role: 'Assistant', status: 'busy' },
+    { id: '3', name: 'Erik Larsen', role: 'Educator', status: 'available' },
+    { id: '4', name: 'Anna Nilsen', role: 'Substitute', status: 'offline' }
   ]);
 
-  const channels = [
-    { id: 'general', name: 'General', icon: Users },
-    { id: 'safety', name: 'Safety & Incidents', icon: AlertTriangle },
-    { id: 'activities', name: 'Activities', icon: Calendar },
-    { id: 'announcements', name: 'Announcements', icon: Bell }
-  ];
-
-  const handleSendMessage = () => {
-    if (!newMessage.trim()) return;
-    
-    // Add new message logic here
-    console.log('Sending message:', newMessage, 'to channel:', selectedChannel);
-    setNewMessage('');
-  };
-
-  const handleAddHandoverNote = () => {
-    if (!newHandoverNote.trim()) return;
-    
-    // Add handover note logic here
-    console.log('Adding handover note:', newHandoverNote);
-    setNewHandoverNote('');
-  };
-
-  const getStatusBadge = (status: string) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
-      case 'pending':
-        return <Badge className="bg-yellow-100 text-yellow-800"><Clock className="w-3 h-3 mr-1" />Pending</Badge>;
-      case 'covered':
-        return <Badge className="bg-green-100 text-green-800"><CheckCircle className="w-3 h-3 mr-1" />Covered</Badge>;
-      case 'declined':
-        return <Badge className="bg-red-100 text-red-800">Declined</Badge>;
-      default:
-        return <Badge variant="outline">{status}</Badge>;
+      case 'available': return 'bg-green-100 text-green-800';
+      case 'busy': return 'bg-yellow-100 text-yellow-800';
+      case 'offline': return 'bg-gray-100 text-gray-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getMessageTypeIcon = (type: string) => {
+    switch (type) {
+      case 'alert': return <AlertTriangle className="w-4 h-4 text-red-500" />;
+      case 'handover': return <UserCheck className="w-4 h-4 text-blue-500" />;
+      default: return <MessageSquare className="w-4 h-4 text-gray-500" />;
     }
   };
 
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="w-5 h-5" />
-            Team Collaboration Hub
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="messages" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="messages">Team Messages</TabsTrigger>
-              <TabsTrigger value="handover">Handover Notes</TabsTrigger>
-              <TabsTrigger value="coverage">Coverage Requests</TabsTrigger>
-              <TabsTrigger value="resources">Resources</TabsTrigger>
-            </TabsList>
+      <Tabs defaultValue="messages" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="messages">Messages</TabsTrigger>
+          <TabsTrigger value="handover">Handover</TabsTrigger>
+          <TabsTrigger value="staff">Team Status</TabsTrigger>
+          <TabsTrigger value="coverage">Coverage</TabsTrigger>
+        </TabsList>
 
-            <TabsContent value="messages" className="space-y-4">
-              <div className="grid md:grid-cols-4 gap-4">
-                <div className="space-y-2">
-                  <h4 className="font-medium">Channels</h4>
-                  {channels.map((channel) => {
-                    const Icon = channel.icon;
-                    return (
-                      <Button
-                        key={channel.id}
-                        variant={selectedChannel === channel.id ? "default" : "ghost"}
-                        className="w-full justify-start"
-                        onClick={() => setSelectedChannel(channel.id)}
-                      >
-                        <Icon className="w-4 h-4 mr-2" />
-                        {channel.name}
-                      </Button>
-                    );
-                  })}
-                </div>
-
-                <div className="md:col-span-3 space-y-4">
-                  <div className="h-96 overflow-y-auto space-y-3 border rounded p-3">
-                    {teamMessages
-                      .filter(msg => msg.channel === selectedChannel)
-                      .map((message) => (
-                        <div key={message.id} className="flex gap-3">
-                          <Avatar className="w-8 h-8">
-                            <AvatarFallback>{message.senderAvatar}</AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="font-medium text-sm">{message.sender}</span>
-                              <span className="text-xs text-gray-500">
-                                {new Date(message.timestamp).toLocaleTimeString()}
-                              </span>
-                              {message.urgent && (
-                                <Badge variant="destructive" className="text-xs">Urgent</Badge>
-                              )}
-                            </div>
-                            <p className="text-sm text-gray-700">{message.content}</p>
-                          </div>
-                        </div>
-                      ))}
-                  </div>
-
-                  <div className="flex gap-2">
-                    <Input
-                      placeholder="Type your message..."
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
-                      onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                    />
-                    <Button onClick={handleSendMessage}>
-                      <Send className="w-4 h-4" />
-                    </Button>
-                    <Button variant="outline">
-                      <Paperclip className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="handover" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Add Handover Note</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <Textarea
-                    placeholder="Add important information for the next shift..."
-                    value={newHandoverNote}
-                    onChange={(e) => setNewHandoverNote(e.target.value)}
-                    rows={3}
-                  />
-                  <div className="flex gap-2">
-                    <Button onClick={handleAddHandoverNote}>
-                      <FileText className="w-4 h-4 mr-2" />
-                      Add Note
-                    </Button>
-                    <Button variant="outline">
-                      <AlertTriangle className="w-4 h-4 mr-2" />
-                      Mark as Important
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
+        <TabsContent value="messages" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <MessageSquare className="w-5 h-5" />
+                Team Messages
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
               <div className="space-y-3">
-                <h4 className="font-medium">Recent Handover Notes</h4>
-                {handoverNotes.map((note) => (
-                  <Card key={note.id}>
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium">{note.shift}</span>
-                          {note.important && (
-                            <Badge variant="destructive">Important</Badge>
-                          )}
-                        </div>
-                        <span className="text-sm text-gray-500">{note.date}</span>
+                {teamMessages.map((message) => (
+                  <div key={message.id} className={`p-3 rounded-lg border ${!message.read ? 'bg-blue-50 border-blue-200' : 'bg-gray-50'}`}>
+                    <div className="flex items-start gap-3">
+                      <div className="flex-shrink-0">
+                        {getMessageTypeIcon(message.type)}
                       </div>
-                      <p className="text-gray-700 mb-2">{note.content}</p>
-                      <div className="flex items-center justify-between text-sm text-gray-500">
-                        <span>By: {note.author}</span>
-                        {note.children.length > 0 && (
-                          <span>Children: {note.children.join(', ')}</span>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="coverage" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Request Coverage</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <Input type="date" />
-                    <Input placeholder="Time slot (e.g., 08:00 - 12:00)" />
-                  </div>
-                  <Textarea placeholder="Reason for coverage request..." rows={2} />
-                  <Button>
-                    <UserCheck className="w-4 h-4 mr-2" />
-                    Request Coverage
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <div className="space-y-3">
-                <h4 className="font-medium">Coverage Requests</h4>
-                {coverageRequests.map((request) => (
-                  <Card key={request.id}>
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between mb-2">
-                        <div>
-                          <span className="font-medium">{request.requestedBy}</span>
-                          <p className="text-sm text-gray-600">{request.date} • {request.timeSlot}</p>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="font-medium text-sm">{message.from}</span>
+                          <span className="text-xs text-gray-500">{message.timestamp}</span>
                         </div>
-                        {getStatusBadge(request.status)}
+                        <p className="text-sm text-gray-700">{message.message}</p>
                       </div>
-                      <p className="text-gray-700 mb-2">{request.reason}</p>
-                      {request.coveredBy && (
-                        <p className="text-sm text-green-600">Covered by: {request.coveredBy}</p>
-                      )}
-                      {request.status === 'pending' && (
-                        <div className="flex gap-2 mt-3">
-                          <Button size="sm">Accept Coverage</Button>
-                          <Button size="sm" variant="outline">Decline</Button>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="resources" className="space-y-4">
-              <div className="grid md:grid-cols-2 gap-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">Shared Resources</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      <Button variant="ghost" className="w-full justify-start">
-                        <FileText className="w-4 h-4 mr-2" />
-                        Activity Templates
-                      </Button>
-                      <Button variant="ghost" className="w-full justify-start">
-                        <FileText className="w-4 h-4 mr-2" />
-                        Safety Protocols
-                      </Button>
-                      <Button variant="ghost" className="w-full justify-start">
-                        <FileText className="w-4 h-4 mr-2" />
-                        Emergency Procedures
-                      </Button>
                     </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">Upload Resource</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <Input placeholder="Resource name" />
-                    <Button variant="outline" className="w-full">
-                      <Paperclip className="w-4 h-4 mr-2" />
-                      Choose File
-                    </Button>
-                    <Button className="w-full">Upload Resource</Button>
-                  </CardContent>
-                </Card>
+                  </div>
+                ))}
               </div>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Type a message to your team..."
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  className="flex-1"
+                />
+                <Button disabled={!newMessage.trim()}>
+                  <Send className="w-4 h-4" />
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="handover" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="w-5 h-5" />
+                Shift Handover Notes
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-3">
+                <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Clock className="w-4 h-4 text-yellow-600" />
+                    <span className="font-medium text-sm">Morning Shift Notes</span>
+                  </div>
+                  <p className="text-sm text-gray-700">All children present. Emma needs extra attention during water play activities. New child Lucas starts tomorrow.</p>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Add Handover Note</label>
+                <Textarea
+                  placeholder="Important information for the next shift..."
+                  value={handoverNote}
+                  onChange={(e) => setHandoverNote(e.target.value)}
+                  rows={3}
+                />
+                <Button disabled={!handoverNote.trim()}>
+                  Add Handover Note
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="staff" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="w-5 h-5" />
+                Team Status
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {staffMembers.map((staff) => (
+                  <div key={staff.id} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="w-10 h-10">
+                        <AvatarImage src={staff.avatar} />
+                        <AvatarFallback>{staff.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-medium">{staff.name}</p>
+                        <p className="text-sm text-gray-600">{staff.role}</p>
+                      </div>
+                    </div>
+                    <Badge className={getStatusColor(staff.status)}>
+                      {staff.status}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="coverage" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <UserCheck className="w-5 h-5" />
+                Coverage & Substitutes
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <Button variant="outline" className="h-16 flex-col">
+                  <Bell className="w-5 h-5 mb-1" />
+                  Request Coverage
+                </Button>
+                <Button variant="outline" className="h-16 flex-col">
+                  <Users className="w-5 h-5 mb-1" />
+                  Assign Substitute
+                </Button>
+              </div>
+
+              <div className="space-y-2">
+                <h4 className="font-medium">Today's Coverage</h4>
+                <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                  <p className="text-sm">Anna Nilsen covering for lunch break (12:00-13:00)</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
