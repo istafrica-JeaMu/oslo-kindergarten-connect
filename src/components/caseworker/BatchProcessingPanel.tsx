@@ -89,6 +89,10 @@ const BatchProcessingPanel = ({ applications, onBatchAction }: BatchProcessingPr
     return true;
   });
 
+  const handleSimulationModeChange = (checked: boolean | "indeterminate") => {
+    setSimulationMode(checked === true);
+  };
+
   return (
     <div className="space-y-6">
       {/* Batch Controls */}
@@ -136,7 +140,7 @@ const BatchProcessingPanel = ({ applications, onBatchAction }: BatchProcessingPr
               <Checkbox 
                 id="simulation"
                 checked={simulationMode}
-                onCheckedChange={setSimulationMode}
+                onCheckedChange={handleSimulationModeChange}
               />
               <label htmlFor="simulation" className="text-sm">
                 Simulation Mode (Preview Results)
