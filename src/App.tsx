@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/sonner';
@@ -43,13 +42,19 @@ import ApplicationEdit from '@/pages/caseworker/ApplicationEdit';
 import PlacementManagement from '@/pages/caseworker/PlacementManagement';
 import ReviewQueue from '@/pages/caseworker/ReviewQueue';
 
-// Other role pages
+// Educator pages
 import EducatorDashboard from '@/pages/educator/EducatorDashboard';
+import EducatorAttendance from '@/pages/educator/EducatorAttendance';
+import EducatorChildren from '@/pages/educator/EducatorChildren';
+import EducatorMessages from '@/pages/educator/EducatorMessages';
+import EducatorReports from '@/pages/educator/EducatorReports';
+import EducatorCalendar from '@/pages/educator/EducatorCalendar';
+
+// Other role pages
 import StaffDashboard from '@/pages/staff/StaffDashboard';
 import PrivateKindergartenDashboard from '@/pages/staff/PrivateKindergartenDashboard';
 import PublicKindergartenDashboard from '@/pages/staff/PublicKindergartenDashboard';
 import ChildrenManagement from '@/pages/staff/ChildrenManagement';
-import EducatorAttendance from '@/pages/staff/EducatorAttendance';
 import KindergartenDashboard from '@/pages/kindergarten/KindergartenDashboard';
 import KindergartenAttendance from '@/pages/kindergarten/KindergartenAttendance';
 import KindergartenReports from '@/pages/kindergarten/KindergartenReports';
@@ -103,8 +108,15 @@ function App() {
                 <Route path="/caseworker/placement-management" element={<PlacementManagement />} />
                 <Route path="/caseworker/review-queue" element={<ReviewQueue />} />
 
-                {/* Other Role Routes */}
+                {/* Educator Routes */}
                 <Route path="/educator" element={<EducatorDashboard />} />
+                <Route path="/educator/attendance" element={<EducatorAttendance />} />
+                <Route path="/educator/children" element={<EducatorChildren />} />
+                <Route path="/educator/messages" element={<EducatorMessages />} />
+                <Route path="/educator/reports" element={<EducatorReports />} />
+                <Route path="/educator/calendar" element={<EducatorCalendar />} />
+
+                {/* Other Role Routes */}
                 <Route path="/staff" element={<StaffDashboard />} />
                 <Route path="/staff/private-kindergarten" element={<PrivateKindergartenDashboard />} />
                 <Route path="/staff/public-kindergarten" element={<PublicKindergartenDashboard />} />
