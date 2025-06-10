@@ -73,12 +73,12 @@ function App() {
               path="/living-arrangements"
               element={
                 <PrivateRoute>
-                  <Layout>
-                    <GuardianLivingArrangements />
-                  </Layout>
+                  <Layout />
                 </PrivateRoute>
               }
-            />
+            >
+              <Route index element={<GuardianLivingArrangements />} />
+            </Route>
 
             {/* Educator Routes */}
             <Route
