@@ -54,7 +54,31 @@
       "recentActivity": "Recent Activity"
     },
     "reviewQueue": {
-      "quickActionsDesc": "Access frequently used caseworker tools and workflows"
+      "title": "Review Queue",
+      "description": "Manage and review kindergarten applications",
+      "totalApplications": "Total Applications",
+      "new": "New",
+      "underReview": "Under Review",
+      "missingDocs": "Missing Documents",
+      "avgProcessing": "Avg Processing",
+      "filterApplications": "Filter Applications",
+      "searchPlaceholder": "Search by child name, guardian, or application ID...",
+      "allStatuses": "All Statuses",
+      "allPriorities": "All Priorities",
+      "clearFilters": "Clear Filters",
+      "applications": "Applications",
+      "clickToView": "Click on an application to view details",
+      "view": "View",
+      "review": "Review",
+      "quickActions": "Quick Actions",
+      "quickActionsDesc": "Access frequently used caseworker tools and workflows",
+      "bulkReview": "Bulk Review",
+      "requestDocuments": "Request Documents",
+      "approveApplications": "Approve Applications",
+      "contactGuardians": "Contact Guardians",
+      "highPriority": "High Priority",
+      "normalPriority": "Normal Priority",
+      "lowPriority": "Low Priority"
     }
   },
   "holidayRegistration": {

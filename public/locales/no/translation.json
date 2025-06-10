@@ -54,7 +54,31 @@
       "recentActivity": "Nylig aktivitet"
     },
     "reviewQueue": {
-      "quickActionsDesc": "Tilgang til ofte brukte saksbehandlerverktøy og arbeidsflyter"
+      "title": "Behandlingskø",
+      "description": "Administrer og gjennomgå barnehagesøknader",
+      "totalApplications": "Totale søknader",
+      "new": "Nye",
+      "underReview": "Under behandling",
+      "missingDocs": "Mangler dokumenter",
+      "avgProcessing": "Gjennomsnittlig behandling",
+      "filterApplications": "Filtrer søknader",
+      "searchPlaceholder": "Søk etter barnenavn, foresatt eller søknads-ID...",
+      "allStatuses": "Alle statuser",
+      "allPriorities": "Alle prioriteter",
+      "clearFilters": "Tøm filtre",
+      "applications": "Søknader",
+      "clickToView": "Klikk på en søknad for å se detaljer",
+      "view": "Vis",
+      "review": "Behandle",
+      "quickActions": "Hurtighandlinger",
+      "quickActionsDesc": "Tilgang til ofte brukte saksbehandlerverktøy og arbeidsflyter",
+      "bulkReview": "Massebehandling",
+      "requestDocuments": "Be om dokumenter",
+      "approveApplications": "Godkjenn søknader",
+      "contactGuardians": "Kontakt foresatte",
+      "highPriority": "Høy prioritet",
+      "normalPriority": "Normal prioritet",
+      "lowPriority": "Lav prioritet"
     }
   },
   "holidayRegistration": {
