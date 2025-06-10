@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -17,8 +16,6 @@ import {
   AlertTriangle,
   MapPin,
   Search,
-  LogIn,
-  LogOut,
   Filter,
   Zap
 } from 'lucide-react';
@@ -168,16 +165,6 @@ const EducatorAttendance = () => {
               day: 'numeric' 
             })}
           </p>
-        </div>
-        <div className="flex gap-2">
-          <Button onClick={() => handleBulkAction('check-in-all')} className="bg-green-600 hover:bg-green-700">
-            <LogIn className="w-4 h-4 mr-2" />
-            Bulk Check In
-          </Button>
-          <Button onClick={() => handleBulkAction('check-out-all')} className="bg-blue-600 hover:bg-blue-700">
-            <LogOut className="w-4 h-4 mr-2" />
-            Bulk Check Out
-          </Button>
         </div>
       </div>
 

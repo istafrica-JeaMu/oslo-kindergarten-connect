@@ -16,8 +16,6 @@ import {
   AlertTriangle,
   MapPin,
   Activity,
-  LogIn,
-  LogOut,
   FileText,
   Settings
 } from 'lucide-react';
@@ -101,12 +99,6 @@ const EducatorDashboard = () => {
     console.log('Quick action triggered:', action);
     // Handle different quick actions
     switch (action) {
-      case 'bulk-check-in':
-        console.log('Bulk check-in initiated');
-        break;
-      case 'bulk-check-out':
-        console.log('Bulk check-out initiated');
-        break;
       case 'send-reminders':
         console.log('Sending reminders');
         break;

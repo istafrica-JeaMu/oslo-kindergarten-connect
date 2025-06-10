@@ -3,11 +3,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   Users, 
-  LogIn, 
-  LogOut, 
   MessageSquare, 
   Calendar,
-  Clock
+  Clock,
+  AlertTriangle
 } from 'lucide-react';
 
 interface QuickActionButtonsProps {
@@ -16,20 +15,6 @@ interface QuickActionButtonsProps {
 
 const QuickActionButtons = ({ onAction }: QuickActionButtonsProps) => {
   const quickActions = [
-    {
-      id: 'bulk-check-in',
-      label: 'Bulk Check-In',
-      icon: LogIn,
-      className: 'bg-green-600 hover:bg-green-700 text-white',
-      description: 'Check in all absent children'
-    },
-    {
-      id: 'bulk-check-out',
-      label: 'Bulk Check-Out',
-      icon: LogOut,
-      className: 'bg-blue-600 hover:bg-blue-700 text-white',
-      description: 'Check out all present children'
-    },
     {
       id: 'send-reminders',
       label: 'Send Reminders',
@@ -47,7 +32,7 @@ const QuickActionButtons = ({ onAction }: QuickActionButtonsProps) => {
     {
       id: 'emergency-contact',
       label: 'Emergency',
-      icon: Clock,
+      icon: AlertTriangle,
       className: 'bg-red-600 hover:bg-red-700 text-white',
       description: 'Quick emergency protocols'
     }
@@ -62,7 +47,7 @@ const QuickActionButtons = ({ onAction }: QuickActionButtonsProps) => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {quickActions.map((action) => (
             <Button
               key={action.id}
