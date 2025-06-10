@@ -79,6 +79,28 @@
       "highPriority": "High Priority",
       "normalPriority": "Normal Priority",
       "lowPriority": "Low Priority"
+    },
+    "placementManagement": {
+      "title": "Placement Management",
+      "description": "Manage kindergarten capacity and availability",
+      "totalCapacity": "Total Capacity",
+      "occupied": "Occupied",
+      "available": "Available",
+      "waitingList": "Waiting List",
+      "searchPlaceholder": "Search kindergartens...",
+      "allDistricts": "All Districts",
+      "allTypes": "All Types",
+      "municipal": "Municipal",
+      "private": "Private",
+      "addKindergarten": "Add Kindergarten",
+      "viewDetails": "View Details",
+      "overallCapacity": "Overall Capacity",
+      "ageGroup1to2": "Age 1-2 Years",
+      "ageGroup3to5": "Age 3-5 Years",
+      "capacity": "Capacity",
+      "contactInformation": "Contact Information",
+      "full": "Full",
+      "onWaitingList": "on waiting list"
     }
   },
   "holidayRegistration": {

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -141,7 +140,7 @@ const PlacementManagement = () => {
                 <Building className="h-6 w-6 text-blue-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">Total Capacity</p>
+                <p className="text-sm text-gray-600">{t('caseworker.placementManagement.totalCapacity')}</p>
                 <p className="text-2xl font-bold text-gray-900">{totals.capacity}</p>
               </div>
             </div>
@@ -155,7 +154,7 @@ const PlacementManagement = () => {
                 <UserCheck className="h-6 w-6 text-green-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">Occupied</p>
+                <p className="text-sm text-gray-600">{t('caseworker.placementManagement.occupied')}</p>
                 <p className="text-2xl font-bold text-green-600">{totals.occupied}</p>
               </div>
             </div>
@@ -169,7 +168,7 @@ const PlacementManagement = () => {
                 <Plus className="h-6 w-6 text-yellow-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">Available</p>
+                <p className="text-sm text-gray-600">{t('caseworker.placementManagement.available')}</p>
                 <p className="text-2xl font-bold text-yellow-600">{totals.available}</p>
               </div>
             </div>
@@ -183,7 +182,7 @@ const PlacementManagement = () => {
                 <Users className="h-6 w-6 text-red-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">Waiting List</p>
+                <p className="text-sm text-gray-600">{t('caseworker.placementManagement.waitingList')}</p>
                 <p className="text-2xl font-bold text-red-600">{totals.waitingList}</p>
               </div>
             </div>
@@ -198,7 +197,7 @@ const PlacementManagement = () => {
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
-                placeholder="Search kindergartens..."
+                placeholder={t('caseworker.placementManagement.searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
@@ -207,10 +206,10 @@ const PlacementManagement = () => {
             
             <Select value={districtFilter} onValueChange={setDistrictFilter}>
               <SelectTrigger>
-                <SelectValue placeholder="All Districts" />
+                <SelectValue placeholder={t('caseworker.placementManagement.allDistricts')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Districts</SelectItem>
+                <SelectItem value="all">{t('caseworker.placementManagement.allDistricts')}</SelectItem>
                 <SelectItem value="Frogner">Frogner</SelectItem>
                 <SelectItem value="Grünerløkka">Grünerløkka</SelectItem>
                 <SelectItem value="Sagene">Sagene</SelectItem>
@@ -220,18 +219,18 @@ const PlacementManagement = () => {
 
             <Select value={typeFilter} onValueChange={setTypeFilter}>
               <SelectTrigger>
-                <SelectValue placeholder="All Types" />
+                <SelectValue placeholder={t('caseworker.placementManagement.allTypes')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="Municipal">Municipal</SelectItem>
-                <SelectItem value="Private">Private</SelectItem>
+                <SelectItem value="all">{t('caseworker.placementManagement.allTypes')}</SelectItem>
+                <SelectItem value="Municipal">{t('caseworker.placementManagement.municipal')}</SelectItem>
+                <SelectItem value="Private">{t('caseworker.placementManagement.private')}</SelectItem>
               </SelectContent>
             </Select>
 
             <Button>
               <Plus className="h-4 w-4 mr-2" />
-              Add Kindergarten
+              {t('caseworker.placementManagement.addKindergarten')}
             </Button>
           </div>
         </CardContent>
@@ -251,7 +250,7 @@ const PlacementManagement = () => {
                       <Building className="h-6 w-6 text-oslo-blue" />
                       {kg.name}
                       <Badge variant="outline" className={kg.type === 'Municipal' ? 'text-blue-600 border-blue-300 bg-blue-50' : 'text-purple-600 border-purple-300 bg-purple-50'}>
-                        {kg.type}
+                        {kg.type === 'Municipal' ? t('caseworker.placementManagement.municipal') : t('caseworker.placementManagement.private')}
                       </Badge>
                     </CardTitle>
                     <CardDescription className="flex items-center gap-4 mt-2">
@@ -265,11 +264,11 @@ const PlacementManagement = () => {
                   <div className="flex gap-2">
                     <Button variant="outline" size="sm">
                       <Eye className="h-4 w-4 mr-2" />
-                      View Details
+                      {t('caseworker.placementManagement.viewDetails')}
                     </Button>
                     <Button variant="outline" size="sm">
                       <Edit className="h-4 w-4 mr-2" />
-                      Edit
+                      {t('common.edit')}
                     </Button>
                   </div>
                 </div>
@@ -279,10 +278,10 @@ const PlacementManagement = () => {
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                   {/* Overall Capacity */}
                   <div className="space-y-3">
-                    <h4 className="font-medium text-gray-900">Overall Capacity</h4>
+                    <h4 className="font-medium text-gray-900">{t('caseworker.placementManagement.overallCapacity')}</h4>
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
-                        <span>Occupied</span>
+                        <span>{t('caseworker.placementManagement.occupied')}</span>
                         <span className="font-medium">{kg.currentOccupancy}/{kg.capacity}</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
@@ -292,25 +291,25 @@ const PlacementManagement = () => {
                         ></div>
                       </div>
                       <Badge variant="outline" className={getOccupancyColor(occupancyPercentage)}>
-                        {occupancyPercentage}% Full
+                        {occupancyPercentage}% {t('caseworker.placementManagement.full')}
                       </Badge>
                     </div>
                   </div>
 
                   {/* Age Group 1-2 */}
                   <div className="space-y-3">
-                    <h4 className="font-medium text-gray-900">Age 1-2 Years</h4>
+                    <h4 className="font-medium text-gray-900">{t('caseworker.placementManagement.ageGroup1to2')}</h4>
                     <div className="space-y-1 text-sm">
                       <div className="flex justify-between">
-                        <span>Capacity:</span>
+                        <span>{t('caseworker.placementManagement.capacity')}:</span>
                         <span className="font-medium">{kg.ageGroups['1-2'].capacity}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Occupied:</span>
+                        <span>{t('caseworker.placementManagement.occupied')}:</span>
                         <span className="font-medium">{kg.ageGroups['1-2'].occupied}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Available:</span>
+                        <span>{t('caseworker.placementManagement.available')}:</span>
                         <span className={`font-medium ${kg.ageGroups['1-2'].available === 0 ? 'text-red-600' : 'text-green-600'}`}>
                           {kg.ageGroups['1-2'].available}
                         </span>
@@ -320,18 +319,18 @@ const PlacementManagement = () => {
 
                   {/* Age Group 3-5 */}
                   <div className="space-y-3">
-                    <h4 className="font-medium text-gray-900">Age 3-5 Years</h4>
+                    <h4 className="font-medium text-gray-900">{t('caseworker.placementManagement.ageGroup3to5')}</h4>
                     <div className="space-y-1 text-sm">
                       <div className="flex justify-between">
-                        <span>Capacity:</span>
+                        <span>{t('caseworker.placementManagement.capacity')}:</span>
                         <span className="font-medium">{kg.ageGroups['3-5'].capacity}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Occupied:</span>
+                        <span>{t('caseworker.placementManagement.occupied')}:</span>
                         <span className="font-medium">{kg.ageGroups['3-5'].occupied}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Available:</span>
+                        <span>{t('caseworker.placementManagement.available')}:</span>
                         <span className={`font-medium ${kg.ageGroups['3-5'].available === 0 ? 'text-red-600' : 'text-green-600'}`}>
                           {kg.ageGroups['3-5'].available}
                         </span>
@@ -341,7 +340,7 @@ const PlacementManagement = () => {
 
                   {/* Contact Info */}
                   <div className="space-y-3">
-                    <h4 className="font-medium text-gray-900">Contact Information</h4>
+                    <h4 className="font-medium text-gray-900">{t('caseworker.placementManagement.contactInformation')}</h4>
                     <div className="space-y-1 text-sm text-gray-600">
                       <p>{kg.phone}</p>
                       <p className="break-all">{kg.contact}</p>
@@ -349,7 +348,7 @@ const PlacementManagement = () => {
                         <div className="flex items-center gap-1 mt-2">
                           <AlertTriangle className="h-4 w-4 text-yellow-600" />
                           <span className="text-yellow-600 font-medium">
-                            {kg.waitingList} on waiting list
+                            {kg.waitingList} {t('caseworker.placementManagement.onWaitingList')}
                           </span>
                         </div>
                       )}

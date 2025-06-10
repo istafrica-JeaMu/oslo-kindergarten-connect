@@ -79,6 +79,28 @@
       "highPriority": "Høy prioritet",
       "normalPriority": "Normal prioritet",
       "lowPriority": "Lav prioritet"
+    },
+    "placementManagement": {
+      "title": "Plasseringsadministrasjon",
+      "description": "Administrer barnehagekapasitet og tilgjengelighet",
+      "totalCapacity": "Total kapasitet",
+      "occupied": "Opptatt",
+      "available": "Tilgjengelig",
+      "waitingList": "Venteliste",
+      "searchPlaceholder": "Søk barnehager...",
+      "allDistricts": "Alle bydeler",
+      "allTypes": "Alle typer",
+      "municipal": "Kommunal",
+      "private": "Privat",
+      "addKindergarten": "Legg til barnehage",
+      "viewDetails": "Vis detaljer",
+      "overallCapacity": "Samlet kapasitet",
+      "ageGroup1to2": "Alder 1-2 år",
+      "ageGroup3to5": "Alder 3-5 år",
+      "capacity": "Kapasitet",
+      "contactInformation": "Kontaktinformasjon",
+      "full": "Full",
+      "onWaitingList": "på venteliste"
     }
   },
   "holidayRegistration": {
