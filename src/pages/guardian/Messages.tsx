@@ -152,11 +152,11 @@ const Messages = () => {
       case 'system':
         return <Badge variant="outline" className="text-blue-600 border-blue-200 bg-blue-50 text-xs font-medium">System</Badge>;
       case 'educator':
-        return <Badge variant="outline" className="text-green-600 border-green-200 bg-green-50 text-xs font-medium">Lærer</Badge>;
+        return <Badge variant="outline" className="text-green-600 border-green-200 bg-green-50 text-xs font-medium">Teacher</Badge>;
       case 'case worker':
-        return <Badge variant="outline" className="text-purple-600 border-purple-200 bg-purple-50 text-xs font-medium">Saksbehandler</Badge>;
+        return <Badge variant="outline" className="text-purple-600 border-purple-200 bg-purple-50 text-xs font-medium">Case Worker</Badge>;
       default:
-        return <Badge variant="outline" className="text-gray-600 border-gray-200 bg-gray-50 text-xs font-medium">Ansatt</Badge>;
+        return <Badge variant="outline" className="text-gray-600 border-gray-200 bg-gray-50 text-xs font-medium">Staff</Badge>;
     }
   };
 
@@ -166,11 +166,11 @@ const Messages = () => {
     const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
     
     if (diffDays === 0) {
-      return date.toLocaleTimeString('no-NO', { hour: '2-digit', minute: '2-digit' });
+      return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
     } else if (diffDays < 7) {
-      return date.toLocaleDateString('no-NO', { weekday: 'short' });
+      return date.toLocaleDateString('en-US', { weekday: 'short' });
     } else {
-      return date.toLocaleDateString('no-NO', { month: 'short', day: 'numeric' });
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     }
   };
 
@@ -181,7 +181,7 @@ const Messages = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('dashboard.messages')}</h1>
-            <p className="text-gray-600">Kommuniser med barnehagen og følg opp meldinger</p>
+            <p className="text-gray-600">Communicate with the kindergarten and follow up on messages</p>
           </div>
           <div className="flex items-center space-x-3">
             <Button variant="outline" size="sm" className="hidden md:flex">
@@ -190,7 +190,7 @@ const Messages = () => {
             </Button>
             <Button className="shadow-lg">
               <Plus className="h-4 w-4 mr-2" />
-              Ny melding
+              New Message
             </Button>
           </div>
         </div>
@@ -205,10 +205,10 @@ const Messages = () => {
           {/* Enhanced Chat Header */}
           <div className="p-6 border-b border-slate-200/60 bg-white/80 backdrop-blur-sm">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-gray-900">Meldinger</h2>
+              <h2 className="text-xl font-bold text-gray-900">Messages</h2>
               {unreadCount > 0 && (
                 <Badge className="bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs shadow-lg animate-pulse">
-                  {unreadCount} nye
+                  {unreadCount} new
                 </Badge>
               )}
             </div>
@@ -223,7 +223,7 @@ const Messages = () => {
                     : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
                 }`}
               >
-                Alle samtaler
+                All Conversations
               </button>
               <button
                 onClick={() => setActiveTab('educators')}
@@ -233,7 +233,7 @@ const Messages = () => {
                     : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
                 }`}
               >
-                Lærere
+                Teachers
               </button>
             </div>
 
@@ -241,7 +241,7 @@ const Messages = () => {
             <div className="relative">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
-                placeholder="Søk i samtaler..."
+                placeholder="Search conversations..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-12 bg-white/80 border-slate-300/60 focus:border-oslo-blue/60 focus:ring-oslo-blue/20 rounded-xl h-12 backdrop-blur-sm"
@@ -344,10 +344,10 @@ const Messages = () => {
                         {selectedMessage.participant.online ? (
                           <span className="text-green-600 flex items-center">
                             <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
-                            Pålogget nå
+                            Online now
                           </span>
                         ) : (
-                          `Sist sett ${formatTime(selectedMessage.timestamp)}`
+                          `Last seen ${formatTime(selectedMessage.timestamp)}`
                         )}
                       </p>
                     </div>
@@ -428,7 +428,7 @@ const Messages = () => {
                           message.type === 'sent' ? 'justify-end' : 'justify-start'
                         }`}>
                           <span className="text-xs text-gray-500 font-medium">
-                            {new Date(message.timestamp).toLocaleTimeString('no-NO', { 
+                            {new Date(message.timestamp).toLocaleTimeString('en-US', { 
                               hour: '2-digit', 
                               minute: '2-digit' 
                             })}
@@ -449,7 +449,7 @@ const Messages = () => {
                   
                   <div className="flex-1">
                     <Textarea
-                      placeholder="Skriv melding..."
+                      placeholder="Type a message..."
                       value={replyText}
                       onChange={(e) => setReplyText(e.target.value)}
                       className="min-h-[50px] max-h-32 resize-none border-slate-300/60 focus:border-oslo-blue/60 focus:ring-oslo-blue/20 rounded-xl bg-white/80 backdrop-blur-sm"
@@ -482,9 +482,9 @@ const Messages = () => {
                     <Plus className="h-3 w-3 text-white" />
                   </div>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Start en samtale</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Start a conversation</h3>
                 <p className="text-sm text-gray-600 max-w-sm mx-auto leading-relaxed">
-                  Velg en samtale fra sidemenyen for å se meldinger eller start en ny samtale.
+                  Select a conversation from the sidebar to view messages or start a new conversation.
                 </p>
               </div>
             </div>
