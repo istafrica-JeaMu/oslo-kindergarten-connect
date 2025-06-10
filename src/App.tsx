@@ -68,7 +68,7 @@ function App() {
               }
             />
 
-            {/* Shared Routes - Available to all authenticated users */}
+            {/* Living Arrangements - Available to all authenticated users */}
             <Route
               path="/living-arrangements"
               element={
