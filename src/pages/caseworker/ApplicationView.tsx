@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { ArrowLeft, Download, Edit, Calendar, User, FileText, Phone, Mail, MapPin, AlertTriangle, CheckCircle, Clock, MessageSquare, FileCheck, Users, Star, Flag } from 'lucide-react';
 import { mockApplications } from '@/types/application';
-import { format } from 'date-fns';
+import { format, isValid, parseISO } from 'date-fns';
 import { toast } from 'sonner';
 
 const ApplicationView = () => {
@@ -77,6 +77,30 @@ const ApplicationView = () => {
     return configs[priority as keyof typeof configs] || configs.medium;
   };
 
+  const formatDate = (dateString: string) => {
+    try {
+      const date = parseISO(dateString);
+      if (isValid(date)) {
+        return format(date, 'MMM dd, yyyy');
+      }
+      return 'Invalid date';
+    } catch {
+      return 'Invalid date';
+    }
+  };
+
+  const formatDateLong = (dateString: string) => {
+    try {
+      const date = parseISO(dateString);
+      if (isValid(date)) {
+        return format(date, 'PPP');
+      }
+      return 'Invalid date';
+    } catch {
+      return 'Invalid date';
+    }
+  };
+
   const statusConfig = getStatusConfig(application.status);
   const priorityConfig = getPriorityConfig(application.priority);
   const StatusIcon = statusConfig.icon;
@@ -138,15 +162,15 @@ const ApplicationView = () => {
                         <div className="flex items-center gap-4 text-gray-600">
                           <span className="flex items-center gap-1">
                             <User className="h-4 w-4" />
-                            Age {application.childAge}
+                            Child Application
                           </span>
                           <span className="flex items-center gap-1">
                             <Calendar className="h-4 w-4" />
-                            Submitted {format(new Date(application.submittedDate), 'MMM dd, yyyy')}
+                            Created {formatDate(application.createdAt)}
                           </span>
                           <span className="flex items-center gap-1">
                             <MapPin className="h-4 w-4" />
-                            {application.district}
+                            Oslo
                           </span>
                         </div>
                       </div>
@@ -173,16 +197,16 @@ const ApplicationView = () => {
 
                     {/* Special Indicators */}
                     <div className="flex gap-2 mt-4">
-                      {application.specialNeeds && (
+                      {application.applicationType === 'Emergency' && (
                         <Badge variant="outline" className="text-orange-600 border-orange-300 bg-orange-50">
                           <Star className="h-3 w-3 mr-1" />
-                          Special Needs
+                          Emergency Application
                         </Badge>
                       )}
-                      {application.siblingInKindergarten && (
+                      {application.applicationType === 'Transfer' && (
                         <Badge variant="outline" className="text-blue-600 border-blue-300 bg-blue-50">
                           <Users className="h-3 w-3 mr-1" />
-                          Sibling Priority
+                          Transfer Request
                         </Badge>
                       )}
                     </div>
@@ -244,16 +268,14 @@ const ApplicationView = () => {
               <CardContent className="p-6 space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="text-sm font-medium text-gray-600">Kindergarten Preferences</label>
-                    <div className="mt-2 space-y-2">
-                      {application.kindergartenPreferences?.map((pref, index) => (
-                        <div key={index} className="flex items-center gap-2">
-                          <Badge variant="outline" className="text-sm">
-                            #{index + 1}
-                          </Badge>
-                          <span className="text-gray-900">{pref}</span>
-                        </div>
-                      ))}
+                    <label className="text-sm font-medium text-gray-600">Kindergarten Preference</label>
+                    <div className="mt-2">
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="text-sm">
+                          #1
+                        </Badge>
+                        <span className="text-gray-900">{application.kindergartenPreference || 'Not specified'}</span>
+                      </div>
                     </div>
                   </div>
                   <div>
@@ -288,8 +310,8 @@ const ApplicationView = () => {
                       <FileText className="h-4 w-4 text-blue-600" />
                     </div>
                     <div className="flex-1">
-                      <div className="font-medium text-gray-900">Application Submitted</div>
-                      <div className="text-sm text-gray-600">{format(new Date(application.submittedDate), 'PPP')}</div>
+                      <div className="font-medium text-gray-900">Application Created</div>
+                      <div className="text-sm text-gray-600">{formatDateLong(application.createdAt)}</div>
                     </div>
                   </div>
                   
@@ -299,7 +321,7 @@ const ApplicationView = () => {
                     </div>
                     <div className="flex-1">
                       <div className="font-medium text-gray-900">Last Updated</div>
-                      <div className="text-sm text-gray-600">{format(new Date(application.lastModified), 'PPP')}</div>
+                      <div className="text-sm text-gray-600">{formatDateLong(application.lastModified)}</div>
                     </div>
                   </div>
                 </div>
@@ -355,8 +377,8 @@ const ApplicationView = () => {
                     </Badge>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">District</span>
-                    <span className="text-sm font-medium">{application.district}</span>
+                    <span className="text-sm text-gray-600">Location</span>
+                    <span className="text-sm font-medium">Oslo</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Type</span>
@@ -369,7 +391,7 @@ const ApplicationView = () => {
                 <div className="space-y-2">
                   <h4 className="font-medium text-gray-900">Next Steps</h4>
                   <p className="text-sm text-gray-600">
-                    {application.status === 'new' && 'Begin initial review and verification'}
+                    {application.status === 'draft' && 'Begin initial review and verification'}
                     {application.status === 'submitted' && 'Continue processing and placement decisions'}
                     {application.status === 'flagged' && 'Address flagged issues and requirements'}
                     {application.status === 'approved' && 'Finalize placement and notify guardian'}
