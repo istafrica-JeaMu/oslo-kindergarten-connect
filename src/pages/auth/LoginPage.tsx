@@ -31,6 +31,7 @@ const LoginPage = () => {
     }
   }, [email, checkDomainType]);
 
+  // Updated redirect logic with proper routes
   if (user) {
     let redirectPath = '/';
     switch (user.role) {
@@ -44,8 +45,10 @@ const LoginPage = () => {
         redirectPath = '/admin';
         break;
       case 'staff':
+        redirectPath = '/staff';
+        break;
       case 'partner':
-        redirectPath = '/kindergarten';
+        redirectPath = '/partner';
         break;
       case 'district-admin':
         redirectPath = '/district-admin';
@@ -53,6 +56,8 @@ const LoginPage = () => {
       case 'educator':
         redirectPath = '/educator';
         break;
+      default:
+        redirectPath = '/';
     }
     return <Navigate to={redirectPath} replace />;
   }

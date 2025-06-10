@@ -34,6 +34,18 @@ import GuardianDocuments from './pages/guardian/Documents';
 import GuardianNewApplication from './pages/guardian/NewApplication';
 import GuardianLivingArrangements from './pages/guardian/LivingArrangements';
 import PostDetail from './pages/guardian/PostDetail';
+import CaseWorkerDashboard from './pages/caseworker/CaseWorkerDashboard';
+import ReviewQueue from './pages/caseworker/ReviewQueue';
+import PlacementManagement from './pages/caseworker/PlacementManagement';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import Reports from './pages/admin/Reports';
+import SystemSettings from './pages/admin/SystemSettings';
+import StaffDashboard from './pages/staff/StaffDashboard';
+import PartnerDashboard from './pages/partner/PartnerDashboard';
+import DistrictAdminDashboard from './pages/district-admin/DistrictAdminDashboard';
+import KindergartenDashboard from './pages/kindergarten/KindergartenDashboard';
+import KindergartenAttendance from './pages/kindergarten/KindergartenAttendance';
+import KindergartenReports from './pages/kindergarten/KindergartenReports';
 import LoginPage from './pages/auth/LoginPage';
 import NotFound from './pages/NotFound';
 
@@ -68,28 +80,6 @@ function AppRoutes() {
       <Route path="/" element={<Index />} />
       <Route path="/login" element={<LoginPage />} />
 
-      {/* Educator Routes */}
-      <Route
-        path="/educator"
-        element={
-          <PrivateRoute>
-            <Layout />
-          </PrivateRoute>
-        }
-      >
-        <Route index element={<EducatorDashboard />} />
-        <Route path="attendance" element={<EducatorAttendance />} />
-        <Route path="children" element={<EducatorChildren />} />
-        <Route path="messages" element={<EducatorMessages />} />
-        <Route path="reports" element={<EducatorReports />} />
-        <Route path="calendar" element={<EducatorCalendar />} />
-        <Route path="location-tracker" element={<EducatorLocationTracker />} />
-        <Route path="appointments" element={<EducatorAppointments />} />
-        <Route path="notes" element={<EducatorNotes />} />
-        <Route path="bulletin-board" element={<EducatorBulletinBoard />} />
-        <Route path="team-collaboration" element={<EducatorTeamCollab />} />
-      </Route>
-
       {/* Guardian Routes */}
       <Route
         path="/guardian"
@@ -118,6 +108,107 @@ function AppRoutes() {
         <Route path="payments" element={<GuardianPayments />} />
         <Route path="documents" element={<GuardianDocuments />} />
         <Route path="new-application" element={<GuardianNewApplication />} />
+      </Route>
+
+      {/* Caseworker Routes */}
+      <Route
+        path="/caseworker"
+        element={
+          <PrivateRoute>
+            <Layout />
+          </PrivateRoute>
+        }
+      >
+        <Route index element={<CaseWorkerDashboard />} />
+        <Route path="review-queue" element={<ReviewQueue />} />
+        <Route path="placement-management" element={<PlacementManagement />} />
+        <Route path="messages" element={<GuardianMessages />} />
+      </Route>
+
+      {/* Admin Routes */}
+      <Route
+        path="/admin"
+        element={
+          <PrivateRoute>
+            <Layout />
+          </PrivateRoute>
+        }
+      >
+        <Route index element={<AdminDashboard />} />
+        <Route path="reports" element={<Reports />} />
+        <Route path="settings" element={<SystemSettings />} />
+      </Route>
+
+      {/* Staff Routes */}
+      <Route
+        path="/staff"
+        element={
+          <PrivateRoute>
+            <Layout />
+          </PrivateRoute>
+        }
+      >
+        <Route index element={<StaffDashboard />} />
+      </Route>
+
+      {/* Partner Routes */}
+      <Route
+        path="/partner"
+        element={
+          <PrivateRoute>
+            <Layout />
+          </PrivateRoute>
+        }
+      >
+        <Route index element={<PartnerDashboard />} />
+      </Route>
+
+      {/* District Admin Routes */}
+      <Route
+        path="/district-admin"
+        element={
+          <PrivateRoute>
+            <Layout />
+          </PrivateRoute>
+        }
+      >
+        <Route index element={<DistrictAdminDashboard />} />
+      </Route>
+
+      {/* Kindergarten Routes (for staff and partners) */}
+      <Route
+        path="/kindergarten"
+        element={
+          <PrivateRoute>
+            <Layout />
+          </PrivateRoute>
+        }
+      >
+        <Route index element={<KindergartenDashboard />} />
+        <Route path="attendance" element={<KindergartenAttendance />} />
+        <Route path="reports" element={<KindergartenReports />} />
+      </Route>
+
+      {/* Educator Routes */}
+      <Route
+        path="/educator"
+        element={
+          <PrivateRoute>
+            <Layout />
+          </PrivateRoute>
+        }
+      >
+        <Route index element={<EducatorDashboard />} />
+        <Route path="attendance" element={<EducatorAttendance />} />
+        <Route path="children" element={<EducatorChildren />} />
+        <Route path="messages" element={<EducatorMessages />} />
+        <Route path="reports" element={<EducatorReports />} />
+        <Route path="calendar" element={<EducatorCalendar />} />
+        <Route path="location-tracker" element={<EducatorLocationTracker />} />
+        <Route path="appointments" element={<EducatorAppointments />} />
+        <Route path="notes" element={<EducatorNotes />} />
+        <Route path="bulletin-board" element={<EducatorBulletinBoard />} />
+        <Route path="team-collaboration" element={<EducatorTeamCollab />} />
       </Route>
 
       {/* Living Arrangements - Available to all authenticated users */}
