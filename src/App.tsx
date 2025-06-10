@@ -29,6 +29,7 @@ import GuardianChildProfile from './pages/guardian/ChildProfile';
 import GuardianPayments from './pages/guardian/Payments';
 import GuardianDocuments from './pages/guardian/Documents';
 import GuardianNewApplication from './pages/guardian/NewApplication';
+import PostDetail from './pages/guardian/PostDetail';
 import LoginPage from './pages/auth/LoginPage';
 import NotFound from './pages/NotFound';
 
@@ -102,6 +103,7 @@ function App() {
               <Route path="daily-schedule" element={<GuardianDailySchedule />} />
               <Route path="attendance-tracking" element={<GuardianAttendanceTracking />} />
               <Route path="notice-board" element={<GuardianNoticeBoard />} />
+              <Route path="notice-board/post/:id" element={<PostDetail />} />
               <Route path="application-status" element={<GuardianApplicationStatus />} />
               <Route path="child-profile" element={<GuardianChildProfile />} />
               <Route path="payments" element={<GuardianPayments />} />
