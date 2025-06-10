@@ -31,7 +31,7 @@ export const useGuardianNavigation = () => {
       },
       {
         title: 'Attendance',
-        url: '/guardian/attendance',
+        url: '/guardian/attendance-tracking',
         icon: UserCheck,
         description: "Check-in status and absence reporting"
       },
@@ -57,7 +57,7 @@ export const useGuardianNavigation = () => {
       },
       {
         title: 'Child Profile',
-        url: '/guardian/living-arrangements',
+        url: '/guardian/child-profile',
         icon: User,
         description: "Living arrangements and pickup settings"
       },
