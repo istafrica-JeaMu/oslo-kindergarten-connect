@@ -8,6 +8,7 @@ import {
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { LanguageProvider } from './contexts/LanguageContext';
 import Layout from './components/layout/Layout';
+import Index from './pages/Index';
 import EducatorDashboard from './pages/educator/EducatorDashboard';
 import EducatorAttendance from './pages/staff/EducatorAttendance';
 import EducatorChildren from './pages/educator/EducatorChildren';
@@ -49,32 +50,6 @@ function AppRoutes() {
     return user ? children : <Navigate to="/login" />;
   }
 
-  function RootRedirect() {
-    const { user, isLoading } = useAuth();
-    
-    if (isLoading) {
-      return (
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        </div>
-      );
-    }
-    
-    if (!user) {
-      return <Navigate to="/login" replace />;
-    }
-    
-    // Redirect based on user role
-    switch (user.role) {
-      case 'educator':
-        return <Navigate to="/educator" replace />;
-      case 'guardian':
-        return <Navigate to="/guardian" replace />;
-      default:
-        return <Navigate to="/guardian" replace />;
-    }
-  }
-
   function AdminRoute({ children }: { children: JSX.Element }) {
     const { user } = useAuth();
     if (!user) {
@@ -88,10 +63,8 @@ function AppRoutes() {
   return (
     <Routes>
       {/* Public Routes */}
+      <Route path="/" element={<Index />} />
       <Route path="/login" element={<LoginPage />} />
-
-      {/* Root redirect based on user role */}
-      <Route path="/" element={<RootRedirect />} />
 
       {/* Educator Routes */}
       <Route
