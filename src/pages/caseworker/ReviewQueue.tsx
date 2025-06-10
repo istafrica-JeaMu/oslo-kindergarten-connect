@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { 
   Search, 
   Filter, 
@@ -22,7 +24,14 @@ import {
   Users,
   BarChart3,
   Settings,
-  Play
+  Play,
+  Plus,
+  FileDown,
+  Mail,
+  Star,
+  TrendingUp,
+  Zap,
+  ArrowRight
 } from 'lucide-react';
 
 // Import the new workflow components
@@ -39,6 +48,7 @@ const ReviewQueue = () => {
   const [workflowDialogOpen, setWorkflowDialogOpen] = useState(false);
   const [placementDialogOpen, setPlacementDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('queue');
+  const [isLoading, setIsLoading] = useState(false);
 
   // Mock applications data
   const applications = [
@@ -142,24 +152,52 @@ const ReviewQueue = () => {
     setSearchTerm('');
     setStatusFilter('all');
     setPriorityFilter('all');
+    toast.success('Filters cleared');
   };
 
-  // New workflow handlers
-  const handleStatusChange = (applicationId: string, newStatus: string, reason?: string) => {
-    console.log(`Changing status for ${applicationId} to ${newStatus}`, reason);
-    // Here you would update the application status in your data store
-    setWorkflowDialogOpen(false);
+  // Enhanced workflow handlers with loading states and feedback
+  const handleStatusChange = async (applicationId: string, newStatus: string, reason?: string) => {
+    setIsLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      console.log(`Changing status for ${applicationId} to ${newStatus}`, reason);
+      toast.success(`Application status updated to ${newStatus}`);
+      setWorkflowDialogOpen(false);
+    } catch (error) {
+      toast.error('Failed to update application status');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleBatchAction = (applicationIds: string[], action: string) => {
-    console.log(`Batch action ${action} for applications:`, applicationIds);
-    // Here you would process the batch action
+  const handleBatchAction = async (applicationIds: string[], action: string) => {
+    setIsLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      console.log(`Batch action ${action} for applications:`, applicationIds);
+      toast.success(`Batch action "${action}" completed for ${applicationIds.length} applications`);
+    } catch (error) {
+      toast.error('Failed to execute batch action');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handlePlacementDecision = (applicationId: string, decision: any) => {
-    console.log(`Placement decision for ${applicationId}:`, decision);
-    // Here you would save the placement decision
-    setPlacementDialogOpen(false);
+  const handlePlacementDecision = async (applicationId: string, decision: any) => {
+    setIsLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      console.log(`Placement decision for ${applicationId}:`, decision);
+      toast.success('Placement decision saved successfully');
+      setPlacementDialogOpen(false);
+    } catch (error) {
+      toast.error('Failed to save placement decision');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const openWorkflowDialog = (application: any) => {
@@ -172,80 +210,205 @@ const ReviewQueue = () => {
     setPlacementDialogOpen(true);
   };
 
+  // Enhanced Quick Action handlers
+  const handleQuickAction = async (action: string) => {
+    setIsLoading(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 800));
+      switch (action) {
+        case 'review':
+          toast.success('Redirecting to applications review...');
+          break;
+        case 'manage':
+          toast.success('Opening placement management...');
+          break;
+        case 'message':
+          toast.success('Opening message composer...');
+          break;
+        case 'report':
+          toast.success('Generating reports...');
+          break;
+        default:
+          toast.info(`Executing ${action}...`);
+      }
+    } catch (error) {
+      toast.error(`Failed to execute ${action}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleContactGuardian = (app: any) => {
+    toast.success(`Opening message to ${app.guardianName}...`);
+    // Here you would typically navigate to the messages page with pre-filled recipient
+  };
+
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">{t('caseworker.reviewQueue.title')}</h1>
-        <p className="text-gray-600 mt-2">{t('caseworker.reviewQueue.description')}</p>
+    <div className="space-y-8 p-6 max-w-7xl mx-auto">
+      {/* Enhanced Header */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">{t('caseworker.reviewQueue.title')}</h1>
+            <p className="text-lg text-gray-600">{t('caseworker.reviewQueue.description')}</p>
+          </div>
+          <div className="flex gap-3">
+            <Button 
+              onClick={() => handleQuickAction('report')} 
+              variant="outline"
+              className="gap-2"
+              disabled={isLoading}
+            >
+              <FileDown className="h-4 w-4" />
+              Export Data
+            </Button>
+            <Button 
+              onClick={() => handleQuickAction('message')} 
+              className="gap-2"
+              disabled={isLoading}
+            >
+              <Plus className="h-4 w-4" />
+              New Action
+            </Button>
+          </div>
+        </div>
+
+        {/* Enhanced Quick Actions Panel */}
+        <Card className="bg-gradient-to-r from-oslo-blue/5 to-oslo-green/5 border-oslo-blue/20">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-3 text-oslo-blue">
+              <Zap className="h-5 w-5" />
+              {t('caseworker.reviewQueue.quickActions')}
+            </CardTitle>
+            <CardDescription>
+              {t('caseworker.reviewQueue.quickActionsDesc')}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Button 
+                onClick={() => handleQuickAction('review')}
+                variant="outline" 
+                className="h-20 flex-col gap-2 hover:bg-oslo-blue/10 border-oslo-blue/20"
+                disabled={isLoading}
+              >
+                <FileText className="h-6 w-6 text-oslo-blue" />
+                <span className="text-sm font-medium">{t('caseworker.reviewQueue.bulkReview')}</span>
+              </Button>
+              <Button 
+                onClick={() => handleQuickAction('manage')}
+                variant="outline" 
+                className="h-20 flex-col gap-2 hover:bg-oslo-green/10 border-oslo-green/20"
+                disabled={isLoading}
+              >
+                <Users className="h-6 w-6 text-oslo-green" />
+                <span className="text-sm font-medium">{t('caseworker.reviewQueue.requestDocuments')}</span>
+              </Button>
+              <Button 
+                onClick={() => handleQuickAction('message')}
+                variant="outline" 
+                className="h-20 flex-col gap-2 hover:bg-purple-100 border-purple-200"
+                disabled={isLoading}
+              >
+                <Mail className="h-6 w-6 text-purple-600" />
+                <span className="text-sm font-medium">{t('caseworker.reviewQueue.contactGuardians')}</span>
+              </Button>
+              <Button 
+                onClick={() => handleQuickAction('report')}
+                variant="outline" 
+                className="h-20 flex-col gap-2 hover:bg-orange-100 border-orange-200"
+                disabled={isLoading}
+              >
+                <TrendingUp className="h-6 w-6 text-orange-600" />
+                <span className="text-sm font-medium">{t('caseworker.reviewQueue.approveApplications')}</span>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Statistics - keep existing code */}
+      {/* Enhanced Statistics */}
       <div className="grid md:grid-cols-5 gap-6">
-        <Card className="shadow-lg border-0">
+        <Card className="shadow-lg border-0 bg-gradient-to-br from-oslo-blue/10 to-oslo-blue/5 hover:shadow-xl transition-all">
           <CardContent className="pt-6">
             <div className="text-center">
-              <p className="text-sm text-gray-600">{t('caseworker.reviewQueue.totalApplications')}</p>
+              <div className="w-12 h-12 bg-oslo-blue/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                <FileText className="h-6 w-6 text-oslo-blue" />
+              </div>
+              <p className="text-sm text-gray-600 mb-1">{t('caseworker.reviewQueue.totalApplications')}</p>
               <p className="text-3xl font-bold text-oslo-blue">{stats.total}</p>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-lg border-0">
+        <Card className="shadow-lg border-0 bg-gradient-to-br from-blue-100/50 to-blue-50 hover:shadow-xl transition-all">
           <CardContent className="pt-6">
             <div className="text-center">
-              <p className="text-sm text-gray-600">{t('caseworker.reviewQueue.new')}</p>
+              <div className="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Star className="h-6 w-6 text-blue-600" />
+              </div>
+              <p className="text-sm text-gray-600 mb-1">{t('caseworker.reviewQueue.new')}</p>
               <p className="text-3xl font-bold text-blue-600">{stats.new}</p>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-lg border-0">
+        <Card className="shadow-lg border-0 bg-gradient-to-br from-yellow-100/50 to-yellow-50 hover:shadow-xl transition-all">
           <CardContent className="pt-6">
             <div className="text-center">
-              <p className="text-sm text-gray-600">{t('caseworker.reviewQueue.underReview')}</p>
+              <div className="w-12 h-12 bg-yellow-200 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Clock className="h-6 w-6 text-yellow-600" />
+              </div>
+              <p className="text-sm text-gray-600 mb-1">{t('caseworker.reviewQueue.underReview')}</p>
               <p className="text-3xl font-bold text-yellow-600">{stats.underReview}</p>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-lg border-0">
+        <Card className="shadow-lg border-0 bg-gradient-to-br from-red-100/50 to-red-50 hover:shadow-xl transition-all">
           <CardContent className="pt-6">
             <div className="text-center">
-              <p className="text-sm text-gray-600">{t('caseworker.reviewQueue.missingDocs')}</p>
+              <div className="w-12 h-12 bg-red-200 rounded-full flex items-center justify-center mx-auto mb-3">
+                <AlertTriangle className="h-6 w-6 text-red-600" />
+              </div>
+              <p className="text-sm text-gray-600 mb-1">{t('caseworker.reviewQueue.missingDocs')}</p>
               <p className="text-3xl font-bold text-red-600">{stats.missingDocs}</p>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-lg border-0">
+        <Card className="shadow-lg border-0 bg-gradient-to-br from-green-100/50 to-green-50 hover:shadow-xl transition-all">
           <CardContent className="pt-6">
             <div className="text-center">
-              <p className="text-sm text-gray-600">{t('caseworker.reviewQueue.avgProcessing')}</p>
+              <div className="w-12 h-12 bg-green-200 rounded-full flex items-center justify-center mx-auto mb-3">
+                <TrendingUp className="h-6 w-6 text-green-600" />
+              </div>
+              <p className="text-sm text-gray-600 mb-1">{t('caseworker.reviewQueue.avgProcessing')}</p>
               <p className="text-3xl font-bold text-green-600">{stats.avgProcessing}d</p>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Main Content with Tabs */}
+      {/* Main Content with Enhanced Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="queue" className="flex items-center gap-2">
+        <TabsList className="grid w-full grid-cols-3 h-14 bg-gray-100 p-1">
+          <TabsTrigger value="queue" className="flex items-center gap-2 h-12 data-[state=active]:bg-white data-[state=active]:shadow-sm">
             <FileText className="h-4 w-4" />
             {t('caseworker.reviewQueue.applicationQueue')}
           </TabsTrigger>
-          <TabsTrigger value="batch" className="flex items-center gap-2">
+          <TabsTrigger value="batch" className="flex items-center gap-2 h-12 data-[state=active]:bg-white data-[state=active]:shadow-sm">
             <Users className="h-4 w-4" />
             {t('caseworker.reviewQueue.batchProcessing')}
           </TabsTrigger>
-          <TabsTrigger value="analytics" className="flex items-center gap-2">
+          <TabsTrigger value="analytics" className="flex items-center gap-2 h-12 data-[state=active]:bg-white data-[state=active]:shadow-sm">
             <BarChart3 className="h-4 w-4" />
             {t('caseworker.reviewQueue.analytics')}
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="queue" className="space-y-6">
-          {/* Filters - keep existing code */}
+          {/* Enhanced Filters */}
           <Card className="shadow-lg border-0">
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
@@ -296,12 +459,17 @@ const ReviewQueue = () => {
             </CardContent>
           </Card>
 
-          {/* Applications Table with Enhanced Actions */}
+          {/* Enhanced Applications List */}
           <Card className="shadow-lg border-0">
             <CardHeader>
-              <CardTitle className="flex items-center gap-3">
-                <FileText className="h-5 w-5" />
-                {t('caseworker.reviewQueue.applications')} ({filteredApplications.length})
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <FileText className="h-5 w-5" />
+                  {t('caseworker.reviewQueue.applications')} ({filteredApplications.length})
+                </div>
+                <Badge variant="outline" className="text-sm">
+                  {filteredApplications.length} of {applications.length}
+                </Badge>
               </CardTitle>
               <CardDescription>
                 {t('caseworker.reviewQueue.clickToView')}
@@ -312,17 +480,19 @@ const ReviewQueue = () => {
                 {filteredApplications.map((app) => (
                   <div
                     key={app.id}
-                    className="p-4 border border-gray-200 rounded-xl hover:border-oslo-blue/30 hover:bg-gray-50/50 transition-all"
+                    className="group p-6 border border-gray-200 rounded-xl hover:border-oslo-blue/30 hover:bg-gray-50/50 transition-all hover:shadow-md"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-oslo-blue/10 rounded-xl flex items-center justify-center">
-                          <User className="h-6 w-6 text-oslo-blue" />
+                        <div className="w-14 h-14 bg-gradient-to-br from-oslo-blue/20 to-oslo-blue/10 rounded-xl flex items-center justify-center">
+                          <User className="h-7 w-7 text-oslo-blue" />
                         </div>
                         <div>
-                          <div className="flex items-center gap-2 mb-1">
-                            <h4 className="font-semibold text-gray-900">{app.childName}</h4>
-                            <span className="text-sm text-gray-500">({app.childAge} years)</span>
+                          <div className="flex items-center gap-3 mb-2">
+                            <h4 className="font-semibold text-gray-900 text-lg">{app.childName}</h4>
+                            <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                              {app.childAge} years
+                            </span>
                             {app.specialNeeds && (
                               <Badge variant="outline" className="text-orange-600 border-orange-300 bg-orange-50">
                                 Special Needs
@@ -334,8 +504,8 @@ const ReviewQueue = () => {
                               </Badge>
                             )}
                           </div>
-                          <p className="text-gray-600">{app.guardianName}</p>
-                          <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                          <p className="text-gray-700 font-medium mb-1">{app.guardianName}</p>
+                          <div className="flex items-center gap-4 text-sm text-gray-500">
                             <span className="flex items-center gap-1">
                               <Calendar className="h-4 w-4" />
                               {app.submittedDate}
@@ -344,12 +514,12 @@ const ReviewQueue = () => {
                               <MapPin className="h-4 w-4" />
                               {app.district}
                             </span>
-                            <span>ID: {app.id}</span>
+                            <span className="text-xs bg-gray-100 px-2 py-1 rounded">ID: {app.id}</span>
                           </div>
                         </div>
                       </div>
-                      <div className="text-right">
-                        <div className="flex items-center gap-2 mb-2">
+                      <div className="text-right space-y-3">
+                        <div className="flex items-center gap-2">
                           {getStatusBadge(app.status)}
                           {getPriorityBadge(app.priority)}
                         </div>
@@ -358,20 +528,30 @@ const ReviewQueue = () => {
                             variant="outline" 
                             size="sm"
                             onClick={() => openWorkflowDialog(app)}
+                            className="gap-2 hover:bg-oslo-blue hover:text-white transition-colors"
+                            disabled={isLoading}
                           >
-                            <Settings className="h-4 w-4 mr-2" />
+                            <Settings className="h-4 w-4" />
                             {t('caseworker.reviewQueue.workflow')}
                           </Button>
                           <Button 
                             variant="outline" 
                             size="sm"
                             onClick={() => openPlacementDialog(app)}
+                            className="gap-2 hover:bg-oslo-green hover:text-white transition-colors"
+                            disabled={isLoading}
                           >
-                            <Play className="h-4 w-4 mr-2" />
+                            <Play className="h-4 w-4" />
                             {t('caseworker.reviewQueue.placement')}
                           </Button>
-                          <Button variant="outline" size="sm">
-                            <MessageSquare className="h-4 w-4 mr-2" />
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleContactGuardian(app)}
+                            className="gap-2 hover:bg-purple-600 hover:text-white transition-colors"
+                            disabled={isLoading}
+                          >
+                            <MessageSquare className="h-4 w-4" />
                             {t('caseworker.reviewQueue.contact')}
                           </Button>
                         </div>
