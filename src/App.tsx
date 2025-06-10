@@ -1,156 +1,127 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Toaster } from '@/components/ui/sonner';
-import { AuthProvider } from '@/contexts/AuthContext';
-import { LanguageProvider } from '@/contexts/LanguageContext';
-import ProtectedRoute from '@/components/auth/ProtectedRoute';
-import Layout from '@/components/layout/Layout';
-
-// Import all pages
-import Index from '@/pages/Index';
-import NotFound from '@/pages/NotFound';
-import LoginPage from '@/pages/auth/LoginPage';
-
-// Guardian pages
-import GuardianDashboard from '@/pages/guardian/GuardianDashboard';
-import NewApplication from '@/pages/guardian/NewApplication';
-import ApplicationStatus from '@/pages/guardian/ApplicationStatus';
-import Documents from '@/pages/guardian/Documents';
-import Messages from '@/pages/guardian/Messages';
-import DailySchedule from '@/pages/guardian/DailySchedule';
-import AttendanceTracking from '@/pages/guardian/AttendanceTracking';
-import AbsenceReporting from '@/pages/guardian/AbsenceReporting';
-import EmergencyContacts from '@/pages/guardian/EmergencyContacts';
-import PickupAuthorization from '@/pages/guardian/PickupAuthorization';
-import Payments from '@/pages/guardian/Payments';
-import TeacherMeetings from '@/pages/guardian/TeacherMeetings';
-import HolidayRegistration from '@/pages/guardian/HolidayRegistration';
-import LivingArrangements from '@/pages/guardian/LivingArrangements';
-import Consents from '@/pages/guardian/Consents';
-import ChildLocation from '@/pages/guardian/ChildLocation';
-import NoticeBoard from '@/pages/guardian/NoticeBoard';
-import PostDetail from '@/pages/guardian/PostDetail';
-import ChildProfile from '@/pages/guardian/ChildProfile';
-
-// Caseworker pages
-import CaseWorkerDashboard from '@/pages/caseworker/CaseWorkerDashboard';
-import ApplicationsInProgress from '@/pages/caseworker/ApplicationsInProgress';
-import ApplicationsSubmitted from '@/pages/caseworker/ApplicationsSubmitted';
-import ApplicationsFollowUp from '@/pages/caseworker/ApplicationsFollowUp';
-import ManualApplication from '@/pages/caseworker/ManualApplication';
-import ApplicationView from '@/pages/caseworker/ApplicationView';
-import ApplicationEdit from '@/pages/caseworker/ApplicationEdit';
-import PlacementManagement from '@/pages/caseworker/PlacementManagement';
-import ReviewQueue from '@/pages/caseworker/ReviewQueue';
-
-// Educator pages
-import EducatorDashboard from '@/pages/educator/EducatorDashboard';
-import EducatorAttendance from '@/pages/educator/EducatorAttendance';
-import EducatorChildren from '@/pages/educator/EducatorChildren';
-import EducatorMessages from '@/pages/educator/EducatorMessages';
-import EducatorReports from '@/pages/educator/EducatorReports';
-import EducatorCalendar from '@/pages/educator/EducatorCalendar';
-import EducatorNotes from '@/pages/educator/EducatorNotes';
-import EducatorTeamCollab from '@/pages/educator/EducatorTeamCollab';
-import EducatorLocationTracker from '@/pages/educator/EducatorLocationTracker';
-import EducatorBulletinBoard from '@/pages/educator/EducatorBulletinBoard';
-import EducatorAppointments from '@/pages/educator/EducatorAppointments';
-
-// Other role pages
-import StaffDashboard from '@/pages/staff/StaffDashboard';
-import PrivateKindergartenDashboard from '@/pages/staff/PrivateKindergartenDashboard';
-import PublicKindergartenDashboard from '@/pages/staff/PublicKindergartenDashboard';
-import ChildrenManagement from '@/pages/staff/ChildrenManagement';
-import KindergartenDashboard from '@/pages/kindergarten/KindergartenDashboard';
-import KindergartenAttendance from '@/pages/kindergarten/KindergartenAttendance';
-import KindergartenReports from '@/pages/kindergarten/KindergartenReports';
-import DistrictAdminDashboard from '@/pages/district-admin/DistrictAdminDashboard';
-import PartnerDashboard from '@/pages/partner/PartnerDashboard';
-import AdminDashboard from '@/pages/admin/AdminDashboard';
-import Reports from '@/pages/admin/Reports';
-import SystemSettings from '@/pages/admin/SystemSettings';
-
-const queryClient = new QueryClient();
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from 'react-router-dom';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
+import UpdateProfile from './pages/UpdateProfile';
+import Layout from './components/Layout';
+import Dashboard from './pages/Dashboard';
+import Profile from './pages/Profile';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminUsers from './pages/admin/AdminUsers';
+import AdminSettings from './pages/admin/AdminSettings';
+import EducatorDashboard from './pages/educator/EducatorDashboard';
+import EducatorAttendance from './pages/staff/EducatorAttendance';
+import EducatorChildren from './pages/educator/EducatorChildren';
+import EducatorMessages from './pages/educator/EducatorMessages';
+import EducatorReports from './pages/educator/EducatorReports';
+import EducatorCalendar from './pages/educator/EducatorCalendar';
+import EducatorLocationTracker from './pages/educator/EducatorLocationTracker';
+import EducatorAppointments from './pages/educator/EducatorAppointments';
+import EducatorNotes from './pages/educator/EducatorNotes';
+import EducatorBulletinBoard from './pages/educator/EducatorBulletinBoard';
+import EducatorTeamCollab from './pages/educator/EducatorTeamCollab';
+import GuardianDashboard from './pages/guardian/GuardianDashboard';
+import GuardianProfile from './pages/guardian/GuardianProfile';
+import GuardianMessages from './pages/guardian/GuardianMessages';
+import GuardianBilling from './pages/guardian/GuardianBilling';
+import GuardianDailySchedule from './pages/guardian/DailySchedule';
+import GuardianChildProfile from './pages/guardian/GuardianChildProfile';
+import GuardianEmergencyContacts from './pages/guardian/GuardianEmergencyContacts';
+import GuardianConsents from './pages/guardian/GuardianConsents';
+import GuardianTransportation from './pages/guardian/GuardianTransportation';
+import LanguageProvider from './contexts/LanguageContext';
 
 function App() {
+  function PrivateRoute({ children }: { children: JSX.Element }) {
+    const { currentUser } = useAuth();
+    return currentUser ? children : <Navigate to="/login" />;
+  }
+
+  function AdminRoute({ children }: { children: JSX.Element }) {
+    const { currentUser } = useAuth();
+    if (!currentUser) {
+      return <Navigate to="/login" />;
+    }
+    // Check if the user has admin role (you might need to fetch user role from an API)
+    const isAdmin = currentUser.email === 'admin@example.com'; // Example: checking for admin email
+    return isAdmin ? children : <Navigate to="/" />;
+  }
+
   return (
-    <QueryClientProvider client={queryClient}>
+    <LanguageProvider>
       <AuthProvider>
-        <LanguageProvider>
-          <Router>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/login" element={<LoginPage />} />
-              
-              <Route element={<ProtectedRoute allowedRoles={['guardian', 'caseworker', 'admin', 'staff', 'partner', 'district-admin', 'educator']}><Layout /></ProtectedRoute>}>
-                {/* Guardian Routes */}
-                <Route path="/guardian" element={<GuardianDashboard />} />
-                <Route path="/guardian/new-application" element={<NewApplication />} />
-                <Route path="/guardian/application-status" element={<ApplicationStatus />} />
-                <Route path="/guardian/documents" element={<Documents />} />
-                <Route path="/guardian/messages" element={<Messages />} />
-                <Route path="/guardian/daily-schedule" element={<DailySchedule />} />
-                <Route path="/guardian/attendance" element={<AttendanceTracking />} />
-                <Route path="/guardian/absence-reporting" element={<AbsenceReporting />} />
-                <Route path="/guardian/emergency-contacts" element={<EmergencyContacts />} />
-                <Route path="/guardian/pickup-authorization" element={<PickupAuthorization />} />
-                <Route path="/guardian/payments" element={<Payments />} />
-                <Route path="/guardian/teacher-meetings" element={<TeacherMeetings />} />
-                <Route path="/guardian/holiday-registration" element={<HolidayRegistration />} />
-                <Route path="/guardian/living-arrangements" element={<LivingArrangements />} />
-                <Route path="/guardian/consents" element={<Consents />} />
-                <Route path="/guardian/child-location" element={<ChildLocation />} />
-                <Route path="/guardian/notice-board" element={<NoticeBoard />} />
-                <Route path="/guardian/notice-board/:id" element={<PostDetail />} />
-                <Route path="/guardian/children/:childId" element={<ChildProfile />} />
+        <Router>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
 
-                {/* Caseworker Routes */}
-                <Route path="/caseworker" element={<CaseWorkerDashboard />} />
-                <Route path="/caseworker/applications/in-progress" element={<ApplicationsInProgress />} />
-                <Route path="/caseworker/applications/submitted" element={<ApplicationsSubmitted />} />
-                <Route path="/caseworker/applications/follow-up" element={<ApplicationsFollowUp />} />
-                <Route path="/caseworker/manual-application" element={<ManualApplication />} />
-                <Route path="/caseworker/manual-application/:id/edit" element={<ApplicationEdit />} />
-                <Route path="/caseworker/application/:id/view" element={<ApplicationView />} />
-                <Route path="/caseworker/placement-management" element={<PlacementManagement />} />
-                <Route path="/caseworker/review-queue" element={<ReviewQueue />} />
+            {/* Private Routes */}
+            <Route
+              path="/"
+              element={
+                <PrivateRoute>
+                  <Layout />
+                </PrivateRoute>
+              }
+            >
+              <Route index element={<Dashboard />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="update-profile" element={<UpdateProfile />} />
+            </Route>
 
-                {/* Educator Routes */}
-                <Route path="/educator" element={<EducatorDashboard />} />
-                <Route path="/educator/attendance" element={<EducatorAttendance />} />
-                <Route path="/educator/children" element={<EducatorChildren />} />
-                <Route path="/educator/messages" element={<EducatorMessages />} />
-                <Route path="/educator/reports" element={<EducatorReports />} />
-                <Route path="/educator/calendar" element={<EducatorCalendar />} />
-                <Route path="/educator/notes" element={<EducatorNotes />} />
-                <Route path="/educator/team-collaboration" element={<EducatorTeamCollab />} />
-                <Route path="/educator/location-tracker" element={<EducatorLocationTracker />} />
-                <Route path="/educator/bulletin-board" element={<EducatorBulletinBoard />} />
-                <Route path="/educator/appointments" element={<EducatorAppointments />} />
+            {/* Admin Routes */}
+            <Route
+              path="/admin"
+              element={
+                <AdminRoute>
+                  <Layout />
+                </AdminRoute>
+              }
+            >
+              <Route index element={<AdminDashboard />} />
+              <Route path="users" element={<AdminUsers />} />
+              <Route path="settings" element={<AdminSettings />} />
+            </Route>
 
-                {/* Other Role Routes */}
-                <Route path="/staff" element={<StaffDashboard />} />
-                <Route path="/staff/private-kindergarten" element={<PrivateKindergartenDashboard />} />
-                <Route path="/staff/public-kindergarten" element={<PublicKindergartenDashboard />} />
-                <Route path="/staff/children" element={<ChildrenManagement />} />
-                <Route path="/staff/educator-attendance" element={<EducatorAttendance />} />
-                <Route path="/kindergarten" element={<KindergartenDashboard />} />
-                <Route path="/kindergarten/attendance" element={<KindergartenAttendance />} />
-                <Route path="/kindergarten/reports" element={<KindergartenReports />} />
-                <Route path="/district-admin" element={<DistrictAdminDashboard />} />
-                <Route path="/partner" element={<PartnerDashboard />} />
-                <Route path="/admin" element={<AdminDashboard />} />
-                <Route path="/admin/reports" element={<Reports />} />
-                <Route path="/admin/system-settings" element={<SystemSettings />} />
-              </Route>
+            {/* Educator Routes */}
+            <Route path="/educator" element={<Layout />}>
+              <Route index element={<EducatorDashboard />} />
+              <Route path="attendance" element={<EducatorAttendance />} />
+              <Route path="children" element={<EducatorChildren />} />
+              <Route path="messages" element={<EducatorMessages />} />
+              <Route path="reports" element={<EducatorReports />} />
+              <Route path="calendar" element={<EducatorCalendar />} />
+              <Route path="location-tracker" element={<EducatorLocationTracker />} />
+              <Route path="appointments" element={<EducatorAppointments />} />
+              <Route path="notes" element={<EducatorNotes />} />
+              <Route path="bulletin-board" element={<EducatorBulletinBoard />} />
+              <Route path="team-collaboration" element={<EducatorTeamCollab />} />
+            </Route>
 
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-            <Toaster />
-          </Router>
-        </LanguageProvider>
+            {/* Guardian Routes */}
+            <Route path="/guardian" element={<Layout />}>
+              <Route index element={<GuardianDashboard />} />
+              <Route path="profile" element={<GuardianProfile />} />
+              <Route path="messages" element={<GuardianMessages />} />
+              <Route path="billing" element={<GuardianBilling />} />
+              <Route path="daily-schedule" element={<GuardianDailySchedule />} />
+              <Route path="child-profile" element={<GuardianChildProfile />} />
+              <Route path="emergency-contacts" element={<GuardianEmergencyContacts />} />
+              <Route path="consents" element={<GuardianConsents />} />
+              <Route path="transportation" element={<GuardianTransportation />} />
+            </Route>
+          </Routes>
+        </Router>
       </AuthProvider>
-    </QueryClientProvider>
+    </LanguageProvider>
   );
 }
 
