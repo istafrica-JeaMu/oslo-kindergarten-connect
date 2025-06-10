@@ -1,10 +1,10 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FileText, Clock, CheckCircle, XCircle, AlertCircle, Eye, Calendar, User, FileCheck, Phone } from 'lucide-react';
+import { FileText, Clock, CheckCircle, XCircle, AlertCircle, Eye, Calendar, User, FileCheck, Phone, Plus, Bell, MessageCircle, Upload, ExternalLink, MapPin, Calculator } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const ApplicationStatus = () => {
   // Enhanced mock application data with new requirements
@@ -21,9 +21,9 @@ const ApplicationStatus = () => {
       documentsStatus: 'pending_review',
       queuePosition: 234,
       kindergartens: [
-        { name: 'Løvenskiold Kindergarten', priority: 1, status: 'pending' },
-        { name: 'Sinsen Kindergarten', priority: 2, status: 'pending' },
-        { name: 'Sagene Kindergarten', priority: 3, status: 'pending' }
+        { name: 'Løvenskiold Kindergarten', priority: 1, status: 'pending', distance: '0.8 km' },
+        { name: 'Sinsen Kindergarten', priority: 2, status: 'pending', distance: '1.2 km' },
+        { name: 'Sagene Kindergarten', priority: 3, status: 'pending', distance: '1.5 km' }
       ],
       lastUpdate: '2024-03-16',
       caseWorker: 'Erik Johansen',
@@ -32,7 +32,9 @@ const ApplicationStatus = () => {
       uploadedDocuments: [
         { name: 'Birth Certificate', status: 'verified', required: true },
         { name: 'Disability Documentation', status: 'pending', required: false }
-      ]
+      ],
+      notifications: 3,
+      urgentActions: 1
     },
     {
       id: 'APP-002',
@@ -45,8 +47,8 @@ const ApplicationStatus = () => {
       idVerificationStatus: 'verified',
       documentsStatus: 'verified',
       kindergartens: [
-        { name: 'Sinsen Kindergarten', priority: 1, status: 'accepted' },
-        { name: 'Bjølsen Kindergarten', priority: 2, status: 'not_processed' }
+        { name: 'Sinsen Kindergarten', priority: 1, status: 'accepted', distance: '1.2 km' },
+        { name: 'Bjølsen Kindergarten', priority: 2, status: 'not_processed', distance: '2.1 km' }
       ],
       lastUpdate: '2024-03-10',
       placedKindergarten: 'Sinsen Kindergarten',
@@ -54,9 +56,22 @@ const ApplicationStatus = () => {
       progressPercentage: 100,
       uploadedDocuments: [
         { name: 'Birth Certificate', status: 'verified', required: true }
-      ]
+      ],
+      notifications: 0,
+      urgentActions: 0
     }
   ];
+
+  // Progress stepper stages
+  const getProgressStages = (status: string, progressPercentage: number) => {
+    const stages = [
+      { name: 'Application Submitted', status: 'completed', percentage: 25 },
+      { name: 'Under Review', status: progressPercentage >= 50 ? 'completed' : 'current', percentage: 50 },
+      { name: 'Decision Made', status: progressPercentage >= 75 ? 'completed' : 'pending', percentage: 75 },
+      { name: 'Placement Assigned', status: status === 'placed' ? 'completed' : 'pending', percentage: 100 }
+    ];
+    return stages;
+  };
 
   const getAdmissionRoundInfo = (round: string) => {
     switch (round) {
@@ -149,21 +164,75 @@ const ApplicationStatus = () => {
     }
   };
 
+  const totalNotifications = applications.reduce((sum, app) => sum + app.notifications, 0);
+  const totalUrgentActions = applications.reduce((sum, app) => sum + app.urgentActions, 0);
+
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Application Status</h1>
-        <p className="text-gray-600 mt-2">
-          Track the status of your kindergarten applications across different recording periods
-        </p>
+      {/* Enhanced Header with Actions */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Application Status</h1>
+          <p className="text-gray-600 mt-2">
+            Track the status of your kindergarten applications across different recording periods
+          </p>
+        </div>
+        
+        {/* Call-to-Action and Quick Actions */}
+        <div className="flex flex-col sm:flex-row gap-3">
+          {totalNotifications > 0 && (
+            <Button variant="outline" className="relative">
+              <Bell className="h-4 w-4 mr-2" />
+              Notifications
+              <Badge className="ml-2 bg-red-500 text-white text-xs px-1.5 py-0.5">
+                {totalNotifications}
+              </Badge>
+            </Button>
+          )}
+          
+          <Link to="/guardian/new-application">
+            <Button className="bg-oslo-blue hover:bg-oslo-blue/90 shadow-lg hover:shadow-xl transition-all duration-200">
+              <Plus className="h-4 w-4 mr-2" />
+              New Application
+            </Button>
+          </Link>
+        </div>
       </div>
+
+      {/* Quick Actions Panel */}
+      {totalUrgentActions > 0 && (
+        <Card className="border-l-4 border-l-red-500 bg-red-50">
+          <CardContent className="pt-6">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="h-5 w-5 text-red-600 mt-0.5" />
+              <div className="flex-1">
+                <h4 className="font-semibold text-red-800 mb-2">Urgent Actions Required</h4>
+                <p className="text-red-700 text-sm mb-3">
+                  You have {totalUrgentActions} urgent action(s) that need your attention.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <Button size="sm" variant="outline" className="border-red-300 text-red-700 hover:bg-red-100">
+                    <Upload className="h-3 w-3 mr-1" />
+                    Upload Documents
+                  </Button>
+                  <Button size="sm" variant="outline" className="border-red-300 text-red-700 hover:bg-red-100">
+                    <Phone className="h-3 w-3 mr-1" />
+                    Contact Support
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="space-y-6">
         {applications.map((app) => {
           const roundInfo = getAdmissionRoundInfo(app.admissionRound);
+          const progressStages = getProgressStages(app.status, app.progressPercentage);
           
           return (
-            <Card key={app.id} className="border-l-4 border-l-oslo-blue">
+            <Card key={app.id} className="border-l-4 border-l-oslo-blue shadow-lg hover:shadow-xl transition-all duration-200">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -175,18 +244,71 @@ const ApplicationStatus = () => {
                         {app.statutoryRight && (
                           <Badge className="bg-oslo-blue text-white">Statutory Right</Badge>
                         )}
+                        {app.notifications > 0 && (
+                          <Badge variant="outline" className="text-blue-600 border-blue-300">
+                            <Bell className="h-3 w-3 mr-1" />
+                            {app.notifications} new
+                          </Badge>
+                        )}
                       </CardTitle>
                       <CardDescription>
                         Application #{app.id} • {roundInfo.name} • Submitted: {app.submittedDate}
                       </CardDescription>
                     </div>
                   </div>
-                  <Button variant="outline" size="sm">
-                    <Eye className="h-4 w-4 mr-2" />
-                    View Details
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button variant="ghost" size="sm">
+                      <MessageCircle className="h-4 w-4 mr-2" />
+                      Message
+                    </Button>
+                    <Button variant="outline" size="sm">
+                      <Eye className="h-4 w-4 mr-2" />
+                      View Details
+                    </Button>
+                  </div>
                 </div>
                 
+                {/* Enhanced Progress Stepper */}
+                <div className="mt-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="font-semibold text-slate-800">Application Progress</h4>
+                    <span className="text-sm text-gray-600">{app.progressPercentage}% Complete</span>
+                  </div>
+                  
+                  <div className="relative">
+                    <div className="flex justify-between items-center mb-2">
+                      {progressStages.map((stage, index) => (
+                        <div key={index} className="flex flex-col items-center text-center flex-1">
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold mb-2 ${
+                            stage.status === 'completed' 
+                              ? 'bg-green-500 text-white' 
+                              : stage.status === 'current'
+                              ? 'bg-oslo-blue text-white'
+                              : 'bg-gray-200 text-gray-500'
+                          }`}>
+                            {stage.status === 'completed' ? <CheckCircle className="h-4 w-4" /> : index + 1}
+                          </div>
+                          <span className={`text-xs font-medium ${
+                            stage.status === 'completed' || stage.status === 'current'
+                              ? 'text-slate-900'
+                              : 'text-gray-500'
+                          }`}>
+                            {stage.name}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                    <Progress value={app.progressPercentage} className="h-2" />
+                  </div>
+                  
+                  {app.queuePosition && (
+                    <div className="mt-3 flex items-center gap-4 text-sm text-gray-600">
+                      <span>Queue position: #{app.queuePosition}</span>
+                      <span>Est. decision: {app.estimatedDecisionDate}</span>
+                    </div>
+                  )}
+                </div>
+
                 {/* Application Round Info */}
                 <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mt-4">
                   <div className="flex items-center gap-2 mb-2">
@@ -200,24 +322,13 @@ const ApplicationStatus = () => {
               </CardHeader>
               
               <CardContent className="space-y-6">
-                {/* Progress Bar */}
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Application Progress</span>
-                    <span className="text-sm text-gray-600">{app.progressPercentage}% Complete</span>
-                  </div>
-                  <Progress value={app.progressPercentage} className="h-2" />
-                  {app.queuePosition && (
-                    <p className="text-sm text-gray-600">Queue position: #{app.queuePosition}</p>
-                  )}
-                </div>
-
                 <Tabs defaultValue="timeline" className="w-full">
-                  <TabsList className="grid w-full grid-cols-4">
+                  <TabsList className="grid w-full grid-cols-5">
                     <TabsTrigger value="timeline">Timeline</TabsTrigger>
                     <TabsTrigger value="preferences">Preferences</TabsTrigger>
                     <TabsTrigger value="documents">Documents</TabsTrigger>
                     <TabsTrigger value="verification">Verification</TabsTrigger>
+                    <TabsTrigger value="tools">Tools</TabsTrigger>
                   </TabsList>
                   
                   <TabsContent value="timeline" className="space-y-4">
@@ -253,17 +364,34 @@ const ApplicationStatus = () => {
 
                   <TabsContent value="preferences" className="space-y-4">
                     <div>
-                      <h4 className="font-semibold mb-3">Kindergarten Preferences</h4>
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="font-semibold">Kindergarten Preferences</h4>
+                        <Button variant="outline" size="sm">
+                          <MapPin className="h-3 w-3 mr-1" />
+                          View Map
+                        </Button>
+                      </div>
                       <div className="space-y-3">
                         {app.kindergartens.map((kg, index) => (
-                          <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                          <div key={index} className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 transition-colors">
                             <div className="flex items-center gap-3">
                               <span className="w-6 h-6 bg-oslo-blue text-white text-sm rounded-full flex items-center justify-center">
                                 {kg.priority}
                               </span>
-                              <span className="font-medium">{kg.name}</span>
+                              <div>
+                                <span className="font-medium">{kg.name}</span>
+                                <div className="text-sm text-gray-500 flex items-center gap-1">
+                                  <MapPin className="h-3 w-3" />
+                                  {kg.distance}
+                                </div>
+                              </div>
                             </div>
-                            {getKindergartenStatusBadge(kg.status)}
+                            <div className="flex items-center gap-2">
+                              {getKindergartenStatusBadge(kg.status)}
+                              <Button variant="ghost" size="sm">
+                                <ExternalLink className="h-3 w-3" />
+                              </Button>
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -325,9 +453,30 @@ const ApplicationStatus = () => {
                       )}
                     </div>
                   </TabsContent>
+
+                  <TabsContent value="tools" className="space-y-4">
+                    <div>
+                      <h4 className="font-semibold mb-3">Helpful Tools</h4>
+                      <div className="grid md:grid-cols-2 gap-3">
+                        <Button variant="outline" className="h-auto p-4 flex flex-col items-start gap-2">
+                          <div className="flex items-center gap-2">
+                            <Calculator className="h-4 w-4" />
+                            <span className="font-medium">Fee Calculator</span>
+                          </div>
+                          <span className="text-sm text-gray-500">Calculate expected fees</span>
+                        </Button>
+                        <Button variant="outline" className="h-auto p-4 flex flex-col items-start gap-2">
+                          <div className="flex items-center gap-2">
+                            <MapPin className="h-4 w-4" />
+                            <span className="font-medium">Distance Calculator</span>
+                          </div>
+                          <span className="text-sm text-gray-500">Check commute times</span>
+                        </Button>
+                      </div>
+                    </div>
+                  </TabsContent>
                 </Tabs>
 
-                {/* Placement Information */}
                 {app.status === 'placed' && app.placedKindergarten && (
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <h4 className="font-semibold text-green-800 mb-2">🎉 Congratulations! Placement Assigned</h4>
@@ -348,7 +497,6 @@ const ApplicationStatus = () => {
                   </div>
                 )}
 
-                {/* Case Worker Information */}
                 <div className="flex justify-between items-center pt-4 border-t">
                   <div className="text-sm text-gray-600">
                     {app.caseWorker && (
@@ -372,7 +520,6 @@ const ApplicationStatus = () => {
         })}
       </div>
 
-      {/* Enhanced Information Box */}
       <Card className="bg-blue-50 border-blue-200">
         <CardContent className="pt-6">
           <div className="flex items-start gap-3">
