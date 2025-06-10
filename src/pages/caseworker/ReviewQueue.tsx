@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { 
   Search, 
@@ -40,6 +41,7 @@ import PlacementDecisionPanel from '@/components/caseworker/PlacementDecisionPan
 
 const ReviewQueue = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [priorityFilter, setPriorityFilter] = useState('all');
@@ -240,6 +242,10 @@ const ReviewQueue = () => {
   const handleContactGuardian = (app: any) => {
     toast.success(`Opening message to ${app.guardianName}...`);
     // Here you would typically navigate to the messages page with pre-filled recipient
+  };
+
+  const handleApplicationClick = (applicationId: string) => {
+    navigate(`/caseworker/application/${applicationId}`);
   };
 
   return (
@@ -524,7 +530,8 @@ const ReviewQueue = () => {
                 {filteredApplications.map((app) => (
                   <div
                     key={app.id}
-                    className="group p-6 border border-gray-200 rounded-xl hover:border-oslo-blue/30 hover:bg-gray-50/50 transition-all hover:shadow-md"
+                    className="group p-6 border border-gray-200 rounded-xl hover:border-oslo-blue/30 hover:bg-gray-50/50 transition-all hover:shadow-md cursor-pointer"
+                    onClick={() => handleApplicationClick(app.id)}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
@@ -533,7 +540,7 @@ const ReviewQueue = () => {
                         </div>
                         <div>
                           <div className="flex items-center gap-3 mb-2">
-                            <h4 className="font-semibold text-gray-900 text-lg">{app.childName}</h4>
+                            <h4 className="font-semibold text-gray-900 text-lg group-hover:text-oslo-blue transition-colors">{app.childName}</h4>
                             <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
                               {app.childAge} years
                             </span>
@@ -571,7 +578,10 @@ const ReviewQueue = () => {
                           <Button 
                             variant="outline" 
                             size="sm"
-                            onClick={() => openWorkflowDialog(app)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openWorkflowDialog(app);
+                            }}
                             className="gap-2 hover:bg-oslo-blue hover:text-white transition-colors"
                             disabled={isLoading}
                           >
@@ -581,7 +591,10 @@ const ReviewQueue = () => {
                           <Button 
                             variant="outline" 
                             size="sm"
-                            onClick={() => openPlacementDialog(app)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openPlacementDialog(app);
+                            }}
                             className="gap-2 hover:bg-oslo-green hover:text-white transition-colors"
                             disabled={isLoading}
                           >
@@ -591,7 +604,10 @@ const ReviewQueue = () => {
                           <Button 
                             variant="outline" 
                             size="sm"
-                            onClick={() => handleContactGuardian(app)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleContactGuardian(app);
+                            }}
                             className="gap-2 hover:bg-purple-600 hover:text-white transition-colors"
                             disabled={isLoading}
                           >
