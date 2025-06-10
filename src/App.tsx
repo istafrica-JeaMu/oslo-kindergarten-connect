@@ -36,8 +36,43 @@ import NotFound from './pages/NotFound';
 
 function App() {
   function PrivateRoute({ children }: { children: JSX.Element }) {
-    const { user } = useAuth();
+    const { user, isLoading } = useAuth();
+    
+    if (isLoading) {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+      );
+    }
+    
     return user ? children : <Navigate to="/login" />;
+  }
+
+  function RootRedirect() {
+    const { user, isLoading } = useAuth();
+    
+    if (isLoading) {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+      );
+    }
+    
+    if (!user) {
+      return <Navigate to="/login" replace />;
+    }
+    
+    // Redirect based on user role
+    switch (user.role) {
+      case 'educator':
+        return <Navigate to="/educator" replace />;
+      case 'guardian':
+        return <Navigate to="/guardian" replace />;
+      default:
+        return <Navigate to="/guardian" replace />;
+    }
   }
 
   function AdminRoute({ children }: { children: JSX.Element }) {
@@ -58,27 +93,8 @@ function App() {
             {/* Public Routes */}
             <Route path="/login" element={<LoginPage />} />
 
-            {/* Default redirect based on user role */}
-            <Route
-              path="/"
-              element={
-                <PrivateRoute>
-                  <Navigate to="/guardian" replace />
-                </PrivateRoute>
-              }
-            />
-
-            {/* Living Arrangements - Available to all authenticated users */}
-            <Route
-              path="/living-arrangements"
-              element={
-                <PrivateRoute>
-                  <Layout />
-                </PrivateRoute>
-              }
-            >
-              <Route index element={<GuardianLivingArrangements />} />
-            </Route>
+            {/* Root redirect based on user role */}
+            <Route path="/" element={<RootRedirect />} />
 
             {/* Educator Routes */}
             <Route
@@ -122,6 +138,18 @@ function App() {
               <Route path="payments" element={<GuardianPayments />} />
               <Route path="documents" element={<GuardianDocuments />} />
               <Route path="new-application" element={<GuardianNewApplication />} />
+            </Route>
+
+            {/* Living Arrangements - Available to all authenticated users */}
+            <Route
+              path="/living-arrangements"
+              element={
+                <PrivateRoute>
+                  <Layout />
+                </PrivateRoute>
+              }
+            >
+              <Route index element={<GuardianLivingArrangements />} />
             </Route>
 
             {/* 404 Route */}
