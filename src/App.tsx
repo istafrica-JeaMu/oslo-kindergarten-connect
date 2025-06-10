@@ -37,6 +37,10 @@ import PostDetail from './pages/guardian/PostDetail';
 import CaseWorkerDashboard from './pages/caseworker/CaseWorkerDashboard';
 import ReviewQueue from './pages/caseworker/ReviewQueue';
 import PlacementManagement from './pages/caseworker/PlacementManagement';
+import ManualApplication from './pages/caseworker/ManualApplication';
+import ApplicationsInProgress from './pages/caseworker/ApplicationsInProgress';
+import ApplicationsSubmitted from './pages/caseworker/ApplicationsSubmitted';
+import ApplicationsFollowUp from './pages/caseworker/ApplicationsFollowUp';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import Reports from './pages/admin/Reports';
 import SystemSettings from './pages/admin/SystemSettings';
@@ -123,6 +127,10 @@ function AppRoutes() {
         <Route path="review-queue" element={<ReviewQueue />} />
         <Route path="placement-management" element={<PlacementManagement />} />
         <Route path="messages" element={<GuardianMessages />} />
+        <Route path="manual-application" element={<ManualApplication />} />
+        <Route path="applications/in-progress" element={<ApplicationsInProgress />} />
+        <Route path="applications/submitted" element={<ApplicationsSubmitted />} />
+        <Route path="applications/follow-up" element={<ApplicationsFollowUp />} />
       </Route>
 
       {/* Admin Routes */}
