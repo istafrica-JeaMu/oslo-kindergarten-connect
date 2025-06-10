@@ -49,6 +49,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 
 const LivingArrangements = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const [isEditingPrimaryAddress, setIsEditingPrimaryAddress] = useState(false);
   const [selectedArrangementType, setSelectedArrangementType] = useState('fixed');
   const [showAddPersonDialog, setShowAddPersonDialog] = useState(false);
   const [showEditPersonDialog, setShowEditPersonDialog] = useState(false);
@@ -60,10 +61,19 @@ const LivingArrangements = () => {
     purpose: '',
     restrictions: ''
   });
+  const [primaryAddressData, setPrimaryAddressData] = useState({
+    street: 'Trondheimsveien 235',
+    postalCode: '0586',
+    city: 'Oslo',
+    resident: 'Mother (Anna Hansen)',
+    relationship: 'Primary Guardian',
+    schedule: 'Monday - Thursday (Kindergarten pickup at 16:00)',
+    phone: '+47 22 33 44 55',
+    email: 'anna.hansen@email.com'
+  });
   const { toast } = useToast();
   const { t } = useLanguage();
 
-  // Enhanced mock data with comprehensive information
   const livingArrangement = {
     type: selectedArrangementType,
     lastUpdated: '2024-03-18',
@@ -75,14 +85,14 @@ const LivingArrangements = () => {
       emergency: false
     },
     primaryAddress: {
-      street: 'Trondheimsveien 235',
-      postalCode: '0586',
-      city: 'Oslo',
-      resident: 'Mother (Anna Hansen)',
-      relationship: 'Primary Guardian',
-      schedule: 'Monday - Thursday (Kindergarten pickup at 16:00)',
-      phone: '+47 22 33 44 55',
-      email: 'anna.hansen@email.com',
+      street: primaryAddressData.street,
+      postalCode: primaryAddressData.postalCode,
+      city: primaryAddressData.city,
+      resident: primaryAddressData.resident,
+      relationship: primaryAddressData.relationship,
+      schedule: primaryAddressData.schedule,
+      phone: primaryAddressData.phone,
+      email: primaryAddressData.email,
       verified: true
     },
     secondaryAddress: {
@@ -150,6 +160,14 @@ const LivingArrangements = () => {
     });
   };
 
+  const handleSavePrimaryAddress = () => {
+    setIsEditingPrimaryAddress(false);
+    toast({
+      title: "Primary address updated",
+      description: "Your address information has been saved successfully.",
+    });
+  };
+
   const handleArrangementTypeChange = (type: string) => {
     setSelectedArrangementType(type);
     toast({
@@ -191,7 +209,6 @@ const LivingArrangements = () => {
   };
 
   const handleSaveNewPerson = () => {
-    // Simulate adding new person
     toast({
       title: "Person Added",
       description: `${newPersonData.name} has been added to authorized pickup list.`,
@@ -319,7 +336,6 @@ const LivingArrangements = () => {
 
   return (
     <div className="space-y-6">
-      {/* Enhanced Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Living Arrangements</h1>
@@ -349,7 +365,6 @@ const LivingArrangements = () => {
         </div>
       </div>
 
-      {/* Status Overview */}
       <Card className="border-l-4 border-l-oslo-blue">
         <CardHeader className="pb-3">
           <CardTitle className="text-lg">Arrangement Status</CardTitle>
@@ -376,7 +391,6 @@ const LivingArrangements = () => {
         </CardContent>
       </Card>
 
-      {/* Enhanced Living Arrangement Type */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -492,33 +506,44 @@ const LivingArrangements = () => {
         </CardContent>
       </Card>
 
-      {/* Enhanced Primary Address */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <MapPin className="w-5 h-5 text-oslo-blue" />
-            Primary Address
-          </CardTitle>
-          <CardDescription>
-            Main residence where child lives
-          </CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <MapPin className="w-5 h-5 text-oslo-blue" />
+                Primary Address
+              </CardTitle>
+              <CardDescription>
+                Main residence where child lives
+              </CardDescription>
+            </div>
+            {!isEditingPrimaryAddress && (
+              <Button variant="outline" size="sm" onClick={() => setIsEditingPrimaryAddress(true)}>
+                <Edit className="w-4 h-4 mr-2" />
+                Edit Address
+              </Button>
+            )}
+          </div>
         </CardHeader>
         <CardContent>
-          {isEditing ? (
+          {isEditingPrimaryAddress ? (
             <div className="space-y-4">
               <div className="grid md:grid-cols-3 gap-4">
                 <div className="col-span-2">
                   <Label htmlFor="street1">Street Address</Label>
                   <Input
                     id="street1"
-                    defaultValue={livingArrangement.primaryAddress.street}
+                    value={primaryAddressData.street}
+                    onChange={(e) => setPrimaryAddressData({...primaryAddressData, street: e.target.value})}
                   />
                 </div>
                 <div>
                   <Label htmlFor="postal1">Postal Code</Label>
                   <Input
                     id="postal1"
-                    defaultValue={livingArrangement.primaryAddress.postalCode}
+                    value={primaryAddressData.postalCode}
+                    onChange={(e) => setPrimaryAddressData({...primaryAddressData, postalCode: e.target.value})}
                   />
                 </div>
               </div>
@@ -527,67 +552,118 @@ const LivingArrangements = () => {
                   <Label htmlFor="city1">City</Label>
                   <Input
                     id="city1"
-                    defaultValue={livingArrangement.primaryAddress.city}
+                    value={primaryAddressData.city}
+                    onChange={(e) => setPrimaryAddressData({...primaryAddressData, city: e.target.value})}
                   />
                 </div>
                 <div>
                   <Label htmlFor="resident1">Resident</Label>
                   <Input
                     id="resident1"
-                    defaultValue={livingArrangement.primaryAddress.resident}
+                    value={primaryAddressData.resident}
+                    onChange={(e) => setPrimaryAddressData({...primaryAddressData, resident: e.target.value})}
                   />
                 </div>
+              </div>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="phone1">Phone</Label>
+                  <Input
+                    id="phone1"
+                    value={primaryAddressData.phone}
+                    onChange={(e) => setPrimaryAddressData({...primaryAddressData, phone: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="email1">Email</Label>
+                  <Input
+                    id="email1"
+                    value={primaryAddressData.email}
+                    onChange={(e) => setPrimaryAddressData({...primaryAddressData, email: e.target.value})}
+                  />
+                </div>
+              </div>
+              <div>
+                <Label htmlFor="schedule1">Schedule</Label>
+                <Input
+                  id="schedule1"
+                  value={primaryAddressData.schedule}
+                  onChange={(e) => setPrimaryAddressData({...primaryAddressData, schedule: e.target.value})}
+                />
+              </div>
+              <div className="flex gap-3 pt-4">
+                <Button onClick={handleSavePrimaryAddress}>
+                  <Save className="w-4 h-4 mr-2" />
+                  Save Address
+                </Button>
+                <Button variant="outline" onClick={() => setIsEditingPrimaryAddress(false)}>
+                  Cancel
+                </Button>
               </div>
             </div>
           ) : (
             <div className="space-y-4">
-              <div className="flex items-start gap-4 p-4 bg-slate-50 rounded-lg">
-                <Avatar className="w-12 h-12">
-                  <AvatarImage src="" />
-                  <AvatarFallback className="bg-oslo-blue text-white">AH</AvatarFallback>
-                </Avatar>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <h3 className="font-semibold">{livingArrangement.primaryAddress.resident}</h3>
-                    <Badge className="bg-blue-100 text-blue-700 text-xs">{livingArrangement.primaryAddress.relationship}</Badge>
-                    <CheckCircle className="w-4 h-4 text-green-600" />
-                  </div>
-                  <div className="space-y-1 text-sm text-slate-600">
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4" />
-                      <span>{livingArrangement.primaryAddress.street}, {livingArrangement.primaryAddress.postalCode} {livingArrangement.primaryAddress.city}</span>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="flex items-start gap-4 p-6 bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-xl border border-blue-100">
+                  <Avatar className="w-16 h-16 border-2 border-white shadow-md">
+                    <AvatarImage src="" />
+                    <AvatarFallback className="bg-oslo-blue text-white text-lg font-semibold">AH</AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-3">
+                      <h3 className="font-bold text-lg text-slate-800">{livingArrangement.primaryAddress.resident}</h3>
+                      <Badge className="bg-blue-100 text-blue-700 text-xs border-blue-200">{livingArrangement.primaryAddress.relationship}</Badge>
+                      <CheckCircle className="w-5 h-5 text-green-600" />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Phone className="w-4 h-4" />
-                      <span>{livingArrangement.primaryAddress.phone}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Mail className="w-4 h-4" />
-                      <span>{livingArrangement.primaryAddress.email}</span>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-3 text-sm text-slate-700">
+                        <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+                          <MapPin className="w-3 h-3 text-blue-600" />
+                        </div>
+                        <span className="font-medium">{livingArrangement.primaryAddress.street}</span>
+                      </div>
+                      <div className="flex items-center gap-3 text-sm text-slate-600 ml-9">
+                        <span>{livingArrangement.primaryAddress.postalCode} {livingArrangement.primaryAddress.city}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => handleViewContact('Anna Hansen')}>
-                  <Eye className="w-4 h-4" />
-                </Button>
-              </div>
-              
-              <div className="p-4 border rounded-lg">
-                <div className="flex items-center justify-between mb-3">
-                  <h4 className="font-medium flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
-                    Kindergarten Pickup Schedule
-                  </h4>
-                  {renderWeeklySchedule(livingArrangement.primaryAddress.schedule, 'bg-blue-500')}
+
+                <div className="space-y-4">
+                  <div className="p-4 bg-slate-50 rounded-lg border">
+                    <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                      <Phone className="w-4 h-4 text-slate-600" />
+                      Contact Information
+                    </h4>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center gap-2">
+                        <span className="text-slate-500 w-12">Phone:</span>
+                        <span className="font-medium">{livingArrangement.primaryAddress.phone}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-slate-500 w-12">Email:</span>
+                        <span className="font-medium">{livingArrangement.primaryAddress.email}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-4 bg-green-50 rounded-lg border border-green-100">
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="font-semibold text-green-800 flex items-center gap-2">
+                        <Calendar className="w-4 h-4" />
+                        Pickup Schedule
+                      </h4>
+                      {renderWeeklySchedule(livingArrangement.primaryAddress.schedule, 'bg-green-500')}
+                    </div>
+                    <p className="text-sm text-green-700">{livingArrangement.primaryAddress.schedule}</p>
+                  </div>
                 </div>
-                <p className="text-sm text-slate-600">{livingArrangement.primaryAddress.schedule}</p>
               </div>
             </div>
           )}
         </CardContent>
       </Card>
 
-      {/* Enhanced Secondary Address - Only show if shared custody */}
       {selectedArrangementType === 'shared' && (
         <Card>
           <CardHeader>
@@ -647,7 +723,6 @@ const LivingArrangements = () => {
         </Card>
       )}
 
-      {/* Enhanced Authorized Pickup Persons Section */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -745,7 +820,6 @@ const LivingArrangements = () => {
         </CardContent>
       </Card>
 
-      {/* Enhanced Custody Documents */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -799,7 +873,6 @@ const LivingArrangements = () => {
         </CardContent>
       </Card>
 
-      {/* Action Buttons */}
       {isEditing && (
         <div className="flex justify-end gap-3">
           <Button variant="outline" onClick={() => setIsEditing(false)}>
@@ -812,7 +885,6 @@ const LivingArrangements = () => {
         </div>
       )}
 
-      {/* Enhanced Information Box */}
       <Card className="border-blue-200 bg-blue-50">
         <CardHeader>
           <CardTitle className="text-blue-800 flex items-center gap-2">
@@ -836,7 +908,6 @@ const LivingArrangements = () => {
         </CardContent>
       </Card>
 
-      {/* Add Person Dialog */}
       <Dialog open={showAddPersonDialog} onOpenChange={setShowAddPersonDialog}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
@@ -918,7 +989,6 @@ const LivingArrangements = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Edit Person Dialog */}
       <Dialog open={showEditPersonDialog} onOpenChange={setShowEditPersonDialog}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
