@@ -28,6 +28,7 @@ import TodaysStatusCard from '@/components/guardian/TodaysStatusCard';
 import NoticeBoardPreviewCard from '@/components/guardian/NoticeBoardPreviewCard';
 import QuickActionsCard from '@/components/guardian/QuickActionsCard';
 import ApplicationsSummaryCard from '@/components/guardian/ApplicationsSummaryCard';
+import WeatherForecastCard from '@/components/guardian/WeatherForecastCard';
 
 const GuardianDashboard = () => {
   const { t } = useLanguage();
@@ -182,8 +183,8 @@ const GuardianDashboard = () => {
           ))}
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[...Array(4)].map((_, i) => (
+        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
+          {[...Array(5)].map((_, i) => (
             <Card key={i} className="p-6 animate-pulse">
               <div className="flex items-center space-x-4">
                 <Skeleton className="h-14 w-14 rounded-xl" />
@@ -259,7 +260,7 @@ const GuardianDashboard = () => {
       </div>
 
       {/* Priority Cards - Responsive Grid Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-15 gap-6">
         {/* Today's Status */}
         <div className="xl:col-span-3">
           <TodaysStatusCard />
@@ -270,7 +271,12 @@ const GuardianDashboard = () => {
           <QuickActionsCard />
         </div>
         
-        {/* Notice Board - Takes full width on mobile/tablet, remaining space on xl screens */}
+        {/* Weather Forecast */}
+        <div className="xl:col-span-3">
+          <WeatherForecastCard />
+        </div>
+        
+        {/* Notice Board - Takes remaining space */}
         <div className="md:col-span-2 xl:col-span-6">
           <NoticeBoardPreviewCard />
         </div>

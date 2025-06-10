@@ -1,7 +1,8 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { AlertCircle, MessageSquare, Calendar, Phone, CloudSun } from 'lucide-react';
+import { AlertCircle, MessageSquare, Calendar, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const QuickActionsCard = () => {
@@ -35,14 +36,6 @@ const QuickActionsCard = () => {
       description: 'Manage child information',
       icon: Phone,
       url: '/guardian/child-profile',
-      variant: 'outline' as const,
-      urgent: false
-    },
-    {
-      title: 'Notice Board',
-      description: 'Latest updates and news',
-      icon: CloudSun,
-      url: '/guardian/notice-board',
       variant: 'outline' as const,
       urgent: false
     }
