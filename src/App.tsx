@@ -1,4 +1,3 @@
-
 import {
   BrowserRouter as Router,
   Route,
@@ -37,6 +36,7 @@ import PostDetail from './pages/guardian/PostDetail';
 import CaseWorkerDashboard from './pages/caseworker/CaseWorkerDashboard';
 import ReviewQueue from './pages/caseworker/ReviewQueue';
 import PlacementManagement from './pages/caseworker/PlacementManagement';
+import CaseWorkerMessages from './pages/caseworker/Messages';
 import ManualApplication from './pages/caseworker/ManualApplication';
 import ApplicationsInProgress from './pages/caseworker/ApplicationsInProgress';
 import ApplicationsSubmitted from './pages/caseworker/ApplicationsSubmitted';
@@ -112,6 +112,7 @@ function AppRoutes() {
         <Route path="payments" element={<GuardianPayments />} />
         <Route path="documents" element={<GuardianDocuments />} />
         <Route path="new-application" element={<GuardianNewApplication />} />
+        <Route path="living-arrangements" element={<GuardianLivingArrangements />} />
       </Route>
 
       {/* Caseworker Routes */}
@@ -126,7 +127,7 @@ function AppRoutes() {
         <Route index element={<CaseWorkerDashboard />} />
         <Route path="review-queue" element={<ReviewQueue />} />
         <Route path="placement-management" element={<PlacementManagement />} />
-        <Route path="messages" element={<GuardianMessages />} />
+        <Route path="messages" element={<CaseWorkerMessages />} />
         <Route path="manual-application" element={<ManualApplication />} />
         <Route path="applications/in-progress" element={<ApplicationsInProgress />} />
         <Route path="applications/submitted" element={<ApplicationsSubmitted />} />
