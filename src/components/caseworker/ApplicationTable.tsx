@@ -24,7 +24,7 @@ const ApplicationTable = ({ applications, showActions = true }: ApplicationTable
   const navigate = useNavigate();
 
   const handleView = (application: Application) => {
-    navigate(`/caseworker/application/${application.id}/view`);
+    navigate(`/caseworker/application/${application.id}`);
   };
 
   const handleResume = (application: Application) => {
@@ -44,7 +44,7 @@ const ApplicationTable = ({ applications, showActions = true }: ApplicationTable
   };
 
   const handleReview = (application: Application) => {
-    navigate(`/caseworker/application/${application.id}/view`);
+    navigate(`/caseworker/application/${application.id}`);
   };
 
   const getStatusIcon = (status: Application['status']) => {
