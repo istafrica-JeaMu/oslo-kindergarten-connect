@@ -1,3 +1,4 @@
+
 import {
   BrowserRouter as Router,
   Route,
@@ -5,16 +6,8 @@ import {
   Navigate,
 } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import ForgotPassword from './pages/ForgotPassword';
-import UpdateProfile from './pages/UpdateProfile';
-import Layout from './components/Layout';
-import Dashboard from './pages/Dashboard';
-import Profile from './pages/Profile';
-import AdminDashboard from './pages/admin/AdminDashboard';
-import AdminUsers from './pages/admin/AdminUsers';
-import AdminSettings from './pages/admin/AdminSettings';
+import { LanguageProvider } from './contexts/LanguageContext';
+import Layout from './components/layout/Layout';
 import EducatorDashboard from './pages/educator/EducatorDashboard';
 import EducatorAttendance from './pages/staff/EducatorAttendance';
 import EducatorChildren from './pages/educator/EducatorChildren';
@@ -27,29 +20,24 @@ import EducatorNotes from './pages/educator/EducatorNotes';
 import EducatorBulletinBoard from './pages/educator/EducatorBulletinBoard';
 import EducatorTeamCollab from './pages/educator/EducatorTeamCollab';
 import GuardianDashboard from './pages/guardian/GuardianDashboard';
-import GuardianProfile from './pages/guardian/GuardianProfile';
-import GuardianMessages from './pages/guardian/GuardianMessages';
-import GuardianBilling from './pages/guardian/GuardianBilling';
+import GuardianMessages from './pages/guardian/Messages';
 import GuardianDailySchedule from './pages/guardian/DailySchedule';
-import GuardianChildProfile from './pages/guardian/GuardianChildProfile';
-import GuardianEmergencyContacts from './pages/guardian/GuardianEmergencyContacts';
-import GuardianConsents from './pages/guardian/GuardianConsents';
-import GuardianTransportation from './pages/guardian/GuardianTransportation';
-import LanguageProvider from './contexts/LanguageContext';
+import LoginPage from './pages/auth/LoginPage';
+import NotFound from './pages/NotFound';
 
 function App() {
   function PrivateRoute({ children }: { children: JSX.Element }) {
-    const { currentUser } = useAuth();
-    return currentUser ? children : <Navigate to="/login" />;
+    const { user } = useAuth();
+    return user ? children : <Navigate to="/login" />;
   }
 
   function AdminRoute({ children }: { children: JSX.Element }) {
-    const { currentUser } = useAuth();
-    if (!currentUser) {
+    const { user } = useAuth();
+    if (!user) {
       return <Navigate to="/login" />;
     }
-    // Check if the user has admin role (you might need to fetch user role from an API)
-    const isAdmin = currentUser.email === 'admin@example.com'; // Example: checking for admin email
+    // Check if the user has admin role
+    const isAdmin = user.role === 'admin';
     return isAdmin ? children : <Navigate to="/" />;
   }
 
@@ -59,40 +47,27 @@ function App() {
         <Router>
           <Routes>
             {/* Public Routes */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/login" element={<LoginPage />} />
 
-            {/* Private Routes */}
+            {/* Default redirect based on user role */}
             <Route
               path="/"
+              element={
+                <PrivateRoute>
+                  <Navigate to="/educator" replace />
+                </PrivateRoute>
+              }
+            />
+
+            {/* Educator Routes */}
+            <Route
+              path="/educator"
               element={
                 <PrivateRoute>
                   <Layout />
                 </PrivateRoute>
               }
             >
-              <Route index element={<Dashboard />} />
-              <Route path="profile" element={<Profile />} />
-              <Route path="update-profile" element={<UpdateProfile />} />
-            </Route>
-
-            {/* Admin Routes */}
-            <Route
-              path="/admin"
-              element={
-                <AdminRoute>
-                  <Layout />
-                </AdminRoute>
-              }
-            >
-              <Route index element={<AdminDashboard />} />
-              <Route path="users" element={<AdminUsers />} />
-              <Route path="settings" element={<AdminSettings />} />
-            </Route>
-
-            {/* Educator Routes */}
-            <Route path="/educator" element={<Layout />}>
               <Route index element={<EducatorDashboard />} />
               <Route path="attendance" element={<EducatorAttendance />} />
               <Route path="children" element={<EducatorChildren />} />
@@ -107,17 +82,21 @@ function App() {
             </Route>
 
             {/* Guardian Routes */}
-            <Route path="/guardian" element={<Layout />}>
+            <Route
+              path="/guardian"
+              element={
+                <PrivateRoute>
+                  <Layout />
+                </PrivateRoute>
+              }
+            >
               <Route index element={<GuardianDashboard />} />
-              <Route path="profile" element={<GuardianProfile />} />
               <Route path="messages" element={<GuardianMessages />} />
-              <Route path="billing" element={<GuardianBilling />} />
               <Route path="daily-schedule" element={<GuardianDailySchedule />} />
-              <Route path="child-profile" element={<GuardianChildProfile />} />
-              <Route path="emergency-contacts" element={<GuardianEmergencyContacts />} />
-              <Route path="consents" element={<GuardianConsents />} />
-              <Route path="transportation" element={<GuardianTransportation />} />
             </Route>
+
+            {/* 404 Route */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>
       </AuthProvider>
