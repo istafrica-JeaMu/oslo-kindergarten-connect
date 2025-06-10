@@ -78,7 +78,20 @@
       "contactGuardians": "Contact Guardians",
       "highPriority": "High Priority",
       "normalPriority": "Normal Priority",
-      "lowPriority": "Low Priority"
+      "lowPriority": "Low Priority",
+      "applicationQueue": "Application Queue",
+      "batchProcessing": "Batch Processing",
+      "analytics": "Analytics",
+      "workflow": "Workflow",
+      "placement": "Placement",
+      "contact": "Contact",
+      "workflowManagement": "Workflow Management",
+      "workflowDescription": "Manage application workflow for {{childName}}",
+      "placementDecision": "Placement Decision",
+      "placementDescription": "Make placement decision for {{childName}}",
+      "processingAnalytics": "Processing Analytics",
+      "analyticsDescription": "View application processing statistics and trends",
+      "analyticsComingSoon": "Analytics dashboard coming soon..."
     },
     "placementManagement": {
       "title": "Placement Management",

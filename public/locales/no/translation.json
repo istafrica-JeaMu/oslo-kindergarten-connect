@@ -78,7 +78,20 @@
       "contactGuardians": "Kontakt foresatte",
       "highPriority": "Høy prioritet",
       "normalPriority": "Normal prioritet",
-      "lowPriority": "Lav prioritet"
+      "lowPriority": "Lav prioritet",
+      "applicationQueue": "Søknadskø",
+      "batchProcessing": "Massebehandling",
+      "analytics": "Analyser",
+      "workflow": "Arbeidsflyt",
+      "placement": "Plassering",
+      "contact": "Kontakt",
+      "workflowManagement": "Arbeidsflytadministrasjon",
+      "workflowDescription": "Administrer arbeidsflyt for {{childName}}",
+      "placementDecision": "Plasseringsbeslutning",
+      "placementDescription": "Ta plasseringsbeslutning for {{childName}}",
+      "processingAnalytics": "Behandlingsanalyser",
+      "analyticsDescription": "Vis statistikk og trender for søknadsbehandling",
+      "analyticsComingSoon": "Analyseoversikt kommer snart..."
     },
     "placementManagement": {
       "title": "Plasseringsadministrasjon",
