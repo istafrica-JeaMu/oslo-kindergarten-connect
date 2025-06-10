@@ -1,4 +1,5 @@
 
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -14,9 +15,14 @@ import {
   Bell,
   AlertTriangle,
   MapPin,
-  Activity
+  Activity,
+  LogIn,
+  LogOut,
+  FileText,
+  Settings
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import QuickActionButtons from '@/components/educator/QuickActionButtons';
 
 const EducatorDashboard = () => {
   const { user } = useAuth();
@@ -90,6 +96,30 @@ const EducatorDashboard = () => {
       color: 'text-orange-600'
     }
   ];
+
+  const handleQuickAction = (action: string) => {
+    console.log('Quick action triggered:', action);
+    // Handle different quick actions
+    switch (action) {
+      case 'bulk-check-in':
+        console.log('Bulk check-in initiated');
+        break;
+      case 'bulk-check-out':
+        console.log('Bulk check-out initiated');
+        break;
+      case 'send-reminders':
+        console.log('Sending reminders');
+        break;
+      case 'attendance-report':
+        console.log('Generating attendance report');
+        break;
+      case 'emergency-contact':
+        console.log('Emergency protocol activated');
+        break;
+      default:
+        console.log('Unknown action:', action);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -172,6 +202,9 @@ const EducatorDashboard = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Quick Action Buttons */}
+      <QuickActionButtons onAction={handleQuickAction} />
 
       {/* Quick Actions */}
       <Card>
