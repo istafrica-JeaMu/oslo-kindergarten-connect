@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -104,6 +103,24 @@ const GuardianDashboard = () => {
     { label: 'Placed Children', value: '1', change: '0', trend: 'stable' },
     { label: 'Pending Payments', value: '1', change: '+1', trend: 'stable' },
     { label: 'Unread Messages', value: '1', change: '+1', trend: 'up' }
+  ];
+
+  // Add children data
+  const children = [
+    {
+      id: 'emma-hansen',
+      name: 'Emma Hansen',
+      age: '3 years',
+      kindergarten: 'Løvenskiold Kindergarten',
+      status: 'placed'
+    },
+    {
+      id: 'oliver-hansen',
+      name: 'Oliver Hansen', 
+      age: '5 years',
+      kindergarten: 'Sinsen Kindergarten',
+      status: 'placed'
+    }
   ];
 
   const getStatusBadge = (status: string) => {
@@ -260,9 +277,49 @@ const GuardianDashboard = () => {
       </div>
 
       {/* Secondary Priority Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Applications Summary */}
         <ApplicationsSummaryCard />
+
+        {/* Children List */}
+        <Card className="relative overflow-hidden border-0 shadow-xl">
+          <div className="absolute inset-0 bg-gradient-to-br from-white via-green-50/30 to-green-100/20" />
+          <CardHeader className="relative border-b border-slate-200/50">
+            <CardTitle className="flex items-center gap-6 text-2xl">
+              <div className="w-14 h-14 bg-gradient-to-br from-green-100 to-green-200 rounded-2xl flex items-center justify-center">
+                <User className="h-7 w-7 text-green-600" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-slate-900">My Children</h3>
+                <p className="text-sm text-slate-600 font-normal mt-1">View detailed profiles</p>
+              </div>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="relative p-6">
+            <div className="space-y-4">
+              {children.map((child) => (
+                <Link key={child.id} to={`/guardian/children/${child.id}`} className="group cursor-pointer block">
+                  <div className="flex items-center justify-between p-6 rounded-xl hover:bg-gradient-to-r hover:from-green-50 hover:to-transparent transition-all duration-300 border border-transparent hover:border-green-200 hover:shadow-md">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center">
+                        <User className="w-6 h-6 text-green-600" />
+                      </div>
+                      <div>
+                        <h5 className="font-bold text-slate-900 group-hover:text-green-600 transition-colors text-lg">{child.name}</h5>
+                        <p className="text-slate-600 font-medium">{child.age} • {child.kindergarten}</p>
+                        <Badge className="bg-green-100 text-green-800 border-green-300 font-semibold mt-1">
+                          <CheckCircle className="w-3 h-3 mr-1" />
+                          {child.status}
+                        </Badge>
+                      </div>
+                    </div>
+                    <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-green-600 group-hover:translate-x-1 transition-all duration-300" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Enhanced Recent Messages */}
         <Card className="relative overflow-hidden border-0 shadow-xl">

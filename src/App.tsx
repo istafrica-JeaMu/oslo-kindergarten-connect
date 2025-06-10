@@ -30,6 +30,7 @@ import Consents from '@/pages/guardian/Consents';
 import ChildLocation from '@/pages/guardian/ChildLocation';
 import NoticeBoard from '@/pages/guardian/NoticeBoard';
 import PostDetail from '@/pages/guardian/PostDetail';
+import ChildProfile from '@/pages/guardian/ChildProfile';
 
 // Caseworker pages
 import CaseWorkerDashboard from '@/pages/caseworker/CaseWorkerDashboard';
@@ -96,6 +97,7 @@ function App() {
                 <Route path="/guardian/child-location" element={<ChildLocation />} />
                 <Route path="/guardian/notice-board" element={<NoticeBoard />} />
                 <Route path="/guardian/notice-board/:id" element={<PostDetail />} />
+                <Route path="/guardian/children/:childId" element={<ChildProfile />} />
 
                 {/* Caseworker Routes */}
                 <Route path="/caseworker" element={<CaseWorkerDashboard />} />
