@@ -101,6 +101,27 @@
       "contactInformation": "Kontaktinformasjon",
       "full": "Full",
       "onWaitingList": "på venteliste"
+    },
+    "messages": {
+      "title": "Meldinger",
+      "description": "Kommuniser med foresatte og kollegaer",
+      "allChats": "Alle samtaler",
+      "staffOnly": "Kun ansatte",
+      "searchConversations": "Søk i samtaler...",
+      "newMessage": "Ny melding",
+      "filter": "Filter",
+      "new": "nye",
+      "onlineNow": "Pålogget nå",
+      "lastSeen": "Sist sett",
+      "typeMessage": "Skriv melding...",
+      "startConversation": "Start en samtale",
+      "selectConversation": "Velg en samtale fra sidemenyen for å se meldinger eller start en ny samtale med ansatte.",
+      "badges": {
+        "system": "System",
+        "kindergarten": "Barnehage",
+        "caseWorker": "Saksbehandler",
+        "staff": "Ansatt"
+      }
     }
   },
   "holidayRegistration": {

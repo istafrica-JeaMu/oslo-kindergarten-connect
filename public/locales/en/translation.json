@@ -101,6 +101,27 @@
       "contactInformation": "Contact Information",
       "full": "Full",
       "onWaitingList": "on waiting list"
+    },
+    "messages": {
+      "title": "Messages",
+      "description": "Communicate with guardians and colleagues",
+      "allChats": "All Chats",
+      "staffOnly": "Staff Only",
+      "searchConversations": "Search conversations...",
+      "newMessage": "New Message",
+      "filter": "Filter",
+      "new": "new",
+      "onlineNow": "Online now",
+      "lastSeen": "Last seen",
+      "typeMessage": "Type your message...",
+      "startConversation": "Start a conversation",
+      "selectConversation": "Select a conversation from the sidebar to view messages or start a new conversation with staff members.",
+      "badges": {
+        "system": "System",
+        "kindergarten": "Kindergarten",
+        "caseWorker": "Case Worker",
+        "staff": "Staff"
+      }
     }
   },
   "holidayRegistration": {
