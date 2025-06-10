@@ -11,7 +11,7 @@ const NoticeBoardPreviewCard = () => {
     {
       id: 1,
       title: "Easter Holiday Preparations",
-      preview: "We're getting ready for Easter with fun activities and egg hunts in the garden.",
+      preview: "We're getting ready for Easter with fun activities...",
       date: "2024-03-20",
       hasImages: true,
       type: "activity",
@@ -20,7 +20,7 @@ const NoticeBoardPreviewCard = () => {
     {
       id: 2,
       title: "Important: Pick-up Changes Tomorrow",
-      preview: "Due to staff training, pick-up times will be delayed by 30 minutes.",
+      preview: "Due to staff training, pick-up times will be...",
       date: "2024-03-19",
       hasImages: false,
       type: "notice",
@@ -29,7 +29,7 @@ const NoticeBoardPreviewCard = () => {
     {
       id: 3,
       title: "Weekly Menu Update",
-      preview: "This week's healthy and delicious menu includes fresh vegetables and seasonal ingredients.",
+      preview: "This week's healthy and delicious menu includes...",
       date: "2024-03-18",
       hasImages: true,
       type: "menu",
@@ -70,38 +70,36 @@ const NoticeBoardPreviewCard = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="relative flex-1 flex flex-col pt-0">
-        <div className="space-y-4 flex-1 max-h-80 overflow-y-auto">
-          {recentPosts.map((post) => (
-            <Link key={post.id} to={`/guardian/notice-board`}>
+        <div className="space-y-4 flex-1">
+          {recentPosts.slice(0, 3).map((post) => (
+            <Link key={post.id} to={`/guardian/notice-board/post/${post.id}`}>
               <div className="group cursor-pointer">
-                <div className="p-4 rounded-lg border border-slate-200 hover:border-purple-300 hover:bg-gradient-to-r hover:from-purple-50 hover:to-transparent transition-all duration-300 hover:shadow-md">
+                <div className="p-4 rounded-lg border border-slate-200 hover:border-purple-300 hover:bg-gradient-to-r hover:from-purple-50 hover:to-transparent transition-all duration-300">
                   <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1 space-y-3">
-                      <div className="flex items-start justify-between gap-2">
-                        <h4 className="font-semibold text-slate-900 group-hover:text-purple-600 transition-colors text-base leading-tight">
+                    <div className="flex-1 space-y-2.5">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h4 className="font-semibold text-slate-900 group-hover:text-purple-600 transition-colors line-clamp-1 text-sm leading-tight">
                           {post.title}
                         </h4>
-                        <Badge className={`text-xs flex-shrink-0 ${getPostTypeColor(post.type, post.urgent)}`}>
+                        <Badge className={`text-xs ${getPostTypeColor(post.type, post.urgent)}`}>
                           {post.urgent ? 'Urgent' : post.type}
                         </Badge>
                       </div>
-                      <p className="text-sm text-slate-600 line-clamp-2 leading-relaxed">{post.preview}</p>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3 text-xs text-slate-500">
+                      <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">{post.preview}</p>
+                      <div className="flex items-center gap-3 text-xs text-slate-500 pt-1">
+                        <span className="flex items-center gap-1">
+                          <Calendar className="w-3 h-3" />
+                          {post.date}
+                        </span>
+                        {post.hasImages && (
                           <span className="flex items-center gap-1">
-                            <Calendar className="w-3 h-3" />
-                            {post.date}
+                            <Image className="w-3 h-3" />
+                            Photos
                           </span>
-                          {post.hasImages && (
-                            <span className="flex items-center gap-1">
-                              <Image className="w-3 h-3" />
-                              Photos
-                            </span>
-                          )}
-                        </div>
-                        <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-purple-600 group-hover:translate-x-1 transition-all duration-300 flex-shrink-0" />
+                        )}
                       </div>
                     </div>
+                    <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-purple-600 group-hover:translate-x-1 transition-all duration-300 flex-shrink-0 mt-1" />
                   </div>
                 </div>
               </div>
