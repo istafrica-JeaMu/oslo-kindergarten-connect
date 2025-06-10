@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -11,7 +10,7 @@ const QuickActionsCard = () => {
       title: 'Report Absence',
       description: 'Quick absence notification',
       icon: AlertCircle,
-      url: '/guardian/absence-reporting',
+      url: '/guardian/attendance-tracking',
       variant: 'destructive' as const,
       urgent: true
     },
@@ -24,26 +23,26 @@ const QuickActionsCard = () => {
       urgent: false
     },
     {
-      title: 'Schedule Meeting',
-      description: 'Book teacher meeting',
+      title: 'View Schedule',
+      description: 'Check daily activities',
       icon: Calendar,
-      url: '/guardian/teacher-meetings',
+      url: '/guardian/daily-schedule',
       variant: 'outline' as const,
       urgent: false
     },
     {
-      title: 'Emergency Contact',
-      description: 'Manage emergency contacts',
+      title: 'Child Profile',
+      description: 'Manage child information',
       icon: Phone,
-      url: '/guardian/emergency-contacts',
-      variant: 'destructive' as const,
-      urgent: true
+      url: '/guardian/child-profile',
+      variant: 'outline' as const,
+      urgent: false
     },
     {
-      title: 'Weather & Outdoor',
-      description: 'Check weather for activities',
+      title: 'Notice Board',
+      description: 'Latest updates and news',
       icon: CloudSun,
-      url: '/guardian/weather',
+      url: '/guardian/notice-board',
       variant: 'outline' as const,
       urgent: false
     }

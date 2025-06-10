@@ -298,7 +298,7 @@ const GuardianDashboard = () => {
           <CardContent className="relative p-6">
             <div className="space-y-4">
               {children.map((child) => (
-                <Link key={child.id} to={`/guardian/children/${child.id}`} className="group cursor-pointer block">
+                <Link key={child.id} to={`/guardian/child-profile`} className="group cursor-pointer block">
                   <div className="flex items-center justify-between p-6 rounded-xl hover:bg-gradient-to-r hover:from-green-50 hover:to-transparent transition-all duration-300 border border-transparent hover:border-green-200 hover:shadow-md">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center">

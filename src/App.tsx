@@ -28,6 +28,7 @@ import GuardianApplicationStatus from './pages/guardian/ApplicationStatus';
 import GuardianChildProfile from './pages/guardian/ChildProfile';
 import GuardianPayments from './pages/guardian/Payments';
 import GuardianDocuments from './pages/guardian/Documents';
+import GuardianNewApplication from './pages/guardian/NewApplication';
 import LoginPage from './pages/auth/LoginPage';
 import NotFound from './pages/NotFound';
 
@@ -60,7 +61,7 @@ function App() {
               path="/"
               element={
                 <PrivateRoute>
-                  <Navigate to="/educator" replace />
+                  <Navigate to="/guardian" replace />
                 </PrivateRoute>
               }
             />
@@ -105,6 +106,7 @@ function App() {
               <Route path="child-profile" element={<GuardianChildProfile />} />
               <Route path="payments" element={<GuardianPayments />} />
               <Route path="documents" element={<GuardianDocuments />} />
+              <Route path="new-application" element={<GuardianNewApplication />} />
             </Route>
 
             {/* 404 Route */}

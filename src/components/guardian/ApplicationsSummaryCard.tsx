@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -7,7 +6,6 @@ import { FileText, ArrowRight, CheckCircle, Clock, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const ApplicationsSummaryCard = () => {
-  // Mock data for demonstration
   const applications = {
     active: [
       {
@@ -82,7 +80,7 @@ const ApplicationsSummaryCard = () => {
               Active Applications
             </h4>
             {applications.active.map((app) => (
-              <Link key={app.id} to={`/guardian/application-status/${app.id}`}>
+              <Link key={app.id} to="/guardian/application-status">
                 <div className="p-4 border-2 border-yellow-200 rounded-lg bg-yellow-50/50 hover:bg-yellow-100/50 transition-colors cursor-pointer">
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div>
@@ -113,7 +111,7 @@ const ApplicationsSummaryCard = () => {
               Completed
             </h4>
             {applications.completed.map((app) => (
-              <Link key={app.id} to={`/guardian/application-status/${app.id}`}>
+              <Link key={app.id} to="/guardian/application-status">
                 <div className="p-3 border border-green-200 rounded-lg bg-green-50/50 flex items-center justify-between hover:bg-green-100/50 transition-colors cursor-pointer">
                   <div>
                     <h5 className="font-semibold text-slate-900">{app.childName}</h5>
