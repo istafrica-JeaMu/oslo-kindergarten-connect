@@ -50,6 +50,11 @@ import EducatorChildren from '@/pages/educator/EducatorChildren';
 import EducatorMessages from '@/pages/educator/EducatorMessages';
 import EducatorReports from '@/pages/educator/EducatorReports';
 import EducatorCalendar from '@/pages/educator/EducatorCalendar';
+import EducatorNotes from '@/pages/educator/EducatorNotes';
+import EducatorTeamCollab from '@/pages/educator/EducatorTeamCollab';
+import EducatorLocationTracker from '@/pages/educator/EducatorLocationTracker';
+import EducatorBulletinBoard from '@/pages/educator/EducatorBulletinBoard';
+import EducatorAppointments from '@/pages/educator/EducatorAppointments';
 
 // Other role pages
 import StaffDashboard from '@/pages/staff/StaffDashboard';
@@ -117,6 +122,11 @@ function App() {
                 <Route path="/educator/messages" element={<EducatorMessages />} />
                 <Route path="/educator/reports" element={<EducatorReports />} />
                 <Route path="/educator/calendar" element={<EducatorCalendar />} />
+                <Route path="/educator/notes" element={<EducatorNotes />} />
+                <Route path="/educator/team-collaboration" element={<EducatorTeamCollab />} />
+                <Route path="/educator/location-tracker" element={<EducatorLocationTracker />} />
+                <Route path="/educator/bulletin-board" element={<EducatorBulletinBoard />} />
+                <Route path="/educator/appointments" element={<EducatorAppointments />} />
 
                 {/* Other Role Routes */}
                 <Route path="/staff" element={<StaffDashboard />} />
