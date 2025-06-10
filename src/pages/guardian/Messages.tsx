@@ -86,8 +86,8 @@ const Messages = () => {
   return (
     <div className="container mx-auto px-6 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">{t('messages.title')}</h1>
-        <p className="text-gray-600 mt-2">{t('messages.description')}</p>
+        <h1 className="text-3xl font-bold text-gray-900">{t('dashboard.messages')}</h1>
+        <p className="text-gray-600 mt-2">Kommuniser med barnehagen og følg opp meldinger</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-200px)]">
@@ -95,16 +95,16 @@ const Messages = () => {
         <Card className="lg:col-span-1">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">{t('messages.allChats')}</CardTitle>
+              <CardTitle className="text-lg">Alle samtaler</CardTitle>
               <Button size="sm" variant="outline">
                 <Filter className="h-4 w-4 mr-2" />
-                {t('messages.filter')}
+                Filter
               </Button>
             </div>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
-                placeholder={t('messages.searchConversations')}
+                placeholder="Søk i samtaler..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
@@ -147,7 +147,7 @@ const Messages = () => {
                         )}
                       </div>
                       <Badge variant="secondary" className="mt-1 text-xs">
-                        {t(`messages.badges.${conversation.role.toLowerCase().replace(' ', '')}`)}
+                        {conversation.role}
                       </Badge>
                     </div>
                   </div>
@@ -170,7 +170,7 @@ const Messages = () => {
                   <div>
                     <CardTitle className="text-lg">Sarah Johnson</CardTitle>
                     <CardDescription className="text-sm text-green-600">
-                      {t('messages.onlineNow')}
+                      Pålogget nå
                     </CardDescription>
                   </div>
                 </div>
@@ -204,7 +204,7 @@ const Messages = () => {
                 <div className="border-t p-4">
                   <div className="flex space-x-2">
                     <Input
-                      placeholder={t('messages.typeMessage')}
+                      placeholder="Skriv melding..."
                       value={newMessage}
                       onChange={(e) => setNewMessage(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
@@ -221,10 +221,10 @@ const Messages = () => {
             <CardContent className="flex items-center justify-center h-full">
               <div className="text-center">
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  {t('messages.startConversation')}
+                  Start en samtale
                 </h3>
                 <p className="text-gray-600">
-                  {t('messages.selectConversation')}
+                  Velg en samtale fra sidemenyen for å se meldinger
                 </p>
               </div>
             </CardContent>
