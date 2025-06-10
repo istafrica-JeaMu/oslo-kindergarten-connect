@@ -270,10 +270,7 @@ const ApplicationView = () => {
                             <StatusIcon className="h-3 w-3" />
                             {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
                           </Badge>
-                          <Eye 
-                            className="h-4 w-4 text-gray-400 cursor-help" 
-                            title={statusConfig.description}
-                          />
+                          <Eye className="h-4 w-4 text-gray-400 cursor-help" />
                         </div>
                         <Badge className={`${priorityConfig.color} font-medium flex items-center gap-1`}>
                           <PriorityIcon className="h-3 w-3" />
