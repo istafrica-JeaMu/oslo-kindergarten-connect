@@ -1,3 +1,4 @@
+
 import {
   BrowserRouter as Router,
   Route,
@@ -67,6 +68,18 @@ function App() {
               }
             />
 
+            {/* Shared Routes - Available to all authenticated users */}
+            <Route
+              path="/living-arrangements"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <GuardianLivingArrangements />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
+
             {/* Educator Routes */}
             <Route
               path="/educator"
@@ -106,7 +119,6 @@ function App() {
               <Route path="notice-board/post/:id" element={<PostDetail />} />
               <Route path="application-status" element={<GuardianApplicationStatus />} />
               <Route path="child-profile" element={<GuardianChildProfile />} />
-              <Route path="living-arrangements" element={<GuardianLivingArrangements />} />
               <Route path="payments" element={<GuardianPayments />} />
               <Route path="documents" element={<GuardianDocuments />} />
               <Route path="new-application" element={<GuardianNewApplication />} />
