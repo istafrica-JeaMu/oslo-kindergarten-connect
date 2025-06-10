@@ -1,10 +1,11 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useTranslation } from 'react-i18next';
 import { 
   Search, 
@@ -19,8 +20,15 @@ import {
   AlertTriangle,
   CheckCircle,
   Users,
-  BarChart3
+  BarChart3,
+  Settings,
+  Play
 } from 'lucide-react';
+
+// Import the new workflow components
+import ApplicationWorkflow from '@/components/caseworker/ApplicationWorkflow';
+import BatchProcessingPanel from '@/components/caseworker/BatchProcessingPanel';
+import PlacementDecisionPanel from '@/components/caseworker/PlacementDecisionPanel';
 
 const ReviewQueue = () => {
   const { t } = useTranslation();
@@ -28,6 +36,9 @@ const ReviewQueue = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [priorityFilter, setPriorityFilter] = useState('all');
   const [selectedApplication, setSelectedApplication] = useState<any>(null);
+  const [workflowDialogOpen, setWorkflowDialogOpen] = useState(false);
+  const [placementDialogOpen, setPlacementDialogOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('queue');
 
   // Mock applications data
   const applications = [
@@ -133,6 +144,34 @@ const ReviewQueue = () => {
     setPriorityFilter('all');
   };
 
+  // New workflow handlers
+  const handleStatusChange = (applicationId: string, newStatus: string, reason?: string) => {
+    console.log(`Changing status for ${applicationId} to ${newStatus}`, reason);
+    // Here you would update the application status in your data store
+    setWorkflowDialogOpen(false);
+  };
+
+  const handleBatchAction = (applicationIds: string[], action: string) => {
+    console.log(`Batch action ${action} for applications:`, applicationIds);
+    // Here you would process the batch action
+  };
+
+  const handlePlacementDecision = (applicationId: string, decision: any) => {
+    console.log(`Placement decision for ${applicationId}:`, decision);
+    // Here you would save the placement decision
+    setPlacementDialogOpen(false);
+  };
+
+  const openWorkflowDialog = (application: any) => {
+    setSelectedApplication(application);
+    setWorkflowDialogOpen(true);
+  };
+
+  const openPlacementDialog = (application: any) => {
+    setSelectedApplication(application);
+    setPlacementDialogOpen(true);
+  };
+
   return (
     <div className="space-y-8">
       <div>
@@ -140,7 +179,7 @@ const ReviewQueue = () => {
         <p className="text-gray-600 mt-2">{t('caseworker.reviewQueue.description')}</p>
       </div>
 
-      {/* Statistics */}
+      {/* Statistics - keep existing code */}
       <div className="grid md:grid-cols-5 gap-6">
         <Card className="shadow-lg border-0">
           <CardContent className="pt-6">
@@ -188,169 +227,223 @@ const ReviewQueue = () => {
         </Card>
       </div>
 
-      {/* Filters */}
-      <Card className="shadow-lg border-0">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3">
-            <Filter className="h-5 w-5" />
-            {t('caseworker.reviewQueue.filterApplications')}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-4 gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
-                placeholder={t('caseworker.reviewQueue.searchPlaceholder')}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger>
-                <SelectValue placeholder={t('caseworker.reviewQueue.allStatuses')} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{t('caseworker.reviewQueue.allStatuses')}</SelectItem>
-                <SelectItem value="new">{t('caseworker.reviewQueue.new')}</SelectItem>
-                <SelectItem value="underReview">{t('caseworker.reviewQueue.underReview')}</SelectItem>
-                <SelectItem value="missingDocuments">{t('caseworker.reviewQueue.missingDocs')}</SelectItem>
-              </SelectContent>
-            </Select>
+      {/* Main Content with Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="queue" className="flex items-center gap-2">
+            <FileText className="h-4 w-4" />
+            {t('caseworker.reviewQueue.applicationQueue')}
+          </TabsTrigger>
+          <TabsTrigger value="batch" className="flex items-center gap-2">
+            <Users className="h-4 w-4" />
+            {t('caseworker.reviewQueue.batchProcessing')}
+          </TabsTrigger>
+          <TabsTrigger value="analytics" className="flex items-center gap-2">
+            <BarChart3 className="h-4 w-4" />
+            {t('caseworker.reviewQueue.analytics')}
+          </TabsTrigger>
+        </TabsList>
 
-            <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-              <SelectTrigger>
-                <SelectValue placeholder={t('caseworker.reviewQueue.allPriorities')} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{t('caseworker.reviewQueue.allPriorities')}</SelectItem>
-                <SelectItem value="high">{t('caseworker.reviewQueue.highPriority')}</SelectItem>
-                <SelectItem value="normal">{t('caseworker.reviewQueue.normalPriority')}</SelectItem>
-                <SelectItem value="low">{t('caseworker.reviewQueue.lowPriority')}</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Button variant="outline" onClick={clearFilters}>
-              {t('caseworker.reviewQueue.clearFilters')}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Applications Table */}
-      <Card className="shadow-lg border-0">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3">
-            <FileText className="h-5 w-5" />
-            {t('caseworker.reviewQueue.applications')} ({filteredApplications.length})
-          </CardTitle>
-          <CardDescription>
-            {t('caseworker.reviewQueue.clickToView')}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {filteredApplications.map((app) => (
-              <div
-                key={app.id}
-                className="p-4 border border-gray-200 rounded-xl hover:border-oslo-blue/30 hover:bg-gray-50/50 transition-all cursor-pointer"
-                onClick={() => setSelectedApplication(app)}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-oslo-blue/10 rounded-xl flex items-center justify-center">
-                      <User className="h-6 w-6 text-oslo-blue" />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <h4 className="font-semibold text-gray-900">{app.childName}</h4>
-                        <span className="text-sm text-gray-500">({app.childAge} years)</span>
-                        {app.specialNeeds && (
-                          <Badge variant="outline" className="text-orange-600 border-orange-300 bg-orange-50">
-                            Special Needs
-                          </Badge>
-                        )}
-                        {app.siblingInKindergarten && (
-                          <Badge variant="outline" className="text-blue-600 border-blue-300 bg-blue-50">
-                            Sibling
-                          </Badge>
-                        )}
-                      </div>
-                      <p className="text-gray-600">{app.guardianName}</p>
-                      <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
-                        <span className="flex items-center gap-1">
-                          <Calendar className="h-4 w-4" />
-                          {app.submittedDate}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <MapPin className="h-4 w-4" />
-                          {app.district}
-                        </span>
-                        <span>ID: {app.id}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="flex items-center gap-2 mb-2">
-                      {getStatusBadge(app.status)}
-                      {getPriorityBadge(app.priority)}
-                    </div>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm">
-                        <Eye className="h-4 w-4 mr-2" />
-                        {t('caseworker.reviewQueue.view')}
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <FileText className="h-4 w-4 mr-2" />
-                        {t('caseworker.reviewQueue.review')}
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <MessageSquare className="h-4 w-4 mr-2" />
-                        Contact
-                      </Button>
-                    </div>
-                  </div>
+        <TabsContent value="queue" className="space-y-6">
+          {/* Filters - keep existing code */}
+          <Card className="shadow-lg border-0">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3">
+                <Filter className="h-5 w-5" />
+                {t('caseworker.reviewQueue.filterApplications')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-4 gap-4">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <Input
+                    placeholder={t('caseworker.reviewQueue.searchPlaceholder')}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
                 </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+                
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('caseworker.reviewQueue.allStatuses')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">{t('caseworker.reviewQueue.allStatuses')}</SelectItem>
+                    <SelectItem value="new">{t('caseworker.reviewQueue.new')}</SelectItem>
+                    <SelectItem value="underReview">{t('caseworker.reviewQueue.underReview')}</SelectItem>
+                    <SelectItem value="missingDocuments">{t('caseworker.reviewQueue.missingDocs')}</SelectItem>
+                  </SelectContent>
+                </Select>
 
-      {/* Quick Actions */}
-      <Card className="shadow-lg border-0">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3">
-            <CheckCircle className="h-5 w-5" />
-            {t('caseworker.reviewQueue.quickActions')}
-          </CardTitle>
-          <CardDescription>
-            {t('caseworker.reviewQueue.quickActionsDesc')}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Button className="h-16 flex flex-col gap-2">
-              <Users className="h-5 w-5" />
-              <span className="text-sm">{t('caseworker.reviewQueue.bulkReview')}</span>
-            </Button>
-            <Button variant="outline" className="h-16 flex flex-col gap-2">
-              <FileText className="h-5 w-5" />
-              <span className="text-sm">{t('caseworker.reviewQueue.requestDocuments')}</span>
-            </Button>
-            <Button variant="outline" className="h-16 flex flex-col gap-2">
-              <CheckCircle className="h-5 w-5" />
-              <span className="text-sm">{t('caseworker.reviewQueue.approveApplications')}</span>
-            </Button>
-            <Button variant="outline" className="h-16 flex flex-col gap-2">
-              <MessageSquare className="h-5 w-5" />
-              <span className="text-sm">{t('caseworker.reviewQueue.contactGuardians')}</span>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+                <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('caseworker.reviewQueue.allPriorities')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">{t('caseworker.reviewQueue.allPriorities')}</SelectItem>
+                    <SelectItem value="high">{t('caseworker.reviewQueue.highPriority')}</SelectItem>
+                    <SelectItem value="normal">{t('caseworker.reviewQueue.normalPriority')}</SelectItem>
+                    <SelectItem value="low">{t('caseworker.reviewQueue.lowPriority')}</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Button variant="outline" onClick={clearFilters}>
+                  {t('caseworker.reviewQueue.clearFilters')}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Applications Table with Enhanced Actions */}
+          <Card className="shadow-lg border-0">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3">
+                <FileText className="h-5 w-5" />
+                {t('caseworker.reviewQueue.applications')} ({filteredApplications.length})
+              </CardTitle>
+              <CardDescription>
+                {t('caseworker.reviewQueue.clickToView')}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {filteredApplications.map((app) => (
+                  <div
+                    key={app.id}
+                    className="p-4 border border-gray-200 rounded-xl hover:border-oslo-blue/30 hover:bg-gray-50/50 transition-all"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-oslo-blue/10 rounded-xl flex items-center justify-center">
+                          <User className="h-6 w-6 text-oslo-blue" />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <h4 className="font-semibold text-gray-900">{app.childName}</h4>
+                            <span className="text-sm text-gray-500">({app.childAge} years)</span>
+                            {app.specialNeeds && (
+                              <Badge variant="outline" className="text-orange-600 border-orange-300 bg-orange-50">
+                                Special Needs
+                              </Badge>
+                            )}
+                            {app.siblingInKindergarten && (
+                              <Badge variant="outline" className="text-blue-600 border-blue-300 bg-blue-50">
+                                Sibling
+                              </Badge>
+                            )}
+                          </div>
+                          <p className="text-gray-600">{app.guardianName}</p>
+                          <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                            <span className="flex items-center gap-1">
+                              <Calendar className="h-4 w-4" />
+                              {app.submittedDate}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <MapPin className="h-4 w-4" />
+                              {app.district}
+                            </span>
+                            <span>ID: {app.id}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="flex items-center gap-2 mb-2">
+                          {getStatusBadge(app.status)}
+                          {getPriorityBadge(app.priority)}
+                        </div>
+                        <div className="flex gap-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => openWorkflowDialog(app)}
+                          >
+                            <Settings className="h-4 w-4 mr-2" />
+                            {t('caseworker.reviewQueue.workflow')}
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => openPlacementDialog(app)}
+                          >
+                            <Play className="h-4 w-4 mr-2" />
+                            {t('caseworker.reviewQueue.placement')}
+                          </Button>
+                          <Button variant="outline" size="sm">
+                            <MessageSquare className="h-4 w-4 mr-2" />
+                            {t('caseworker.reviewQueue.contact')}
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="batch">
+          <BatchProcessingPanel 
+            applications={filteredApplications}
+            onBatchAction={handleBatchAction}
+          />
+        </TabsContent>
+
+        <TabsContent value="analytics">
+          <Card>
+            <CardHeader>
+              <CardTitle>{t('caseworker.reviewQueue.processingAnalytics')}</CardTitle>
+              <CardDescription>
+                {t('caseworker.reviewQueue.analyticsDescription')}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-12 text-gray-500">
+                <BarChart3 className="h-16 w-16 mx-auto mb-4 text-gray-300" />
+                <p>{t('caseworker.reviewQueue.analyticsComingSoon')}</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+
+      {/* Workflow Dialog */}
+      <Dialog open={workflowDialogOpen} onOpenChange={setWorkflowDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{t('caseworker.reviewQueue.workflowManagement')}</DialogTitle>
+            <DialogDescription>
+              {t('caseworker.reviewQueue.workflowDescription', { childName: selectedApplication?.childName })}
+            </DialogDescription>
+          </DialogHeader>
+          {selectedApplication && (
+            <ApplicationWorkflow
+              application={selectedApplication}
+              onStatusChange={handleStatusChange}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Placement Decision Dialog */}
+      <Dialog open={placementDialogOpen} onOpenChange={setPlacementDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{t('caseworker.reviewQueue.placementDecision')}</DialogTitle>
+            <DialogDescription>
+              {t('caseworker.reviewQueue.placementDescription', { childName: selectedApplication?.childName })}
+            </DialogDescription>
+          </DialogHeader>
+          {selectedApplication && (
+            <PlacementDecisionPanel
+              application={selectedApplication}
+              onPlacementDecision={handlePlacementDecision}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
