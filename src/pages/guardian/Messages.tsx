@@ -1,235 +1,495 @@
 
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Search, Send, Filter } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { AnimatedAvatar } from '@/components/ui/animated-avatar';
+import { useTranslation } from 'react-i18next';
+import { 
+  Search, 
+  MessageSquare, 
+  Star, 
+  StarOff, 
+  Archive, 
+  Paperclip, 
+  Send,
+  Download,
+  Eye,
+  Phone,
+  Video,
+  MoreHorizontal,
+  ArrowLeft,
+  Plus,
+  Filter
+} from 'lucide-react';
 
 const Messages = () => {
   const { t } = useTranslation('guardian');
-  const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
-  const [newMessage, setNewMessage] = useState('');
+  const [selectedMessage, setSelectedMessage] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [replyText, setReplyText] = useState('');
+  const [showArchived, setShowArchived] = useState(false);
+  const [activeTab, setActiveTab] = useState('all');
 
-  // Mock data for conversations
+  // Mock messages data with chat-like structure
   const conversations = [
     {
-      id: '1',
-      name: 'Sarah Johnson',
-      role: 'Educator',
+      id: 1,
+      participant: {
+        name: 'Sarah Johnson - Educator',
+        role: 'Educator',
+        avatar: '/oslo-logo.svg',
+        online: true
+      },
       lastMessage: 'Emma had a great day today! She participated actively in our art session.',
-      timestamp: '2 min ago',
-      unread: 2,
-      avatar: '/placeholder.svg',
-      online: true
+      timestamp: '2024-03-18T10:30:00',
+      unread: true,
+      starred: false,
+      archived: false,
+      messages: [
+        {
+          id: 1,
+          sender: 'Sarah Johnson',
+          content: 'Good morning! Just wanted to update you on Emma\'s progress today. She did really well in our morning activities.',
+          timestamp: '2024-03-18T09:30:00',
+          type: 'received',
+          attachments: []
+        },
+        {
+          id: 2,
+          sender: 'You',
+          content: 'Thank you for the update! How was she during lunch time?',
+          timestamp: '2024-03-18T10:15:00',
+          type: 'sent',
+          attachments: []
+        },
+        {
+          id: 3,
+          sender: 'Sarah Johnson',
+          content: 'Emma had a great day today! She participated actively in our art session and made some beautiful drawings.',
+          timestamp: '2024-03-18T10:30:00',
+          type: 'received',
+          attachments: [
+            { name: 'Emma_Artwork_Today.jpg', size: '2.1 MB' }
+          ]
+        }
+      ]
     },
     {
-      id: '2',
-      name: 'System Notification',
-      role: 'System',
+      id: 2,
+      participant: {
+        name: 'System Notification',
+        role: 'System',
+        avatar: null,
+        online: false
+      },
       lastMessage: 'Your kindergarten application has been updated.',
-      timestamp: '1 hour ago',
-      unread: 0,
-      avatar: '/placeholder.svg',
-      online: false
+      timestamp: '2024-03-16T14:15:00',
+      unread: false,
+      starred: true,
+      archived: false,
+      messages: [
+        {
+          id: 1,
+          sender: 'System',
+          content: 'Your kindergarten application for Emma has been updated. Please check the application status page for more details.',
+          timestamp: '2024-03-16T14:15:00',
+          type: 'received',
+          attachments: []
+        }
+      ]
     },
     {
-      id: '3',
-      name: 'Mike Thompson',
-      role: 'Case Worker',
+      id: 3,
+      participant: {
+        name: 'Mike Thompson - Case Worker',
+        role: 'Case Worker',
+        avatar: null,
+        online: false
+      },
       lastMessage: 'I have reviewed your documents. Everything looks good!',
-      timestamp: '3 hours ago',
-      unread: 1,
-      avatar: '/placeholder.svg',
-      online: false
+      timestamp: '2024-03-10T09:45:00',
+      unread: false,
+      starred: false,
+      archived: false,
+      messages: [
+        {
+          id: 1,
+          sender: 'Mike Thompson',
+          content: 'I have reviewed your documents for Emma\'s application. Everything looks good and the application is moving forward.',
+          timestamp: '2024-03-10T09:45:00',
+          type: 'received',
+          attachments: []
+        }
+      ]
     }
   ];
 
-  const messages = selectedConversation ? [
-    {
-      id: '1',
-      sender: 'Sarah Johnson',
-      content: 'Good morning! Just wanted to update you on Emma\'s progress.',
-      timestamp: '9:30 AM',
-      isOwn: false
-    },
-    {
-      id: '2',
-      sender: 'You',
-      content: 'Thank you for the update! How was she during lunch?',
-      timestamp: '9:45 AM',
-      isOwn: true
-    },
-    {
-      id: '3',
-      sender: 'Sarah Johnson',
-      content: 'Emma had a great day today! She participated actively in our art session.',
-      timestamp: '10:15 AM',
-      isOwn: false
-    }
-  ] : [];
+  const filteredConversations = conversations.filter(conv => {
+    const matchesSearch = conv.participant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         conv.lastMessage.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesArchived = showArchived ? conv.archived : !conv.archived;
+    const matchesTab = activeTab === 'all' || 
+                      (activeTab === 'educators' && conv.participant.role === 'Educator') ||
+                      (activeTab === 'system' && conv.participant.role === 'System');
+    return matchesSearch && matchesArchived && matchesTab;
+  });
+
+  const unreadCount = conversations.filter(conv => conv.unread && !conv.archived).length;
 
   const handleSendMessage = () => {
-    if (newMessage.trim()) {
-      // Handle sending message
-      setNewMessage('');
+    if (replyText.trim() && selectedMessage) {
+      console.log('Sending message:', replyText);
+      setReplyText('');
     }
   };
 
-  const filteredConversations = conversations.filter(conv =>
-    conv.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const getRoleBadge = (role: string) => {
+    switch (role.toLowerCase()) {
+      case 'system':
+        return <Badge variant="outline" className="text-blue-600 border-blue-200 bg-blue-50 text-xs font-medium">System</Badge>;
+      case 'educator':
+        return <Badge variant="outline" className="text-green-600 border-green-200 bg-green-50 text-xs font-medium">Lærer</Badge>;
+      case 'case worker':
+        return <Badge variant="outline" className="text-purple-600 border-purple-200 bg-purple-50 text-xs font-medium">Saksbehandler</Badge>;
+      default:
+        return <Badge variant="outline" className="text-gray-600 border-gray-200 bg-gray-50 text-xs font-medium">Ansatt</Badge>;
+    }
+  };
+
+  const formatTime = (timestamp: string) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) {
+      return date.toLocaleTimeString('no-NO', { hour: '2-digit', minute: '2-digit' });
+    } else if (diffDays < 7) {
+      return date.toLocaleDateString('no-NO', { weekday: 'short' });
+    } else {
+      return date.toLocaleDateString('no-NO', { month: 'short', day: 'numeric' });
+    }
+  };
 
   return (
-    <div className="container mx-auto px-6 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">{t('dashboard.messages')}</h1>
-        <p className="text-gray-600 mt-2">Kommuniser med barnehagen og følg opp meldinger</p>
+    <div className="h-[calc(100vh-8rem)] flex flex-col">
+      {/* Enhanced Header */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('dashboard.messages')}</h1>
+            <p className="text-gray-600">Kommuniser med barnehagen og følg opp meldinger</p>
+          </div>
+          <div className="flex items-center space-x-3">
+            <Button variant="outline" size="sm" className="hidden md:flex">
+              <Filter className="h-4 w-4 mr-2" />
+              Filter
+            </Button>
+            <Button className="shadow-lg">
+              <Plus className="h-4 w-4 mr-2" />
+              Ny melding
+            </Button>
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-200px)]">
-        {/* Conversations Sidebar */}
-        <Card className="lg:col-span-1">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">Alle samtaler</CardTitle>
-              <Button size="sm" variant="outline">
-                <Filter className="h-4 w-4 mr-2" />
-                Filter
-              </Button>
+      {/* Enhanced Main Chat Interface */}
+      <div className="flex-1 grid lg:grid-cols-5 gap-0 bg-white rounded-2xl border border-slate-200/60 shadow-xl overflow-hidden backdrop-blur-sm">
+        
+        {/* Enhanced Sidebar - Conversations List */}
+        <div className={`lg:col-span-2 border-r border-slate-200/60 flex flex-col bg-gradient-to-b from-slate-50/50 to-white ${selectedMessage ? 'hidden lg:flex' : 'flex'}`}>
+          
+          {/* Enhanced Chat Header */}
+          <div className="p-6 border-b border-slate-200/60 bg-white/80 backdrop-blur-sm">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-gray-900">Meldinger</h2>
+              {unreadCount > 0 && (
+                <Badge className="bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs shadow-lg animate-pulse">
+                  {unreadCount} nye
+                </Badge>
+              )}
             </div>
+            
+            {/* Enhanced Tab Navigation */}
+            <div className="flex space-x-1 bg-slate-100/80 rounded-xl p-1 mb-4 backdrop-blur-sm">
+              <button
+                onClick={() => setActiveTab('all')}
+                className={`flex-1 px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 ${
+                  activeTab === 'all' 
+                    ? 'bg-white text-oslo-blue shadow-md transform scale-[0.98]' 
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
+                }`}
+              >
+                Alle samtaler
+              </button>
+              <button
+                onClick={() => setActiveTab('educators')}
+                className={`flex-1 px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 ${
+                  activeTab === 'educators' 
+                    ? 'bg-white text-oslo-blue shadow-md transform scale-[0.98]' 
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
+                }`}
+              >
+                Lærere
+              </button>
+            </div>
+
+            {/* Enhanced Search */}
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
                 placeholder="Søk i samtaler..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-12 bg-white/80 border-slate-300/60 focus:border-oslo-blue/60 focus:ring-oslo-blue/20 rounded-xl h-12 backdrop-blur-sm"
               />
             </div>
-          </CardHeader>
-          <CardContent className="p-0">
-            <div className="divide-y">
-              {filteredConversations.map((conversation) => (
+          </div>
+
+          {/* Enhanced Conversations List */}
+          <ScrollArea className="flex-1">
+            <div className="p-2">
+              {filteredConversations.map((conversation, index) => (
                 <div
                   key={conversation.id}
-                  className={`p-4 cursor-pointer hover:bg-gray-50 transition-colors ${
-                    selectedConversation === conversation.id ? 'bg-blue-50 border-r-2 border-blue-500' : ''
+                  onClick={() => setSelectedMessage(conversation)}
+                  className={`p-4 m-2 rounded-xl cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[0.99] group ${
+                    selectedMessage?.id === conversation.id 
+                      ? 'bg-gradient-to-r from-oslo-blue/10 to-blue-50 border-l-4 border-l-oslo-blue shadow-md' 
+                      : 'hover:bg-slate-50/80 hover:shadow-sm'
                   }`}
-                  onClick={() => setSelectedConversation(conversation.id)}
+                  style={{
+                    animationDelay: `${index * 50}ms`
+                  }}
                 >
-                  <div className="flex items-start space-x-3">
-                    <div className="relative">
-                      <Avatar className="h-10 w-10">
-                        <AvatarImage src={conversation.avatar} />
-                        <AvatarFallback>{conversation.name.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                      {conversation.online && (
-                        <div className="absolute -bottom-1 -right-1 h-3 w-3 bg-green-500 border-2 border-white rounded-full" />
-                      )}
-                    </div>
+                  <div className="flex items-start space-x-4">
+                    <AnimatedAvatar
+                      name={conversation.participant.name}
+                      role={conversation.participant.role}
+                      online={conversation.participant.online}
+                      size="md"
+                      context="sidebar"
+                    />
+                    
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm font-medium text-gray-900 truncate">
-                          {conversation.name}
-                        </p>
-                        <p className="text-xs text-gray-500">{conversation.timestamp}</p>
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center space-x-2">
+                          <h4 className={`text-sm font-semibold text-gray-900 truncate transition-colors ${
+                            conversation.unread ? 'text-oslo-blue' : ''
+                          }`}>
+                            {conversation.participant.name}
+                          </h4>
+                          {getRoleBadge(conversation.participant.role)}
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          {conversation.starred && (
+                            <Star className="h-3 w-3 text-yellow-500 fill-current animate-pulse" />
+                          )}
+                          <span className="text-xs text-gray-500 font-medium">
+                            {formatTime(conversation.timestamp)}
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex items-center justify-between mt-1">
-                        <p className="text-sm text-gray-600 truncate">{conversation.lastMessage}</p>
-                        {conversation.unread > 0 && (
-                          <Badge variant="destructive" className="ml-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs">
-                            {conversation.unread}
-                          </Badge>
-                        )}
-                      </div>
-                      <Badge variant="secondary" className="mt-1 text-xs">
-                        {conversation.role}
-                      </Badge>
+                      
+                      <p className={`text-sm text-gray-600 truncate leading-relaxed ${
+                        conversation.unread ? 'font-semibold text-gray-800' : ''
+                      }`}>
+                        {conversation.lastMessage}
+                      </p>
+                      
+                      {conversation.unread && (
+                        <div className="flex justify-end mt-3">
+                          <div className="w-2 h-2 bg-gradient-to-r from-oslo-blue to-blue-600 rounded-full animate-pulse shadow-sm"></div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </ScrollArea>
+        </div>
 
-        {/* Message Area */}
-        <Card className="lg:col-span-2">
-          {selectedConversation ? (
+        {/* Enhanced Chat Area */}
+        <div className={`lg:col-span-3 flex flex-col bg-gradient-to-b from-white to-slate-50/30 ${selectedMessage ? 'flex' : 'hidden lg:flex'}`}>
+          {selectedMessage ? (
             <>
-              <CardHeader className="border-b">
-                <div className="flex items-center space-x-3">
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage src="/placeholder.svg" />
-                    <AvatarFallback>SJ</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <CardTitle className="text-lg">Sarah Johnson</CardTitle>
-                    <CardDescription className="text-sm text-green-600">
-                      Pålogget nå
-                    </CardDescription>
+              {/* Enhanced Chat Header */}
+              <div className="p-6 border-b border-slate-200/60 bg-white/90 backdrop-blur-sm">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setSelectedMessage(null)}
+                      className="lg:hidden rounded-full"
+                    >
+                      <ArrowLeft className="h-4 w-4" />
+                    </Button>
+                    
+                    <AnimatedAvatar
+                      name={selectedMessage.participant.name}
+                      role={selectedMessage.participant.role}
+                      online={selectedMessage.participant.online}
+                      size="md"
+                      context="header"
+                    />
+                    
+                    <div>
+                      <h3 className="font-bold text-gray-900 text-lg">{selectedMessage.participant.name}</h3>
+                      <p className="text-sm text-gray-500 font-medium">
+                        {selectedMessage.participant.online ? (
+                          <span className="text-green-600 flex items-center">
+                            <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+                            Pålogget nå
+                          </span>
+                        ) : (
+                          `Sist sett ${formatTime(selectedMessage.timestamp)}`
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center space-x-2">
+                    <Button variant="ghost" size="sm" className="rounded-full hover:bg-oslo-blue/10">
+                      <Phone className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="sm" className="rounded-full hover:bg-oslo-blue/10">
+                      <Video className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="sm" className="rounded-full hover:bg-oslo-blue/10">
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
                   </div>
                 </div>
-              </CardHeader>
-              <CardContent className="flex flex-col h-full p-0">
-                <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                  {messages.map((message) => (
+              </div>
+
+              {/* Enhanced Messages */}
+              <ScrollArea className="flex-1 p-6">
+                <div className="space-y-6">
+                  {selectedMessage.messages.map((message: any, index: number) => (
                     <div
                       key={message.id}
-                      className={`flex ${message.isOwn ? 'justify-end' : 'justify-start'}`}
+                      className={`flex items-end space-x-3 animate-fade-in ${
+                        message.type === 'sent' ? 'justify-end' : 'justify-start'
+                      }`}
+                      style={{
+                        animationDelay: `${index * 100}ms`
+                      }}
                     >
-                      <div
-                        className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                          message.isOwn
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-gray-100 text-gray-900'
-                        }`}
-                      >
-                        <p className="text-sm">{message.content}</p>
-                        <p
-                          className={`text-xs mt-1 ${
-                            message.isOwn ? 'text-blue-100' : 'text-gray-500'
-                          }`}
-                        >
-                          {message.timestamp}
-                        </p>
+                      {message.type === 'received' && (
+                        <AnimatedAvatar
+                          name={message.sender}
+                          role={selectedMessage.participant.role}
+                          size="sm"
+                          context="message"
+                          enableAnimation={false}
+                        />
+                      )}
+                      
+                      <div className={`max-w-[75%] ${message.type === 'sent' ? 'order-2' : 'order-1'}`}>
+                        <div className={`rounded-2xl px-4 py-3 shadow-md transition-transform hover:scale-[1.02] ${
+                          message.type === 'sent' 
+                            ? 'bg-gradient-to-r from-oslo-blue to-blue-600 text-white ml-auto' 
+                            : 'bg-white text-gray-900 border border-slate-200/60'
+                        }`}>
+                          <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+                          
+                          {message.attachments?.length > 0 && (
+                            <div className="mt-3 space-y-2">
+                              {message.attachments.map((attachment: any, index: number) => (
+                                <div key={index} className={`flex items-center justify-between p-3 rounded-xl transition-colors ${
+                                  message.type === 'sent' ? 'bg-white/15 hover:bg-white/20' : 'bg-slate-50 hover:bg-slate-100'
+                                }`}>
+                                  <div className="flex items-center space-x-3">
+                                    <div className={`p-2 rounded-lg ${
+                                      message.type === 'sent' ? 'bg-white/20' : 'bg-oslo-blue/10'
+                                    }`}>
+                                      <Paperclip className="h-4 w-4" />
+                                    </div>
+                                    <div>
+                                      <p className="text-sm font-semibold">{attachment.name}</p>
+                                      <p className="text-xs opacity-70">{attachment.size}</p>
+                                    </div>
+                                  </div>
+                                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full">
+                                    <Download className="h-3 w-3" />
+                                  </Button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                        
+                        <div className={`flex items-center mt-2 space-x-2 ${
+                          message.type === 'sent' ? 'justify-end' : 'justify-start'
+                        }`}>
+                          <span className="text-xs text-gray-500 font-medium">
+                            {new Date(message.timestamp).toLocaleTimeString('no-NO', { 
+                              hour: '2-digit', 
+                              minute: '2-digit' 
+                            })}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
-                <div className="border-t p-4">
-                  <div className="flex space-x-2">
-                    <Input
+              </ScrollArea>
+
+              {/* Enhanced Message Input */}
+              <div className="p-6 border-t border-slate-200/60 bg-white/90 backdrop-blur-sm">
+                <div className="flex items-end space-x-4">
+                  <Button variant="ghost" size="sm" className="mb-3 rounded-full hover:bg-oslo-blue/10">
+                    <Paperclip className="h-4 w-4" />
+                  </Button>
+                  
+                  <div className="flex-1">
+                    <Textarea
                       placeholder="Skriv melding..."
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
-                      onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                      className="flex-1"
+                      value={replyText}
+                      onChange={(e) => setReplyText(e.target.value)}
+                      className="min-h-[50px] max-h-32 resize-none border-slate-300/60 focus:border-oslo-blue/60 focus:ring-oslo-blue/20 rounded-xl bg-white/80 backdrop-blur-sm"
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          handleSendMessage();
+                        }
+                      }}
                     />
-                    <Button onClick={handleSendMessage} size="sm">
-                      <Send className="h-4 w-4" />
-                    </Button>
                   </div>
+                  
+                  <Button 
+                    onClick={handleSendMessage}
+                    disabled={!replyText.trim()}
+                    className="bg-gradient-to-r from-oslo-blue to-blue-600 hover:from-blue-600 hover:to-blue-700 mb-3 rounded-full shadow-lg transform transition-transform hover:scale-105 disabled:opacity-50"
+                    size="sm"
+                  >
+                    <Send className="h-4 w-4" />
+                  </Button>
                 </div>
-              </CardContent>
+              </div>
             </>
           ) : (
-            <CardContent className="flex items-center justify-center h-full">
-              <div className="text-center">
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  Start en samtale
-                </h3>
-                <p className="text-gray-600">
-                  Velg en samtale fra sidemenyen for å se meldinger
+            <div className="flex-1 flex items-center justify-center bg-gradient-to-b from-slate-50/50 to-white">
+              <div className="text-center text-gray-500 animate-fade-in">
+                <div className="relative mb-6">
+                  <MessageSquare className="h-20 w-20 mx-auto text-gray-300" />
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-oslo-blue rounded-full flex items-center justify-center">
+                    <Plus className="h-3 w-3 text-white" />
+                  </div>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Start en samtale</h3>
+                <p className="text-sm text-gray-600 max-w-sm mx-auto leading-relaxed">
+                  Velg en samtale fra sidemenyen for å se meldinger eller start en ny samtale.
                 </p>
               </div>
-            </CardContent>
+            </div>
           )}
-        </Card>
+        </div>
       </div>
     </div>
   );
