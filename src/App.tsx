@@ -27,6 +27,8 @@ import GuardianAttendanceTracking from './pages/guardian/AttendanceTracking';
 import GuardianNoticeBoard from './pages/guardian/NoticeBoard';
 import GuardianApplicationStatus from './pages/guardian/ApplicationStatus';
 import GuardianChildProfile from './pages/guardian/ChildProfile';
+import ChildrenList from './pages/guardian/ChildrenList';
+import ChildProfileDetail from './pages/guardian/ChildProfileDetail';
 import GuardianPayments from './pages/guardian/Payments';
 import GuardianDocuments from './pages/guardian/Documents';
 import GuardianNewApplication from './pages/guardian/NewApplication';
@@ -105,6 +107,14 @@ function AppRoutes() {
         <Route path="notice-board/post/:id" element={<PostDetail />} />
         <Route path="application-status" element={<GuardianApplicationStatus />} />
         <Route path="child-profile" element={<GuardianChildProfile />} />
+        <Route path="children" element={<ChildrenList />} />
+        <Route path="child-profile/:childId" element={<ChildProfileDetail />} />
+        <Route path="child-profile/:childId/application-details" element={<ChildProfileDetail />} />
+        <Route path="child-profile/:childId/attendance" element={<ChildProfileDetail />} />
+        <Route path="child-profile/:childId/consents" element={<ChildProfileDetail />} />
+        <Route path="child-profile/:childId/living-arrangements" element={<ChildProfileDetail />} />
+        <Route path="child-profile/:childId/documents" element={<ChildProfileDetail />} />
+        <Route path="child-profile/:childId/contacts" element={<ChildProfileDetail />} />
         <Route path="payments" element={<GuardianPayments />} />
         <Route path="documents" element={<GuardianDocuments />} />
         <Route path="new-application" element={<GuardianNewApplication />} />
