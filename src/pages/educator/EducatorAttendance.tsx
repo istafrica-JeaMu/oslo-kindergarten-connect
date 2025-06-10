@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -27,15 +26,19 @@ export interface Child {
   id: string;
   name: string;
   age: string;
+  department: string;
   guardian: string;
+  phone: string;
   status: 'present' | 'absent' | 'on-leave';
   checkInTime?: string;
   checkOutTime?: string;
-  expectedPickupTime: string;
+  expectedPickupTime?: string;
   currentLocation: string;
   medicalAlerts: string[];
   missingConsents: string[];
   unreadMessages: number;
+  notes: string[];
+  pickupDelegates: string[];
 }
 
 const EducatorAttendance = () => {
@@ -49,52 +52,68 @@ const EducatorAttendance = () => {
       id: '1',
       name: 'Emma Larsen',
       age: '4 years',
+      department: 'Sunshine Room',
       guardian: 'Anna Larsen',
+      phone: '+47 123 45 678',
       status: 'present',
       checkInTime: '08:30',
       expectedPickupTime: '15:30',
       currentLocation: 'Classroom',
       medicalAlerts: ['Nut allergy'],
       missingConsents: [],
-      unreadMessages: 0
+      unreadMessages: 0,
+      notes: ['Had a great morning playing with blocks'],
+      pickupDelegates: ['Erik Larsen (Father)', 'Ingrid Hansen (Grandmother)']
     },
     {
       id: '2',
       name: 'Oliver Hansen',
-      age: '5 years', 
+      age: '5 years',
+      department: 'Rainbow Group', 
       guardian: 'Maria Hansen',
+      phone: '+47 987 65 432',
       status: 'absent',
       expectedPickupTime: '16:00',
       currentLocation: '',
       medicalAlerts: [],
       missingConsents: ['Photo consent'],
-      unreadMessages: 1
+      unreadMessages: 1,
+      notes: [],
+      pickupDelegates: ['Erik Hansen (Father)']
     },
     {
       id: '3',
       name: 'Lucas Berg',
       age: '3 years',
+      department: 'Star Class',
       guardian: 'Thomas Berg',
+      phone: '+47 555 44 333',
       status: 'present',
       checkInTime: '09:00',
       expectedPickupTime: '16:00',
       currentLocation: 'Playground',
       medicalAlerts: [],
       missingConsents: [],
-      unreadMessages: 0
+      unreadMessages: 0,
+      notes: ['Enjoyed outdoor play activities'],
+      pickupDelegates: ['Maria Berg (Mother)', 'Anna Berg (Aunt)']
     },
     {
       id: '4',
       name: 'Maja Andersen',
       age: '4 years',
+      department: 'Adventure Group',
       guardian: 'Kari Andersen',
+      phone: '+47 777 88 999',
       status: 'on-leave',
       checkOutTime: '12:30',
       expectedPickupTime: '16:30',
       currentLocation: '',
       medicalAlerts: ['Asthma'],
       missingConsents: [],
-      unreadMessages: 0
+      unreadMessages: 0,
+      notes: ['Early pickup for doctor appointment'],
+      pickupDelegates: ['Per Andersen (Father)']
     }
   ];
 
