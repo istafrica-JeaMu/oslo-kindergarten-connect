@@ -6,9 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
-import { ArrowLeft, Download, Edit, Calendar, User, FileText, Phone, Mail, MapPin, AlertTriangle, CheckCircle, Clock, MessageSquare, FileCheck, Users, Star, Flag } from 'lucide-react';
+import { ArrowLeft, Download, Edit, Calendar, User, FileText, Phone, Mail, MapPin, AlertTriangle, CheckCircle, Clock, MessageSquare, FileCheck, Users, Star, Flag, Timer, Pencil, Send, Upload, Eye, Bell, ChevronLeft, ChevronRight } from 'lucide-react';
 import { mockApplications } from '@/types/application';
-import { format, isValid, parseISO } from 'date-fns';
+import { format, isValid, parseISO, differenceInDays, addDays } from 'date-fns';
 import { toast } from 'sonner';
 
 const ApplicationView = () => {
@@ -16,6 +16,9 @@ const ApplicationView = () => {
   const navigate = useNavigate();
   
   const application = mockApplications.find(app => app.id === id);
+  const currentApplicationIndex = mockApplications.findIndex(app => app.id === id);
+  const previousApplication = currentApplicationIndex > 0 ? mockApplications[currentApplicationIndex - 1] : null;
+  const nextApplication = currentApplicationIndex < mockApplications.length - 1 ? mockApplications[currentApplicationIndex + 1] : null;
   
   if (!application) {
     return (
@@ -37,32 +40,67 @@ const ApplicationView = () => {
     );
   }
 
+  // Calculate child age from application data
+  const getChildAge = (childName: string) => {
+    const ageMap: { [key: string]: number } = {
+      'Lina Berg': 4,
+      'Emma Nordahl': 3,
+      'Oscar Hansen': 5,
+      'Sofia Andersen': 3,
+      'Noah Kristensen': 4,
+      'Maja Olsen': 5,
+      'Elias Pettersen': 3,
+      'Isabella Johansen': 4,
+      'Alexander Nilsen': 5
+    };
+    return ageMap[childName] || 4;
+  };
+
+  // Calculate deadline and urgency
+  const getDeadlineInfo = (application: any) => {
+    const createdDate = parseISO(application.createdAt);
+    const deadline = addDays(createdDate, 30); // 30 days to process
+    const daysLeft = differenceInDays(deadline, new Date());
+    
+    return {
+      deadline,
+      daysLeft,
+      isUrgent: daysLeft <= 7,
+      isOverdue: daysLeft < 0
+    };
+  };
+
   const getStatusConfig = (status: string) => {
     const configs = {
       draft: { 
         color: 'bg-amber-100 text-amber-800 border-amber-200',
         icon: Edit,
-        progress: 25
+        progress: 25,
+        description: 'Application is being completed by guardian'
       },
       submitted: { 
         color: 'bg-blue-100 text-blue-800 border-blue-200',
         icon: CheckCircle,
-        progress: 50
+        progress: 50,
+        description: 'Application submitted and awaiting review'
       },
       flagged: { 
         color: 'bg-red-100 text-red-800 border-red-200',
         icon: Flag,
-        progress: 35
+        progress: 35,
+        description: 'Application requires additional documentation or review'
       },
       approved: { 
         color: 'bg-green-100 text-green-800 border-green-200',
         icon: CheckCircle,
-        progress: 100
+        progress: 100,
+        description: 'Application approved and placement confirmed'
       },
       rejected: { 
         color: 'bg-gray-100 text-gray-800 border-gray-200',
         icon: AlertTriangle,
-        progress: 100
+        progress: 100,
+        description: 'Application rejected - review reasons provided'
       }
     };
     return configs[status as keyof typeof configs] || configs.draft;
@@ -103,6 +141,8 @@ const ApplicationView = () => {
 
   const statusConfig = getStatusConfig(application.status);
   const priorityConfig = getPriorityConfig(application.priority);
+  const deadlineInfo = getDeadlineInfo(application);
+  const childAge = getChildAge(application.childName);
   const StatusIcon = statusConfig.icon;
   const PriorityIcon = priorityConfig.icon;
 
@@ -110,11 +150,28 @@ const ApplicationView = () => {
     toast.success(`${action} action initiated`);
   };
 
+  const handleStatusUpdate = (newStatus: string) => {
+    toast.success(`Application status updated to ${newStatus}`);
+  };
+
+  const handleNavigateApplication = (appId: string) => {
+    navigate(`/caseworker/application/${appId}`);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-green-50/20">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      {/* Enhanced Header with Navigation */}
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-4">
+          {/* Breadcrumb */}
+          <div className="flex items-center text-sm text-gray-500 mb-3">
+            <Link to="/caseworker" className="hover:text-oslo-blue">Dashboard</Link>
+            <span className="mx-2">/</span>
+            <Link to="/caseworker/review-queue" className="hover:text-oslo-blue">Review Queue</Link>
+            <span className="mx-2">/</span>
+            <span className="text-gray-900">Application Details</span>
+          </div>
+
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Button variant="outline" onClick={() => navigate(-1)} className="gap-2">
@@ -125,16 +182,49 @@ const ApplicationView = () => {
                 <h1 className="text-2xl font-bold text-gray-900">Application Details</h1>
                 <p className="text-sm text-gray-500">{application.id}</p>
               </div>
+              
+              {/* Application Navigation */}
+              <div className="flex items-center gap-2 ml-8">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => previousApplication && handleNavigateApplication(previousApplication.id)}
+                  disabled={!previousApplication}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <span className="text-sm text-gray-500 px-2">
+                  {currentApplicationIndex + 1} of {mockApplications.length}
+                </span>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => nextApplication && handleNavigateApplication(nextApplication.id)}
+                  disabled={!nextApplication}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
+
+            {/* Enhanced Action Bar */}
             <div className="flex gap-3">
+              <Button variant="outline" className="gap-2" onClick={() => handleQuickAction('Contact Guardian')}>
+                <MessageSquare className="h-4 w-4" />
+                Contact Guardian
+              </Button>
+              <Button variant="outline" className="gap-2" onClick={() => handleQuickAction('Request Documents')}>
+                <Upload className="h-4 w-4" />
+                Request Docs
+              </Button>
               <Button variant="outline" className="gap-2">
                 <Download className="h-4 w-4" />
                 Export PDF
               </Button>
-              {application.status === 'draft' && (
-                <Button className="gap-2">
-                  <Edit className="h-4 w-4" />
-                  Resume Editing
+              {application.status === 'submitted' && (
+                <Button className="gap-2 bg-oslo-blue hover:bg-oslo-blue/90">
+                  <FileCheck className="h-4 w-4" />
+                  Start Review
                 </Button>
               )}
             </div>
@@ -146,7 +236,7 @@ const ApplicationView = () => {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Main Content - Left Side */}
           <div className="lg:col-span-2 space-y-8">
-            {/* Hero Section */}
+            {/* Enhanced Hero Section */}
             <Card className="overflow-hidden border-0 shadow-xl bg-gradient-to-r from-white via-blue-50/30 to-green-50/20">
               <CardContent className="p-8">
                 <div className="flex items-start gap-6">
@@ -162,7 +252,7 @@ const ApplicationView = () => {
                         <div className="flex items-center gap-4 text-gray-600">
                           <span className="flex items-center gap-1">
                             <User className="h-4 w-4" />
-                            Child Application
+                            Age {childAge}
                           </span>
                           <span className="flex items-center gap-1">
                             <Calendar className="h-4 w-4" />
@@ -175,10 +265,16 @@ const ApplicationView = () => {
                         </div>
                       </div>
                       <div className="flex flex-col items-end gap-2">
-                        <Badge className={`${statusConfig.color} font-medium flex items-center gap-1`}>
-                          <StatusIcon className="h-3 w-3" />
-                          {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
-                        </Badge>
+                        <div className="flex items-center gap-2">
+                          <Badge className={`${statusConfig.color} font-medium flex items-center gap-1`}>
+                            <StatusIcon className="h-3 w-3" />
+                            {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
+                          </Badge>
+                          <Eye 
+                            className="h-4 w-4 text-gray-400 cursor-help" 
+                            title={statusConfig.description}
+                          />
+                        </div>
                         <Badge className={`${priorityConfig.color} font-medium flex items-center gap-1`}>
                           <PriorityIcon className="h-3 w-3" />
                           {application.priority.toUpperCase()} Priority
@@ -186,13 +282,37 @@ const ApplicationView = () => {
                       </div>
                     </div>
                     
-                    {/* Progress Bar */}
-                    <div className="space-y-2">
+                    {/* Enhanced Progress and Deadline */}
+                    <div className="space-y-3">
                       <div className="flex justify-between text-sm">
-                        <span className="font-medium text-gray-700">Application Progress</span>
+                        <span className="font-medium text-gray-700">Processing Progress</span>
                         <span className="text-gray-500">{statusConfig.progress}%</span>
                       </div>
                       <Progress value={statusConfig.progress} className="h-2" />
+                      
+                      {/* Deadline Alert */}
+                      <div className={`flex items-center justify-between p-3 rounded-lg ${
+                        deadlineInfo.isOverdue ? 'bg-red-50 border border-red-200' : 
+                        deadlineInfo.isUrgent ? 'bg-yellow-50 border border-yellow-200' : 
+                        'bg-blue-50 border border-blue-200'
+                      }`}>
+                        <div className="flex items-center gap-2">
+                          <Timer className={`h-4 w-4 ${
+                            deadlineInfo.isOverdue ? 'text-red-600' : 
+                            deadlineInfo.isUrgent ? 'text-yellow-600' : 'text-blue-600'
+                          }`} />
+                          <span className="text-sm font-medium">
+                            {deadlineInfo.isOverdue ? 'Overdue' : 
+                             deadlineInfo.isUrgent ? 'Due Soon' : 'Deadline'}
+                          </span>
+                        </div>
+                        <div className="text-sm">
+                          {deadlineInfo.isOverdue ? 
+                            `${Math.abs(deadlineInfo.daysLeft)} days overdue` :
+                            `${deadlineInfo.daysLeft} days remaining`
+                          }
+                        </div>
+                      </div>
                     </div>
 
                     {/* Special Indicators */}
@@ -209,13 +329,19 @@ const ApplicationView = () => {
                           Transfer Request
                         </Badge>
                       )}
+                      {application.priority === 'high' && (
+                        <Badge variant="outline" className="text-red-600 border-red-300 bg-red-50">
+                          <Bell className="h-3 w-3 mr-1" />
+                          High Priority
+                        </Badge>
+                      )}
                     </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Guardian Information */}
+            {/* Guardian Information with Quick Contact */}
             <Card className="border-0 shadow-lg">
               <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100/50">
                 <CardTitle className="flex items-center gap-3 text-oslo-blue">
@@ -230,8 +356,18 @@ const ApplicationView = () => {
                       <label className="text-sm font-medium text-gray-600">Primary Guardian</label>
                       <p className="text-lg font-semibold text-gray-900">{application.guardianName}</p>
                     </div>
-                    <div className="flex gap-4">
-                      <Button variant="outline" size="sm" className="gap-2" onClick={() => handleQuickAction('Call')}>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 text-sm">
+                        <Phone className="h-4 w-4 text-gray-500" />
+                        <span>+47 123 45 678</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <Mail className="h-4 w-4 text-gray-500" />
+                        <span>{application.guardianName.toLowerCase().replace(' ', '.')}@email.com</span>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button size="sm" className="gap-2" onClick={() => handleQuickAction('Call')}>
                         <Phone className="h-4 w-4" />
                         Call
                       </Button>
@@ -246,10 +382,16 @@ const ApplicationView = () => {
                     </div>
                   </div>
                   <div className="space-y-3">
-                    <div className="p-3 bg-gray-50 rounded-lg">
-                      <div className="text-sm text-gray-600">Contact Information</div>
-                      <div className="text-sm font-medium text-gray-900 mt-1">
-                        Available in full application details
+                    <div className="p-3 bg-blue-50 rounded-lg">
+                      <div className="text-sm font-medium text-blue-900">Last Contact</div>
+                      <div className="text-sm text-blue-700 mt-1">
+                        Email sent 3 days ago
+                      </div>
+                    </div>
+                    <div className="p-3 bg-green-50 rounded-lg">
+                      <div className="text-sm font-medium text-green-900">Response Time</div>
+                      <div className="text-sm text-green-700 mt-1">
+                        Usually responds within 24 hours
                       </div>
                     </div>
                   </div>
@@ -257,7 +399,7 @@ const ApplicationView = () => {
               </CardContent>
             </Card>
 
-            {/* Application Details */}
+            {/* Application Details with Inline Editing */}
             <Card className="border-0 shadow-lg">
               <CardHeader className="bg-gradient-to-r from-green-50 to-green-100/50">
                 <CardTitle className="flex items-center gap-3 text-oslo-green">
@@ -284,80 +426,135 @@ const ApplicationView = () => {
                   </div>
                 </div>
                 
-                {application.notes && (
-                  <div>
-                    <label className="text-sm font-medium text-gray-600">Additional Notes</label>
-                    <div className="mt-2 p-4 bg-gray-50 rounded-lg border-l-4 border-gray-300">
-                      <p className="text-gray-900">{application.notes}</p>
-                    </div>
+                {/* Editable Notes Section */}
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-sm font-medium text-gray-600">Caseworker Notes</label>
+                    <Button variant="ghost" size="sm" className="gap-1">
+                      <Pencil className="h-3 w-3" />
+                      Edit
+                    </Button>
                   </div>
-                )}
+                  <div className="p-4 bg-gray-50 rounded-lg border-l-4 border-gray-300">
+                    <p className="text-gray-900">{application.notes || 'No notes added yet.'}</p>
+                  </div>
+                </div>
+
+                {/* Quick Status Update */}
+                <div>
+                  <label className="text-sm font-medium text-gray-600 mb-3 block">Quick Status Update</label>
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => handleStatusUpdate('In Review')}
+                      disabled={application.status === 'submitted'}
+                    >
+                      Mark In Review
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => handleStatusUpdate('Approved')}
+                      className="text-green-700 border-green-300 hover:bg-green-50"
+                    >
+                      Approve
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => handleStatusUpdate('Flagged')}
+                      className="text-red-700 border-red-300 hover:bg-red-50"
+                    >
+                      Flag for Review
+                    </Button>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
-            {/* Timeline */}
+            {/* Communication History */}
             <Card className="border-0 shadow-lg">
               <CardHeader className="bg-gradient-to-r from-purple-50 to-purple-100/50">
                 <CardTitle className="flex items-center gap-3 text-purple-700">
-                  <Clock className="h-5 w-5" />
-                  Timeline & History
+                  <MessageSquare className="h-5 w-5" />
+                  Communication History
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6">
                 <div className="space-y-4">
-                  <div className="flex items-center gap-4 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-400">
+                  <div className="flex items-start gap-4 p-3 bg-blue-50 rounded-lg">
                     <div className="p-2 bg-blue-100 rounded-full">
-                      <FileText className="h-4 w-4 text-blue-600" />
+                      <Send className="h-4 w-4 text-blue-600" />
                     </div>
                     <div className="flex-1">
-                      <div className="font-medium text-gray-900">Application Created</div>
-                      <div className="text-sm text-gray-600">{formatDateLong(application.createdAt)}</div>
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="font-medium text-gray-900">Document Request Sent</div>
+                        <div className="text-sm text-gray-500">3 days ago</div>
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        Requested vaccination records and birth certificate
+                      </div>
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-4 p-3 bg-green-50 rounded-lg border-l-4 border-green-400">
+                  <div className="flex items-start gap-4 p-3 bg-green-50 rounded-lg">
                     <div className="p-2 bg-green-100 rounded-full">
                       <CheckCircle className="h-4 w-4 text-green-600" />
                     </div>
                     <div className="flex-1">
-                      <div className="font-medium text-gray-900">Last Updated</div>
-                      <div className="text-sm text-gray-600">{formatDateLong(application.lastModified)}</div>
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="font-medium text-gray-900">Application Submitted</div>
+                        <div className="text-sm text-gray-500">{formatDateLong(application.lastModified)}</div>
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        Complete application received from guardian
+                      </div>
                     </div>
                   </div>
+
+                  <Button variant="outline" className="w-full gap-2">
+                    <MessageSquare className="h-4 w-4" />
+                    Add Communication Note
+                  </Button>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* Sidebar - Right Side */}
+          {/* Enhanced Sidebar */}
           <div className="space-y-6">
-            {/* Quick Actions */}
+            {/* Priority Quick Actions */}
             <Card className="border-0 shadow-lg bg-gradient-to-br from-oslo-blue/5 to-oslo-green/5">
               <CardHeader>
-                <CardTitle className="text-oslo-blue">Quick Actions</CardTitle>
-                <CardDescription>Manage this application</CardDescription>
+                <CardTitle className="text-oslo-blue">Priority Actions</CardTitle>
+                <CardDescription>Most common tasks for this application</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
-                <Button className="w-full justify-start gap-3 bg-oslo-blue hover:bg-oslo-blue/90" onClick={() => handleQuickAction('Review')}>
-                  <FileCheck className="h-4 w-4" />
-                  Start Review Process
-                </Button>
-                <Button variant="outline" className="w-full justify-start gap-3" onClick={() => handleQuickAction('Request Documents')}>
-                  <FileText className="h-4 w-4" />
-                  Request Documents
-                </Button>
+                {application.status === 'submitted' && (
+                  <Button className="w-full justify-start gap-3 bg-oslo-blue hover:bg-oslo-blue/90" onClick={() => handleQuickAction('Start Review')}>
+                    <FileCheck className="h-4 w-4" />
+                    Start Review Process
+                  </Button>
+                )}
+                {application.status === 'flagged' && (
+                  <Button className="w-full justify-start gap-3 bg-red-600 hover:bg-red-700 text-white" onClick={() => handleQuickAction('Resolve Issues')}>
+                    <AlertTriangle className="h-4 w-4" />
+                    Resolve Flagged Issues
+                  </Button>
+                )}
                 <Button variant="outline" className="w-full justify-start gap-3" onClick={() => handleQuickAction('Schedule Meeting')}>
                   <Calendar className="h-4 w-4" />
                   Schedule Meeting
                 </Button>
-                <Button variant="outline" className="w-full justify-start gap-3" onClick={() => handleQuickAction('Contact Guardian')}>
-                  <MessageSquare className="h-4 w-4" />
-                  Contact Guardian
+                <Button variant="outline" className="w-full justify-start gap-3" onClick={() => handleQuickAction('Check Placement Availability')}>
+                  <MapPin className="h-4 w-4" />
+                  Check Placement Availability
                 </Button>
               </CardContent>
             </Card>
 
-            {/* Status Summary */}
+            {/* Enhanced Status Summary */}
             <Card className="border-0 shadow-lg">
               <CardHeader>
                 <CardTitle>Application Summary</CardTitle>
@@ -365,24 +562,30 @@ const ApplicationView = () => {
               <CardContent className="space-y-4">
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Status</span>
+                    <span className="text-sm text-gray-600">Current Status</span>
                     <Badge className={statusConfig.color}>
                       {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
                     </Badge>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Priority</span>
+                    <span className="text-sm text-gray-600">Priority Level</span>
                     <Badge className={priorityConfig.color}>
                       {application.priority.toUpperCase()}
                     </Badge>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Location</span>
-                    <span className="text-sm font-medium">Oslo</span>
+                    <span className="text-sm text-gray-600">Child Age</span>
+                    <span className="text-sm font-medium">{childAge} years</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Type</span>
+                    <span className="text-sm text-gray-600">Application Type</span>
                     <span className="text-sm font-medium">{application.applicationType}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Processing Time</span>
+                    <span className={`text-sm font-medium ${deadlineInfo.isUrgent ? 'text-red-600' : 'text-gray-900'}`}>
+                      {differenceInDays(new Date(), parseISO(application.createdAt))} days
+                    </span>
                   </div>
                 </div>
                 
@@ -391,32 +594,75 @@ const ApplicationView = () => {
                 <div className="space-y-2">
                   <h4 className="font-medium text-gray-900">Next Steps</h4>
                   <p className="text-sm text-gray-600">
-                    {application.status === 'draft' && 'Begin initial review and verification'}
-                    {application.status === 'submitted' && 'Continue processing and placement decisions'}
-                    {application.status === 'flagged' && 'Address flagged issues and requirements'}
-                    {application.status === 'approved' && 'Finalize placement and notify guardian'}
-                    {application.status === 'rejected' && 'Review rejection reasons and provide feedback'}
+                    {application.status === 'draft' && 'Wait for guardian to complete application'}
+                    {application.status === 'submitted' && 'Begin document verification and placement assessment'}
+                    {application.status === 'flagged' && 'Address missing documentation and requirements'}
+                    {application.status === 'approved' && 'Coordinate placement start date with kindergarten'}
+                    {application.status === 'rejected' && 'Provide feedback and guidance for reapplication'}
                   </p>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Documents Checklist */}
+            {/* Documents Status */}
             <Card className="border-0 shadow-lg">
               <CardHeader>
-                <CardTitle>Required Documents</CardTitle>
+                <CardTitle>Document Status</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
                   {['Birth Certificate', 'Proof of Address', 'Medical Records', 'Guardian ID'].map((doc, index) => (
-                    <div key={index} className="flex items-center gap-3">
-                      <CheckCircle className="h-4 w-4 text-green-600" />
-                      <span className="text-sm text-gray-700">{doc}</span>
+                    <div key={index} className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <span className="text-sm text-gray-700">{doc}</span>
+                      </div>
+                      <Button variant="ghost" size="sm">
+                        <Eye className="h-3 w-3" />
+                      </Button>
                     </div>
                   ))}
-                  <div className="flex items-center gap-3">
-                    <AlertTriangle className="h-4 w-4 text-amber-600" />
-                    <span className="text-sm text-gray-700">Income Verification</span>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <AlertTriangle className="h-4 w-4 text-amber-600" />
+                      <span className="text-sm text-gray-700">Income Verification</span>
+                    </div>
+                    <Button variant="ghost" size="sm" className="text-amber-600">
+                      Request
+                    </Button>
+                  </div>
+                </div>
+                
+                <Separator className="my-4" />
+                
+                <Button variant="outline" className="w-full gap-2">
+                  <Upload className="h-4 w-4" />
+                  Upload Additional Documents
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Similar Applications */}
+            <Card className="border-0 shadow-lg">
+              <CardHeader>
+                <CardTitle>Similar Applications</CardTitle>
+                <CardDescription>Applications with similar criteria</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="text-sm">
+                    <div className="flex justify-between mb-1">
+                      <span className="text-gray-600">Same age group</span>
+                      <span className="font-medium">12 pending</span>
+                    </div>
+                    <div className="flex justify-between mb-1">
+                      <span className="text-gray-600">Same district</span>
+                      <span className="font-medium">8 pending</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Same kindergarten</span>
+                      <span className="font-medium">3 pending</span>
+                    </div>
                   </div>
                 </div>
               </CardContent>
