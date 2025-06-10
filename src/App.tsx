@@ -34,7 +34,7 @@ import PostDetail from './pages/guardian/PostDetail';
 import LoginPage from './pages/auth/LoginPage';
 import NotFound from './pages/NotFound';
 
-function App() {
+function AppRoutes() {
   function PrivateRoute({ children }: { children: JSX.Element }) {
     const { user, isLoading } = useAuth();
     
@@ -86,75 +86,81 @@ function App() {
   }
 
   return (
+    <Routes>
+      {/* Public Routes */}
+      <Route path="/login" element={<LoginPage />} />
+
+      {/* Root redirect based on user role */}
+      <Route path="/" element={<RootRedirect />} />
+
+      {/* Educator Routes */}
+      <Route
+        path="/educator"
+        element={
+          <PrivateRoute>
+            <Layout />
+          </PrivateRoute>
+        }
+      >
+        <Route index element={<EducatorDashboard />} />
+        <Route path="attendance" element={<EducatorAttendance />} />
+        <Route path="children" element={<EducatorChildren />} />
+        <Route path="messages" element={<EducatorMessages />} />
+        <Route path="reports" element={<EducatorReports />} />
+        <Route path="calendar" element={<EducatorCalendar />} />
+        <Route path="location-tracker" element={<EducatorLocationTracker />} />
+        <Route path="appointments" element={<EducatorAppointments />} />
+        <Route path="notes" element={<EducatorNotes />} />
+        <Route path="bulletin-board" element={<EducatorBulletinBoard />} />
+        <Route path="team-collaboration" element={<EducatorTeamCollab />} />
+      </Route>
+
+      {/* Guardian Routes */}
+      <Route
+        path="/guardian"
+        element={
+          <PrivateRoute>
+            <Layout />
+          </PrivateRoute>
+        }
+      >
+        <Route index element={<GuardianDashboard />} />
+        <Route path="messages" element={<GuardianMessages />} />
+        <Route path="daily-schedule" element={<GuardianDailySchedule />} />
+        <Route path="attendance-tracking" element={<GuardianAttendanceTracking />} />
+        <Route path="notice-board" element={<GuardianNoticeBoard />} />
+        <Route path="notice-board/post/:id" element={<PostDetail />} />
+        <Route path="application-status" element={<GuardianApplicationStatus />} />
+        <Route path="child-profile" element={<GuardianChildProfile />} />
+        <Route path="payments" element={<GuardianPayments />} />
+        <Route path="documents" element={<GuardianDocuments />} />
+        <Route path="new-application" element={<GuardianNewApplication />} />
+      </Route>
+
+      {/* Living Arrangements - Available to all authenticated users */}
+      <Route
+        path="/living-arrangements"
+        element={
+          <PrivateRoute>
+            <Layout />
+          </PrivateRoute>
+        }
+      >
+        <Route index element={<GuardianLivingArrangements />} />
+      </Route>
+
+      {/* 404 Route */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+}
+
+function App() {
+  return (
     <LanguageProvider>
       <AuthProvider>
         <Router>
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/login" element={<LoginPage />} />
-
-            {/* Root redirect based on user role */}
-            <Route path="/" element={<RootRedirect />} />
-
-            {/* Educator Routes */}
-            <Route
-              path="/educator"
-              element={
-                <PrivateRoute>
-                  <Layout />
-                </PrivateRoute>
-              }
-            >
-              <Route index element={<EducatorDashboard />} />
-              <Route path="attendance" element={<EducatorAttendance />} />
-              <Route path="children" element={<EducatorChildren />} />
-              <Route path="messages" element={<EducatorMessages />} />
-              <Route path="reports" element={<EducatorReports />} />
-              <Route path="calendar" element={<EducatorCalendar />} />
-              <Route path="location-tracker" element={<EducatorLocationTracker />} />
-              <Route path="appointments" element={<EducatorAppointments />} />
-              <Route path="notes" element={<EducatorNotes />} />
-              <Route path="bulletin-board" element={<EducatorBulletinBoard />} />
-              <Route path="team-collaboration" element={<EducatorTeamCollab />} />
-            </Route>
-
-            {/* Guardian Routes */}
-            <Route
-              path="/guardian"
-              element={
-                <PrivateRoute>
-                  <Layout />
-                </PrivateRoute>
-              }
-            >
-              <Route index element={<GuardianDashboard />} />
-              <Route path="messages" element={<GuardianMessages />} />
-              <Route path="daily-schedule" element={<GuardianDailySchedule />} />
-              <Route path="attendance-tracking" element={<GuardianAttendanceTracking />} />
-              <Route path="notice-board" element={<GuardianNoticeBoard />} />
-              <Route path="notice-board/post/:id" element={<PostDetail />} />
-              <Route path="application-status" element={<GuardianApplicationStatus />} />
-              <Route path="child-profile" element={<GuardianChildProfile />} />
-              <Route path="payments" element={<GuardianPayments />} />
-              <Route path="documents" element={<GuardianDocuments />} />
-              <Route path="new-application" element={<GuardianNewApplication />} />
-            </Route>
-
-            {/* Living Arrangements - Available to all authenticated users */}
-            <Route
-              path="/living-arrangements"
-              element={
-                <PrivateRoute>
-                  <Layout />
-                </PrivateRoute>
-              }
-            >
-              <Route index element={<GuardianLivingArrangements />} />
-            </Route>
-
-            {/* 404 Route */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <AppRoutes />
         </Router>
       </AuthProvider>
     </LanguageProvider>
