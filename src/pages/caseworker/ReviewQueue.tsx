@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -327,64 +326,109 @@ const ReviewQueue = () => {
         </Card>
       </div>
 
-      {/* Enhanced Statistics */}
+      {/* Enhanced Statistics with Professional Design */}
       <div className="grid md:grid-cols-5 gap-6">
-        <Card className="shadow-lg border-0 bg-gradient-to-br from-oslo-blue/10 to-oslo-blue/5 hover:shadow-xl transition-all">
-          <CardContent className="pt-6">
-            <div className="text-center">
-              <div className="w-12 h-12 bg-oslo-blue/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                <FileText className="h-6 w-6 text-oslo-blue" />
+        {/* Total Applications Card */}
+        <Card className="relative overflow-hidden border-0 bg-white shadow-xl hover:shadow-2xl transition-all duration-300 group">
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/30 to-blue-100/20" />
+          <CardContent className="relative p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-blue-100 rounded-xl">
+                <FileText className="h-6 w-6 text-blue-600" />
               </div>
-              <p className="text-sm text-gray-600 mb-1">{t('caseworker.reviewQueue.totalApplications')}</p>
-              <p className="text-3xl font-bold text-oslo-blue">{stats.total}</p>
+              <div className="text-right">
+                <div className="text-3xl font-bold text-slate-800 mb-1">{stats.total}</div>
+                <div className="text-sm font-medium text-slate-600">{t('caseworker.reviewQueue.totalApplications')}</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-full bg-blue-100 rounded-full h-2">
+                <div className="bg-blue-600 h-2 rounded-full" style={{ width: '100%' }} />
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-lg border-0 bg-gradient-to-br from-blue-100/50 to-blue-50 hover:shadow-xl transition-all">
-          <CardContent className="pt-6">
-            <div className="text-center">
-              <div className="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Star className="h-6 w-6 text-blue-600" />
+        {/* New Applications Card */}
+        <Card className="relative overflow-hidden border-0 bg-white shadow-xl hover:shadow-2xl transition-all duration-300 group">
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-green-50/30 to-green-100/20" />
+          <CardContent className="relative p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-green-100 rounded-xl">
+                <Star className="h-6 w-6 text-green-600" />
               </div>
-              <p className="text-sm text-gray-600 mb-1">{t('caseworker.reviewQueue.new')}</p>
-              <p className="text-3xl font-bold text-blue-600">{stats.new}</p>
+              <div className="text-right">
+                <div className="text-3xl font-bold text-slate-800 mb-1">{stats.new}</div>
+                <div className="text-sm font-medium text-slate-600">{t('caseworker.reviewQueue.new')}</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-full bg-green-100 rounded-full h-2">
+                <div className="bg-green-600 h-2 rounded-full" style={{ width: `${(stats.new / stats.total) * 100}%` }} />
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-lg border-0 bg-gradient-to-br from-yellow-100/50 to-yellow-50 hover:shadow-xl transition-all">
-          <CardContent className="pt-6">
-            <div className="text-center">
-              <div className="w-12 h-12 bg-yellow-200 rounded-full flex items-center justify-center mx-auto mb-3">
+        {/* Under Review Card */}
+        <Card className="relative overflow-hidden border-0 bg-white shadow-xl hover:shadow-2xl transition-all duration-300 group">
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-yellow-50/30 to-yellow-100/20" />
+          <CardContent className="relative p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-yellow-100 rounded-xl">
                 <Clock className="h-6 w-6 text-yellow-600" />
               </div>
-              <p className="text-sm text-gray-600 mb-1">{t('caseworker.reviewQueue.underReview')}</p>
-              <p className="text-3xl font-bold text-yellow-600">{stats.underReview}</p>
+              <div className="text-right">
+                <div className="text-3xl font-bold text-slate-800 mb-1">{stats.underReview}</div>
+                <div className="text-sm font-medium text-slate-600">{t('caseworker.reviewQueue.underReview')}</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-full bg-yellow-100 rounded-full h-2">
+                <div className="bg-yellow-600 h-2 rounded-full" style={{ width: `${(stats.underReview / stats.total) * 100}%` }} />
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-lg border-0 bg-gradient-to-br from-red-100/50 to-red-50 hover:shadow-xl transition-all">
-          <CardContent className="pt-6">
-            <div className="text-center">
-              <div className="w-12 h-12 bg-red-200 rounded-full flex items-center justify-center mx-auto mb-3">
+        {/* Missing Documents Card */}
+        <Card className="relative overflow-hidden border-0 bg-white shadow-xl hover:shadow-2xl transition-all duration-300 group">
+          <div className="absolute inset-0 bg-gradient-to-br from-red-50 via-rose-50/30 to-red-100/20" />
+          <CardContent className="relative p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-red-100 rounded-xl">
                 <AlertTriangle className="h-6 w-6 text-red-600" />
               </div>
-              <p className="text-sm text-gray-600 mb-1">{t('caseworker.reviewQueue.missingDocs')}</p>
-              <p className="text-3xl font-bold text-red-600">{stats.missingDocs}</p>
+              <div className="text-right">
+                <div className="text-3xl font-bold text-slate-800 mb-1">{stats.missingDocs}</div>
+                <div className="text-sm font-medium text-slate-600">{t('caseworker.reviewQueue.missingDocs')}</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-full bg-red-100 rounded-full h-2">
+                <div className="bg-red-600 h-2 rounded-full" style={{ width: `${(stats.missingDocs / stats.total) * 100}%` }} />
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-lg border-0 bg-gradient-to-br from-green-100/50 to-green-50 hover:shadow-xl transition-all">
-          <CardContent className="pt-6">
-            <div className="text-center">
-              <div className="w-12 h-12 bg-green-200 rounded-full flex items-center justify-center mx-auto mb-3">
-                <TrendingUp className="h-6 w-6 text-green-600" />
+        {/* Average Processing Card */}
+        <Card className="relative overflow-hidden border-0 bg-white shadow-xl hover:shadow-2xl transition-all duration-300 group">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-violet-50/30 to-purple-100/20" />
+          <CardContent className="relative p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-purple-100 rounded-xl">
+                <TrendingUp className="h-6 w-6 text-purple-600" />
               </div>
-              <p className="text-sm text-gray-600 mb-1">{t('caseworker.reviewQueue.avgProcessing')}</p>
-              <p className="text-3xl font-bold text-green-600">{stats.avgProcessing}d</p>
+              <div className="text-right">
+                <div className="text-3xl font-bold text-slate-800 mb-1">{stats.avgProcessing}d</div>
+                <div className="text-sm font-medium text-slate-600">{t('caseworker.reviewQueue.avgProcessing')}</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-full bg-purple-100 rounded-full h-2">
+                <div className="bg-purple-600 h-2 rounded-full" style={{ width: '75%' }} />
+              </div>
             </div>
           </CardContent>
         </Card>
