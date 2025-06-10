@@ -22,6 +22,12 @@ import EducatorTeamCollab from './pages/educator/EducatorTeamCollab';
 import GuardianDashboard from './pages/guardian/GuardianDashboard';
 import GuardianMessages from './pages/guardian/Messages';
 import GuardianDailySchedule from './pages/guardian/DailySchedule';
+import GuardianAttendanceTracking from './pages/guardian/AttendanceTracking';
+import GuardianNoticeBoard from './pages/guardian/NoticeBoard';
+import GuardianApplicationStatus from './pages/guardian/ApplicationStatus';
+import GuardianChildProfile from './pages/guardian/ChildProfile';
+import GuardianPayments from './pages/guardian/Payments';
+import GuardianDocuments from './pages/guardian/Documents';
 import LoginPage from './pages/auth/LoginPage';
 import NotFound from './pages/NotFound';
 
@@ -93,6 +99,12 @@ function App() {
               <Route index element={<GuardianDashboard />} />
               <Route path="messages" element={<GuardianMessages />} />
               <Route path="daily-schedule" element={<GuardianDailySchedule />} />
+              <Route path="attendance-tracking" element={<GuardianAttendanceTracking />} />
+              <Route path="notice-board" element={<GuardianNoticeBoard />} />
+              <Route path="application-status" element={<GuardianApplicationStatus />} />
+              <Route path="child-profile" element={<GuardianChildProfile />} />
+              <Route path="payments" element={<GuardianPayments />} />
+              <Route path="documents" element={<GuardianDocuments />} />
             </Route>
 
             {/* 404 Route */}
