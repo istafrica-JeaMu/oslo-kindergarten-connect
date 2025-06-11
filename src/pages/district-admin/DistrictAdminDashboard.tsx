@@ -1,7 +1,9 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
+import { Link } from 'react-router-dom';
 import { 
   Users, 
   FileText, 
@@ -12,7 +14,13 @@ import {
   AlertTriangle,
   TrendingUp,
   MapPin,
-  School
+  School,
+  Settings,
+  Shield,
+  UserCheck,
+  ClipboardList,
+  BarChart3,
+  Eye
 } from 'lucide-react';
 
 const DistrictAdminDashboard = () => {
@@ -53,16 +61,75 @@ const DistrictAdminDashboard = () => {
     }
   ];
 
+  const adminModules = [
+    {
+      title: 'Kindergarten Management',
+      description: 'Configure and manage all kindergartens in your district',
+      icon: School,
+      href: '/district-admin/kindergartens',
+      color: 'bg-blue-50 hover:bg-blue-100 border-blue-200',
+      iconColor: 'text-blue-600'
+    },
+    {
+      title: 'User & Role Management',
+      description: 'Manage staff accounts, roles and permissions',
+      icon: UserCheck,
+      href: '/district-admin/users',
+      color: 'bg-green-50 hover:bg-green-100 border-green-200',
+      iconColor: 'text-green-600'
+    },
+    {
+      title: 'Placement Calendar',
+      description: 'Configure placement periods and application windows',
+      icon: Calendar,
+      href: '/district-admin/placement-calendar',
+      color: 'bg-purple-50 hover:bg-purple-100 border-purple-200',
+      iconColor: 'text-purple-600'
+    },
+    {
+      title: 'Policy Configuration',
+      description: 'Set district policies and system parameters',
+      icon: Settings,
+      href: '/district-admin/policies',
+      color: 'bg-orange-50 hover:bg-orange-100 border-orange-200',
+      iconColor: 'text-orange-600'
+    },
+    {
+      title: 'Self-Service Features',
+      description: 'Enable/disable parent-facing features',
+      icon: Shield,
+      href: '/district-admin/self-service',
+      color: 'bg-indigo-50 hover:bg-indigo-100 border-indigo-200',
+      iconColor: 'text-indigo-600'
+    },
+    {
+      title: 'Monitoring & Analytics',
+      description: 'View district-wide analytics and reports',
+      icon: BarChart3,
+      href: '/district-admin/analytics',
+      color: 'bg-pink-50 hover:bg-pink-100 border-pink-200',
+      iconColor: 'text-pink-600'
+    },
+    {
+      title: 'Audit Logs',
+      description: 'Review system actions and compliance logs',
+      icon: Eye,
+      href: '/district-admin/audit-logs',
+      color: 'bg-slate-50 hover:bg-slate-100 border-slate-200',
+      iconColor: 'text-slate-600'
+    }
+  ];
+
   return (
     <div className="space-y-8">
       {/* Welcome Section */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">
-            Welcome back, {user?.name}
+            District System Administration
           </h1>
           <p className="text-slate-600 mt-2">
-            District Administrator - {user?.district}
+            Welcome back, {user?.name} - {user?.district}
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -100,124 +167,97 @@ const DistrictAdminDashboard = () => {
         ))}
       </div>
 
-      {/* Main Content Grid */}
-      <div className="grid lg:grid-cols-3 gap-6">
-        {/* District Overview */}
-        <Card className="lg:col-span-2">
+      {/* Admin Modules */}
+      <div>
+        <h2 className="text-2xl font-bold text-slate-900 mb-6">Administration Modules</h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {adminModules.map((module, index) => (
+            <Card key={index} className={`transition-all duration-200 hover:shadow-lg ${module.color}`}>
+              <CardContent className="p-6">
+                <Link to={module.href} className="block">
+                  <div className="flex items-start gap-4">
+                    <div className={`w-12 h-12 rounded-xl bg-white flex items-center justify-center ${module.iconColor}`}>
+                      <module.icon className="w-6 h-6" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-slate-900 mb-2">{module.title}</h3>
+                      <p className="text-sm text-slate-600 mb-4">{module.description}</p>
+                      <Button variant="ghost" size="sm" className="text-slate-700 hover:text-slate-900">
+                        Access Module →
+                      </Button>
+                    </div>
+                  </div>
+                </Link>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Quick Overview */}
+      <div className="grid lg:grid-cols-2 gap-6">
+        {/* Recent Activity */}
+        <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Building2 className="w-5 h-5" />
-              Kindergarten Overview
+              <TrendingUp className="w-5 h-5" />
+              Recent District Activity
             </CardTitle>
-            <CardDescription>
-              Performance and status across all kindergartens in your district
-            </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {[
-                { name: 'Sentrum Barnehage', capacity: '120/125', status: 'Excellent', rating: 4.8, type: 'public' },
-                { name: 'Nordre Barnehage', capacity: '98/110', status: 'Good', rating: 4.5, type: 'public' },
-                { name: 'Private Kids AS', capacity: '85/90', status: 'Very Good', rating: 4.6, type: 'private' },
-              ].map((kindergarten, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border rounded-lg hover:bg-slate-50">
-                  <div className="flex items-center gap-4">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold ${
-                      kindergarten.type === 'public' ? 'bg-blue-500' : 'bg-purple-500'
-                    }`}>
-                      {kindergarten.name.split(' ')[0][0]}
-                    </div>
-                    <div>
-                      <p className="font-medium text-slate-900">{kindergarten.name}</p>
-                      <p className="text-sm text-slate-600">Capacity: {kindergarten.capacity} • Rating: {kindergarten.rating}/5</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant={
-                      kindergarten.status === 'Excellent' ? 'default' : 
-                      kindergarten.status === 'Very Good' ? 'secondary' : 'outline'
-                    }>
-                      {kindergarten.status}
-                    </Badge>
-                    <Badge variant="outline">
-                      {kindergarten.type === 'public' ? 'Public' : 'Private'}
-                    </Badge>
+          <CardContent className="space-y-4">
+            {[
+              { action: 'New kindergarten added', user: 'System Admin', time: '2 hours ago', type: 'success' },
+              { action: 'User permissions updated', user: 'Erik Johansen', time: '4 hours ago', type: 'info' },
+              { action: 'Placement period configured', user: 'System Admin', time: '1 day ago', type: 'info' },
+              { action: 'Policy settings modified', user: 'District Admin', time: '2 days ago', type: 'warning' }
+            ].map((activity, index) => (
+              <div key={index} className="flex items-center justify-between p-3 border rounded-lg hover:bg-slate-50">
+                <div className="flex items-center gap-3">
+                  <div className={`w-2 h-2 rounded-full ${
+                    activity.type === 'success' ? 'bg-green-500' : 
+                    activity.type === 'warning' ? 'bg-orange-500' : 'bg-blue-500'
+                  }`} />
+                  <div>
+                    <p className="font-medium text-slate-900">{activity.action}</p>
+                    <p className="text-sm text-slate-600">by {activity.user}</p>
                   </div>
                 </div>
-              ))}
-            </div>
+                <p className="text-sm text-slate-500">{activity.time}</p>
+              </div>
+            ))}
           </CardContent>
         </Card>
 
-        {/* District Actions & Updates */}
-        <div className="space-y-6">
-          {/* Quick Actions */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5" />
-                District Actions
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <button className="w-full p-3 text-left border rounded-lg hover:bg-blue-50 hover:border-blue-200 transition-colors">
-                <div className="flex items-center gap-3">
-                  <FileText className="w-5 h-5 text-blue-600" />
-                  <div>
-                    <p className="font-medium text-slate-900">Review Applications</p>
-                    <p className="text-sm text-slate-600">234 pending</p>
-                  </div>
-                </div>
-              </button>
-              
-              <button className="w-full p-3 text-left border rounded-lg hover:bg-green-50 hover:border-green-200 transition-colors">
-                <div className="flex items-center gap-3">
-                  <School className="w-5 h-5 text-green-600" />
-                  <div>
-                    <p className="font-medium text-slate-900">Kindergarten Inspections</p>
-                    <p className="text-sm text-slate-600">5 scheduled</p>
-                  </div>
-                </div>
-              </button>
-              
-              <button className="w-full p-3 text-left border rounded-lg hover:bg-purple-50 hover:border-purple-200 transition-colors">
-                <div className="flex items-center gap-3">
-                  <Users className="w-5 h-5 text-purple-600" />
-                  <div>
-                    <p className="font-medium text-slate-900">Staff Management</p>
-                    <p className="text-sm text-slate-600">23 kindergartens</p>
-                  </div>
-                </div>
-              </button>
-            </CardContent>
-          </Card>
+        {/* District Alerts */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-orange-500" />
+              District Alerts & Notifications
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-sm font-medium text-red-800">Capacity Alert</p>
+              <p className="text-sm text-red-700">3 kindergartens over capacity</p>
+            </div>
+            
+            <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <p className="text-sm font-medium text-yellow-800">Placement Deadline</p>
+              <p className="text-sm text-yellow-700">Spring 2025 applications close in 5 days</p>
+            </div>
+            
+            <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-sm font-medium text-blue-800">System Update</p>
+              <p className="text-sm text-blue-700">Scheduled maintenance next Sunday</p>
+            </div>
 
-          {/* District Alerts */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-orange-500" />
-                District Alerts
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-sm font-medium text-red-800">Urgent</p>
-                <p className="text-sm text-red-700">3 kindergartens over capacity</p>
-              </div>
-              
-              <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <p className="text-sm font-medium text-yellow-800">Budget Review</p>
-                <p className="text-sm text-yellow-700">Q1 budget review due</p>
-              </div>
-              
-              <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                <p className="text-sm font-medium text-blue-800">Training Program</p>
-                <p className="text-sm text-blue-700">New staff training next week</p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+            <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+              <p className="text-sm font-medium text-green-800">Compliance Status</p>
+              <p className="text-sm text-green-700">All kindergartens compliant</p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

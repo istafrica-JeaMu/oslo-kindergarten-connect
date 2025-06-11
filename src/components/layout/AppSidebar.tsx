@@ -1,3 +1,4 @@
+
 import {
   Home,
   FileText,
@@ -11,7 +12,11 @@ import {
   GraduationCap,
   ClipboardList,
   Calendar,
-  AlertCircle
+  AlertCircle,
+  School,
+  UserCheck,
+  Shield,
+  Eye
 } from 'lucide-react';
 
 import {
@@ -172,6 +177,41 @@ export function AppSidebar() {
             title: t('nav.dashboard', 'Dashboard'),
             url: baseUrl,
             icon: Home,
+          },
+          {
+            title: 'Kindergarten Management',
+            url: `${baseUrl}/kindergartens`,
+            icon: School,
+          },
+          {
+            title: 'User Management',
+            url: `${baseUrl}/users`,
+            icon: UserCheck,
+          },
+          {
+            title: 'Placement Calendar',
+            url: `${baseUrl}/placement-calendar`,
+            icon: Calendar,
+          },
+          {
+            title: 'Policy Configuration',
+            url: `${baseUrl}/policies`,
+            icon: Settings,
+          },
+          {
+            title: 'Self-Service Features',
+            url: `${baseUrl}/self-service`,
+            icon: Shield,
+          },
+          {
+            title: 'Analytics',
+            url: `${baseUrl}/analytics`,
+            icon: BarChart3,
+          },
+          {
+            title: 'Audit Logs',
+            url: `${baseUrl}/audit-logs`,
+            icon: Eye,
           },
         ];
       

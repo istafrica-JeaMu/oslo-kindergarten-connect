@@ -1,3 +1,4 @@
+
 import {
   BrowserRouter as Router,
   Route,
@@ -50,6 +51,8 @@ import SystemSettings from './pages/admin/SystemSettings';
 import StaffDashboard from './pages/staff/StaffDashboard';
 import PartnerDashboard from './pages/partner/PartnerDashboard';
 import DistrictAdminDashboard from './pages/district-admin/DistrictAdminDashboard';
+import KindergartenManagement from './pages/district-admin/KindergartenManagement';
+import UserManagement from './pages/district-admin/UserManagement';
 import KindergartenDashboard from './pages/kindergarten/KindergartenDashboard';
 import KindergartenAttendance from './pages/kindergarten/KindergartenAttendance';
 import KindergartenReports from './pages/kindergarten/KindergartenReports';
@@ -193,6 +196,8 @@ function AppRoutes() {
         }
       >
         <Route index element={<DistrictAdminDashboard />} />
+        <Route path="kindergartens" element={<KindergartenManagement />} />
+        <Route path="users" element={<UserManagement />} />
       </Route>
 
       {/* Kindergarten Routes (for staff and partners) */}
