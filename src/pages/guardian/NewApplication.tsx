@@ -544,6 +544,49 @@ const NewApplication = () => {
     />
   );
 
+  // Function to handle kindergarten selection
+  const handleKindergartenSelection = (kindergarten, priorityIndex) => {
+    const maxSelections = formData.preferences.isDualPlacement ? 2 : 3;
+    
+    setFormData(prev => {
+      const newKindergartens = [...prev.preferences.kindergartens];
+      
+      // Remove kindergarten if already selected
+      const existingIndex = newKindergartens.findIndex(kg => kg.id === kindergarten.id);
+      if (existingIndex !== -1) {
+        newKindergartens.splice(existingIndex, 1);
+      } else if (newKindergartens.length < maxSelections) {
+        // Add kindergarten with priority
+        newKindergartens.push({
+          ...kindergarten,
+          priority: priorityIndex + 1
+        });
+      }
+      
+      // Sort by priority
+      newKindergartens.sort((a, b) => a.priority - b.priority);
+      
+      return {
+        ...prev,
+        preferences: {
+          ...prev.preferences,
+          kindergartens: newKindergartens
+        }
+      };
+    });
+  };
+
+  // Check if kindergarten is selected
+  const isKindergartenSelected = (kindergartenId) => {
+    return formData.preferences.kindergartens.some(kg => kg.id === kindergartenId);
+  };
+
+  // Get kindergarten priority
+  const getKindergartenPriority = (kindergartenId) => {
+    const kg = formData.preferences.kindergartens.find(kg => kg.id === kindergartenId);
+    return kg ? kg.priority : null;
+  };
+
   const renderKindergartenPreferences = () => (
     <div className="space-y-6">
       <div className="bg-gradient-to-r from-oslo-blue/5 to-blue-50 p-6 rounded-xl border border-oslo-blue/20">
@@ -551,7 +594,10 @@ const NewApplication = () => {
           <Sparkles className="w-6 h-6 text-oslo-blue" />
           <h3 className="text-lg font-semibold text-slate-900">Choose Your Preferred Kindergartens</h3>
         </div>
-        <p className="text-slate-600 mb-4">Select up to 3 kindergartens in order of preference. Higher priority choices have better placement chances.</p>
+        <p className="text-slate-600 mb-4">
+          Select up to {formData.preferences.isDualPlacement ? '2' : '3'} kindergartens in order of preference. 
+          Higher priority choices have better placement chances.
+        </p>
       </div>
 
       {/* Dual Placement Option */}
@@ -562,10 +608,16 @@ const NewApplication = () => {
               <Switch 
                 id="dualPlacement"
                 checked={formData.preferences.isDualPlacement || false}
-                onCheckedChange={(checked) => setFormData({
-                  ...formData,
-                  preferences: { ...formData.preferences, isDualPlacement: checked }
-                })}
+                onCheckedChange={(checked) => {
+                  setFormData({
+                    ...formData,
+                    preferences: { 
+                      ...formData.preferences, 
+                      isDualPlacement: checked,
+                      kindergartens: checked ? formData.preferences.kindergartens.slice(0, 2) : formData.preferences.kindergartens
+                    }
+                  });
+                }}
               />
             </div>
             <div className="flex-1">
@@ -605,42 +657,95 @@ const NewApplication = () => {
         </CardContent>
       </Card>
 
-      <div className="grid gap-4">
-        {kindergartenOptions.map((kg, index) => (
-          <Card key={kg.id} className="group hover:shadow-lg transition-all duration-300 cursor-pointer border-2 hover:border-oslo-blue/30">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-oslo-blue/10 to-blue-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
-                    <Building2 className="w-6 h-6 text-oslo-blue" />
-                  </div>
+      {/* Selected Kindergartens Display */}
+      {formData.preferences.kindergartens.length > 0 && (
+        <Card className="border-2 border-emerald-200 bg-emerald-50">
+          <CardContent className="p-6">
+            <h4 className="font-semibold text-emerald-800 mb-4 flex items-center gap-2">
+              <CheckCircle className="w-5 h-5" />
+              Selected Kindergartens
+            </h4>
+            <div className="space-y-3">
+              {formData.preferences.kindergartens.map((kg) => (
+                <div key={kg.id} className="flex items-center justify-between bg-white p-3 rounded-lg border border-emerald-200">
                   <div>
-                    <h4 className="font-bold text-slate-900 text-lg group-hover:text-oslo-blue transition-colors">{kg.name}</h4>
-                    <div className="flex items-center gap-4 mt-1">
-                      <span className="text-sm text-slate-600">{kg.district} District</span>
-                      <Badge variant="outline" className={`text-xs ${
-                        kg.capacity === 'High' ? 'text-emerald-600 border-emerald-300 bg-emerald-50' :
-                        kg.capacity === 'Medium' ? 'text-amber-600 border-amber-300 bg-amber-50' :
-                        'text-red-600 border-red-300 bg-red-50'
-                      }`}>
-                        {kg.capacity} Capacity
-                      </Badge>
-                      <div className="flex items-center gap-1">
-                        <span className="text-sm font-medium text-slate-700">★ {kg.rating}</span>
+                    <span className="font-medium text-slate-900">{kg.name}</span>
+                    <span className="text-sm text-slate-600 ml-2">({kg.district})</span>
+                  </div>
+                  <Badge variant="outline" className="text-emerald-600 border-emerald-300 bg-emerald-50">
+                    {formData.preferences.isDualPlacement 
+                      ? (kg.priority === 1 ? 'Primary' : 'Secondary')
+                      : `Priority ${kg.priority}`
+                    }
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      <div className="grid gap-4">
+        {kindergartenOptions.map((kg, index) => {
+          const isSelected = isKindergartenSelected(kg.id);
+          const priority = getKindergartenPriority(kg.id);
+          const maxSelections = formData.preferences.isDualPlacement ? 2 : 3;
+          const canSelect = !isSelected && formData.preferences.kindergartens.length < maxSelections;
+          
+          return (
+            <Card 
+              key={kg.id} 
+              className={`group hover:shadow-lg transition-all duration-300 cursor-pointer border-2 ${
+                isSelected ? 'border-oslo-blue bg-oslo-blue/5' : 'hover:border-oslo-blue/30'
+              }`}
+            >
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-oslo-blue/10 to-blue-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+                      <Building2 className="w-6 h-6 text-oslo-blue" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-slate-900 text-lg group-hover:text-oslo-blue transition-colors">{kg.name}</h4>
+                      <div className="flex items-center gap-4 mt-1">
+                        <span className="text-sm text-slate-600">{kg.district} District</span>
+                        <Badge variant="outline" className={`text-xs ${
+                          kg.capacity === 'High' ? 'text-emerald-600 border-emerald-300 bg-emerald-50' :
+                          kg.capacity === 'Medium' ? 'text-amber-600 border-amber-300 bg-amber-50' :
+                          'text-red-600 border-red-300 bg-red-50'
+                        }`}>
+                          {kg.capacity} Capacity
+                        </Badge>
+                        <div className="flex items-center gap-1">
+                          <span className="text-sm font-medium text-slate-700">★ {kg.rating}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
+                  <div className="flex items-center gap-2">
+                    {isSelected && (
+                      <Badge variant="outline" className="text-oslo-blue border-oslo-blue bg-oslo-blue/10">
+                        {formData.preferences.isDualPlacement 
+                          ? (priority === 1 ? 'Primary' : 'Secondary')
+                          : `Priority ${priority}`
+                        }
+                      </Badge>
+                    )}
+                    <Button 
+                      variant={isSelected ? "destructive" : "outline"} 
+                      size="sm" 
+                      onClick={() => handleKindergartenSelection(kg, formData.preferences.kindergartens.length)}
+                      disabled={!canSelect && !isSelected}
+                      className={isSelected ? "hover:bg-red-600" : "hover:bg-oslo-blue hover:text-white"}
+                    >
+                      {isSelected ? 'Remove' : (canSelect ? 'Select' : 'Full')}
+                    </Button>
+                  </div>
                 </div>
-                <Button variant="outline" size="sm" className="hover:bg-oslo-blue hover:text-white">
-                  Select as {formData.preferences.isDualPlacement && index < 2 ? 
-                    (index === 0 ? 'Primary' : 'Secondary') : 
-                    `Priority ${index + 1}`
-                  }
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
 
       {formData.preferences.isDualPlacement && (
@@ -738,6 +843,7 @@ const NewApplication = () => {
         </h3>
         
         <div className="grid gap-4">
+          {/* Application Type */}
           <Card className="border-2 border-slate-200">
             <CardHeader className="pb-3">
               <CardTitle className="text-base flex items-center gap-2">
@@ -746,25 +852,27 @@ const NewApplication = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm font-medium">
-                {[
-                  {
-                    id: 'new-admission',
-                    title: 'New Admission',
-                  },
-                  {
-                    id: 'transfer-request',
-                    title: 'Transfer Request',
-                  },
-                  {
-                    id: 'late-ongoing',
-                    title: 'Late/Ongoing Application',
-                  }
-                ].find(t => t.id === formData.applicationType)?.title || 'Not selected'}
-              </p>
+              <div className="space-y-2">
+                <p className="text-sm font-medium">
+                  {[
+                    { id: 'new-admission', title: 'New Admission' },
+                    { id: 'transfer-request', title: 'Transfer Request' },
+                    { id: 'late-ongoing', title: 'Late/Ongoing Application' }
+                  ].find(t => t.id === formData.applicationType)?.title || 'Not selected'}
+                </p>
+                {formData.preferences.isDualPlacement && (
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-purple-100 text-purple-700 border-purple-300">
+                      <ArrowLeftRight className="w-3 h-3 mr-1" />
+                      Dual Placement Request
+                    </Badge>
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
 
+          {/* Child Information */}
           <Card className="border-2 border-slate-200">
             <CardHeader className="pb-3">
               <CardTitle className="text-base flex items-center gap-2">
@@ -778,6 +886,8 @@ const NewApplication = () => {
                 <div><span className="font-medium">Birth Date:</span> {formData.childInfo.birthDate}</div>
                 <div><span className="font-medium">Personal Number:</span> {formData.childInfo.personalNumber}</div>
                 <div><span className="font-medium">Statutory Right:</span> {formData.childInfo.statutoryRight ? 'Yes' : 'No'}</div>
+                <div><span className="font-medium">Special Needs:</span> {formData.childInfo.specialNeeds ? 'Yes' : 'No'}</div>
+                <div><span className="font-medium">Has Siblings:</span> {formData.childInfo.siblings ? 'Yes' : 'No'}</div>
               </div>
               {fregLookupState.isSuccess && (
                 <div className="mt-3 flex items-center gap-2">
@@ -787,6 +897,72 @@ const NewApplication = () => {
                   </Badge>
                 </div>
               )}
+            </CardContent>
+          </Card>
+
+          {/* Guardian Information */}
+          <Card className="border-2 border-slate-200">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2">
+                <Shield className="w-4 h-4 text-oslo-blue" />
+                Guardian Information
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-2 gap-3 text-sm">
+                <div><span className="font-medium">Name:</span> {formData.guardian.firstName} {formData.guardian.lastName}</div>
+                <div><span className="font-medium">Email:</span> {formData.guardian.email}</div>
+                <div><span className="font-medium">Phone:</span> {formData.guardian.phone}</div>
+                <div><span className="font-medium">Address:</span> {formData.guardian.address}</div>
+                <div><span className="font-medium">Relationship:</span> {formData.guardian.relationship}</div>
+                <div><span className="font-medium">ID Method:</span> {formData.guardian.idMethod}</div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Kindergarten Preferences */}
+          <Card className="border-2 border-slate-200">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2">
+                <Building2 className="w-4 h-4 text-oslo-blue" />
+                Kindergarten Preferences
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="grid md:grid-cols-2 gap-3 text-sm">
+                  <div><span className="font-medium">Start Date:</span> {formData.preferences.startDate || 'Not specified'}</div>
+                  <div><span className="font-medium">Attendance:</span> {formData.preferences.fullTime ? 'Full-time' : 'Part-time'}</div>
+                </div>
+                
+                {formData.preferences.kindergartens.length > 0 ? (
+                  <div>
+                    <h5 className="font-medium text-slate-700 mb-2">Selected Kindergartens:</h5>
+                    <div className="space-y-2">
+                      {formData.preferences.kindergartens.map((kg) => (
+                        <div key={kg.id} className="flex items-center justify-between bg-slate-50 p-2 rounded">
+                          <span className="text-sm">{kg.name} ({kg.district})</span>
+                          <Badge variant="outline" className="text-xs">
+                            {formData.preferences.isDualPlacement 
+                              ? (kg.priority === 1 ? 'Primary' : 'Secondary')
+                              : `Priority ${kg.priority}`
+                            }
+                          </Badge>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-sm text-slate-500">No kindergartens selected</p>
+                )}
+
+                {formData.preferences.isDualPlacement && formData.preferences.dualPlacementReason && (
+                  <div>
+                    <h5 className="font-medium text-slate-700 mb-1">Dual Placement Reason:</h5>
+                    <p className="text-sm text-slate-600 bg-slate-50 p-2 rounded">{formData.preferences.dualPlacementReason}</p>
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -800,6 +976,9 @@ const NewApplication = () => {
             <ul className="text-amber-700 text-sm space-y-1">
               <li>• Application will receive a unique ApplicationID upon submission</li>
               <li>• Status will be set to "Draft" initially, then updated based on admission round</li>
+              {formData.preferences.isDualPlacement && (
+                <li>• Dual placement applications require additional review and approval</li>
+              )}
               <li>• Processing typically takes 4-6 weeks</li>
               <li>• You will receive email confirmation once submitted</li>
               <li>• Contact us if you need assistance: kindergarten@oslo.kommune.no</li>
