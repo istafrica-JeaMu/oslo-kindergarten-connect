@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -13,7 +12,6 @@ import {
   BarChart3,
   Globe,
   Calendar,
-  FileShield,
   Bell,
   MapPin,
   Server,
@@ -87,7 +85,7 @@ const MunicipalityAdminDashboard = () => {
         {
           title: 'Policy Configuration',
           description: 'Set municipality-wide policies and rules',
-          icon: FileShield,
+          icon: Shield,
           href: '/admin/policy-config',
           color: 'bg-violet-50 hover:bg-violet-100 border-violet-200',
           iconColor: 'text-violet-600'

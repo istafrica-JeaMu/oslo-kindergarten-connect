@@ -2,10 +2,9 @@ import {
   LayoutDashboard,
   Settings,
   Globe,
-  FileShield,
+  Shield,
   MapPin,
   UserCheck,
-  Shield,
   School,
   Database,
   Calendar,
@@ -62,7 +61,7 @@ export function AppSidebar() {
             items: [
               { title: "Global Settings", url: "/admin/global-settings", icon: Settings },
               { title: "Feature Management", url: "/admin/feature-management", icon: Globe },
-              { title: "Policy Configuration", url: "/admin/policy-config", icon: FileShield },
+              { title: "Policy Configuration", url: "/admin/policy-config", icon: Shield },
               { title: "Placement Windows", url: "/admin/placement-windows", icon: Calendar }
             ]
           },
@@ -80,7 +79,7 @@ export function AppSidebar() {
             items: [
               { title: "Data Integration", url: "/admin/integrations", icon: Database },
               { title: "Security & Audit", url: "/admin/security-audit", icon: Eye },
-              { title: "Compliance", url: "/admin/compliance", icon: FileShield }
+              { title: "Compliance", url: "/admin/compliance", icon: Shield }
             ]
           }
         ];
