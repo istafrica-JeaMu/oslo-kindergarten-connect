@@ -54,6 +54,7 @@ import DistrictAdminDashboard from './pages/district-admin/DistrictAdminDashboar
 import KindergartenDashboard from './pages/kindergarten/KindergartenDashboard';
 import KindergartenAttendance from './pages/kindergarten/KindergartenAttendance';
 import KindergartenReports from './pages/kindergarten/KindergartenReports';
+import ChildrenManagement from './pages/staff/ChildrenManagement';
 import LoginPage from './pages/auth/LoginPage';
 import NotFound from './pages/NotFound';
 
