@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,7 +6,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
-import { ArrowLeft, User, FileText, Calendar, CheckCircle, Home as HomeIcon, FileCheck, Users, MapPin, Phone, Mail, Clock, ExternalLink, Eye, Download, Edit } from 'lucide-react';
+import { ArrowLeft, User, FileText, Calendar, CheckCircle, Home as HomeIcon, FileCheck, Users, MapPin, Phone, Mail, Clock, ExternalLink, Eye, Download, Edit, ArrowLeftRight, Settings } from 'lucide-react';
+import { mockDualPlacements } from '@/types/dualPlacement';
 
 const ChildProfileDetail = () => {
   const { childId } = useParams();
@@ -25,7 +25,7 @@ const ChildProfileDetail = () => {
     return 'overview';
   };
 
-  // Mock child data
+  // Mock child data with dual placement info
   const child = {
     id: childId,
     name: childId === 'emma' ? 'Emma Hansen' : 'Lucas Hansen',
@@ -36,8 +36,12 @@ const ChildProfileDetail = () => {
     kindergarten: 'Rainbow Kindergarten',
     birthDate: childId === 'emma' ? '2020-03-15' : '2021-07-22',
     startDate: childId === 'emma' ? '2023-08-15' : '2024-01-10',
-    applicationNumber: childId === 'emma' ? 'APP-2023-001234' : 'APP-2024-005678'
+    applicationNumber: childId === 'emma' ? 'APP-2023-001234' : 'APP-2024-005678',
+    isDualPlacement: childId === 'emma' // Emma has dual placement
   };
+
+  // Get dual placement data if applicable
+  const dualPlacement = child.isDualPlacement ? mockDualPlacements[0] : null;
 
   const navigationItems = [
     {
@@ -86,6 +90,84 @@ const ChildProfileDetail = () => {
 
   const renderOverviewContent = () => (
     <div className="space-y-6">
+      {/* Dual Placement Alert/Info */}
+      {child.isDualPlacement && dualPlacement && (
+        <Card className="border-purple-200 bg-gradient-to-r from-purple-50 to-purple-100/50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3 text-purple-700">
+              <ArrowLeftRight className="h-5 w-5" />
+              Dual Placement Arrangement
+              <Badge className="bg-purple-100 text-purple-800 border-purple-300">
+                {dualPlacement.status.charAt(0).toUpperCase() + dualPlacement.status.slice(1)}
+              </Badge>
+            </CardTitle>
+            <CardDescription className="text-purple-600">
+              This child attends two kindergartens based on custody arrangements
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                  <h4 className="font-semibold text-purple-900">Primary Kindergarten</h4>
+                  <Badge variant="outline" className="text-xs">{dualPlacement.primaryKindergarten.custodyPercentage}%</Badge>
+                </div>
+                <div className="pl-5 space-y-2">
+                  <p className="font-medium">{dualPlacement.primaryKindergarten.name}</p>
+                  <div className="text-sm text-purple-700">
+                    <p className="flex items-center gap-1">
+                      <Calendar className="h-3 w-3" />
+                      Days: {Object.entries(dualPlacement.primaryKindergarten.schedule)
+                        .filter(([_, value]) => value)
+                        .map(([day, _]) => day.charAt(0).toUpperCase() + day.slice(1))
+                        .join(', ')}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <h4 className="font-semibold text-purple-900">Secondary Kindergarten</h4>
+                  <Badge variant="outline" className="text-xs">{dualPlacement.secondaryKindergarten.custodyPercentage}%</Badge>
+                </div>
+                <div className="pl-5 space-y-2">
+                  <p className="font-medium">{dualPlacement.secondaryKindergarten.name}</p>
+                  <div className="text-sm text-purple-700">
+                    <p className="flex items-center gap-1">
+                      <Calendar className="h-3 w-3" />
+                      Days: {Object.entries(dualPlacement.secondaryKindergarten.schedule)
+                        .filter(([_, value]) => value)
+                        .map(([day, _]) => day.charAt(0).toUpperCase() + day.slice(1))
+                        .join(', ')}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <Separator className="bg-purple-200" />
+            
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-purple-700">
+                  <strong>Justification:</strong> {dualPlacement.justification}
+                </p>
+                <p className="text-xs text-purple-600 mt-1">
+                  Approved on {new Date(dualPlacement.approvedAt || '').toLocaleDateString()}
+                </p>
+              </div>
+              <Button variant="outline" size="sm" className="gap-2 text-purple-600 border-purple-300 hover:bg-purple-50">
+                <Settings className="h-4 w-4" />
+                Manage
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <div className="grid md:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
@@ -116,7 +198,15 @@ const ChildProfileDetail = () => {
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700">Status</label>
-                <Badge variant="secondary">{child.status}</Badge>
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary">{child.status}</Badge>
+                  {child.isDualPlacement && (
+                    <Badge className="bg-purple-100 text-purple-800 border-purple-300 text-xs">
+                      <ArrowLeftRight className="h-3 w-3 mr-1" />
+                      Dual
+                    </Badge>
+                  )}
+                </div>
               </div>
             </div>
           </CardContent>
@@ -695,7 +785,7 @@ const ChildProfileDetail = () => {
         </Link>
       </div>
 
-      {/* Child Header */}
+      {/* Enhanced Child Header with Dual Placement Indicator */}
       <div className="bg-white rounded-lg border p-6">
         <div className="flex items-center space-x-4">
           <Avatar className="h-20 w-20">
@@ -704,8 +794,16 @@ const ChildProfileDetail = () => {
               {child.name.split(' ').map(n => n[0]).join('')}
             </AvatarFallback>
           </Avatar>
-          <div>
-            <h1 className="text-2xl font-semibold">{child.name}</h1>
+          <div className="flex-1">
+            <div className="flex items-center gap-3 mb-2">
+              <h1 className="text-2xl font-semibold">{child.name}</h1>
+              {child.isDualPlacement && (
+                <Badge className="bg-purple-100 text-purple-800 border-purple-300">
+                  <ArrowLeftRight className="h-3 w-3 mr-1" />
+                  Dual Placement
+                </Badge>
+              )}
+            </div>
             <p className="text-gray-600">{child.group} • Age {child.age}</p>
             <Badge className="mt-1">{child.status}</Badge>
           </div>
