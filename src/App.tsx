@@ -53,6 +53,11 @@ import PartnerDashboard from './pages/partner/PartnerDashboard';
 import DistrictAdminDashboard from './pages/district-admin/DistrictAdminDashboard';
 import KindergartenManagement from './pages/district-admin/KindergartenManagement';
 import UserManagement from './pages/district-admin/UserManagement';
+import PlacementCalendar from './pages/district-admin/PlacementCalendar';
+import PolicyConfiguration from './pages/district-admin/PolicyConfiguration';
+import SelfServiceFeatures from './pages/district-admin/SelfServiceFeatures';
+import Analytics from './pages/district-admin/Analytics';
+import AuditLogs from './pages/district-admin/AuditLogs';
 import KindergartenDashboard from './pages/kindergarten/KindergartenDashboard';
 import KindergartenAttendance from './pages/kindergarten/KindergartenAttendance';
 import KindergartenReports from './pages/kindergarten/KindergartenReports';
@@ -198,6 +203,11 @@ function AppRoutes() {
         <Route index element={<DistrictAdminDashboard />} />
         <Route path="kindergartens" element={<KindergartenManagement />} />
         <Route path="users" element={<UserManagement />} />
+        <Route path="placement-calendar" element={<PlacementCalendar />} />
+        <Route path="policies" element={<PolicyConfiguration />} />
+        <Route path="self-service" element={<SelfServiceFeatures />} />
+        <Route path="analytics" element={<Analytics />} />
+        <Route path="audit-logs" element={<AuditLogs />} />
       </Route>
 
       {/* Kindergarten Routes (for staff and partners) */}
