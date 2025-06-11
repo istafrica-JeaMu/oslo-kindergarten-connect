@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -341,10 +340,6 @@ const ChildrenManagement = () => {
           <Badge variant="outline" className="text-sm">
             {filteredChildren.length} of {children.length} children
           </Badge>
-          <Button className="bg-oslo-blue hover:bg-oslo-blue/90">
-            <Plus className="w-4 h-4 mr-2" />
-            Add Child
-          </Button>
         </div>
       </div>
 
