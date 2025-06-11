@@ -1,3 +1,4 @@
+
 import {
   BrowserRouter as Router,
   Route,
@@ -43,6 +44,7 @@ import ApplicationsInProgress from './pages/caseworker/ApplicationsInProgress';
 import ApplicationsSubmitted from './pages/caseworker/ApplicationsSubmitted';
 import ApplicationsFollowUp from './pages/caseworker/ApplicationsFollowUp';
 import ApplicationView from './pages/caseworker/ApplicationView';
+import DualPlacementSetup from './pages/caseworker/DualPlacementSetup';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import Reports from './pages/admin/Reports';
 import SystemSettings from './pages/admin/SystemSettings';
@@ -133,6 +135,7 @@ function AppRoutes() {
         <Route path="messages" element={<CaseWorkerMessages />} />
         <Route path="manual-application" element={<ManualApplication />} />
         <Route path="application/:id" element={<ApplicationView />} />
+        <Route path="dual-placement-setup/:id" element={<DualPlacementSetup />} />
         <Route path="applications/in-progress" element={<ApplicationsInProgress />} />
         <Route path="applications/submitted" element={<ApplicationsSubmitted />} />
         <Route path="applications/follow-up" element={<ApplicationsFollowUp />} />
