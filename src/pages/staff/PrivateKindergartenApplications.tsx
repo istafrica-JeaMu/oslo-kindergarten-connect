@@ -1,5 +1,5 @@
-
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -26,6 +26,7 @@ import {
 
 const PrivateKindergartenApplications = () => {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterPriority, setFilterPriority] = useState('all');
@@ -178,6 +179,10 @@ const PrivateKindergartenApplications = () => {
     underReview: applications.filter(app => app.status === 'under-review').length,
     accepted: applications.filter(app => app.status === 'accepted').length,
     rejected: applications.filter(app => app.status === 'rejected').length
+  };
+
+  const handleViewApplication = (applicationId: string) => {
+    navigate(`/kindergarten/applications/${applicationId}`);
   };
 
   return (
@@ -378,6 +383,15 @@ const PrivateKindergartenApplications = () => {
                           <TableCell>{getPriorityBadge(application.priority)}</TableCell>
                           <TableCell>
                             <div className="flex items-center justify-center gap-2">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleViewApplication(application.id)}
+                                className="gap-1"
+                              >
+                                <Eye className="w-3 h-3" />
+                                View
+                              </Button>
                               {application.status === 'pending' || application.status === 'under-review' ? (
                                 <>
                                   <Button
@@ -398,16 +412,7 @@ const PrivateKindergartenApplications = () => {
                                     Reject
                                   </Button>
                                 </>
-                              ) : (
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => setSelectedApplication(application.id)}
-                                >
-                                  <Eye className="w-3 h-3 mr-1" />
-                                  View
-                                </Button>
-                              )}
+                              ) : null}
                             </div>
                           </TableCell>
                         </TableRow>
@@ -441,6 +446,15 @@ const PrivateKindergartenApplications = () => {
                         </div>
                         
                         <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="flex-1"
+                            onClick={() => handleViewApplication(application.id)}
+                          >
+                            <Eye className="w-4 h-4 mr-1" />
+                            View Details
+                          </Button>
                           {application.status === 'pending' || application.status === 'under-review' ? (
                             <>
                               <Button
@@ -461,17 +475,7 @@ const PrivateKindergartenApplications = () => {
                                 Reject
                               </Button>
                             </>
-                          ) : (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="flex-1"
-                              onClick={() => setSelectedApplication(application.id)}
-                            >
-                              <Eye className="w-4 h-4 mr-1" />
-                              View Details
-                            </Button>
-                          )}
+                          ) : null}
                         </div>
                       </div>
                     </Card>
