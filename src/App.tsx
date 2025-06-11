@@ -55,6 +55,8 @@ import KindergartenAttendance from './pages/kindergarten/KindergartenAttendance'
 import KindergartenReports from './pages/kindergarten/KindergartenReports';
 import ChildrenManagement from './pages/staff/ChildrenManagement';
 import StaffMessages from './pages/staff/StaffMessages';
+import PrivateKindergartenApplications from './pages/staff/PrivateKindergartenApplications';
+import PrivateKindergartenCapacity from './pages/staff/PrivateKindergartenCapacity';
 import LoginPage from './pages/auth/LoginPage';
 import NotFound from './pages/NotFound';
 
@@ -206,6 +208,8 @@ function AppRoutes() {
         <Route path="attendance" element={<KindergartenAttendance />} />
         <Route path="reports" element={<KindergartenReports />} />
         <Route path="messages" element={<StaffMessages />} />
+        <Route path="applications" element={<PrivateKindergartenApplications />} />
+        <Route path="capacity" element={<PrivateKindergartenCapacity />} />
       </Route>
 
       {/* Educator Routes */}
