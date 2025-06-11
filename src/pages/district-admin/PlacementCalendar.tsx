@@ -1,11 +1,27 @@
 
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, Plus, Settings, Clock, Users, CheckCircle } from 'lucide-react';
+import PlacementPeriodModal from '@/components/district-admin/PlacementPeriodModal';
+import { useToast } from '@/hooks/use-toast';
+
+interface PlacementPeriod {
+  id: number;
+  name: string;
+  applicationDeadline: string;
+  placementStart: string;
+  status: string;
+  applicationsReceived: number;
+  placementsConfirmed: number;
+}
 
 const PlacementCalendar = () => {
-  const placementPeriods = [
+  const { toast } = useToast();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingPeriod, setEditingPeriod] = useState<PlacementPeriod | undefined>();
+  const [placementPeriods, setPlacementPeriods] = useState<PlacementPeriod[]>([
     {
       id: 1,
       name: 'Spring 2025 Placement',
@@ -24,7 +40,39 @@ const PlacementCalendar = () => {
       applicationsReceived: 0,
       placementsConfirmed: 0
     }
-  ];
+  ]);
+
+  const handleNewPeriod = () => {
+    setEditingPeriod(undefined);
+    setIsModalOpen(true);
+  };
+
+  const handleEditPeriod = (period: PlacementPeriod) => {
+    setEditingPeriod(period);
+    setIsModalOpen(true);
+  };
+
+  const handleSavePeriod = (periodData: Omit<PlacementPeriod, 'id'> & { id?: number }) => {
+    if (periodData.id) {
+      // Update existing period
+      setPlacementPeriods(prev => 
+        prev.map(p => p.id === periodData.id ? { ...periodData, id: periodData.id } : p)
+      );
+    } else {
+      // Create new period
+      const newPeriod = {
+        ...periodData,
+        id: Math.max(...placementPeriods.map(p => p.id)) + 1,
+        applicationsReceived: 0,
+        placementsConfirmed: 0
+      };
+      setPlacementPeriods(prev => [...prev, newPeriod]);
+    }
+  };
+
+  const totalApplications = placementPeriods.reduce((sum, period) => sum + period.applicationsReceived, 0);
+  const totalPlacements = placementPeriods.reduce((sum, period) => sum + period.placementsConfirmed, 0);
+  const activePeriods = placementPeriods.filter(p => p.status === 'Active').length;
 
   return (
     <div className="space-y-8">
@@ -35,7 +83,7 @@ const PlacementCalendar = () => {
             Configure placement periods and application windows
           </p>
         </div>
-        <Button>
+        <Button onClick={handleNewPeriod}>
           <Plus className="w-4 h-4 mr-2" />
           New Placement Period
         </Button>
@@ -50,7 +98,7 @@ const PlacementCalendar = () => {
                 <Calendar className="w-6 h-6 text-blue-600" />
               </div>
               <div>
-                <p className="text-3xl font-bold text-slate-900">2</p>
+                <p className="text-3xl font-bold text-slate-900">{activePeriods}</p>
                 <p className="text-sm text-slate-600">Active Periods</p>
               </div>
             </div>
@@ -64,7 +112,7 @@ const PlacementCalendar = () => {
                 <Users className="w-6 h-6 text-green-600" />
               </div>
               <div>
-                <p className="text-3xl font-bold text-slate-900">234</p>
+                <p className="text-3xl font-bold text-slate-900">{totalApplications}</p>
                 <p className="text-sm text-slate-600">Total Applications</p>
               </div>
             </div>
@@ -78,7 +126,7 @@ const PlacementCalendar = () => {
                 <CheckCircle className="w-6 h-6 text-purple-600" />
               </div>
               <div>
-                <p className="text-3xl font-bold text-slate-900">187</p>
+                <p className="text-3xl font-bold text-slate-900">{totalPlacements}</p>
                 <p className="text-sm text-slate-600">Placements Confirmed</p>
               </div>
             </div>
@@ -114,7 +162,7 @@ const PlacementCalendar = () => {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" onClick={() => handleEditPeriod(period)}>
                     <Settings className="w-4 h-4 mr-2" />
                     Configure
                   </Button>
@@ -124,6 +172,13 @@ const PlacementCalendar = () => {
           </Card>
         ))}
       </div>
+
+      <PlacementPeriodModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleSavePeriod}
+        period={editingPeriod}
+      />
     </div>
   );
 };
