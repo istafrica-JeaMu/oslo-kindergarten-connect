@@ -1,3 +1,4 @@
+
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -5,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
-import { ArrowLeft, Download, Edit, Calendar, User, FileText, Phone, Mail, MapPin, AlertTriangle, CheckCircle, Clock, MessageSquare, FileCheck, Users, Star, Flag, Timer, Pencil, Send, Upload, Eye, Bell, ChevronLeft, ChevronRight, Settings } from 'lucide-react';
+import { ArrowLeft, Download, Edit, Calendar, User, FileText, Phone, Mail, MapPin, AlertTriangle, CheckCircle, Clock, MessageSquare, FileCheck, Users, Star, Flag, Timer, Pencil, Send, Upload, Eye, Bell, ChevronLeft, ChevronRight, Settings, ArrowLeftRight } from 'lucide-react';
 import { mockApplications } from '@/types/application';
 import { format, isValid, parseISO, differenceInDays, addDays } from 'date-fns';
 import { toast } from 'sonner';
@@ -50,7 +51,8 @@ const ApplicationView = () => {
       'Maja Olsen': 5,
       'Elias Pettersen': 3,
       'Isabella Johansen': 4,
-      'Alexander Nilsen': 5
+      'Alexander Nilsen': 5,
+      'Erik Svendsen': 4
     };
     return ageMap[childName] || 4;
   };
@@ -639,4 +641,20 @@ const ApplicationView = () => {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Application Type</span>
-                    <span className="text-sm font-medium">{application.applicationType}</
+                    <span className="text-sm font-medium">{application.applicationType}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Created Date</span>
+                    <span className="text-sm font-medium">{formatDate(application.createdAt)}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ApplicationView;
