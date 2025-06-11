@@ -1,231 +1,403 @@
+
 import {
-  LayoutDashboard,
-  Settings,
-  Globe,
-  Shield,
-  MapPin,
-  UserCheck,
-  School,
-  Database,
-  Calendar,
-  BarChart3,
-  Eye,
-  Server,
+  Home,
   FileText,
-  Users,
-  Building2,
   Clock,
-  CheckCircle,
-  AlertTriangle,
-  TrendingUp,
-  LogOut
-} from "lucide-react"
+  MessageSquare,
+  CreditCard,
+  Users,
+  Settings,
+  BarChart3,
+  FolderOpen,
+  GraduationCap,
+  ClipboardList,
+  Calendar,
+  AlertCircle,
+  School,
+  UserCheck,
+  Shield,
+  Eye
+} from 'lucide-react';
 
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion"
-import { useAuth } from "@/contexts/AuthContext"
-import { NavLink } from "react-router-dom"
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarHeader,
+} from '@/components/ui/sidebar';
 
-interface NavItem {
-  title: string
-  url: string
-  icon: any
-}
-
-interface NavSection {
-  title: string
-  items: NavItem[]
-}
+import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { Link, useLocation } from 'react-router-dom';
+import { useGuardianNavigation } from '@/components/guardian/navigation/GuardianNavigation';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import ApplicationsSidebar from '@/components/caseworker/ApplicationsSidebar';
 
 export function AppSidebar() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
+  const { t } = useLanguage();
+  const location = useLocation();
+  const guardianNavigation = useGuardianNavigation();
 
-  const getNavigationItems = () => {
+  const getMenuItems = () => {
+    const baseUrl = `/${user?.role}`;
+    
     switch (user?.role) {
-      case 'admin':
-        return [
-          {
-            title: "System Overview",
-            items: [
-              { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
-              { title: "System Health", url: "/admin/system-health", icon: Server },
-              { title: "System Analytics", url: "/admin/analytics", icon: BarChart3 }
-            ]
-          },
-          {
-            title: "Configuration",
-            items: [
-              { title: "Global Settings", url: "/admin/global-settings", icon: Settings },
-              { title: "Feature Management", url: "/admin/feature-management", icon: Globe },
-              { title: "Policy Configuration", url: "/admin/policy-config", icon: Shield },
-              { title: "Placement Windows", url: "/admin/placement-windows", icon: Calendar }
-            ]
-          },
-          {
-            title: "Management",
-            items: [
-              { title: "District Oversight", url: "/admin/districts", icon: MapPin },
-              { title: "Municipality Users", url: "/admin/users", icon: UserCheck },
-              { title: "Role Templates", url: "/admin/role-templates", icon: Shield },
-              { title: "Kindergarten Registry", url: "/admin/kindergarten-registry", icon: School }
-            ]
-          },
-          {
-            title: "Integration & Security",
-            items: [
-              { title: "Data Integration", url: "/admin/integrations", icon: Database },
-              { title: "Security & Audit", url: "/admin/security-audit", icon: Eye },
-              { title: "Compliance", url: "/admin/compliance", icon: Shield }
-            ]
-          }
-        ];
-
       case 'guardian':
-        return [
-          {
-            title: "Guardian Portal",
-            items: [
-              { title: "Dashboard", url: "/guardian", icon: LayoutDashboard },
-              { title: "Applications", url: "/guardian/applications", icon: FileText },
-              { title: "Children", url: "/guardian/children", icon: Users },
-              { title: "Communication", url: "/guardian/communication", icon: Building2 },
-              { title: "Documents", url: "/guardian/documents", icon: FileText },
-              { title: "Payments", url: "/guardian/payments", icon: Clock }
-            ]
-          }
-        ];
-
+        return guardianNavigation;
+      
       case 'caseworker':
         return [
           {
-            title: "Caseworker Dashboard",
-            items: [
-              { title: "Dashboard", url: "/caseworker", icon: LayoutDashboard },
-              { title: "Applications", url: "/caseworker/applications", icon: FileText },
-              { title: "Capacity", url: "/caseworker/capacity", icon: CheckCircle },
-              { title: "Communication", url: "/caseworker/communication", icon: Building2 },
-              { title: "Children", url: "/caseworker/children", icon: Users },
-              { title: "Reports", url: "/caseworker/reports", icon: FileText }
-            ]
-          }
+            title: t('nav.dashboard', 'Dashboard'),
+            url: baseUrl,
+            icon: Home,
+          },
+          {
+            title: t('nav.reviewQueue', 'Review Queue'),
+            url: `${baseUrl}/review-queue`,
+            icon: FolderOpen,
+          },
+          {
+            title: t('nav.placementManagement', 'Placement Management'),
+            url: `${baseUrl}/placement-management`,
+            icon: Users,
+          },
+          {
+            title: t('nav.messages', 'Messages'),
+            url: `${baseUrl}/messages`,
+            icon: MessageSquare,
+          },
         ];
-
-      case 'staff':
+      
+      case 'admin':
         return [
           {
-            title: "Staff Portal",
-            items: [
-              { title: "Dashboard", url: "/staff", icon: LayoutDashboard },
-              { title: "Attendance", url: "/staff/attendance", icon: Clock },
-              { title: "Children", url: "/staff/children", icon: Users },
-              { title: "Communication", url: "/staff/communication", icon: Building2 },
-              { title: "Reports", url: "/staff/reports", icon: FileText }
-            ]
-          }
-        ];
-
-      case 'partner':
-        return [
+            title: t('nav.dashboard', 'Dashboard'),
+            url: baseUrl,
+            icon: Home,
+          },
           {
-            title: "Partner Portal",
-            items: [
-              { title: "Dashboard", url: "/partner", icon: LayoutDashboard },
-              { title: "Applications", url: "/partner/applications", icon: FileText },
-              { title: "Capacity", url: "/partner/capacity", icon: CheckCircle },
-              { title: "Finance", url: "/partner/finance", icon: Clock },
-              { title: "Communication", url: "/partner/communication", icon: Building2 }
-            ]
-          }
-        ];
-
-      case 'district-admin':
-        return [
+            title: t('nav.reports', 'Reports'),
+            url: `${baseUrl}/reports`,
+            icon: BarChart3,
+          },
           {
-            title: "District Administration",
-            items: [
-              { title: "Dashboard", url: "/district-admin", icon: LayoutDashboard },
-              { title: "Kindergartens", url: "/district-admin/kindergartens", icon: School },
-              { title: "Users", url: "/district-admin/users", icon: Users },
-              { title: "Placement Calendar", url: "/district-admin/placement-calendar", icon: Calendar },
-              { title: "Policies", url: "/district-admin/policies", icon: FileText },
-              { title: "Self-Service", url: "/district-admin/self-service", icon: Settings },
-              { title: "Analytics", url: "/district-admin/analytics", icon: BarChart3 },
-              { title: "Audit Logs", url: "/district-admin/audit-logs", icon: Eye }
-            ]
-          }
+            title: t('nav.settings', 'Settings'),
+            url: `${baseUrl}/settings`,
+            icon: Settings,
+          },
         ];
 
       case 'educator':
         return [
           {
-            title: "Educator Portal",
-            items: [
-              { title: "Dashboard", url: "/educator", icon: LayoutDashboard },
-              { title: "Attendance", url: "/educator/attendance", icon: Clock },
-              { title: "Activities", url: "/educator/activities", icon: Calendar },
-              { title: "Communication", url: "/educator/communication", icon: Building2 },
-              { title: "Children", url: "/educator/children", icon: Users }
-            ]
-          }
+            title: 'Dashboard',
+            url: baseUrl,
+            icon: Home,
+          },
+          {
+            title: 'Daily Attendance',
+            url: `${baseUrl}/attendance`,
+            icon: ClipboardList,
+          },
+          {
+            title: 'Children',
+            url: `${baseUrl}/children`,
+            icon: Users,
+          },
+          {
+            title: 'Messages',
+            url: `${baseUrl}/messages`,
+            icon: MessageSquare,
+          },
+          {
+            title: 'Reports',
+            url: `${baseUrl}/reports`,
+            icon: BarChart3,
+          },
+          {
+            title: 'Calendar',
+            url: `${baseUrl}/calendar`,
+            icon: Calendar,
+          },
         ];
 
+      case 'staff':
+      case 'partner':
+        return [
+          {
+            title: 'Dashboard',
+            url: '/kindergarten',
+            icon: Home,
+          },
+          {
+            title: 'Children',
+            url: '/kindergarten/children',
+            icon: Users,
+          },
+          {
+            title: 'Attendance',
+            url: '/kindergarten/attendance',
+            icon: Clock,
+          },
+          {
+            title: 'Reports',
+            url: '/kindergarten/reports',
+            icon: BarChart3,
+          },
+          {
+            title: 'Messages',
+            url: '/kindergarten/messages',
+            icon: MessageSquare,
+          },
+          ...(user?.role === 'partner' ? [
+            {
+              title: 'Applications',
+              url: '/kindergarten/applications',
+              icon: FileText,
+            },
+            {
+              title: 'Capacity',
+              url: '/kindergarten/capacity',
+              icon: Settings,
+            }
+          ] : [])
+        ];
+
+      case 'district-admin':
+        return [
+          {
+            title: t('nav.dashboard', 'Dashboard'),
+            url: baseUrl,
+            icon: Home,
+          },
+          {
+            title: 'Kindergarten Management',
+            url: `${baseUrl}/kindergartens`,
+            icon: School,
+          },
+          {
+            title: 'User Management',
+            url: `${baseUrl}/users`,
+            icon: UserCheck,
+          },
+          {
+            title: 'Placement Calendar',
+            url: `${baseUrl}/placement-calendar`,
+            icon: Calendar,
+          },
+          {
+            title: 'Policy Configuration',
+            url: `${baseUrl}/policies`,
+            icon: Settings,
+          },
+          {
+            title: 'Self-Service Features',
+            url: `${baseUrl}/self-service`,
+            icon: Shield,
+          },
+          {
+            title: 'Analytics',
+            url: `${baseUrl}/analytics`,
+            icon: BarChart3,
+          },
+          {
+            title: 'Audit Logs',
+            url: `${baseUrl}/audit-logs`,
+            icon: Eye,
+          },
+        ];
+      
       default:
         return [];
     }
   };
 
-  const navigationItems = getNavigationItems();
+  const menuItems = getMenuItems();
+
+  const getSidebarTitle = () => {
+    switch (user?.role) {
+      case 'guardian':
+        return 'Guardian Portal';
+      case 'caseworker':
+        return 'Case Worker Dashboard';
+      case 'admin':
+        return 'Administrator Panel';
+      case 'educator':
+        return 'Educator Portal';
+      case 'staff':
+        return 'Public Kindergarten';
+      case 'partner':
+        return 'Private Kindergarten';
+      case 'district-admin':
+        return 'District Administration';
+      default:
+        return 'Platform';
+    }
+  };
+
+  const isGuardianNavigation = (items: any): items is { primary: any[], secondary: any[] } => {
+    return items && typeof items === 'object' && 'primary' in items && 'secondary' in items;
+  };
+
+  const renderGuardianNavigation = () => {
+    const guardianMenuItems = guardianNavigation;
+    
+    if (!isGuardianNavigation(guardianMenuItems)) return null;
+
+    return (
+      <>
+        {/* Primary Navigation - Daily Essentials */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-oslo-blue font-semibold text-xs mb-2 px-3">
+            Daily Essentials
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="space-y-1">
+              {guardianMenuItems.primary?.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton 
+                    asChild 
+                    isActive={location.pathname === item.url}
+                    className="rounded-lg hover:bg-oslo-blue/10 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 min-h-[52px]"
+                  >
+                    <Link to={item.url} className="flex items-center gap-3 px-3 py-2 w-full">
+                      <item.icon className="h-4 w-4 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <span className="font-medium text-sm block">{item.title}</span>
+                        {item.description && (
+                          <p className="text-xs text-slate-500 mt-0.5">{item.description}</p>
+                        )}
+                      </div>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <Separator className="my-3" />
+
+        {/* Secondary Navigation - Administrative */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-slate-600 font-medium text-xs mb-2 px-3">
+            Administrative
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="space-y-1">
+              {guardianMenuItems.secondary?.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton 
+                    asChild 
+                    isActive={location.pathname === item.url}
+                    className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-slate-200 data-[active=true]:text-slate-900 transition-colors duration-200 min-h-[44px]"
+                  >
+                    <Link to={item.url} className="flex items-center gap-3 px-3 py-2 w-full">
+                      <item.icon className="h-4 w-4 text-slate-600 flex-shrink-0" />
+                      <span className="font-medium text-sm">{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </>
+    );
+  };
+
+  const renderCaseworkerNavigation = (items: any[]) => (
+    <>
+      {/* Main Navigation */}
+      <SidebarGroup>
+        <SidebarGroupLabel className="text-oslo-blue font-semibold text-sm mb-3 px-3">
+          {getSidebarTitle()}
+        </SidebarGroupLabel>
+        <SidebarGroupContent>
+          <SidebarMenu className="space-y-1">
+            {items.map((item) => (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton 
+                  asChild 
+                  isActive={location.pathname === item.url}
+                  className="rounded-lg hover:bg-oslo-blue/10 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200"
+                >
+                  <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
+                    <item.icon className="h-5 w-5" />
+                    <span className="font-medium">{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+
+      <Separator className="my-3" />
+
+      {/* Applications Section */}
+      <SidebarGroup>
+        <SidebarGroupContent>
+          <ApplicationsSidebar />
+        </SidebarGroupContent>
+      </SidebarGroup>
+    </>
+  );
+
+  const renderStandardNavigation = (items: any[]) => (
+    <SidebarGroup>
+      <SidebarGroupLabel className="text-oslo-blue font-semibold text-sm mb-3 px-3">
+        {getSidebarTitle()}
+      </SidebarGroupLabel>
+      <SidebarGroupContent>
+        <SidebarMenu className="space-y-1">
+          {items.map((item) => (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton 
+                asChild 
+                isActive={location.pathname === item.url}
+                className="rounded-lg hover:bg-oslo-blue/10 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200"
+              >
+                <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
+                  <item.icon className="h-5 w-5" />
+                  <span className="font-medium">{item.title}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  );
 
   return (
-    <div className="flex flex-col h-full space-y-4 py-4">
-      <div className="px-3 py-2 text-center">
-        <h1 className="font-bold text-lg">Kindergarten System</h1>
-        <p className="text-sm text-muted-foreground">
-          {user?.name} ({user?.role})
-        </p>
-      </div>
-      <div className="flex-1">
-        {navigationItems.map((section, index) => (
-          <Accordion type="single" collapsible className="w-full" key={index}>
-            <AccordionItem value={`section-${index}`}>
-              <AccordionTrigger className="px-3 py-2 font-medium hover:underline">
-                {section.title}
-              </AccordionTrigger>
-              <AccordionContent>
-                <nav className="grid gap-1">
-                  {section.items.map((item) => (
-                    <NavLink
-                      key={item.title}
-                      to={item.url}
-                      className={({ isActive }) =>
-                        `flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors hover:bg-secondary hover:text-secondary-foreground ${
-                          isActive ? "bg-secondary text-secondary-foreground font-medium" : "text-muted-foreground"
-                        }`
-                      }
-                    >
-                      <item.icon className="w-4 h-4" />
-                      {item.title}
-                    </NavLink>
-                  ))}
-                </nav>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        ))}
-      </div>
-      <div className="p-3">
-        <button
-          onClick={logout}
-          className="w-full rounded-md bg-red-500 text-white px-4 py-2 hover:bg-red-600 transition-colors"
-        >
-          <LogOut className="w-4 h-4 mr-2 inline-block" />
-          Logout
-        </button>
-      </div>
-    </div>
+    <Sidebar className="border-r border-slate-200 bg-white">
+      <SidebarHeader className="border-b border-slate-200 p-6">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-oslo-blue to-blue-700 rounded-xl flex items-center justify-center shadow-md">
+            <GraduationCap className="w-6 h-6 text-white" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <h2 className="text-lg font-bold text-oslo-blue truncate">IST Platform</h2>
+            <p className="text-xs text-slate-600 -mt-1 truncate">Oslo Municipality</p>
+          </div>
+        </div>
+      </SidebarHeader>
+      <SidebarContent className="p-4">
+        {user?.role === 'guardian' 
+          ? renderGuardianNavigation() 
+          : user?.role === 'caseworker'
+          ? renderCaseworkerNavigation(Array.isArray(menuItems) ? menuItems : [])
+          : renderStandardNavigation(Array.isArray(menuItems) ? menuItems : [])}
+      </SidebarContent>
+    </Sidebar>
   );
 }
