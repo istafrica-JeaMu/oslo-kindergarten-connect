@@ -74,14 +74,15 @@ const DualPlacementCalendar = ({ kindergartenId, kindergartenName }: DualPlaceme
     }
   ];
 
-  const getDayOfWeek = (date: Date) => {
-    const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-    return days[date.getDay()] as keyof DualPlacementChild['schedule'];
+  const getDayOfWeek = (date: Date): keyof DualPlacementChild['schedule'] | 'weekend' => {
+    const dayIndex = date.getDay();
+    const days: (keyof DualPlacementChild['schedule'] | 'weekend')[] = ['weekend', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'weekend'];
+    return days[dayIndex];
   };
 
   const getExpectedChildren = (date: Date) => {
     const dayOfWeek = getDayOfWeek(date);
-    if (dayOfWeek === 'sunday' || dayOfWeek === 'saturday') return [];
+    if (dayOfWeek === 'weekend') return [];
     
     return dualPlacementChildren.filter(child => {
       const scheduleForDay = child.schedule[dayOfWeek];
@@ -93,7 +94,7 @@ const DualPlacementCalendar = ({ kindergartenId, kindergartenName }: DualPlaceme
   const getUnexpectedChildren = () => {
     return dualPlacementChildren.filter(child => {
       const dayOfWeek = getDayOfWeek(selectedDate);
-      if (dayOfWeek === 'sunday' || dayOfWeek === 'saturday') return false;
+      if (dayOfWeek === 'weekend') return false;
       
       const scheduleForDay = child.schedule[dayOfWeek];
       const isExpectedHere = (kindergartenName === child.primaryKindergarten && scheduleForDay === 'primary') ||
@@ -311,6 +312,36 @@ const DualPlacementCalendar = ({ kindergartenId, kindergartenName }: DualPlaceme
       </Card>
     </div>
   );
+
+  function getAttendanceIcon(status?: string) {
+    switch (status) {
+      case 'present':
+        return <CheckCircle className="h-4 w-4 text-green-600" />;
+      case 'absent':
+        return <XCircle className="h-4 w-4 text-red-600" />;
+      case 'at-other-kindergarten':
+        return <ArrowLeftRight className="h-4 w-4 text-blue-600" />;
+      case 'unscheduled':
+        return <AlertTriangle className="h-4 w-4 text-orange-600" />;
+      default:
+        return <Clock className="h-4 w-4 text-gray-400" />;
+    }
+  }
+
+  function getAttendanceLabel(status?: string) {
+    switch (status) {
+      case 'present':
+        return 'Present';
+      case 'absent':
+        return 'Absent';
+      case 'at-other-kindergarten':
+        return 'At Other Kindergarten';
+      case 'unscheduled':
+        return 'Unscheduled Attendance';
+      default:
+        return 'Not Logged';
+    }
+  }
 };
 
 export default DualPlacementCalendar;
