@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { Eye, Download, Print, MapPin, Users, Clock, Phone, Mail } from 'lucide-react';
+import { Eye, Download, Printer, MapPin, Users, Clock, Phone, Mail } from 'lucide-react';
 
 interface KindergartenDetailsModalProps {
   open: boolean;
@@ -48,7 +48,7 @@ const KindergartenDetailsModal = ({ open, onOpenChange, kindergarten }: Kinderga
                 Export
               </Button>
               <Button variant="outline" size="sm" onClick={handlePrint}>
-                <Print className="w-4 h-4 mr-2" />
+                <Printer className="w-4 h-4 mr-2" />
                 Print
               </Button>
             </div>
