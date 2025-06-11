@@ -219,7 +219,11 @@ const ApplicationView = () => {
             {/* Enhanced Action Bar */}
             <div className="flex gap-3">
               {application.isDualPlacement && (
-                <Button variant="outline" className="gap-2 text-purple-600 border-purple-300 hover:bg-purple-50" onClick={() => handleQuickAction('Manage Dual Placement')}>
+                <Button 
+                  variant="outline" 
+                  className="gap-2 text-purple-600 border-purple-300 hover:bg-purple-50" 
+                  onClick={() => navigate(`/caseworker/dual-placement-setup/${application.id}`)}
+                >
                   <Settings className="h-4 w-4" />
                   Manage Dual Placement
                 </Button>
