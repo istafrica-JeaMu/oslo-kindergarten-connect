@@ -1,4 +1,3 @@
-
 import {
   BrowserRouter as Router,
   Route,
@@ -33,6 +32,7 @@ import GuardianPayments from './pages/guardian/Payments';
 import GuardianDocuments from './pages/guardian/Documents';
 import GuardianNewApplication from './pages/guardian/NewApplication';
 import GuardianLivingArrangements from './pages/guardian/LivingArrangements';
+import GuardianDualPlacementManagement from './pages/guardian/DualPlacementManagement';
 import PostDetail from './pages/guardian/PostDetail';
 import CaseWorkerDashboard from './pages/caseworker/CaseWorkerDashboard';
 import ReviewQueue from './pages/caseworker/ReviewQueue';
@@ -115,6 +115,7 @@ function AppRoutes() {
         <Route path="documents" element={<GuardianDocuments />} />
         <Route path="new-application" element={<GuardianNewApplication />} />
         <Route path="living-arrangements" element={<GuardianLivingArrangements />} />
+        <Route path="dual-placement/:id" element={<GuardianDualPlacementManagement />} />
       </Route>
 
       {/* Caseworker Routes */}
