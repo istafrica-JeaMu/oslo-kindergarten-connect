@@ -3,64 +3,49 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FileText, Clock, CheckCircle, XCircle, AlertCircle, Eye, Calendar, User, FileCheck, Phone, Plus, Bell, MessageCircle, Upload, ExternalLink, MapPin, Calculator } from 'lucide-react';
+import { FileText, Clock, CheckCircle, XCircle, AlertCircle, Eye, Calendar, User, FileCheck, Phone, Plus, Bell, MessageCircle, Upload, ExternalLink, MapPin, Calculator, ArrowLeftRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { mockApplications } from '@/types/application';
 
 const ApplicationStatus = () => {
-  // Enhanced mock application data with new requirements
-  const applications = [
-    {
-      id: 'APP-001',
-      childName: 'Emma Hansen',
-      status: 'under_review',
-      submittedDate: '2024-03-15',
-      admissionRound: 'main_part_1',
-      deadline: '2024-03-01',
-      statutoryRight: true,
-      idVerificationStatus: 'verified',
-      documentsStatus: 'pending_review',
-      queuePosition: 234,
-      kindergartens: [
-        { name: 'Løvenskiold Kindergarten', priority: 1, status: 'pending', distance: '0.8 km' },
-        { name: 'Sinsen Kindergarten', priority: 2, status: 'pending', distance: '1.2 km' },
-        { name: 'Sagene Kindergarten', priority: 3, status: 'pending', distance: '1.5 km' }
-      ],
-      lastUpdate: '2024-03-16',
-      caseWorker: 'Erik Johansen',
-      estimatedDecisionDate: '2024-04-15',
-      progressPercentage: 45,
-      uploadedDocuments: [
-        { name: 'Birth Certificate', status: 'verified', required: true },
-        { name: 'Disability Documentation', status: 'pending', required: false }
-      ],
-      notifications: 3,
-      urgentActions: 1
-    },
-    {
-      id: 'APP-002',
-      childName: 'Oliver Hansen',
-      status: 'placed',
-      submittedDate: '2024-02-20',
-      admissionRound: 'main_part_1',
-      deadline: '2024-03-01',
-      statutoryRight: false,
-      idVerificationStatus: 'verified',
-      documentsStatus: 'verified',
-      kindergartens: [
-        { name: 'Sinsen Kindergarten', priority: 1, status: 'accepted', distance: '1.2 km' },
-        { name: 'Bjølsen Kindergarten', priority: 2, status: 'not_processed', distance: '2.1 km' }
-      ],
-      lastUpdate: '2024-03-10',
-      placedKindergarten: 'Sinsen Kindergarten',
-      startDate: '2024-08-15',
-      progressPercentage: 100,
-      uploadedDocuments: [
-        { name: 'Birth Certificate', status: 'verified', required: true }
-      ],
-      notifications: 0,
-      urgentActions: 0
-    }
-  ];
+  // Use applications from the centralized mock data
+  const applications = mockApplications.filter(app => 
+    // Filter to show applications that would belong to a guardian
+    ['APP-2024-001', 'APP-2024-002', 'APP-2024-010'].includes(app.id)
+  ).map(app => ({
+    ...app,
+    submittedDate: app.createdAt,
+    admissionRound: 'main_part_1' as const,
+    deadline: '2024-03-01',
+    statutoryRight: app.priority === 'high',
+    idVerificationStatus: 'verified' as const,
+    documentsStatus: app.status === 'draft' ? 'pending_review' as const : 'verified' as const,
+    queuePosition: app.status === 'submitted' ? 234 : undefined,
+    kindergartens: [
+      { 
+        name: app.kindergartenPreference || 'Unknown Kindergarten', 
+        priority: 1, 
+        status: app.status === 'submitted' ? 'pending' as const : 'not_processed' as const, 
+        distance: '0.8 km' 
+      },
+      ...(app.secondaryKindergartenPreference ? [{
+        name: app.secondaryKindergartenPreference,
+        priority: 2,
+        status: app.status === 'submitted' ? 'pending' as const : 'not_processed' as const,
+        distance: '1.2 km'
+      }] : [])
+    ],
+    lastUpdate: app.lastModified,
+    caseWorker: 'Erik Johansen',
+    estimatedDecisionDate: '2024-04-15',
+    progressPercentage: app.status === 'draft' ? 25 : app.status === 'submitted' ? 65 : 100,
+    uploadedDocuments: [
+      { name: 'Birth Certificate', status: 'verified' as const, required: true },
+      ...(app.notes ? [{ name: 'Additional Notes', status: 'pending' as const, required: false }] : [])
+    ],
+    notifications: app.status === 'draft' ? 1 : 0,
+    urgentActions: app.status === 'draft' ? 1 : 0
+  }));
 
   // Progress stepper stages
   const getProgressStages = (status: string, progressPercentage: number) => {
@@ -68,7 +53,7 @@ const ApplicationStatus = () => {
       { name: 'Application Submitted', status: 'completed', percentage: 25 },
       { name: 'Under Review', status: progressPercentage >= 50 ? 'completed' : 'current', percentage: 50 },
       { name: 'Decision Made', status: progressPercentage >= 75 ? 'completed' : 'pending', percentage: 75 },
-      { name: 'Placement Assigned', status: status === 'placed' ? 'completed' : 'pending', percentage: 100 }
+      { name: 'Placement Assigned', status: status === 'approved' ? 'completed' : 'pending', percentage: 100 }
     ];
     return stages;
   };
@@ -108,14 +93,16 @@ const ApplicationStatus = () => {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'under_review':
+      case 'draft':
         return <Clock className="h-5 w-5 text-yellow-500" />;
-      case 'placed':
+      case 'submitted':
+        return <Clock className="h-5 w-5 text-blue-500" />;
+      case 'approved':
         return <CheckCircle className="h-5 w-5 text-green-500" />;
       case 'rejected':
         return <XCircle className="h-5 w-5 text-red-500" />;
-      case 'verification_pending':
-        return <User className="h-5 w-5 text-orange-500" />;
+      case 'flagged':
+        return <AlertCircle className="h-5 w-5 text-orange-500" />;
       default:
         return <AlertCircle className="h-5 w-5 text-gray-500" />;
     }
@@ -123,14 +110,16 @@ const ApplicationStatus = () => {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'under_review':
-        return <Badge variant="outline" className="text-yellow-600 border-yellow-300">Under Review</Badge>;
-      case 'placed':
-        return <Badge variant="outline" className="text-green-600 border-green-300">Placement Assigned</Badge>;
+      case 'draft':
+        return <Badge variant="outline" className="text-yellow-600 border-yellow-300">Draft</Badge>;
+      case 'submitted':
+        return <Badge variant="outline" className="text-blue-600 border-blue-300">Submitted</Badge>;
+      case 'approved':
+        return <Badge variant="outline" className="text-green-600 border-green-300">Approved</Badge>;
       case 'rejected':
         return <Badge variant="outline" className="text-red-600 border-red-300">Rejected</Badge>;
-      case 'verification_pending':
-        return <Badge variant="outline" className="text-orange-600 border-orange-300">Verification Pending</Badge>;
+      case 'flagged':
+        return <Badge variant="outline" className="text-orange-600 border-orange-300">Needs Follow-up</Badge>;
       default:
         return <Badge variant="outline">Unknown Status</Badge>;
     }
@@ -141,6 +130,7 @@ const ApplicationStatus = () => {
       case 'verified':
         return <Badge variant="outline" className="text-green-600 border-green-300">Verified</Badge>;
       case 'pending':
+      case 'pending_review':
         return <Badge variant="outline" className="text-yellow-600 border-yellow-300">Pending Review</Badge>;
       case 'rejected':
         return <Badge variant="outline" className="text-red-600 border-red-300">Rejected</Badge>;
@@ -244,6 +234,12 @@ const ApplicationStatus = () => {
                         {app.statutoryRight && (
                           <Badge className="bg-oslo-blue text-white">Statutory Right</Badge>
                         )}
+                        {app.isDualPlacement && (
+                          <Badge variant="outline" className="text-purple-600 border-purple-300">
+                            <ArrowLeftRight className="h-3 w-3 mr-1" />
+                            Dual Placement
+                          </Badge>
+                        )}
                         {app.notifications > 0 && (
                           <Badge variant="outline" className="text-blue-600 border-blue-300">
                             <Bell className="h-3 w-3 mr-1" />
@@ -253,6 +249,11 @@ const ApplicationStatus = () => {
                       </CardTitle>
                       <CardDescription>
                         Application #{app.id} • {roundInfo.name} • Submitted: {app.submittedDate}
+                        {app.isDualPlacement && app.dualPlacementId && (
+                          <span className="block text-purple-600 font-medium mt-1">
+                            Dual Placement ID: {app.dualPlacementId}
+                          </span>
+                        )}
                       </CardDescription>
                     </div>
                   </div>
@@ -265,6 +266,14 @@ const ApplicationStatus = () => {
                       <Eye className="h-4 w-4 mr-2" />
                       View Details
                     </Button>
+                    {app.isDualPlacement && (
+                      <Link to={`/guardian/dual-placement/${app.id}`}>
+                        <Button variant="outline" size="sm" className="text-purple-600 border-purple-300">
+                          <ArrowLeftRight className="h-4 w-4 mr-2" />
+                          Manage Schedule
+                        </Button>
+                      </Link>
+                    )}
                   </div>
                 </div>
                 
@@ -319,6 +328,34 @@ const ApplicationStatus = () => {
                   <p className="text-blue-700 text-sm">{roundInfo.description}</p>
                   <p className="text-blue-600 text-sm mt-1">Deadline: {roundInfo.deadline}</p>
                 </div>
+
+                {/* Dual Placement Special Info */}
+                {app.isDualPlacement && (
+                  <div className="bg-purple-50 p-4 rounded-lg border border-purple-200 mt-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <ArrowLeftRight className="h-4 w-4 text-purple-600" />
+                      <span className="font-semibold text-purple-800">Dual Placement Arrangement</span>
+                    </div>
+                    <p className="text-purple-700 text-sm mb-2">
+                      Your child will attend two kindergartens according to a shared custody schedule.
+                    </p>
+                    <div className="grid grid-cols-2 gap-3 mt-3">
+                      <div className="bg-white p-3 rounded border border-purple-200">
+                        <span className="text-xs font-medium text-purple-600">Primary Kindergarten</span>
+                        <p className="font-medium text-purple-800">{app.kindergartenPreference}</p>
+                      </div>
+                      <div className="bg-white p-3 rounded border border-purple-200">
+                        <span className="text-xs font-medium text-purple-600">Secondary Kindergarten</span>
+                        <p className="font-medium text-purple-800">{app.secondaryKindergartenPreference}</p>
+                      </div>
+                    </div>
+                    {app.notes && (
+                      <p className="text-purple-600 text-sm mt-2">
+                        <strong>Notes:</strong> {app.notes}
+                      </p>
+                    )}
+                  </div>
+                )}
               </CardHeader>
               
               <CardContent className="space-y-6">
@@ -476,26 +513,6 @@ const ApplicationStatus = () => {
                     </div>
                   </TabsContent>
                 </Tabs>
-
-                {app.status === 'placed' && app.placedKindergarten && (
-                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                    <h4 className="font-semibold text-green-800 mb-2">🎉 Congratulations! Placement Assigned</h4>
-                    <p className="text-green-700">
-                      <strong>{app.childName}</strong> has been assigned a place at <strong>{app.placedKindergarten}</strong>
-                    </p>
-                    <p className="text-green-600 mt-1">
-                      Start date: {app.startDate}
-                    </p>
-                    <div className="mt-3 flex gap-2">
-                      <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                        Accept Placement
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        Download Contract
-                      </Button>
-                    </div>
-                  </div>
-                )}
 
                 <div className="flex justify-between items-center pt-4 border-t">
                   <div className="text-sm text-gray-600">
