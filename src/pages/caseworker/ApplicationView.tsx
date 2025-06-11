@@ -1,4 +1,3 @@
-
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
-import { ArrowLeft, Download, Edit, Calendar, User, FileText, Phone, Mail, MapPin, AlertTriangle, CheckCircle, Clock, MessageSquare, FileCheck, Users, Star, Flag, Timer, Pencil, Send, Upload, Eye, Bell, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Download, Edit, Calendar, User, FileText, Phone, Mail, MapPin, AlertTriangle, CheckCircle, Clock, MessageSquare, FileCheck, Users, Star, Flag, Timer, Pencil, Send, Upload, Eye, Bell, ChevronLeft, ChevronRight, Settings } from 'lucide-react';
 import { mockApplications } from '@/types/application';
 import { format, isValid, parseISO, differenceInDays, addDays } from 'date-fns';
 import { toast } from 'sonner';
@@ -179,7 +178,15 @@ const ApplicationView = () => {
                 Back to Queue
               </Button>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Application Details</h1>
+                <div className="flex items-center gap-3">
+                  <h1 className="text-2xl font-bold text-gray-900">Application Details</h1>
+                  {application.isDualPlacement && (
+                    <Badge className="bg-purple-100 text-purple-800 border-purple-300">
+                      <ArrowLeftRight className="h-3 w-3 mr-1" />
+                      Dual Placement
+                    </Badge>
+                  )}
+                </div>
                 <p className="text-sm text-gray-500">{application.id}</p>
               </div>
               
@@ -209,6 +216,12 @@ const ApplicationView = () => {
 
             {/* Enhanced Action Bar */}
             <div className="flex gap-3">
+              {application.isDualPlacement && (
+                <Button variant="outline" className="gap-2 text-purple-600 border-purple-300 hover:bg-purple-50" onClick={() => handleQuickAction('Manage Dual Placement')}>
+                  <Settings className="h-4 w-4" />
+                  Manage Dual Placement
+                </Button>
+              )}
               <Button variant="outline" className="gap-2" onClick={() => handleQuickAction('Contact Guardian')}>
                 <MessageSquare className="h-4 w-4" />
                 Contact Guardian
@@ -337,6 +350,56 @@ const ApplicationView = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Dual Placement Information (if applicable) */}
+            {application.isDualPlacement && (
+              <Card className="border-0 shadow-lg bg-gradient-to-r from-purple-50 to-purple-100/50">
+                <CardHeader className="bg-gradient-to-r from-purple-50 to-purple-100/50">
+                  <CardTitle className="flex items-center gap-3 text-purple-700">
+                    <ArrowLeftRight className="h-5 w-5" />
+                    Dual Placement Configuration
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                        <h4 className="font-medium">Primary Kindergarten</h4>
+                      </div>
+                      <div className="pl-5 space-y-2">
+                        <p className="font-semibold">{application.kindergartenPreference}</p>
+                        <div className="text-sm text-gray-600">
+                          <p>Days: Monday, Tuesday, Friday</p>
+                          <p>Custody: 60%</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                        <h4 className="font-medium">Secondary Kindergarten</h4>
+                      </div>
+                      <div className="pl-5 space-y-2">
+                        <p className="font-semibold">{application.secondaryKindergartenPreference}</p>
+                        <div className="text-sm text-gray-600">
+                          <p>Days: Wednesday, Thursday</p>
+                          <p>Custody: 40%</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-6 p-4 bg-white rounded-lg border border-purple-200">
+                    <h5 className="font-medium text-purple-900 mb-2">Dual Placement Notes</h5>
+                    <p className="text-sm text-purple-700">
+                      Split custody arrangement - parents live in different districts. Approved based on custody agreement dated June 1st, 2024.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Guardian Information with Quick Contact */}
             <Card className="border-0 shadow-lg">
@@ -576,99 +639,4 @@ const ApplicationView = () => {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Application Type</span>
-                    <span className="text-sm font-medium">{application.applicationType}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Processing Time</span>
-                    <span className={`text-sm font-medium ${deadlineInfo.isUrgent ? 'text-red-600' : 'text-gray-900'}`}>
-                      {differenceInDays(new Date(), parseISO(application.createdAt))} days
-                    </span>
-                  </div>
-                </div>
-                
-                <Separator />
-                
-                <div className="space-y-2">
-                  <h4 className="font-medium text-gray-900">Next Steps</h4>
-                  <p className="text-sm text-gray-600">
-                    {application.status === 'draft' && 'Wait for guardian to complete application'}
-                    {application.status === 'submitted' && 'Begin document verification and placement assessment'}
-                    {application.status === 'flagged' && 'Address missing documentation and requirements'}
-                    {application.status === 'approved' && 'Coordinate placement start date with kindergarten'}
-                    {application.status === 'rejected' && 'Provide feedback and guidance for reapplication'}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Documents Status */}
-            <Card className="border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle>Document Status</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {['Birth Certificate', 'Proof of Address', 'Medical Records', 'Guardian ID'].map((doc, index) => (
-                    <div key={index} className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <CheckCircle className="h-4 w-4 text-green-600" />
-                        <span className="text-sm text-gray-700">{doc}</span>
-                      </div>
-                      <Button variant="ghost" size="sm">
-                        <Eye className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  ))}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <AlertTriangle className="h-4 w-4 text-amber-600" />
-                      <span className="text-sm text-gray-700">Income Verification</span>
-                    </div>
-                    <Button variant="ghost" size="sm" className="text-amber-600">
-                      Request
-                    </Button>
-                  </div>
-                </div>
-                
-                <Separator className="my-4" />
-                
-                <Button variant="outline" className="w-full gap-2">
-                  <Upload className="h-4 w-4" />
-                  Upload Additional Documents
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Similar Applications */}
-            <Card className="border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle>Similar Applications</CardTitle>
-                <CardDescription>Applications with similar criteria</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="text-sm">
-                    <div className="flex justify-between mb-1">
-                      <span className="text-gray-600">Same age group</span>
-                      <span className="font-medium">12 pending</span>
-                    </div>
-                    <div className="flex justify-between mb-1">
-                      <span className="text-gray-600">Same district</span>
-                      <span className="font-medium">8 pending</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Same kindergarten</span>
-                      <span className="font-medium">3 pending</span>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default ApplicationView;
+                    <span className="text-sm font-medium">{application.applicationType}</

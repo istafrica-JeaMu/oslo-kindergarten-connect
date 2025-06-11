@@ -1,3 +1,4 @@
+
 import { Application } from '@/types/application';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -10,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Eye, Play, Download, AlertCircle, Clock, CheckCircle } from 'lucide-react';
+import { Eye, Play, Download, AlertCircle, Clock, CheckCircle, ArrowLeftRight, Users, Settings } from 'lucide-react';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -45,6 +46,10 @@ const ApplicationTable = ({ applications, showActions = true }: ApplicationTable
 
   const handleReview = (application: Application) => {
     navigate(`/caseworker/application/${application.id}`);
+  };
+
+  const handleSetupDualPlacement = (application: Application) => {
+    navigate(`/caseworker/dual-placement/${application.id}`);
   };
 
   const getStatusIcon = (status: Application['status']) => {
@@ -123,6 +128,19 @@ const ApplicationTable = ({ applications, showActions = true }: ApplicationTable
       case 'submitted':
         return (
           <>
+            {/* Dual Placement Setup Button */}
+            {!application.isDualPlacement && (
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="h-8 gap-1 text-purple-600 border-purple-300 hover:bg-purple-50"
+                onClick={() => handleSetupDualPlacement(application)}
+                title="Setup dual kindergarten placement"
+              >
+                <ArrowLeftRight className="h-3 w-3" />
+                Dual
+              </Button>
+            )}
             <Button 
               size="sm" 
               variant="outline" 
@@ -221,7 +239,15 @@ const ApplicationTable = ({ applications, showActions = true }: ApplicationTable
               <TableRow key={application.id} className="hover:bg-gray-50">
                 <TableCell className="font-medium">
                   <div>
-                    <div className="font-semibold text-slate-900">{application.childName}</div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-slate-900">{application.childName}</span>
+                      {application.isDualPlacement && (
+                        <Badge variant="outline" className="text-purple-600 border-purple-300 bg-purple-50 text-xs">
+                          <ArrowLeftRight className="h-3 w-3 mr-1" />
+                          Dual
+                        </Badge>
+                      )}
+                    </div>
                     <div className="text-xs text-slate-500">{application.id}</div>
                   </div>
                 </TableCell>
@@ -243,7 +269,16 @@ const ApplicationTable = ({ applications, showActions = true }: ApplicationTable
                 <TableCell>{getStatusBadge(application.status)}</TableCell>
                 <TableCell>
                   <div className="text-sm text-slate-600">
-                    {application.kindergartenPreference || 'Not specified'}
+                    {application.isDualPlacement ? (
+                      <div className="space-y-1">
+                        <div>{application.kindergartenPreference || 'Primary not specified'}</div>
+                        <div className="text-xs text-purple-600">
+                          + {application.secondaryKindergartenPreference || 'Secondary not specified'}
+                        </div>
+                      </div>
+                    ) : (
+                      application.kindergartenPreference || 'Not specified'
+                    )}
                   </div>
                 </TableCell>
                 {showActions && (
