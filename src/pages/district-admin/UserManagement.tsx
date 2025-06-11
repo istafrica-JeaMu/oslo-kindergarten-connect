@@ -22,7 +22,8 @@ import {
   Plus, 
   Download,
   Filter,
-  AlertTriangle
+  AlertTriangle,
+  Shield
 } from 'lucide-react';
 
 const UserManagement = () => {
