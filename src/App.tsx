@@ -1,4 +1,3 @@
-
 import {
   BrowserRouter as Router,
   Route,
@@ -55,6 +54,7 @@ import KindergartenDashboard from './pages/kindergarten/KindergartenDashboard';
 import KindergartenAttendance from './pages/kindergarten/KindergartenAttendance';
 import KindergartenReports from './pages/kindergarten/KindergartenReports';
 import ChildrenManagement from './pages/staff/ChildrenManagement';
+import StaffMessages from './pages/staff/StaffMessages';
 import LoginPage from './pages/auth/LoginPage';
 import NotFound from './pages/NotFound';
 
@@ -202,8 +202,10 @@ function AppRoutes() {
         }
       >
         <Route index element={<KindergartenDashboard />} />
+        <Route path="children" element={<ChildrenManagement />} />
         <Route path="attendance" element={<KindergartenAttendance />} />
         <Route path="reports" element={<KindergartenReports />} />
+        <Route path="messages" element={<StaffMessages />} />
       </Route>
 
       {/* Educator Routes */}
