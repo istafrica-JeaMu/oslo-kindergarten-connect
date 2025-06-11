@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { FileText, User, Building2, Calendar, ArrowRight, CheckCircle, AlertCircle, Sparkles, Clock, Shield, Upload, Info, AlertTriangle, HelpCircle, Loader2, Database } from 'lucide-react';
+import { FileText, User, Building2, Calendar, ArrowRight, CheckCircle, AlertCircle, Sparkles, Clock, Shield, Upload, Info, AlertTriangle, HelpCircle, Loader2, Database, ArrowLeftRight } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import GuardianInfoManager from '@/components/guardian/GuardianInfoManager';
 
@@ -34,7 +34,9 @@ const NewApplication = () => {
     preferences: {
       kindergartens: [],
       startDate: '',
-      fullTime: true
+      fullTime: true,
+      isDualPlacement: false,
+      dualPlacementReason: ''
     },
     guardian: {
       firstName: '',
@@ -552,6 +554,57 @@ const NewApplication = () => {
         <p className="text-slate-600 mb-4">Select up to 3 kindergartens in order of preference. Higher priority choices have better placement chances.</p>
       </div>
 
+      {/* Dual Placement Option */}
+      <Card className="border-2 border-purple-200 bg-purple-50">
+        <CardContent className="p-6">
+          <div className="flex items-start gap-4">
+            <div className="flex items-center space-x-3">
+              <Switch 
+                id="dualPlacement"
+                checked={formData.preferences.isDualPlacement || false}
+                onCheckedChange={(checked) => setFormData({
+                  ...formData,
+                  preferences: { ...formData.preferences, isDualPlacement: checked }
+                })}
+              />
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-2">
+                <ArrowLeftRight className="w-5 h-5 text-purple-600" />
+                <Label htmlFor="dualPlacement" className="text-lg font-semibold text-purple-800">
+                  Request Dual Placement
+                </Label>
+              </div>
+              <p className="text-purple-700 text-sm mb-3">
+                Dual placement allows your child to attend two different kindergartens according to a shared custody schedule or other special arrangements.
+              </p>
+              <div className="text-sm text-purple-600">
+                <p>• Requires approval from both kindergartens</p>
+                <p>• Schedule coordination will be arranged with caseworker</p>
+                <p>• Additional documentation may be required</p>
+              </div>
+            </div>
+          </div>
+          
+          {formData.preferences.isDualPlacement && (
+            <div className="mt-4 p-4 bg-white rounded-lg border border-purple-200">
+              <Label className="text-sm font-semibold text-purple-700 mb-2 block">
+                Reason for Dual Placement Request
+              </Label>
+              <Textarea
+                placeholder="Please explain why you need dual placement (e.g., shared custody arrangement, special circumstances, etc.)"
+                value={formData.preferences.dualPlacementReason || ''}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  preferences: { ...formData.preferences, dualPlacementReason: e.target.value }
+                })}
+                className="min-h-[80px]"
+              />
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       <div className="grid gap-4">
         {kindergartenOptions.map((kg, index) => (
           <Card key={kg.id} className="group hover:shadow-lg transition-all duration-300 cursor-pointer border-2 hover:border-oslo-blue/30">
@@ -579,13 +632,34 @@ const NewApplication = () => {
                   </div>
                 </div>
                 <Button variant="outline" size="sm" className="hover:bg-oslo-blue hover:text-white">
-                  Select as Priority {index + 1}
+                  Select as {formData.preferences.isDualPlacement && index < 2 ? 
+                    (index === 0 ? 'Primary' : 'Secondary') : 
+                    `Priority ${index + 1}`
+                  }
                 </Button>
               </div>
             </CardContent>
           </Card>
         ))}
       </div>
+
+      {formData.preferences.isDualPlacement && (
+        <div className="bg-amber-50 p-4 rounded-xl border border-amber-200">
+          <div className="flex items-start gap-3">
+            <Info className="w-5 h-5 text-amber-600 mt-0.5" />
+            <div>
+              <h4 className="font-semibold text-amber-800 mb-2">Dual Placement Process</h4>
+              <ul className="text-amber-700 text-sm space-y-1">
+                <li>• Select your Primary and Secondary kindergarten preferences above</li>
+                <li>• Your application will be flagged for dual placement review</li>
+                <li>• A caseworker will contact you to discuss scheduling arrangements</li>
+                <li>• Both kindergartens must agree to the dual placement</li>
+                <li>• Final schedule will be coordinated based on availability and your needs</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="grid md:grid-cols-2 gap-6 mt-8">
         <div className="space-y-2">
