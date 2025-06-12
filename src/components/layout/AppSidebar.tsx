@@ -1,3 +1,4 @@
+
 import {
   Home,
   FileText,
@@ -22,7 +23,9 @@ import {
   Monitor,
   Database,
   Activity,
-  Lock
+  Lock,
+  ChevronDown,
+  ChevronRight
 } from 'lucide-react';
 
 import {
@@ -44,12 +47,20 @@ import { useGuardianNavigation } from '@/components/guardian/navigation/Guardian
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import ApplicationsSidebar from '@/components/caseworker/ApplicationsSidebar';
+import { useState } from 'react';
+import { 
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
+import { Button } from '@/components/ui/button';
 
 export function AppSidebar() {
   const { user } = useAuth();
   const { t } = useLanguage();
   const location = useLocation();
   const guardianNavigation = useGuardianNavigation();
+  const [isSystemOverviewOpen, setIsSystemOverviewOpen] = useState(true);
 
   const getMenuItems = () => {
     const baseUrl = `/${user?.role}`;
@@ -83,73 +94,85 @@ export function AppSidebar() {
         ];
       
       case 'admin':
-        return [
-          {
-            title: t('nav.dashboard', 'Dashboard'),
-            url: baseUrl,
-            icon: Home,
-          },
-          {
-            title: 'Global Configuration',
-            url: `${baseUrl}/global-config`,
-            icon: Globe,
-          },
-          {
-            title: 'District Oversight',
-            url: `${baseUrl}/districts`,
-            icon: MapPin,
-          },
-          {
-            title: 'Policy Management',
-            url: `${baseUrl}/policies`,
-            icon: Flag,
-          },
-          {
-            title: 'User Templates',
-            url: `${baseUrl}/user-templates`,
-            icon: UserCheck,
-          },
-          {
-            title: 'Kindergarten Types',
-            url: `${baseUrl}/kindergarten-types`,
-            icon: School,
-          },
-          {
-            title: 'Placement Windows',
-            url: `${baseUrl}/placement-windows`,
-            icon: Calendar,
-          },
-          {
-            title: 'Feature Control',
-            url: `${baseUrl}/features`,
-            icon: Monitor,
-          },
-          {
-            title: 'Security & Compliance',
-            url: `${baseUrl}/security`,
-            icon: Shield,
-          },
-          {
-            title: 'Analytics',
-            url: `${baseUrl}/analytics`,
-            icon: BarChart3,
-          },
-          {
-            title: 'Data Integration',
-            url: `${baseUrl}/integrations`,
-            icon: Database,
-          },
-          {
-            title: 'Communications',
-            url: `${baseUrl}/communications`,
-            icon: MessageSquare,
-          },
-          {
-            title: 'System Releases',
-            url: `${baseUrl}/releases`,
-            icon: Activity,
-          },
-        ];
+        return {
+          primary: [
+            {
+              title: t('nav.dashboard', 'Dashboard'),
+              url: baseUrl,
+              icon: Home,
+            }
+          ],
+          systemOverview: {
+            coreConfiguration: [
+              {
+                title: 'Global Configuration',
+                url: `${baseUrl}/global-config`,
+                icon: Globe,
+              },
+              {
+                title: 'District Oversight',
+                url: `${baseUrl}/districts`,
+                icon: MapPin,
+              },
+              {
+                title: 'Policy Management',
+                url: `${baseUrl}/policies`,
+                icon: Flag,
+              },
+            ],
+            userManagement: [
+              {
+                title: 'User Templates',
+                url: `${baseUrl}/user-templates`,
+                icon: UserCheck,
+              },
+              {
+                title: 'Feature Control',
+                url: `${baseUrl}/features`,
+                icon: Monitor,
+              },
+              {
+                title: 'Security & Compliance',
+                url: `${baseUrl}/security`,
+                icon: Shield,
+              },
+            ],
+            operations: [
+              {
+                title: 'Analytics',
+                url: `${baseUrl}/analytics`,
+                icon: BarChart3,
+              },
+              {
+                title: 'Data Integration',
+                url: `${baseUrl}/integrations`,
+                icon: Database,
+              },
+              {
+                title: 'Communications',
+                url: `${baseUrl}/communications`,
+                icon: MessageSquare,
+              },
+              {
+                title: 'System Releases',
+                url: `${baseUrl}/releases`,
+                icon: Activity,
+              },
+            ],
+            contentManagement: [
+              {
+                title: 'Kindergarten Types',
+                url: `${baseUrl}/kindergarten-types`,
+                icon: School,
+              },
+              {
+                title: 'Placement Windows',
+                url: `${baseUrl}/placement-windows`,
+                icon: Calendar,
+              },
+            ]
+          }
+        };
 
       case 'educator':
         return [
@@ -303,6 +326,10 @@ export function AppSidebar() {
     return items && typeof items === 'object' && 'primary' in items && 'secondary' in items;
   };
 
+  const isAdminNavigation = (items: any): items is { primary: any[], systemOverview: any } => {
+    return items && typeof items === 'object' && 'primary' in items && 'systemOverview' in items;
+  };
+
   const renderGuardianNavigation = () => {
     const guardianMenuItems = guardianNavigation;
     
@@ -364,6 +391,164 @@ export function AppSidebar() {
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </>
+    );
+  };
+
+  const renderAdminNavigation = (items: any) => {
+    if (!isAdminNavigation(items)) return null;
+
+    return (
+      <>
+        {/* Primary Navigation - Dashboard */}
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu className="space-y-1">
+              {items.primary?.map((item: any) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton 
+                    asChild 
+                    isActive={location.pathname === item.url}
+                    className="rounded-lg hover:bg-oslo-blue/10 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200"
+                  >
+                    <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
+                      <item.icon className="h-5 w-5" />
+                      <span className="font-medium">{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <Separator className="my-3" />
+
+        {/* System Overview Dropdown */}
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <Collapsible open={isSystemOverviewOpen} onOpenChange={setIsSystemOverviewOpen}>
+              <CollapsibleTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-between hover:bg-oslo-blue/10 data-[state=open]:bg-oslo-blue/10 transition-colors duration-200 min-h-[44px] rounded-lg"
+                >
+                  <div className="flex items-center gap-3">
+                    <Settings className="h-4 w-4 text-oslo-blue" />
+                    <span className="font-semibold text-slate-900">System Overview</span>
+                  </div>
+                  {isSystemOverviewOpen ? (
+                    <ChevronDown className="h-4 w-4 text-slate-600" />
+                  ) : (
+                    <ChevronRight className="h-4 w-4 text-slate-600" />
+                  )}
+                </Button>
+              </CollapsibleTrigger>
+              
+              <CollapsibleContent className="space-y-4 ml-4 mt-2">
+                {/* Core Configuration */}
+                <div className="space-y-1">
+                  <div className="px-3 py-1">
+                    <span className="text-xs font-semibold text-oslo-blue uppercase tracking-wider">
+                      Core Configuration
+                    </span>
+                  </div>
+                  <SidebarMenu className="space-y-1">
+                    {items.systemOverview.coreConfiguration?.map((item: any) => (
+                      <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton 
+                          asChild 
+                          isActive={location.pathname === item.url}
+                          className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 ml-3"
+                        >
+                          <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
+                            <item.icon className="h-4 w-4" />
+                            <span className="font-medium text-sm">{item.title}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </div>
+
+                {/* User Management */}
+                <div className="space-y-1">
+                  <div className="px-3 py-1">
+                    <span className="text-xs font-semibold text-emerald-600 uppercase tracking-wider">
+                      User Management
+                    </span>
+                  </div>
+                  <SidebarMenu className="space-y-1">
+                    {items.systemOverview.userManagement?.map((item: any) => (
+                      <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton 
+                          asChild 
+                          isActive={location.pathname === item.url}
+                          className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 ml-3"
+                        >
+                          <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
+                            <item.icon className="h-4 w-4" />
+                            <span className="font-medium text-sm">{item.title}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </div>
+
+                {/* Operations */}
+                <div className="space-y-1">
+                  <div className="px-3 py-1">
+                    <span className="text-xs font-semibold text-purple-600 uppercase tracking-wider">
+                      Operations
+                    </span>
+                  </div>
+                  <SidebarMenu className="space-y-1">
+                    {items.systemOverview.operations?.map((item: any) => (
+                      <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton 
+                          asChild 
+                          isActive={location.pathname === item.url}
+                          className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 ml-3"
+                        >
+                          <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
+                            <item.icon className="h-4 w-4" />
+                            <span className="font-medium text-sm">{item.title}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </div>
+
+                {/* Content Management */}
+                <div className="space-y-1">
+                  <div className="px-3 py-1">
+                    <span className="text-xs font-semibold text-amber-600 uppercase tracking-wider">
+                      Content Management
+                    </span>
+                  </div>
+                  <SidebarMenu className="space-y-1">
+                    {items.systemOverview.contentManagement?.map((item: any) => (
+                      <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton 
+                          asChild 
+                          isActive={location.pathname === item.url}
+                          className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 ml-3"
+                        >
+                          <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
+                            <item.icon className="h-4 w-4" />
+                            <span className="font-medium text-sm">{item.title}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
           </SidebarGroupContent>
         </SidebarGroup>
       </>
@@ -450,6 +635,8 @@ export function AppSidebar() {
       <SidebarContent className="p-4">
         {user?.role === 'guardian' 
           ? renderGuardianNavigation() 
+          : user?.role === 'admin'
+          ? renderAdminNavigation(menuItems)
           : user?.role === 'caseworker'
           ? renderCaseworkerNavigation(Array.isArray(menuItems) ? menuItems : [])
           : renderStandardNavigation(Array.isArray(menuItems) ? menuItems : [])}
