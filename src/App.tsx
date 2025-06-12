@@ -45,7 +45,7 @@ import ApplicationsSubmitted from './pages/caseworker/ApplicationsSubmitted';
 import ApplicationsFollowUp from './pages/caseworker/ApplicationsFollowUp';
 import ApplicationView from './pages/caseworker/ApplicationView';
 import DualPlacementSetup from './pages/caseworker/DualPlacementSetup';
-import AdminDashboard from './pages/admin/AdminDashboard';
+import MunicipalityAdminDashboard from './pages/admin/MunicipalityAdminDashboard';
 import Reports from './pages/admin/Reports';
 import SystemSettings from './pages/admin/SystemSettings';
 import StaffDashboard from './pages/staff/StaffDashboard';
@@ -162,7 +162,7 @@ function AppRoutes() {
           </PrivateRoute>
         }
       >
-        <Route index element={<AdminDashboard />} />
+        <Route index element={<MunicipalityAdminDashboard />} />
         <Route path="reports" element={<Reports />} />
         <Route path="settings" element={<SystemSettings />} />
       </Route>
