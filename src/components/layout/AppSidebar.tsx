@@ -46,6 +46,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useGuardianNavigation } from '@/components/guardian/navigation/GuardianNavigation';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import ApplicationsSidebar from '@/components/caseworker/ApplicationsSidebar';
 import { useState } from 'react';
 import { 
