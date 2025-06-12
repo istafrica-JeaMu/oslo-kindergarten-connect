@@ -1,4 +1,3 @@
-
 import {
   BrowserRouter as Router,
   Route,
@@ -68,6 +67,20 @@ import PrivateKindergartenCapacity from './pages/staff/PrivateKindergartenCapaci
 import ApplicationDetail from './pages/staff/ApplicationDetail';
 import LoginPage from './pages/auth/LoginPage';
 import NotFound from './pages/NotFound';
+
+// Municipality Admin Components (placeholders for now)
+import GlobalConfig from './pages/admin/GlobalConfig';
+import Districts from './pages/admin/Districts';
+import Policies from './pages/admin/Policies';
+import UserTemplates from './pages/admin/UserTemplates';
+import KindergartenTypes from './pages/admin/KindergartenTypes';
+import PlacementWindows from './pages/admin/PlacementWindows';
+import Features from './pages/admin/Features';
+import Security from './pages/admin/Security';
+import AdminAnalytics from './pages/admin/AdminAnalytics';
+import Integrations from './pages/admin/Integrations';
+import Communications from './pages/admin/Communications';
+import Releases from './pages/admin/Releases';
 
 function AppRoutes() {
   function PrivateRoute({ children }: { children: JSX.Element }) {
@@ -165,6 +178,18 @@ function AppRoutes() {
         <Route index element={<MunicipalityAdminDashboard />} />
         <Route path="reports" element={<Reports />} />
         <Route path="settings" element={<SystemSettings />} />
+        <Route path="global-config" element={<GlobalConfig />} />
+        <Route path="districts" element={<Districts />} />
+        <Route path="policies" element={<Policies />} />
+        <Route path="user-templates" element={<UserTemplates />} />
+        <Route path="kindergarten-types" element={<KindergartenTypes />} />
+        <Route path="placement-windows" element={<PlacementWindows />} />
+        <Route path="features" element={<Features />} />
+        <Route path="security" element={<Security />} />
+        <Route path="analytics" element={<AdminAnalytics />} />
+        <Route path="integrations" element={<Integrations />} />
+        <Route path="communications" element={<Communications />} />
+        <Route path="releases" element={<Releases />} />
       </Route>
 
       {/* Staff Routes */}

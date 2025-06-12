@@ -1,4 +1,3 @@
-
 import {
   Home,
   FileText,
@@ -16,7 +15,14 @@ import {
   School,
   UserCheck,
   Shield,
-  Eye
+  Eye,
+  Globe,
+  MapPin,
+  Flag,
+  Monitor,
+  Database,
+  Activity,
+  Lock
 } from 'lucide-react';
 
 import {
@@ -84,14 +90,64 @@ export function AppSidebar() {
             icon: Home,
           },
           {
-            title: t('nav.reports', 'Reports'),
-            url: `${baseUrl}/reports`,
+            title: 'Global Configuration',
+            url: `${baseUrl}/global-config`,
+            icon: Globe,
+          },
+          {
+            title: 'District Oversight',
+            url: `${baseUrl}/districts`,
+            icon: MapPin,
+          },
+          {
+            title: 'Policy Management',
+            url: `${baseUrl}/policies`,
+            icon: Flag,
+          },
+          {
+            title: 'User Templates',
+            url: `${baseUrl}/user-templates`,
+            icon: UserCheck,
+          },
+          {
+            title: 'Kindergarten Types',
+            url: `${baseUrl}/kindergarten-types`,
+            icon: School,
+          },
+          {
+            title: 'Placement Windows',
+            url: `${baseUrl}/placement-windows`,
+            icon: Calendar,
+          },
+          {
+            title: 'Feature Control',
+            url: `${baseUrl}/features`,
+            icon: Monitor,
+          },
+          {
+            title: 'Security & Compliance',
+            url: `${baseUrl}/security`,
+            icon: Shield,
+          },
+          {
+            title: 'Analytics',
+            url: `${baseUrl}/analytics`,
             icon: BarChart3,
           },
           {
-            title: t('nav.settings', 'Settings'),
-            url: `${baseUrl}/settings`,
-            icon: Settings,
+            title: 'Data Integration',
+            url: `${baseUrl}/integrations`,
+            icon: Database,
+          },
+          {
+            title: 'Communications',
+            url: `${baseUrl}/communications`,
+            icon: MessageSquare,
+          },
+          {
+            title: 'System Releases',
+            url: `${baseUrl}/releases`,
+            icon: Activity,
           },
         ];
 
@@ -229,7 +285,7 @@ export function AppSidebar() {
       case 'caseworker':
         return 'Case Worker Dashboard';
       case 'admin':
-        return 'Administrator Panel';
+        return 'Municipality Administration';
       case 'educator':
         return 'Educator Portal';
       case 'staff':
