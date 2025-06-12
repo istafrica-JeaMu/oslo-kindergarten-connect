@@ -122,6 +122,11 @@ export function AppSidebar() {
               title: 'Placement Windows',
               url: `${baseUrl}/placement-windows`,
               icon: Calendar,
+            },
+            {
+              title: 'Policy Management',
+              url: `${baseUrl}/policies`,
+              icon: Flag,
             }
           ],
           systemOverview: {
@@ -135,11 +140,6 @@ export function AppSidebar() {
                 title: 'District Oversight',
                 url: `${baseUrl}/districts`,
                 icon: MapPin,
-              },
-              {
-                title: 'Policy Management',
-                url: `${baseUrl}/policies`,
-                icon: Flag,
               },
             ],
             userManagement: [
