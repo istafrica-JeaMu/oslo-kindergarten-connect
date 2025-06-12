@@ -447,106 +447,110 @@ export function AppSidebar() {
                 </Button>
               </CollapsibleTrigger>
               
-              <CollapsibleContent className="space-y-4 ml-4 mt-2">
-                {/* Core Configuration */}
-                <div className="space-y-1">
-                  <div className="px-3 py-1">
-                    <span className="text-xs font-semibold text-oslo-blue uppercase tracking-wider">
-                      Core Configuration
-                    </span>
-                  </div>
-                  <SidebarMenu className="space-y-1">
-                    {items.systemOverview.coreConfiguration?.map((item: any) => (
-                      <SidebarMenuItem key={item.title}>
-                        <SidebarMenuButton 
-                          asChild 
-                          isActive={location.pathname === item.url}
-                          className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 ml-3"
-                        >
-                          <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
-                            <item.icon className="h-4 w-4" />
-                            <span className="font-medium text-sm">{item.title}</span>
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    ))}
-                  </SidebarMenu>
-                </div>
+              <CollapsibleContent className="overflow-hidden">
+                <ScrollArea className="h-auto max-h-[60vh]">
+                  <div className="space-y-3 ml-2 mt-2 pb-2">
+                    {/* Core Configuration */}
+                    <div className="space-y-1">
+                      <div className="px-3 py-2">
+                        <span className="text-xs font-semibold text-oslo-blue uppercase tracking-wider">
+                          Core Configuration
+                        </span>
+                      </div>
+                      <SidebarMenu className="space-y-1">
+                        {items.systemOverview.coreConfiguration?.map((item: any) => (
+                          <SidebarMenuItem key={item.title}>
+                            <SidebarMenuButton 
+                              asChild 
+                              isActive={location.pathname === item.url}
+                              className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 ml-2 min-h-[36px]"
+                            >
+                              <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
+                                <item.icon className="h-4 w-4 flex-shrink-0" />
+                                <span className="font-medium text-sm truncate">{item.title}</span>
+                              </Link>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        ))}
+                      </SidebarMenu>
+                    </div>
 
-                {/* User Management */}
-                <div className="space-y-1">
-                  <div className="px-3 py-1">
-                    <span className="text-xs font-semibold text-emerald-600 uppercase tracking-wider">
-                      User Management
-                    </span>
-                  </div>
-                  <SidebarMenu className="space-y-1">
-                    {items.systemOverview.userManagement?.map((item: any) => (
-                      <SidebarMenuItem key={item.title}>
-                        <SidebarMenuButton 
-                          asChild 
-                          isActive={location.pathname === item.url}
-                          className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 ml-3"
-                        >
-                          <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
-                            <item.icon className="h-4 w-4" />
-                            <span className="font-medium text-sm">{item.title}</span>
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    ))}
-                  </SidebarMenu>
-                </div>
+                    {/* User Management */}
+                    <div className="space-y-1">
+                      <div className="px-3 py-2">
+                        <span className="text-xs font-semibold text-emerald-600 uppercase tracking-wider">
+                          User Management
+                        </span>
+                      </div>
+                      <SidebarMenu className="space-y-1">
+                        {items.systemOverview.userManagement?.map((item: any) => (
+                          <SidebarMenuItem key={item.title}>
+                            <SidebarMenuButton 
+                              asChild 
+                              isActive={location.pathname === item.url}
+                              className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 ml-2 min-h-[36px]"
+                            >
+                              <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
+                                <item.icon className="h-4 w-4 flex-shrink-0" />
+                                <span className="font-medium text-sm truncate">{item.title}</span>
+                              </Link>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        ))}
+                      </SidebarMenu>
+                    </div>
 
-                {/* Operations */}
-                <div className="space-y-1">
-                  <div className="px-3 py-1">
-                    <span className="text-xs font-semibold text-purple-600 uppercase tracking-wider">
-                      Operations
-                    </span>
-                  </div>
-                  <SidebarMenu className="space-y-1">
-                    {items.systemOverview.operations?.map((item: any) => (
-                      <SidebarMenuItem key={item.title}>
-                        <SidebarMenuButton 
-                          asChild 
-                          isActive={location.pathname === item.url}
-                          className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 ml-3"
-                        >
-                          <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
-                            <item.icon className="h-4 w-4" />
-                            <span className="font-medium text-sm">{item.title}</span>
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    ))}
-                  </SidebarMenu>
-                </div>
+                    {/* Operations */}
+                    <div className="space-y-1">
+                      <div className="px-3 py-2">
+                        <span className="text-xs font-semibold text-purple-600 uppercase tracking-wider">
+                          Operations
+                        </span>
+                      </div>
+                      <SidebarMenu className="space-y-1">
+                        {items.systemOverview.operations?.map((item: any) => (
+                          <SidebarMenuItem key={item.title}>
+                            <SidebarMenuButton 
+                              asChild 
+                              isActive={location.pathname === item.url}
+                              className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 ml-2 min-h-[36px]"
+                            >
+                              <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
+                                <item.icon className="h-4 w-4 flex-shrink-0" />
+                                <span className="font-medium text-sm truncate">{item.title}</span>
+                              </Link>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        ))}
+                      </SidebarMenu>
+                    </div>
 
-                {/* Content Management */}
-                <div className="space-y-1">
-                  <div className="px-3 py-1">
-                    <span className="text-xs font-semibold text-amber-600 uppercase tracking-wider">
-                      Content Management
-                    </span>
+                    {/* Content Management */}
+                    <div className="space-y-1">
+                      <div className="px-3 py-2">
+                        <span className="text-xs font-semibold text-amber-600 uppercase tracking-wider">
+                          Content Management
+                        </span>
+                      </div>
+                      <SidebarMenu className="space-y-1">
+                        {items.systemOverview.contentManagement?.map((item: any) => (
+                          <SidebarMenuItem key={item.title}>
+                            <SidebarMenuButton 
+                              asChild 
+                              isActive={location.pathname === item.url}
+                              className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 ml-2 min-h-[36px]"
+                            >
+                              <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
+                                <item.icon className="h-4 w-4 flex-shrink-0" />
+                                <span className="font-medium text-sm truncate">{item.title}</span>
+                              </Link>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        ))}
+                      </SidebarMenu>
+                    </div>
                   </div>
-                  <SidebarMenu className="space-y-1">
-                    {items.systemOverview.contentManagement?.map((item: any) => (
-                      <SidebarMenuItem key={item.title}>
-                        <SidebarMenuButton 
-                          asChild 
-                          isActive={location.pathname === item.url}
-                          className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 ml-3"
-                        >
-                          <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
-                            <item.icon className="h-4 w-4" />
-                            <span className="font-medium text-sm">{item.title}</span>
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    ))}
-                  </SidebarMenu>
-                </div>
+                </ScrollArea>
               </CollapsibleContent>
             </Collapsible>
           </SidebarGroupContent>
