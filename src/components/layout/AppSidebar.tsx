@@ -1,4 +1,3 @@
-
 import {
   Home,
   FileText,
@@ -61,7 +60,7 @@ export function AppSidebar() {
   const { t } = useLanguage();
   const location = useLocation();
   const guardianNavigation = useGuardianNavigation();
-  const [isSystemOverviewOpen, setIsSystemOverviewOpen] = useState(true);
+  const [isSystemOverviewOpen, setIsSystemOverviewOpen] = useState(false);
 
   const getMenuItems = () => {
     const baseUrl = `/${user?.role}`;
@@ -101,6 +100,28 @@ export function AppSidebar() {
               title: t('nav.dashboard', 'Dashboard'),
               url: baseUrl,
               icon: Home,
+            },
+            {
+              title: 'Analytics',
+              url: `${baseUrl}/analytics`,
+              icon: BarChart3,
+            },
+            {
+              title: 'Communications',
+              url: `${baseUrl}/communications`,
+              icon: MessageSquare,
+            }
+          ],
+          governance: [
+            {
+              title: 'Kindergarten Types',
+              url: `${baseUrl}/kindergarten-types`,
+              icon: School,
+            },
+            {
+              title: 'Placement Windows',
+              url: `${baseUrl}/placement-windows`,
+              icon: Calendar,
             }
           ],
           systemOverview: {
@@ -140,36 +161,14 @@ export function AppSidebar() {
             ],
             operations: [
               {
-                title: 'Analytics',
-                url: `${baseUrl}/analytics`,
-                icon: BarChart3,
-              },
-              {
                 title: 'Data Integration',
                 url: `${baseUrl}/integrations`,
                 icon: Database,
               },
               {
-                title: 'Communications',
-                url: `${baseUrl}/communications`,
-                icon: MessageSquare,
-              },
-              {
                 title: 'System Releases',
                 url: `${baseUrl}/releases`,
                 icon: Activity,
-              },
-            ],
-            contentManagement: [
-              {
-                title: 'Kindergarten Types',
-                url: `${baseUrl}/kindergarten-types`,
-                icon: School,
-              },
-              {
-                title: 'Placement Windows',
-                url: `${baseUrl}/placement-windows`,
-                icon: Calendar,
               },
             ]
           }
@@ -403,8 +402,11 @@ export function AppSidebar() {
 
     return (
       <>
-        {/* Primary Navigation - Dashboard */}
+        {/* Primary Navigation - Dashboard & Core Functions */}
         <SidebarGroup>
+          <SidebarGroupLabel className="text-oslo-blue font-semibold text-xs mb-2 px-3">
+            Core Functions
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
               {items.primary?.map((item: any) => (
@@ -427,18 +429,45 @@ export function AppSidebar() {
 
         <Separator className="my-3" />
 
-        {/* System Overview Dropdown */}
+        {/* Governance Section */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-emerald-600 font-semibold text-xs mb-2 px-3">
+            Governance
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="space-y-1">
+              {items.governance?.map((item: any) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton 
+                    asChild 
+                    isActive={location.pathname === item.url}
+                    className="rounded-lg hover:bg-emerald-50 data-[active=true]:bg-emerald-100 data-[active=true]:text-emerald-800 transition-colors duration-200"
+                  >
+                    <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
+                      <item.icon className="h-4 w-4 text-emerald-600" />
+                      <span className="font-medium text-sm">{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <Separator className="my-3" />
+
+        {/* System Overview Dropdown - Collapsed by Default */}
         <SidebarGroup>
           <SidebarGroupContent>
             <Collapsible open={isSystemOverviewOpen} onOpenChange={setIsSystemOverviewOpen}>
               <CollapsibleTrigger asChild>
                 <Button 
                   variant="ghost" 
-                  className="w-full justify-between hover:bg-oslo-blue/10 data-[state=open]:bg-oslo-blue/10 transition-colors duration-200 min-h-[44px] rounded-lg"
+                  className="w-full justify-between hover:bg-slate-100 data-[state=open]:bg-slate-100 transition-colors duration-200 min-h-[44px] rounded-lg"
                 >
                   <div className="flex items-center gap-3">
-                    <Settings className="h-4 w-4 text-oslo-blue" />
-                    <span className="font-semibold text-slate-900">System Overview</span>
+                    <Settings className="h-4 w-4 text-slate-600" />
+                    <span className="font-semibold text-slate-700">System Overview</span>
                   </div>
                   {isSystemOverviewOpen ? (
                     <ChevronDown className="h-4 w-4 text-slate-600" />
@@ -449,7 +478,7 @@ export function AppSidebar() {
               </CollapsibleTrigger>
               
               <CollapsibleContent className="overflow-hidden">
-                <ScrollArea className="h-auto max-h-[60vh]">
+                <ScrollArea className="h-auto max-h-[50vh]">
                   <div className="space-y-3 ml-2 mt-2 pb-2">
                     {/* Core Configuration */}
                     <div className="space-y-1">
@@ -479,7 +508,7 @@ export function AppSidebar() {
                     {/* User Management */}
                     <div className="space-y-1">
                       <div className="px-3 py-2">
-                        <span className="text-xs font-semibold text-emerald-600 uppercase tracking-wider">
+                        <span className="text-xs font-semibold text-purple-600 uppercase tracking-wider">
                           User Management
                         </span>
                       </div>
@@ -504,37 +533,12 @@ export function AppSidebar() {
                     {/* Operations */}
                     <div className="space-y-1">
                       <div className="px-3 py-2">
-                        <span className="text-xs font-semibold text-purple-600 uppercase tracking-wider">
+                        <span className="text-xs font-semibold text-amber-600 uppercase tracking-wider">
                           Operations
                         </span>
                       </div>
                       <SidebarMenu className="space-y-1">
                         {items.systemOverview.operations?.map((item: any) => (
-                          <SidebarMenuItem key={item.title}>
-                            <SidebarMenuButton 
-                              asChild 
-                              isActive={location.pathname === item.url}
-                              className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 ml-2 min-h-[36px]"
-                            >
-                              <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
-                                <item.icon className="h-4 w-4 flex-shrink-0" />
-                                <span className="font-medium text-sm truncate">{item.title}</span>
-                              </Link>
-                            </SidebarMenuButton>
-                          </SidebarMenuItem>
-                        ))}
-                      </SidebarMenu>
-                    </div>
-
-                    {/* Content Management */}
-                    <div className="space-y-1">
-                      <div className="px-3 py-2">
-                        <span className="text-xs font-semibold text-amber-600 uppercase tracking-wider">
-                          Content Management
-                        </span>
-                      </div>
-                      <SidebarMenu className="space-y-1">
-                        {items.systemOverview.contentManagement?.map((item: any) => (
                           <SidebarMenuItem key={item.title}>
                             <SidebarMenuButton 
                               asChild 
