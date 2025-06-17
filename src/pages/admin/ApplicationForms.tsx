@@ -2,9 +2,9 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   Table,
   TableBody,
@@ -20,10 +20,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { FileText, Search, Plus, Edit, Settings, List, Eye } from 'lucide-react';
+import { FileText, Plus, Edit, Settings, List, MapPin } from 'lucide-react';
 import FormTemplateBuilder from '@/components/admin/forms/FormTemplateBuilder';
 import FormConfiguration from '@/components/admin/forms/FormConfiguration';
-import DistrictSelector from '@/components/admin/forms/DistrictSelector';
 import TemplatePreview from '@/components/admin/forms/TemplatePreview';
 
 interface District {
@@ -54,13 +53,33 @@ interface FormTemplate {
 }
 
 const ApplicationForms = () => {
-  const [searchTerm, setSearchTerm] = useState('');
   const [selectedForm, setSelectedForm] = useState<ApplicationForm | null>(null);
-  const [selectedDistrict, setSelectedDistrict] = useState<District | null>(null);
+  const [selectedDistrict, setSelectedDistrict] = useState<string>('');
   const [isTemplateBuilderOpen, setIsTemplateBuilderOpen] = useState(false);
   const [isConfigurationOpen, setIsConfigurationOpen] = useState(false);
   const [isTemplatePreviewOpen, setIsTemplatePreviewOpen] = useState(false);
   const [previewTemplate, setPreviewTemplate] = useState<FormTemplate | null>(null);
+
+  const districts: District[] = [
+    {
+      id: '1',
+      name: 'Central District',
+      municipality: 'Oslo Municipality',
+      formCount: 2
+    },
+    {
+      id: '2',
+      name: 'Eastern District',
+      municipality: 'Oslo Municipality',
+      formCount: 2
+    },
+    {
+      id: '3',
+      name: 'Western District',
+      municipality: 'Bergen Municipality',
+      formCount: 2
+    }
+  ];
 
   // Mock data - Only Childcare and Preschool forms
   const applicationForms: ApplicationForm[] = [
@@ -110,12 +129,9 @@ const ApplicationForms = () => {
     }
   ];
 
-  // Filter forms by selected district and search term
+  // Filter forms by selected district
   const filteredForms = applicationForms.filter(form => {
-    const matchesDistrict = !selectedDistrict || form.districtId === selectedDistrict.id;
-    const matchesSearch = form.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         form.municipality.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesDistrict && matchesSearch;
+    return !selectedDistrict || form.districtId === selectedDistrict;
   });
 
   const getStatusBadgeVariant = (status: string) => {
@@ -183,6 +199,8 @@ const ApplicationForms = () => {
     setIsTemplatePreviewOpen(true);
   };
 
+  const selectedDistrictInfo = districts.find(d => d.id === selectedDistrict);
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
@@ -192,12 +210,6 @@ const ApplicationForms = () => {
           <p className="text-slate-600">Manage kindergarten application forms and templates</p>
         </div>
       </div>
-
-      {/* District Selector */}
-      <DistrictSelector 
-        selectedDistrict={selectedDistrict}
-        onDistrictSelect={setSelectedDistrict}
-      />
 
       <Tabs defaultValue="forms" className="space-y-4">
         <TabsList>
@@ -217,9 +229,9 @@ const ApplicationForms = () => {
               <div className="flex items-center justify-between">
                 <CardTitle>
                   Application Forms (Ansökningsformulär)
-                  {selectedDistrict && (
+                  {selectedDistrictInfo && (
                     <span className="text-base font-normal text-slate-600 ml-2">
-                      - {selectedDistrict.name}
+                      - {selectedDistrictInfo.name}
                     </span>
                   )}
                 </CardTitle>
@@ -229,17 +241,21 @@ const ApplicationForms = () => {
                 </Button>
               </div>
               <div className="flex items-center gap-4 mt-4">
-                <div className="relative flex-1 max-w-sm">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
-                  <Input
-                    placeholder="Search forms..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-                <div className="text-sm text-slate-600">
-                  Sort Order: Name (Internal)
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-slate-600" />
+                  <Select value={selectedDistrict} onValueChange={setSelectedDistrict}>
+                    <SelectTrigger className="w-64">
+                      <SelectValue placeholder="Select District / Municipality" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">All Districts</SelectItem>
+                      {districts.map((district) => (
+                        <SelectItem key={district.id} value={district.id}>
+                          {district.name} - {district.municipality}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
             </CardHeader>
