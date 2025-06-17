@@ -68,6 +68,8 @@ const TimetableTable = ({ data, selectedRows, onSelectAll, onSelectRow, activeTa
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
 
   const handleSort = (field: string) => {
+    console.log('Sorting field:', field, 'Current direction:', sortDirection);
+    
     if (sortField === field) {
       if (sortDirection === 'asc') {
         setSortDirection('desc');
@@ -96,12 +98,55 @@ const TimetableTable = ({ data, selectedRows, onSelectAll, onSelectRow, activeTa
     return <ChevronsUpDown className="w-3 h-3 ml-1 text-gray-400" />;
   };
 
-  const sortedData = React.useMemo(() => {
-    if (!sortField || !sortDirection) return data;
+  const getFieldValue = (record: TimetableRecord, field: string): any => {
+    // Handle special field mappings based on tab context
+    switch (field) {
+      case 'child':
+        return record.child || record.childName;
+      case 'currentUnit':
+        return record.currentUnit || record.unit;
+      case 'replaceUnit':
+        return record.replaceUnit || '';
+      case 'requestedAdmissionEndDate':
+        return record.requestedAdmissionEndDate || record.endDate;
+      case 'requestedNewAdmissionStartDate':
+        return record.requestedNewAdmissionStartDate || record.requestedStartDate;
+      case 'changedStartDate':
+        return record.changedStartDate || record.startDate;
+      case 'currentRateCategory':
+        return record.currentRateCategory || record.rateCategory;
+      case 'currentAverageTime':
+        return record.currentAverageTime || record.averageTime;
+      case 'childFirstName':
+        return record.childFirstName || (record.childName ? record.childName.split(' ')[0] : '');
+      case 'childLastName':
+        return record.childLastName || (record.childName ? record.childName.split(' ')[1] || '' : '');
+      case 'admissionStart':
+        return record.admissionStart || record.startDate;
+      case 'desiredStartDate':
+        return record.desiredStartDate || record.requestedStartDate;
+      case 'civicNumber':
+        return record.civicNumber || record.childCivicNumber;
+      case 'desiredEndDate':
+        return record.desiredEndDate || record.endDate;
+      default:
+        return (record as any)[field];
+    }
+  };
 
-    return [...data].sort((a, b) => {
-      const aValue = (a as any)[sortField];
-      const bValue = (b as any)[sortField];
+  const sortedData = React.useMemo(() => {
+    if (!sortField || !sortDirection || !data.length) {
+      console.log('No sorting applied:', { sortField, sortDirection, dataLength: data.length });
+      return data;
+    }
+
+    console.log('Applying sort:', { sortField, sortDirection });
+
+    const sorted = [...data].sort((a, b) => {
+      const aValue = getFieldValue(a, sortField);
+      const bValue = getFieldValue(b, sortField);
+      
+      console.log('Comparing:', { field: sortField, aValue, bValue });
       
       // Handle null/undefined values
       if (aValue == null && bValue == null) return 0;
@@ -134,6 +179,9 @@ const TimetableTable = ({ data, selectedRows, onSelectAll, onSelectRow, activeTa
       
       return sortDirection === 'asc' ? comparison : -comparison;
     });
+
+    console.log('Sorted data:', sorted.map(item => ({ id: item.id, [sortField]: getFieldValue(item, sortField) })));
+    return sorted;
   }, [data, sortField, sortDirection]);
 
   const SortableHeader = ({ field, children, className = "" }: { field: string; children: React.ReactNode; className?: string }) => (
