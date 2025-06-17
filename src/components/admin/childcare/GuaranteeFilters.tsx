@@ -59,7 +59,7 @@ const GuaranteeFilters = ({ isExpanded, onToggle }: GuaranteeFiltersProps) => {
               </div>
             </div>
           </CardContent>
-        </Collapsible>
+        </CollapsibleContent>
       </Collapsible>
     </Card>
   );
