@@ -44,6 +44,7 @@ import {
   ChevronDown,
   Eye
 } from 'lucide-react';
+import TemplatePreview from './TemplatePreview';
 
 interface QuestionInput {
   id: string;
@@ -72,8 +73,7 @@ interface FormTemplateBuilderProps {
 
 const FormTemplateBuilder: React.FC<FormTemplateBuilderProps> = ({ 
   form, 
-  onClose, 
-  onDisplayTemplate 
+  onClose 
 }) => {
   const [availableTemplates, setAvailableTemplates] = useState<FormTemplate[]>([
     {
@@ -115,6 +115,8 @@ const FormTemplateBuilder: React.FC<FormTemplateBuilderProps> = ({
     mandatory: false,
     active: true
   });
+  const [isTemplatePreviewOpen, setIsTemplatePreviewOpen] = useState(false);
+  const [previewTemplate, setPreviewTemplate] = useState<FormTemplate | null>(null);
 
   const questionTypeIcons = {
     open: Type,
@@ -238,6 +240,11 @@ const FormTemplateBuilder: React.FC<FormTemplateBuilderProps> = ({
     }
   };
 
+  const handleDisplayTemplate = (template: FormTemplate) => {
+    setPreviewTemplate(template);
+    setIsTemplatePreviewOpen(true);
+  };
+
   const TemplateCard = ({ template, isSelected }: { template: FormTemplate; isSelected: boolean }) => (
     <div className="border rounded-lg p-3 bg-white hover:bg-slate-50">
       <div className="flex items-center justify-between mb-2">
@@ -299,7 +306,7 @@ const FormTemplateBuilder: React.FC<FormTemplateBuilderProps> = ({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold">Handle Templates</h3>
+          <h3 className="text-lg font-semibold">Manage Templates</h3>
           <p className="text-sm text-slate-600">Build and customize your application form templates</p>
         </div>
         {onClose && (
@@ -536,14 +543,26 @@ const FormTemplateBuilder: React.FC<FormTemplateBuilderProps> = ({
         </DialogContent>
       </Dialog>
 
+      {/* Template Preview Dialog */}
+      <TemplatePreview 
+        isOpen={isTemplatePreviewOpen}
+        onClose={() => setIsTemplatePreviewOpen(false)}
+        template={previewTemplate}
+      />
+
       <div className="flex items-center justify-between pt-4 border-t">
         <Button 
           variant="outline" 
-          onClick={onDisplayTemplate}
+          onClick={() => {
+            if (selectedTemplates.length > 0) {
+              handleDisplayTemplate(selectedTemplates[0]);
+            }
+          }}
           className="flex items-center gap-2"
+          disabled={selectedTemplates.length === 0}
         >
           <Eye className="w-4 h-4" />
-          Display Template
+          Preview Selected Templates
         </Button>
         <div className="flex gap-2">
           {onClose && <Button variant="outline" onClick={onClose}>Cancel</Button>}
