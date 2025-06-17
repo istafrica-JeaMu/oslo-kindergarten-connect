@@ -130,6 +130,30 @@ const FormTemplateBuilder: React.FC<FormTemplateBuilderProps> = ({
     address: MapPin
   };
 
+  const handleSaveTemplate = () => {
+    if (editingTemplate) {
+      // Update in the appropriate list
+      const isInSelected = selectedTemplates.find(t => t.id === editingTemplate.id);
+      if (isInSelected) {
+        setSelectedTemplates(selectedTemplates.map(t => 
+          t.id === editingTemplate.id ? editingTemplate : t
+        ));
+      } else {
+        setAvailableTemplates(availableTemplates.map(t => 
+          t.id === editingTemplate.id ? editingTemplate : t
+        ));
+      }
+      
+      setEditingTemplate(null);
+      setIsEditTemplateOpen(false);
+    }
+  };
+
+  const handleCancelTemplateEdit = () => {
+    setEditingTemplate(null);
+    setIsEditTemplateOpen(false);
+  };
+
   const moveToSelected = (template: FormTemplate) => {
     setSelectedTemplates([...selectedTemplates, { ...template, order: selectedTemplates.length + 1 }]);
     setAvailableTemplates(availableTemplates.filter(t => t.id !== template.id));
@@ -540,6 +564,15 @@ const FormTemplateBuilder: React.FC<FormTemplateBuilderProps> = ({
               </div>
             </div>
           )}
+
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={handleCancelTemplateEdit}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveTemplate}>
+              Save Template
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 
