@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -189,20 +188,24 @@ const PlacementManagement = () => {
     ));
   };
 
-  const handleSelectAll = (checked: boolean) => {
-    if (checked) {
+  const handleSelectAll = (checked: boolean | "indeterminate") => {
+    if (checked === true) {
       setSelectedRows(mockApplications.map(app => app.id));
     } else {
       setSelectedRows([]);
     }
   };
 
-  const handleSelectRow = (id: string, checked: boolean) => {
-    if (checked) {
+  const handleSelectRow = (id: string, checked: boolean | "indeterminate") => {
+    if (checked === true) {
       setSelectedRows([...selectedRows, id]);
     } else {
       setSelectedRows(selectedRows.filter(rowId => rowId !== id));
     }
+  };
+
+  const handleShowOnlyCurrentUnits = (checked: boolean | "indeterminate") => {
+    setShowOnlyCurrentUnits(checked === true);
   };
 
   const filteredApplications = mockApplications.filter(app => {
@@ -240,7 +243,7 @@ const PlacementManagement = () => {
                 <Checkbox 
                   id="currentUnits" 
                   checked={showOnlyCurrentUnits}
-                  onCheckedChange={setShowOnlyCurrentUnits}
+                  onCheckedChange={handleShowOnlyCurrentUnits}
                 />
                 <Label htmlFor="currentUnits">Show only current units</Label>
               </div>
@@ -427,7 +430,7 @@ const PlacementManagement = () => {
                         <TableCell>
                           <Checkbox
                             checked={selectedRows.includes(application.id)}
-                            onCheckedChange={(checked) => handleSelectRow(application.id, !!checked)}
+                            onCheckedChange={(checked) => handleSelectRow(application.id, checked)}
                           />
                         </TableCell>
                         <TableCell className="font-medium">{application.timetableId}</TableCell>
