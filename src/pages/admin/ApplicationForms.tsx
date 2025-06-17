@@ -1,9 +1,7 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   Table,
@@ -20,10 +18,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { FileText, Plus, Edit, Settings, List, MapPin } from 'lucide-react';
-import FormTemplateBuilder from '@/components/admin/forms/FormTemplateBuilder';
+import { FileText, Plus, Edit, List, MapPin } from 'lucide-react';
 import FormConfiguration from '@/components/admin/forms/FormConfiguration';
 import TemplatePreview from '@/components/admin/forms/TemplatePreview';
+import AddNewFormModal from '@/components/admin/forms/AddNewFormModal';
 
 interface District {
   id: string;
@@ -55,9 +53,9 @@ interface FormTemplate {
 const ApplicationForms = () => {
   const [selectedForm, setSelectedForm] = useState<ApplicationForm | null>(null);
   const [selectedDistrict, setSelectedDistrict] = useState<string>('all');
-  const [isTemplateBuilderOpen, setIsTemplateBuilderOpen] = useState(false);
   const [isConfigurationOpen, setIsConfigurationOpen] = useState(false);
   const [isTemplatePreviewOpen, setIsTemplatePreviewOpen] = useState(false);
+  const [isAddFormModalOpen, setIsAddFormModalOpen] = useState(false);
   const [previewTemplate, setPreviewTemplate] = useState<FormTemplate | null>(null);
 
   const districts: District[] = [
@@ -161,11 +159,6 @@ const ApplicationForms = () => {
     setIsConfigurationOpen(true);
   };
 
-  const handleManageTemplate = (form: ApplicationForm) => {
-    setSelectedForm(form);
-    setIsTemplateBuilderOpen(true);
-  };
-
   const handleDisplayTemplate = () => {
     // Mock template data for preview
     const mockTemplate: FormTemplate = {
@@ -211,117 +204,108 @@ const ApplicationForms = () => {
         </div>
       </div>
 
-      <Tabs defaultValue="forms" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="forms" className="flex items-center gap-2">
-            <List className="w-4 h-4" />
-            Application Forms
-          </TabsTrigger>
-          <TabsTrigger value="templates" className="flex items-center gap-2">
-            <Settings className="w-4 h-4" />
-            Manage Templates
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="forms">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle>
-                  Application Forms (Ansökningsformulär)
-                  {selectedDistrictInfo && (
-                    <span className="text-base font-normal text-slate-600 ml-2">
-                      - {selectedDistrictInfo.name}
-                    </span>
-                  )}
-                </CardTitle>
-                <Button className="flex items-center gap-2">
-                  <Plus className="w-4 h-4" />
-                  Add New Form
-                </Button>
-              </div>
-              <div className="flex items-center gap-4 mt-4">
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-slate-600" />
-                  <Select value={selectedDistrict} onValueChange={setSelectedDistrict}>
-                    <SelectTrigger className="w-64">
-                      <SelectValue placeholder="Select District / Municipality" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Districts</SelectItem>
-                      {districts.map((district) => (
-                        <SelectItem key={district.id} value={district.id}>
-                          {district.name} - {district.municipality}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-teal-600 hover:bg-teal-600">
-                    <TableHead className="text-white font-medium">Namn (internt)</TableHead>
-                    <TableHead className="text-white font-medium">Verksamhetstyp</TableHead>
-                    <TableHead className="text-white font-medium">Templates</TableHead>
-                    <TableHead className="text-white font-medium">Ändra</TableHead>
-                    <TableHead className="text-white font-medium">Frågaformulär</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredForms.map((form) => (
-                    <TableRow key={form.id} className="hover:bg-slate-50">
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                          <span className="font-medium text-blue-600">{form.name}</span>
-                          <Badge variant={getStatusBadgeVariant(form.status)}>
-                            {form.status}
-                          </Badge>
-                        </div>
-                        <div className="text-sm text-slate-500">
-                          Last modified: {form.lastModified} | {form.submissionCount} submissions
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <span className="text-slate-700">{form.municipality}</span>
-                      </TableCell>
-                      <TableCell>
-                        {getTemplateCompletionBadge(form.assignedTemplates, form.totalTemplatesNeeded)}
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleEditForm(form)}
-                          className="text-slate-600 hover:text-slate-900"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </Button>
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleManageTemplate(form)}
-                          className="text-slate-600 hover:text-slate-900"
-                        >
-                          <List className="w-4 h-4" />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle>
+              Application Forms (Ansökningsformulär)
+              {selectedDistrictInfo && (
+                <span className="text-base font-normal text-slate-600 ml-2">
+                  - {selectedDistrictInfo.name}
+                </span>
+              )}
+            </CardTitle>
+            <Button 
+              className="flex items-center gap-2"
+              onClick={() => setIsAddFormModalOpen(true)}
+            >
+              <Plus className="w-4 h-4" />
+              Add New Form
+            </Button>
+          </div>
+          <div className="flex items-center gap-4 mt-4">
+            <div className="flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-slate-600" />
+              <Select value={selectedDistrict} onValueChange={setSelectedDistrict}>
+                <SelectTrigger className="w-64">
+                  <SelectValue placeholder="Select District / Municipality" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Districts</SelectItem>
+                  {districts.map((district) => (
+                    <SelectItem key={district.id} value={district.id}>
+                      {district.name} - {district.municipality}
+                    </SelectItem>
                   ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </TabsContent>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-teal-600 hover:bg-teal-600">
+                <TableHead className="text-white font-medium">Namn (internt)</TableHead>
+                <TableHead className="text-white font-medium">Verksamhetstyp</TableHead>
+                <TableHead className="text-white font-medium">Templates</TableHead>
+                <TableHead className="text-white font-medium">Ändra</TableHead>
+                <TableHead className="text-white font-medium">Frågaformulär</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredForms.map((form) => (
+                <TableRow key={form.id} className="hover:bg-slate-50">
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <span className="font-medium text-blue-600">{form.name}</span>
+                      <Badge variant={getStatusBadgeVariant(form.status)}>
+                        {form.status}
+                      </Badge>
+                    </div>
+                    <div className="text-sm text-slate-500">
+                      Last modified: {form.lastModified} | {form.submissionCount} submissions
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <span className="text-slate-700">{form.municipality}</span>
+                  </TableCell>
+                  <TableCell>
+                    {getTemplateCompletionBadge(form.assignedTemplates, form.totalTemplatesNeeded)}
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleEditForm(form)}
+                      className="text-slate-600 hover:text-slate-900"
+                    >
+                      <Edit className="w-4 h-4" />
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleDisplayTemplate}
+                      className="text-slate-600 hover:text-slate-900"
+                    >
+                      <List className="w-4 h-4" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
 
-        <TabsContent value="templates">
-          <FormTemplateBuilder onDisplayTemplate={handleDisplayTemplate} />
-        </TabsContent>
-      </Tabs>
+      {/* Add New Form Modal */}
+      <AddNewFormModal 
+        isOpen={isAddFormModalOpen}
+        onClose={() => setIsAddFormModalOpen(false)}
+        districts={districts}
+      />
 
       {/* Form Configuration Dialog */}
       <Dialog open={isConfigurationOpen} onOpenChange={setIsConfigurationOpen}>
@@ -338,27 +322,6 @@ const ApplicationForms = () => {
             <FormConfiguration 
               form={selectedForm} 
               onClose={() => setIsConfigurationOpen(false)}
-            />
-          )}
-        </DialogContent>
-      </Dialog>
-
-      {/* Template Builder Dialog */}
-      <Dialog open={isTemplateBuilderOpen} onOpenChange={setIsTemplateBuilderOpen}>
-        <DialogContent className="max-w-6xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>
-              {selectedForm ? `Manage Template: ${selectedForm.name}` : 'Template Builder'}
-            </DialogTitle>
-            <DialogDescription>
-              Build and customize form templates with drag-and-drop functionality
-            </DialogDescription>
-          </DialogHeader>
-          {selectedForm && (
-            <FormTemplateBuilder 
-              form={selectedForm}
-              onClose={() => setIsTemplateBuilderOpen(false)}
-              onDisplayTemplate={handleDisplayTemplate}
             />
           )}
         </DialogContent>
