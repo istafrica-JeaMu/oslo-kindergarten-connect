@@ -19,11 +19,19 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
-import { FileText, Search, Plus, Edit, Settings, List } from 'lucide-react';
+import { FileText, Search, Plus, Edit, Settings, List, Eye } from 'lucide-react';
 import FormTemplateBuilder from '@/components/admin/forms/FormTemplateBuilder';
 import FormConfiguration from '@/components/admin/forms/FormConfiguration';
+import DistrictSelector from '@/components/admin/forms/DistrictSelector';
+import TemplatePreview from '@/components/admin/forms/TemplatePreview';
+
+interface District {
+  id: string;
+  name: string;
+  municipality: string;
+  formCount: number;
+}
 
 interface ApplicationForm {
   id: string;
@@ -32,46 +40,83 @@ interface ApplicationForm {
   status: 'Active' | 'Draft' | 'Archived';
   lastModified: string;
   submissionCount: number;
+  districtId: string;
+  assignedTemplates: number;
+  totalTemplatesNeeded: number;
+}
+
+interface FormTemplate {
+  id: string;
+  title: string;
+  description?: string;
+  inputs: any[];
+  order: number;
 }
 
 const ApplicationForms = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedForm, setSelectedForm] = useState<ApplicationForm | null>(null);
+  const [selectedDistrict, setSelectedDistrict] = useState<District | null>(null);
   const [isTemplateBuilderOpen, setIsTemplateBuilderOpen] = useState(false);
   const [isConfigurationOpen, setIsConfigurationOpen] = useState(false);
+  const [isTemplatePreviewOpen, setIsTemplatePreviewOpen] = useState(false);
+  const [previewTemplate, setPreviewTemplate] = useState<FormTemplate | null>(null);
 
-  // Mock data - in real implementation this would come from API
+  // Mock data - Only Childcare and Preschool forms
   const applicationForms: ApplicationForm[] = [
     {
       id: '1',
-      name: 'Childcare application',
+      name: 'Childcare Application',
       municipality: 'Förskola',
       status: 'Active',
       lastModified: '2024-01-15',
-      submissionCount: 245
+      submissionCount: 245,
+      districtId: '1',
+      assignedTemplates: 3,
+      totalTemplatesNeeded: 5
     },
     {
       id: '2',
-      name: 'Day care application',
+      name: 'Preschool Application', 
       municipality: 'Fritidshem',
       status: 'Active',
       lastModified: '2024-01-12',
-      submissionCount: 189
+      submissionCount: 189,
+      districtId: '1',
+      assignedTemplates: 2,
+      totalTemplatesNeeded: 4
     },
     {
       id: '3',
-      name: 'Special needs application',
+      name: 'Childcare Application',
       municipality: 'Förskola',
       status: 'Draft',
       lastModified: '2024-01-10',
-      submissionCount: 0
+      submissionCount: 0,
+      districtId: '2',
+      assignedTemplates: 1,
+      totalTemplatesNeeded: 5
+    },
+    {
+      id: '4',
+      name: 'Preschool Application',
+      municipality: 'Fritidshem',
+      status: 'Active',
+      lastModified: '2024-01-08',
+      submissionCount: 156,
+      districtId: '2',
+      assignedTemplates: 4,
+      totalTemplatesNeeded: 4
     }
   ];
 
-  const filteredForms = applicationForms.filter(form =>
-    form.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    form.municipality.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Filter forms by selected district and search term
+  const filteredForms = applicationForms.filter(form => {
+    const matchesDistrict = !selectedDistrict || form.districtId === selectedDistrict.id;
+    const matchesSearch = form.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         form.municipality.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesDistrict && matchesSearch;
+  });
 
   const getStatusBadgeVariant = (status: string) => {
     switch (status) {
@@ -86,6 +131,15 @@ const ApplicationForms = () => {
     }
   };
 
+  const getTemplateCompletionBadge = (assigned: number, total: number) => {
+    const isComplete = assigned >= total;
+    return (
+      <Badge variant={isComplete ? "default" : "secondary"} className="text-xs">
+        {assigned}/{total} Templates
+      </Badge>
+    );
+  };
+
   const handleEditForm = (form: ApplicationForm) => {
     setSelectedForm(form);
     setIsConfigurationOpen(true);
@@ -94,6 +148,39 @@ const ApplicationForms = () => {
   const handleManageTemplate = (form: ApplicationForm) => {
     setSelectedForm(form);
     setIsTemplateBuilderOpen(true);
+  };
+
+  const handleDisplayTemplate = () => {
+    // Mock template data for preview
+    const mockTemplate: FormTemplate = {
+      id: 'template-1',
+      title: 'Basic Child Information',
+      description: 'Essential information about the child',
+      inputs: [
+        {
+          id: '1',
+          question: 'Child\'s full name',
+          titleInList: 'Full Name',
+          type: 'open',
+          mandatory: true,
+          active: true,
+          order: 1
+        },
+        {
+          id: '2',
+          question: 'Date of birth',
+          titleInList: 'Birth Date',
+          type: 'date',
+          mandatory: true,
+          active: true,
+          order: 2
+        }
+      ],
+      order: 1
+    };
+    
+    setPreviewTemplate(mockTemplate);
+    setIsTemplatePreviewOpen(true);
   };
 
   return (
@@ -105,6 +192,12 @@ const ApplicationForms = () => {
           <p className="text-slate-600">Manage kindergarten application forms and templates</p>
         </div>
       </div>
+
+      {/* District Selector */}
+      <DistrictSelector 
+        selectedDistrict={selectedDistrict}
+        onDistrictSelect={setSelectedDistrict}
+      />
 
       <Tabs defaultValue="forms" className="space-y-4">
         <TabsList>
@@ -122,7 +215,14 @@ const ApplicationForms = () => {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>Application Forms (Ansökningsformulär)</CardTitle>
+                <CardTitle>
+                  Application Forms (Ansökningsformulär)
+                  {selectedDistrict && (
+                    <span className="text-base font-normal text-slate-600 ml-2">
+                      - {selectedDistrict.name}
+                    </span>
+                  )}
+                </CardTitle>
                 <Button className="flex items-center gap-2">
                   <Plus className="w-4 h-4" />
                   Add New Form
@@ -149,6 +249,7 @@ const ApplicationForms = () => {
                   <TableRow className="bg-teal-600 hover:bg-teal-600">
                     <TableHead className="text-white font-medium">Namn (internt)</TableHead>
                     <TableHead className="text-white font-medium">Verksamhetstyp</TableHead>
+                    <TableHead className="text-white font-medium">Templates</TableHead>
                     <TableHead className="text-white font-medium">Ändra</TableHead>
                     <TableHead className="text-white font-medium">Frågaformulär</TableHead>
                   </TableRow>
@@ -169,6 +270,9 @@ const ApplicationForms = () => {
                       </TableCell>
                       <TableCell>
                         <span className="text-slate-700">{form.municipality}</span>
+                      </TableCell>
+                      <TableCell>
+                        {getTemplateCompletionBadge(form.assignedTemplates, form.totalTemplatesNeeded)}
                       </TableCell>
                       <TableCell>
                         <Button
@@ -199,7 +303,7 @@ const ApplicationForms = () => {
         </TabsContent>
 
         <TabsContent value="templates">
-          <FormTemplateBuilder />
+          <FormTemplateBuilder onDisplayTemplate={handleDisplayTemplate} />
         </TabsContent>
       </Tabs>
 
@@ -238,10 +342,18 @@ const ApplicationForms = () => {
             <FormTemplateBuilder 
               form={selectedForm}
               onClose={() => setIsTemplateBuilderOpen(false)}
+              onDisplayTemplate={handleDisplayTemplate}
             />
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Template Preview Dialog */}
+      <TemplatePreview 
+        isOpen={isTemplatePreviewOpen}
+        onClose={() => setIsTemplatePreviewOpen(false)}
+        template={previewTemplate}
+      />
     </div>
   );
 };

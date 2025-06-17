@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -42,7 +41,8 @@ import {
   ArrowRight,
   ArrowLeft,
   ChevronUp,
-  ChevronDown
+  ChevronDown,
+  Eye
 } from 'lucide-react';
 
 interface QuestionInput {
@@ -67,9 +67,14 @@ interface FormTemplate {
 interface FormTemplateBuilderProps {
   form?: any;
   onClose?: () => void;
+  onDisplayTemplate?: () => void;
 }
 
-const FormTemplateBuilder: React.FC<FormTemplateBuilderProps> = ({ form, onClose }) => {
+const FormTemplateBuilder: React.FC<FormTemplateBuilderProps> = ({ 
+  form, 
+  onClose, 
+  onDisplayTemplate 
+}) => {
   const [availableTemplates, setAvailableTemplates] = useState<FormTemplate[]>([
     {
       id: 'template-1',
@@ -297,9 +302,11 @@ const FormTemplateBuilder: React.FC<FormTemplateBuilderProps> = ({ form, onClose
           <h3 className="text-lg font-semibold">Handle Templates</h3>
           <p className="text-sm text-slate-600">Build and customize your application form templates</p>
         </div>
-        <Button onClick={onClose} variant="outline" size="sm">
-          <X className="w-4 h-4" />
-        </Button>
+        {onClose && (
+          <Button onClick={onClose} variant="outline" size="sm">
+            <X className="w-4 h-4" />
+          </Button>
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-6">
@@ -526,19 +533,20 @@ const FormTemplateBuilder: React.FC<FormTemplateBuilderProps> = ({ form, onClose
               </div>
             </div>
           )}
-
-          <DialogFooter className="gap-2">
-            <Button variant="outline" onClick={() => setIsEditTemplateOpen(false)}>
-              Close
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
 
       <div className="flex items-center justify-between pt-4 border-t">
-        <Button variant="outline">Display template</Button>
+        <Button 
+          variant="outline" 
+          onClick={onDisplayTemplate}
+          className="flex items-center gap-2"
+        >
+          <Eye className="w-4 h-4" />
+          Display Template
+        </Button>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={onClose}>Cancel</Button>
+          {onClose && <Button variant="outline" onClick={onClose}>Cancel</Button>}
           <Button>Save Changes</Button>
         </div>
       </div>
