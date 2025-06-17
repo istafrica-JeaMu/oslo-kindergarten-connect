@@ -205,7 +205,7 @@ const GuaranteeListTable = ({
                 key={page}
                 variant={currentPage === page ? "default" : "outline"}
                 size="sm"
-                onclick={() => onPageChange(page)}
+                onClick={() => onPageChange(page)}
                 className="w-8 h-8 p-0"
               >
                 {page}
