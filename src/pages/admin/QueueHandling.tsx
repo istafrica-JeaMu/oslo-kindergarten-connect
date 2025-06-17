@@ -162,7 +162,7 @@ const QueueHandling = () => {
           <label className="flex items-center gap-2">
             <Checkbox 
               checked={showOnlyCurrentUnits}
-              onCheckedChange={setShowOnlyCurrentUnits}
+              onCheckedChange={(checked) => setShowOnlyCurrentUnits(checked === true)}
             />
             <span className="text-sm">Show only current units</span>
           </label>
@@ -259,7 +259,7 @@ const QueueHandling = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                     <Checkbox
                       checked={currentTab.data.length > 0 && selectedRows.size === currentTab.data.length}
-                      onCheckedChange={handleSelectAll}
+                      onCheckedChange={(checked) => handleSelectAll(checked === true)}
                     />
                   </th>
                 )}
@@ -290,7 +290,7 @@ const QueueHandling = () => {
                       <td className="px-6 py-4">
                         <Checkbox
                           checked={selectedRows.has(row.id)}
-                          onCheckedChange={(checked) => handleRowSelection(row.id, checked as boolean)}
+                          onCheckedChange={(checked) => handleRowSelection(row.id, checked === true)}
                         />
                       </td>
                     )}
