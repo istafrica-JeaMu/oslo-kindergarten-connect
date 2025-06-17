@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,6 +10,7 @@ import BulkActionsPanel from '@/components/admin/childcare/BulkActionsPanel';
 import ChildProfileModal from '@/components/admin/childcare/ChildProfileModal';
 import AdmissionModal from '@/components/admin/childcare/AdmissionModal';
 import { Admission, Child, AdmissionTab, Municipality, FilterState } from '@/types/childcare';
+import ExportDropdown from '@/components/admin/childcare/ExportDropdown';
 
 const ChildcareMember = () => {
   const [selectedMunicipality, setSelectedMunicipality] = useState<Municipality>('förskola');
@@ -21,7 +21,7 @@ const ChildcareMember = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(15);
   const [sortField, setSortField] = useState<string>('childLastName');
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [sortDirection, setSortDirection<'asc' | 'desc'>>('asc');
   const [isChildProfileOpen, setIsChildProfileOpen] = useState(false);
   const [isAdmissionModalOpen, setIsAdmissionModalOpen] = useState(false);
   const [selectedChild, setSelectedChild] = useState<Child | null>(null);
@@ -146,6 +146,12 @@ const ChildcareMember = () => {
     }
   ];
 
+  const handleExport = (format: 'csv' | 'excel' | 'pdf') => {
+    console.log('Exporting as:', format);
+    // Implement export logic based on format
+    // This would typically involve calling an API endpoint or generating the file client-side
+  };
+
   const filteredAdmissions = useMemo(() => {
     return mockAdmissions.filter(admission => {
       const matchesTab = () => {
@@ -209,6 +215,20 @@ const ChildcareMember = () => {
   };
 
   const getTabDisplayName = (tab: AdmissionTab) => {
+    // Shortened names for mobile
+    switch (tab) {
+      case 'current': return 'Current';
+      case 'future': return 'Future';
+      case 'future-changes': return 'Changes';
+      case 'historical': return 'Historical';
+      case 'all': return 'All';
+      case 'deleted': return 'Deleted';
+      case 'terminated': return 'Terminated';
+      default: return tab;
+    }
+  };
+
+  const getTabFullName = (tab: AdmissionTab) => {
     switch (tab) {
       case 'current': return 'Manage current admissions';
       case 'future': return 'Future admissions';
@@ -232,54 +252,43 @@ const ChildcareMember = () => {
         onShowOnlyCurrentUnitsChange={setShowOnlyCurrentUnits}
       />
 
-      {/* Admission Type Tabs */}
+      {/* Improved Admission Type Tabs */}
       <Card>
         <CardContent className="pt-6">
           <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as AdmissionTab)}>
-            <TabsList className="grid w-full grid-cols-7 h-auto">
-              <TabsTrigger 
-                value="current" 
-                className={`text-xs px-2 py-2 ${activeTab === 'current' ? 'font-bold' : ''}`}
-              >
-                Manage current admissions
-              </TabsTrigger>
-              <TabsTrigger 
-                value="future"
-                className={`text-xs px-2 py-2 ${activeTab === 'future' ? 'font-bold' : ''}`}
-              >
-                Future admissions
-              </TabsTrigger>
-              <TabsTrigger 
-                value="future-changes"
-                className={`text-xs px-2 py-2 ${activeTab === 'future-changes' ? 'font-bold' : ''}`}
-              >
-                Future admissions changes
-              </TabsTrigger>
-              <TabsTrigger 
-                value="historical"
-                className={`text-xs px-2 py-2 ${activeTab === 'historical' ? 'font-bold' : ''}`}
-              >
-                Manage historical admissions
-              </TabsTrigger>
-              <TabsTrigger 
-                value="all"
-                className={`text-xs px-2 py-2 ${activeTab === 'all' ? 'font-bold' : ''}`}
-              >
-                Manage all admissions
-              </TabsTrigger>
-              <TabsTrigger 
-                value="deleted"
-                className={`text-xs px-2 py-2 ${activeTab === 'deleted' ? 'font-bold' : ''}`}
-              >
-                Deleted admissions
-              </TabsTrigger>
-              <TabsTrigger 
-                value="terminated"
-                className={`text-xs px-2 py-2 ${activeTab === 'terminated' ? 'font-bold' : ''}`}
-              >
-                Terminated admissions
-              </TabsTrigger>
-            </TabsList>
+            {/* Desktop Tabs */}
+            <div className="hidden lg:block">
+              <TabsList className="grid w-full grid-cols-7 h-auto">
+                {['current', 'future', 'future-changes', 'historical', 'all', 'deleted', 'terminated'].map((tab) => (
+                  <TabsTrigger 
+                    key={tab}
+                    value={tab} 
+                    className={`text-xs px-2 py-2 ${activeTab === tab ? 'font-bold' : ''}`}
+                    title={getTabFullName(tab as AdmissionTab)}
+                  >
+                    {getTabFullName(tab as AdmissionTab)}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </div>
+
+            {/* Mobile/Tablet Tabs - Scrollable */}
+            <div className="lg:hidden">
+              <div className="flex overflow-x-auto scrollbar-hide gap-2 pb-2">
+                {['current', 'future', 'future-changes', 'historical', 'all', 'deleted', 'terminated'].map((tab) => (
+                  <Button
+                    key={tab}
+                    variant={activeTab === tab ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setActiveTab(tab as AdmissionTab)}
+                    className={`whitespace-nowrap flex-shrink-0 ${activeTab === tab ? 'font-bold bg-blue-600 text-white' : ''}`}
+                    title={getTabFullName(tab as AdmissionTab)}
+                  >
+                    {getTabDisplayName(tab as AdmissionTab)}
+                  </Button>
+                ))}
+              </div>
+            </div>
           </Tabs>
         </CardContent>
       </Card>
@@ -306,10 +315,7 @@ const ChildcareMember = () => {
                   <RefreshCw className="w-4 h-4 mr-2" />
                   Refresh
                 </Button>
-                <Button variant="outline" size="sm">
-                  <Download className="w-4 h-4 mr-2" />
-                  Export
-                </Button>
+                <ExportDropdown onExport={handleExport} />
               </div>
             </div>
           </CardHeader>

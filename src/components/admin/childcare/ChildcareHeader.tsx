@@ -2,10 +2,9 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Baby } from 'lucide-react';
+import { Baby } from 'lucide-react';
 import { Municipality } from '@/types/childcare';
 
 interface ChildcareHeaderProps {
@@ -44,60 +43,67 @@ const ChildcareHeader = ({
         </div>
       </div>
 
-      {/* Controls */}
+      {/* Compact Controls */}
       <Card>
         <CardContent className="pt-6">
-          <div className="space-y-4">
-            {/* Manage Admissions Header */}
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-black rounded-full"></div>
-              <span className="font-medium">Manage admissions</span>
+          {/* Single row layout for better space utilization */}
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            {/* Left side - Manage admissions with controls */}
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-black rounded-full"></div>
+                <span className="font-medium">Manage admissions</span>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <Checkbox 
+                  id="current-units"
+                  checked={showOnlyCurrentUnits}
+                  onCheckedChange={onShowOnlyCurrentUnitsChange}
+                />
+                <label htmlFor="current-units" className="text-sm font-medium">
+                  Show only current units
+                </label>
+              </div>
             </div>
 
-            {/* Show only current units */}
-            <div className="flex items-center gap-2">
-              <Checkbox 
-                id="current-units"
-                checked={showOnlyCurrentUnits}
-                onCheckedChange={onShowOnlyCurrentUnitsChange}
-              />
-              <label htmlFor="current-units" className="text-sm font-medium">
-                Show only current units
-              </label>
-            </div>
+            {/* Right side - Municipality and School selection */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              {/* Municipality Toggle */}
+              <div className="flex items-center gap-2">
+                <Button
+                  variant={selectedMunicipality === 'förskola' ? 'default' : 'outline'}
+                  onClick={() => onMunicipalityChange('förskola')}
+                  className={selectedMunicipality === 'förskola' ? 'bg-teal-600 hover:bg-teal-700' : ''}
+                  size="sm"
+                >
+                  Förskola
+                </Button>
+                <Button
+                  variant={selectedMunicipality === 'fritidshem' ? 'default' : 'outline'}
+                  onClick={() => onMunicipalityChange('fritidshem')}
+                  className={selectedMunicipality === 'fritidshem' ? 'bg-teal-600 hover:bg-teal-700' : ''}
+                  size="sm"
+                >
+                  Fritidshem
+                </Button>
+              </div>
 
-            {/* Municipality Toggle */}
-            <div className="flex items-center gap-2">
-              <Button
-                variant={selectedMunicipality === 'förskola' ? 'default' : 'outline'}
-                onClick={() => onMunicipalityChange('förskola')}
-                className={selectedMunicipality === 'förskola' ? 'bg-teal-600 hover:bg-teal-700' : ''}
-              >
-                Förskola
-              </Button>
-              <Button
-                variant={selectedMunicipality === 'fritidshem' ? 'default' : 'outline'}
-                onClick={() => onMunicipalityChange('fritidshem')}
-                className={selectedMunicipality === 'fritidshem' ? 'bg-teal-600 hover:bg-teal-700' : ''}
-              >
-                Fritidshem
-              </Button>
-            </div>
-
-            {/* School Search/Selection */}
-            <div className="max-w-md">
-              <Select value={selectedSchool} onValueChange={onSchoolChange}>
-                <SelectTrigger className="bg-teal-600 text-white border-teal-700">
-                  <SelectValue placeholder="Select school..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {schools.map((school) => (
-                    <SelectItem key={school} value={school}>
-                      {school}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {/* School Selection */}
+              <div className="min-w-[200px]">
+                <Select value={selectedSchool} onValueChange={onSchoolChange}>
+                  <SelectTrigger className="bg-teal-600 text-white border-teal-700">
+                    <SelectValue placeholder="Select school..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {schools.map((school) => (
+                      <SelectItem key={school} value={school}>
+                        {school}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
         </CardContent>
