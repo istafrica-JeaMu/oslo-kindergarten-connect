@@ -470,7 +470,7 @@ export function AppSidebar() {
         {/* Dashboard - Primary Navigation */}
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-1">
+            <SidebarMenu className="space-y-0.5">
               {items.primary?.map((item: any) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton 
@@ -514,8 +514,8 @@ export function AppSidebar() {
               
               <CollapsibleContent className="overflow-hidden">
                 <ScrollArea className="h-auto max-h-[60vh]">
-                  <div className="space-y-1 ml-2 mt-2 pb-2">
-                    <SidebarMenu className="space-y-1">
+                  <div className="space-y-0.5 ml-2 mt-2 pb-2">
+                    <SidebarMenu className="space-y-0.5">
                       {items.administration?.map((item: any) => (
                         <SidebarMenuItem key={item.title}>
                           <SidebarMenuButton 
@@ -562,8 +562,8 @@ export function AppSidebar() {
               </CollapsibleTrigger>
               
               <CollapsibleContent className="overflow-hidden">
-                <div className="space-y-1 ml-2 mt-2 pb-2">
-                  <SidebarMenu className="space-y-1">
+                <div className="space-y-0.5 ml-2 mt-2 pb-2">
+                  <SidebarMenu className="space-y-0.5">
                     {items.admissions?.map((item: any) => (
                       <SidebarMenuItem key={item.title}>
                         <SidebarMenuButton 
@@ -590,7 +590,7 @@ export function AppSidebar() {
         {/* Standalone Items */}
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-1">
+            <SidebarMenu className="space-y-0.5">
               {items.other?.map((item: any) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton 
