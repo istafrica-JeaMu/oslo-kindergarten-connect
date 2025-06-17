@@ -54,7 +54,7 @@ interface FormTemplate {
 
 const ApplicationForms = () => {
   const [selectedForm, setSelectedForm] = useState<ApplicationForm | null>(null);
-  const [selectedDistrict, setSelectedDistrict] = useState<string>('');
+  const [selectedDistrict, setSelectedDistrict] = useState<string>('all');
   const [isTemplateBuilderOpen, setIsTemplateBuilderOpen] = useState(false);
   const [isConfigurationOpen, setIsConfigurationOpen] = useState(false);
   const [isTemplatePreviewOpen, setIsTemplatePreviewOpen] = useState(false);
@@ -131,7 +131,7 @@ const ApplicationForms = () => {
 
   // Filter forms by selected district
   const filteredForms = applicationForms.filter(form => {
-    return !selectedDistrict || form.districtId === selectedDistrict;
+    return selectedDistrict === 'all' || form.districtId === selectedDistrict;
   });
 
   const getStatusBadgeVariant = (status: string) => {
@@ -248,7 +248,7 @@ const ApplicationForms = () => {
                       <SelectValue placeholder="Select District / Municipality" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All Districts</SelectItem>
+                      <SelectItem value="all">All Districts</SelectItem>
                       {districts.map((district) => (
                         <SelectItem key={district.id} value={district.id}>
                           {district.name} - {district.municipality}
