@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -37,6 +36,7 @@ const PlacementManagement = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [statusFilter, setStatusFilter] = useState('all');
   const [showOnlyCurrentUnits, setShowOnlyCurrentUnits] = useState(false);
+  const [activeTab, setActiveTab] = useState('end-request');
 
   // Mock data for the table
   const mockData: TimetableRecord[] = [
@@ -178,7 +178,10 @@ const PlacementManagement = () => {
                 </div>
 
                 {/* Action Buttons */}
-                <TimetableActionButtons />
+                <TimetableActionButtons 
+                  activeTab={activeTab}
+                  onTabChange={setActiveTab}
+                />
               </div>
             </CardContent>
           </Card>
@@ -196,6 +199,7 @@ const PlacementManagement = () => {
             selectedRows={selectedRows}
             onSelectAll={handleSelectAll}
             onSelectRow={handleSelectRow}
+            activeTab={activeTab}
           />
 
           {/* Pagination */}
