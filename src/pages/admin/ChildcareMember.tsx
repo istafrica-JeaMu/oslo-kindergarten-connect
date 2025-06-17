@@ -271,37 +271,21 @@ const ChildcareMember = () => {
               </TabsList>
             </div>
 
-            {/* Tablet Tabs - 2 rows layout */}
+            {/* Tablet Tabs - Single row from left */}
             <div className="hidden lg:block xl:hidden">
-              <div className="space-y-2">
-                <div className="flex gap-2 flex-wrap justify-center">
-                  {['current', 'future', 'future-changes', 'historical'].map((tab) => (
-                    <Button
-                      key={tab}
-                      variant={activeTab === tab ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setActiveTab(tab as AdmissionTab)}
-                      className={`text-xs px-2 py-1 w-auto ${activeTab === tab ? 'font-bold bg-blue-600 text-white' : ''}`}
-                      title={getTabFullName(tab as AdmissionTab)}
-                    >
-                      {getTabDisplayName(tab as AdmissionTab)}
-                    </Button>
-                  ))}
-                </div>
-                <div className="flex gap-2 flex-wrap justify-center">
-                  {['all', 'deleted', 'terminated'].map((tab) => (
-                    <Button
-                      key={tab}
-                      variant={activeTab === tab ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setActiveTab(tab as AdmissionTab)}
-                      className={`text-xs px-2 py-1 w-auto ${activeTab === tab ? 'font-bold bg-blue-600 text-white' : ''}`}
-                      title={getTabFullName(tab as AdmissionTab)}
-                    >
-                      {getTabDisplayName(tab as AdmissionTab)}
-                    </Button>
-                  ))}
-                </div>
+              <div className="flex gap-2 flex-wrap justify-start">
+                {['current', 'future', 'future-changes', 'historical', 'all', 'deleted', 'terminated'].map((tab) => (
+                  <Button
+                    key={tab}
+                    variant={activeTab === tab ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setActiveTab(tab as AdmissionTab)}
+                    className={`text-xs px-2 py-1 w-auto ${activeTab === tab ? 'font-bold bg-blue-600 text-white' : ''}`}
+                    title={getTabFullName(tab as AdmissionTab)}
+                  >
+                    {getTabDisplayName(tab as AdmissionTab)}
+                  </Button>
+                ))}
               </div>
             </div>
 
