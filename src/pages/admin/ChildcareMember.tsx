@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -37,7 +36,6 @@ const ChildcareMember = () => {
     showOnlyCurrentUnits: false
   });
 
-  // Mock data - in real implementation, this would come from API
   const mockAdmissions: Admission[] = [
     {
       id: '1',
@@ -276,28 +274,28 @@ const ChildcareMember = () => {
             {/* Tablet Tabs - 2 rows layout */}
             <div className="hidden lg:block xl:hidden">
               <div className="space-y-2">
-                <div className="flex gap-1">
+                <div className="flex gap-2 flex-wrap justify-center">
                   {['current', 'future', 'future-changes', 'historical'].map((tab) => (
                     <Button
                       key={tab}
                       variant={activeTab === tab ? "default" : "outline"}
                       size="sm"
                       onClick={() => setActiveTab(tab as AdmissionTab)}
-                      className={`flex-1 text-xs ${activeTab === tab ? 'font-bold bg-blue-600 text-white' : ''}`}
+                      className={`text-xs px-2 py-1 w-auto ${activeTab === tab ? 'font-bold bg-blue-600 text-white' : ''}`}
                       title={getTabFullName(tab as AdmissionTab)}
                     >
                       {getTabDisplayName(tab as AdmissionTab)}
                     </Button>
                   ))}
                 </div>
-                <div className="flex gap-1">
+                <div className="flex gap-2 flex-wrap justify-center">
                   {['all', 'deleted', 'terminated'].map((tab) => (
                     <Button
                       key={tab}
                       variant={activeTab === tab ? "default" : "outline"}
                       size="sm"
                       onClick={() => setActiveTab(tab as AdmissionTab)}
-                      className={`flex-1 text-xs ${activeTab === tab ? 'font-bold bg-blue-600 text-white' : ''}`}
+                      className={`text-xs px-2 py-1 w-auto ${activeTab === tab ? 'font-bold bg-blue-600 text-white' : ''}`}
                       title={getTabFullName(tab as AdmissionTab)}
                     >
                       {getTabDisplayName(tab as AdmissionTab)}
@@ -317,7 +315,7 @@ const ChildcareMember = () => {
                       variant={activeTab === tab ? "default" : "outline"}
                       size="sm"
                       onClick={() => setActiveTab(tab as AdmissionTab)}
-                      className={`whitespace-nowrap flex-shrink-0 min-w-fit text-xs px-3 ${activeTab === tab ? 'font-bold bg-blue-600 text-white' : ''}`}
+                      className={`whitespace-nowrap flex-shrink-0 text-xs px-2 py-1 ${activeTab === tab ? 'font-bold bg-blue-600 text-white' : ''}`}
                       title={getTabFullName(tab as AdmissionTab)}
                     >
                       {getTabDisplayName(tab as AdmissionTab)}
