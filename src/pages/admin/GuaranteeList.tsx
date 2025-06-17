@@ -26,7 +26,6 @@ const GuaranteeList = () => {
         firstName: 'Knoura',
         lastName: 'Björnsson',
         fullName: 'Knoura Björnsson',
-        guardianId: '1',
         unitId: '1',
         unitName: 'Månadens förskola',
         specialNeedsFlag: false
@@ -35,7 +34,6 @@ const GuaranteeList = () => {
         id: '1',
         name: 'Månadens förskola',
         unitName: 'Förskola',
-        ageGroup: '3-5',
         capacity: 25,
         currentOccupancy: 20
       },
@@ -47,14 +45,13 @@ const GuaranteeList = () => {
       rateCategory: {
         id: '1',
         name: 'Standard',
-        rate: 1500,
         description: 'Standard rate'
       },
-      averageTime: 40,
+      averageTime: '40',
       reasonType: 'Arbete',
       timetable: {
         id: '1',
-        schedulePattern: 'Mon-Fri 07:00-17:00',
+        schedulePattern: 'full-time',
         weeklyHours: 40,
         flexibleSchedule: false
       }
@@ -134,7 +131,7 @@ const GuaranteeList = () => {
                       <SelectValue placeholder="All units" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All units</SelectItem>
+                      <SelectItem value="all">All units</SelectItem>
                       <SelectItem value="månaden">Månadens förskola</SelectItem>
                       <SelectItem value="björnens">Björnens Förskola</SelectItem>
                       <SelectItem value="sunflower">Sunflower Preschool</SelectItem>
