@@ -1,9 +1,9 @@
-
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { RefreshCw, DollarSign, Download, Send } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { RefreshCw, DollarSign, Download, Send, Brain, Scale, TrendingUp } from 'lucide-react';
 import DebtHeader from '@/components/admin/debt/DebtHeader';
 import DebtFilters from '@/components/admin/debt/DebtFilters';
 import DebtTable from '@/components/admin/debt/DebtTable';
@@ -11,7 +11,10 @@ import DebtAnalytics from '@/components/admin/debt/DebtAnalytics';
 import BulkDebtActions from '@/components/admin/debt/BulkDebtActions';
 import DebtCommunicationModal from '@/components/admin/debt/DebtCommunicationModal';
 import PaymentModal from '@/components/admin/debt/PaymentModal';
-import { DebtRecord, DebtFilters as DebtFiltersType, DebtAnalytics as DebtAnalyticsType } from '@/types/debt';
+import EscalationWorkflow from '@/components/admin/debt/EscalationWorkflow';
+import DebtAIInsights from '@/components/admin/debt/DebtAIInsights';
+import LegalActionManager from '@/components/admin/debt/LegalActionManager';
+import { DebtRecord, DebtFilters as DebtFiltersType, DebtAnalytics as DebtAnalyticsType, EscalationLevel, CollectionStrategy, LegalActionType } from '@/types/debt';
 
 const DebtManagement = () => {
   const [selectedMunicipality, setSelectedMunicipality] = useState<'förskola' | 'fritidshem'>('förskola');
@@ -24,6 +27,9 @@ const DebtManagement = () => {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [isCommunicationModalOpen, setIsCommunicationModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isEscalationModalOpen, setIsEscalationModalOpen] = useState(false);
+  const [isAIInsightsModalOpen, setIsAIInsightsModalOpen] = useState(false);
+  const [isLegalActionModalOpen, setIsLegalActionModalOpen] = useState(false);
   const [selectedDebt, setSelectedDebt] = useState<DebtRecord | null>(null);
 
   const [filters, setFilters] = useState<DebtFiltersType>({
@@ -38,10 +44,14 @@ const DebtManagement = () => {
     daysOverdueRange: {},
     dateRange: {},
     showOnlyCurrentUnits: false,
-    hasPaymentPlan: 'all'
+    hasPaymentPlan: 'all',
+    riskScore: {},
+    assignedCollector: '',
+    fraudRisk: 'all',
+    communicationStatus: 'all'
   });
 
-  // Mock debt data - in real implementation, this would come from API
+  // Enhanced mock debt data with AI predictions and compliance
   const mockDebts: DebtRecord[] = [
     {
       id: 'debt-1',
@@ -55,7 +65,12 @@ const DebtManagement = () => {
         email: 'anna.johansson@email.com',
         phone: '+46 70 123 4567',
         paymentHistory: [],
-        riskScore: 65
+        riskScore: 65,
+        hardshipStatus: 'none',
+        communicationPreference: 'email',
+        lastContactDate: '2024-12-10',
+        fraudRiskScore: 25,
+        paymentBehaviorPattern: 'inconsistent'
       },
       childId: 'child-1',
       child: {
@@ -83,7 +98,31 @@ const DebtManagement = () => {
       description: 'Monthly childcare fee - October 2024',
       notes: ['Initial notice sent', 'No response received'],
       communications: [],
-      transactions: []
+      transactions: [],
+      collectionStrategy: 'standard',
+      assignedCollector: 'collector-1',
+      nextActionDate: '2024-12-20',
+      aiPredictions: {
+        paymentLikelihood: 65,
+        optimalContactTime: 'Weekdays 10:00-12:00',
+        recommendedStrategy: 'gentle',
+        estimatedRecoveryAmount: 2000,
+        timeToResolution: 14,
+        fraudRisk: 25,
+        hardshipRisk: 40,
+        lastUpdated: '2024-12-16'
+      },
+      complianceFlags: [
+        {
+          id: 'flag-1',
+          debtId: 'debt-1',
+          flagType: 'collection_law_violation',
+          severity: 'medium',
+          description: 'Collection attempts exceed legal frequency limits',
+          flaggedDate: '2024-12-15',
+          automaticFlag: true
+        }
+      ]
     },
     {
       id: 'debt-2',
@@ -96,7 +135,11 @@ const DebtManagement = () => {
         fullName: 'Maria Andersson',
         email: 'maria.andersson@email.com',
         paymentHistory: [],
-        riskScore: 45
+        riskScore: 45,
+        hardshipStatus: 'temporary',
+        communicationPreference: 'phone',
+        fraudRiskScore: 15,
+        paymentBehaviorPattern: 'reliable'
       },
       childId: 'child-2',
       child: {
@@ -117,14 +160,26 @@ const DebtManagement = () => {
       daysOverdue: 16,
       status: 'overdue',
       escalationLevel: 'early_warning',
-      managementType: 'standard',
+      managementType: 'hardship',
       unitId: 'unit-2',
       unitName: 'Rainbow After-School',
       municipality: 'fritidshem',
       description: 'After-school care fee - November 2024',
       notes: ['Payment plan active'],
       communications: [],
-      transactions: []
+      transactions: [],
+      collectionStrategy: 'hardship_sensitive',
+      aiPredictions: {
+        paymentLikelihood: 85,
+        optimalContactTime: 'Evenings 17:00-19:00',
+        recommendedStrategy: 'hardship_sensitive',
+        estimatedRecoveryAmount: 900,
+        timeToResolution: 7,
+        fraudRisk: 15,
+        hardshipRisk: 75,
+        lastUpdated: '2024-12-16'
+      },
+      complianceFlags: []
     }
   ];
 
@@ -150,10 +205,34 @@ const DebtManagement = () => {
       write_off: 2
     },
     monthlyTrends: [
-      { month: 'Oct', newDebts: 15, collected: 45000, outstanding: 125000 },
-      { month: 'Nov', newDebts: 23, collected: 38000, outstanding: 135000 },
-      { month: 'Dec', newDebts: 18, collected: 52000, outstanding: 125000 }
-    ]
+      { month: 'Oct', newDebts: 15, collected: 45000, outstanding: 125000, recoveryRate: 72 },
+      { month: 'Nov', newDebts: 23, collected: 38000, outstanding: 135000, recoveryRate: 68 },
+      { month: 'Dec', newDebts: 18, collected: 52000, outstanding: 125000, recoveryRate: 78 }
+    ],
+    collectionEfficiency: {
+      averageTimeToCollection: 34,
+      successRateByMethod: {
+        email: 65,
+        sms: 58,
+        postal: 45,
+        phone: 78,
+        in_person: 85
+      },
+      costPerCollection: 145,
+      totalCollectionCosts: 25600
+    },
+    predictiveAnalytics: {
+      projectedCollections: 85000,
+      atRiskDebts: 23,
+      hardshipCases: 12,
+      fraudAlerts: 3
+    },
+    legalActionMetrics: {
+      totalLegalCases: 8,
+      legalSuccessRate: 75,
+      averageLegalCost: 4500,
+      legalRecoveryAmount: 125000
+    }
   };
 
   const filteredDebts = useMemo(() => {
@@ -205,9 +284,36 @@ const DebtManagement = () => {
     setIsPaymentModalOpen(true);
   };
 
+  const handleEscalateDebt = (debt: DebtRecord) => {
+    setSelectedDebt(debt);
+    setIsEscalationModalOpen(true);
+  };
+
+  const handleViewAIInsights = (debt: DebtRecord) => {
+    setSelectedDebt(debt);
+    setIsAIInsightsModalOpen(true);
+  };
+
+  const handleLegalAction = (debt: DebtRecord) => {
+    setSelectedDebt(debt);
+    setIsLegalActionModalOpen(true);
+  };
+
   const handleBulkAction = (actionType: string, parameters?: any) => {
     console.log('Bulk debt action:', actionType, 'Selected:', selectedRows, 'Parameters:', parameters);
     // Implement bulk action logic
+  };
+
+  const handleEscalation = (debtId: string, level: EscalationLevel, strategy: CollectionStrategy, notes: string) => {
+    console.log('Escalating debt:', debtId, 'to', level, 'with strategy', strategy, 'notes:', notes);
+    setIsEscalationModalOpen(false);
+    setSelectedDebt(null);
+  };
+
+  const handleInitiateLegalAction = (debtId: string, actionType: LegalActionType, details: any) => {
+    console.log('Initiating legal action:', debtId, actionType, details);
+    setIsLegalActionModalOpen(false);
+    setSelectedDebt(null);
   };
 
   const handleExport = (format: 'csv' | 'excel' | 'pdf') => {
@@ -221,7 +327,7 @@ const DebtManagement = () => {
         <DollarSign className="w-8 h-8 text-red-600" />
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Manage debts, queue</h1>
-          <p className="text-slate-600">Comprehensive debt management and collection system</p>
+          <p className="text-slate-600">Comprehensive debt management and collection system with AI-powered insights</p>
         </div>
       </div>
 
@@ -235,9 +341,10 @@ const DebtManagement = () => {
       />
 
       <Tabs defaultValue="queue" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="queue">Debt Queue</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics & Insights</TabsTrigger>
+          <TabsTrigger value="legal">Legal Actions</TabsTrigger>
         </TabsList>
 
         <TabsContent value="queue" className="space-y-6">
@@ -294,13 +401,89 @@ const DebtManagement = () => {
             selectedCount={selectedRows.length}
             onBulkAction={handleBulkAction}
           />
+
+          {/* Quick Action Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => selectedDebt && handleEscalateDebt(selectedDebt)}>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <TrendingUp className="w-8 h-8 text-orange-600" />
+                  <div>
+                    <h3 className="font-semibold">Escalation Workflow</h3>
+                    <p className="text-sm text-slate-600">Automated debt escalation</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => selectedDebt && handleViewAIInsights(selectedDebt)}>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <Brain className="w-8 h-8 text-purple-600" />
+                  <div>
+                    <h3 className="font-semibold">AI Insights</h3>
+                    <p className="text-sm text-slate-600">Smart debt predictions</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => selectedDebt && handleLegalAction(selectedDebt)}>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <Scale className="w-8 h-8 text-gray-600" />
+                  <div>
+                    <h3 className="font-semibold">Legal Actions</h3>
+                    <p className="text-sm text-slate-600">Court proceedings</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-6">
           <DebtAnalytics analytics={analytics} />
         </TabsContent>
+
+        <TabsContent value="legal" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Legal Action Dashboard</CardTitle>
+              <p className="text-sm text-slate-600">Monitor and manage legal proceedings for debt recovery</p>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-purple-600">{analytics.legalActionMetrics.totalLegalCases}</div>
+                  <div className="text-sm text-slate-600">Active Legal Cases</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-600">{analytics.legalActionMetrics.legalSuccessRate}%</div>
+                  <div className="text-sm text-slate-600">Success Rate</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-orange-600">{analytics.legalActionMetrics.averageLegalCost.toLocaleString()} SEK</div>
+                  <div className="text-sm text-slate-600">Average Cost</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-blue-600">{analytics.legalActionMetrics.legalRecoveryAmount.toLocaleString()} SEK</div>
+                  <div className="text-sm text-slate-600">Total Recovered</div>
+                </div>
+              </div>
+              
+              <div className="text-center py-8">
+                <p className="text-slate-600 mb-4">Select a debt from the queue to manage legal actions</p>
+                <Button onClick={() => window.location.hash = '#queue'}>
+                  Go to Debt Queue
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
       </Tabs>
 
+      {/* Modals */}
       {isCommunicationModalOpen && selectedDebt && (
         <DebtCommunicationModal 
           debt={selectedDebt}
@@ -321,6 +504,45 @@ const DebtManagement = () => {
             setSelectedDebt(null);
           }}
         />
+      )}
+
+      {isEscalationModalOpen && selectedDebt && (
+        <Dialog open={isEscalationModalOpen} onOpenChange={setIsEscalationModalOpen}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Debt Escalation Workflow</DialogTitle>
+            </DialogHeader>
+            <EscalationWorkflow 
+              debt={selectedDebt}
+              onEscalate={handleEscalation}
+            />
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {isAIInsightsModalOpen && selectedDebt && (
+        <Dialog open={isAIInsightsModalOpen} onOpenChange={setIsAIInsightsModalOpen}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>AI-Powered Debt Insights</DialogTitle>
+            </DialogHeader>
+            <DebtAIInsights debt={selectedDebt} />
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {isLegalActionModalOpen && selectedDebt && (
+        <Dialog open={isLegalActionModalOpen} onOpenChange={setIsLegalActionModalOpen}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Legal Action Management</DialogTitle>
+            </DialogHeader>
+            <LegalActionManager 
+              debt={selectedDebt}
+              onInitiateLegalAction={handleInitiateLegalAction}
+            />
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   );

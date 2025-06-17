@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ChevronLeft, ChevronRight, Send, CreditCard, AlertTriangle, Clock } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Send, CreditCard, AlertTriangle, Clock, User, MapPin, Calendar, Euro } from 'lucide-react';
 import { DebtRecord } from '@/types/debt';
 
 interface DebtTableProps {
@@ -80,8 +80,11 @@ const DebtTable = ({
     }).format(amount);
   };
 
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('sv-SE');
+  };
+
   const allSelected = debts.length > 0 && debts.every(debt => selectedRows.includes(debt.id));
-  const someSelected = selectedRows.length > 0 && !allSelected;
 
   return (
     <div className="space-y-4">
@@ -95,10 +98,14 @@ const DebtTable = ({
                   onCheckedChange={onSelectAll}
                 />
               </TableHead>
-              <TableHead>Guardian/Child</TableHead>
-              <TableHead>Civic Numbers</TableHead>
+              <TableHead>Relation</TableHead>
+              <TableHead>Civic Number</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Child Civic Number</TableHead>
+              <TableHead>Child Name</TableHead>
               <TableHead>Unit</TableHead>
               <TableHead>Amount</TableHead>
+              <TableHead>Due Date</TableHead>
               <TableHead>Days Overdue</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Escalation</TableHead>
@@ -119,31 +126,49 @@ const DebtTable = ({
                   />
                 </TableCell>
                 <TableCell>
+                  <div className="flex items-center gap-2">
+                    <User className="w-4 h-4 text-slate-500" />
+                    <span className="text-sm font-medium">Guardian/Child</span>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="text-sm font-mono">{debt.guardian.civicNumber}</div>
+                </TableCell>
+                <TableCell>
+                  <div className="font-medium text-slate-900">{debt.guardian.fullName}</div>
+                </TableCell>
+                <TableCell>
+                  <div className="text-sm font-mono">{debt.child.civicNumber}</div>
+                </TableCell>
+                <TableCell>
+                  <div className="font-medium text-slate-900">{debt.child.fullName}</div>
+                </TableCell>
+                <TableCell>
                   <div className="space-y-1">
-                    <div className="font-medium text-slate-900">{debt.guardian.fullName}</div>
-                    <div className="text-sm text-slate-600">Child: {debt.child.fullName}</div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="space-y-1 text-sm">
-                    <div>Guardian: {debt.guardian.civicNumber}</div>
-                    <div>Child: {debt.child.civicNumber}</div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="text-sm">
-                    <div className="font-medium">{debt.unitName}</div>
-                    <div className="text-slate-600 capitalize">{debt.municipality}</div>
+                    <div className="flex items-center gap-1">
+                      <MapPin className="w-3 h-3 text-slate-500" />
+                      <span className="text-sm font-medium">{debt.unitName}</span>
+                    </div>
+                    <div className="text-xs text-slate-600 capitalize">{debt.municipality}</div>
                   </div>
                 </TableCell>
                 <TableCell>
                   <div className="space-y-1">
-                    <div className="font-medium text-red-600">
-                      {formatCurrency(debt.outstandingAmount)}
+                    <div className="flex items-center gap-1">
+                      <Euro className="w-3 h-3 text-red-600" />
+                      <span className="font-medium text-red-600">
+                        {formatCurrency(debt.outstandingAmount)}
+                      </span>
                     </div>
                     <div className="text-xs text-slate-500">
                       of {formatCurrency(debt.originalAmount)}
                     </div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-1">
+                    <Calendar className="w-3 h-3 text-slate-500" />
+                    <span className="text-sm">{formatDate(debt.dueDate)}</span>
                   </div>
                 </TableCell>
                 <TableCell>
