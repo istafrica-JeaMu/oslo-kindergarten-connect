@@ -45,24 +45,20 @@ const AdminPageHeader = ({
         </div>
       </div>
 
-      {/* Breadcrumb */}
-      {breadcrumb && breadcrumb.length > 0 && (
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          {breadcrumb.map((item, index) => (
-            <span key={index} className="flex items-center gap-1">
-              <div className="w-2 h-2 bg-black rounded-full"></div>
-              {item}
-            </span>
-          ))}
-        </div>
-      )}
-
-      {/* Controls */}
+      {/* Compact Controls - Single Row Layout */}
       <Card>
         <CardContent className="pt-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-            {/* Left side - Controls */}
+            {/* Left side - Breadcrumb with controls */}
             <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+              {/* Breadcrumb integrated into controls */}
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-black rounded-full"></div>
+                <span className="font-medium">
+                  {breadcrumb ? breadcrumb[breadcrumb.length - 1] : 'Manage admissions'}
+                </span>
+              </div>
+              
               {onShowOnlyCurrentUnitsChange && (
                 <div className="flex items-center gap-2">
                   <Checkbox 
