@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -23,6 +22,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { Admission, AdmissionTab } from '@/types/childcare';
+import CreateOfferButton from './CreateOfferButton';
 
 interface AdmissionsTableProps {
   admissions: Admission[];
@@ -88,22 +88,6 @@ const AdmissionsTable = ({
     </TableHead>
   );
 
-  const getStatusBadge = (status: string) => {
-    const colors = {
-      active: 'bg-green-100 text-green-800',
-      future: 'bg-blue-100 text-blue-800',
-      historical: 'bg-gray-100 text-gray-800',
-      terminated: 'bg-red-100 text-red-800',
-      deleted: 'bg-red-100 text-red-800'
-    };
-    
-    return (
-      <Badge className={colors[status as keyof typeof colors] || 'bg-gray-100 text-gray-800'}>
-        {status.charAt(0).toUpperCase() + status.slice(1)}
-      </Badge>
-    );
-  };
-
   const getTableHeaders = () => {
     const baseHeaders = [
       <TableHead key="checkbox" className="w-12">
@@ -112,7 +96,8 @@ const AdmissionsTable = ({
           onCheckedChange={onSelectAll}
         />
       </TableHead>,
-      <TableHead key="number" className="text-xs">#</TableHead>
+      <TableHead key="number" className="text-xs">#</TableHead>,
+      <TableHead key="createOffer" className="text-xs w-20">Create Offer</TableHead>
     ];
 
     if (activeTab === 'terminated') {
@@ -167,7 +152,7 @@ const AdmissionsTable = ({
         <SortableHeader key="rateCategory" field="rateCategory">Ratecategory</SortableHeader>,
         <SortableHeader key="averageTime" field="averageTime">Average time</SortableHeader>,
         <SortableHeader key="reasonType" field="reasonType">Reasontype</SortableHeader>,
-        <SortableHeader key="timetable" field="timetable">Timetable</SortableHeader>,
+        <SortableHeader key="timetable" field="timetable">Timetable</TableHead>,
         <TableHead key="showTimetable" className="text-xs">Show timetable</TableHead>,
         <TableHead key="journalNote" className="text-xs">Journal note</TableHead>
       ];
@@ -184,6 +169,12 @@ const AdmissionsTable = ({
       </TableCell>,
       <TableCell key="number" className="font-medium text-xs">
         {(currentPage - 1) * itemsPerPage + index + 1}
+      </TableCell>,
+      <TableCell key="createOffer">
+        <CreateOfferButton
+          childData={admission.child}
+          serviceType={admission.department.name.toLowerCase().includes('fritids') ? 'afterschool' : 'childcare'}
+        />
       </TableCell>
     ];
 
