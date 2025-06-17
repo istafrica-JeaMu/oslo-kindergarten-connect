@@ -25,15 +25,8 @@ const Approve = () => {
           </CardHeader>
           <CardContent>
             <p className="text-slate-600 mb-4">
-              Comprehensive placement approval system with timetable management, 
-              bulk operations, and automated workflows for municipal childcare services.
+              Manage placement approvals, timetables, and bulk operations.
             </p>
-            <div className="space-y-2 mb-4">
-              <div className="text-sm text-slate-500">• Accept new placement applications</div>
-              <div className="text-sm text-slate-500">• Manage children's timetables</div>
-              <div className="text-sm text-slate-500">• Process bulk approvals</div>
-              <div className="text-sm text-slate-500">• Track placement status</div>
-            </div>
             <Link to="/admin/placement-management">
               <Button className="w-full">
                 Access Placement Management
@@ -52,15 +45,8 @@ const Approve = () => {
           </CardHeader>
           <CardContent>
             <p className="text-slate-600 mb-4">
-              Fast-track approval interface for urgent applications and 
-              time-sensitive placement decisions.
+              Fast-track approval interface for urgent applications.
             </p>
-            <div className="space-y-2 mb-4">
-              <div className="text-sm text-slate-500">• Priority applications</div>
-              <div className="text-sm text-slate-500">• Urgent placements</div>
-              <div className="text-sm text-slate-500">• Emergency requests</div>
-              <div className="text-sm text-slate-500">• Fast approval workflow</div>
-            </div>
             <Button variant="outline" className="w-full" disabled>
               Coming Soon
               <Calendar className="w-4 h-4 ml-2" />
@@ -68,21 +54,6 @@ const Approve = () => {
           </CardContent>
         </Card>
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>System Overview</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-slate-600">
-            The placement management system provides comprehensive tools for processing 
-            kindergarten applications, managing children's schedules, and tracking attendance 
-            across different municipalities (Förskola/Fritidshem). The system includes 
-            advanced filtering, bulk operations, and automated approval workflows to 
-            streamline municipal childcare administration.
-          </p>
-        </CardContent>
-      </Card>
     </div>
   );
 };
