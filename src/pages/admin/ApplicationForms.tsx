@@ -22,6 +22,7 @@ import { FileText, Plus, Edit, List, MapPin } from 'lucide-react';
 import FormConfiguration from '@/components/admin/forms/FormConfiguration';
 import TemplatePreview from '@/components/admin/forms/TemplatePreview';
 import AddNewFormModal from '@/components/admin/forms/AddNewFormModal';
+import ApplicationSummaryModal from '@/components/admin/forms/ApplicationSummaryModal';
 
 interface District {
   id: string;
@@ -56,6 +57,7 @@ const ApplicationForms = () => {
   const [isConfigurationOpen, setIsConfigurationOpen] = useState(false);
   const [isTemplatePreviewOpen, setIsTemplatePreviewOpen] = useState(false);
   const [isAddFormModalOpen, setIsAddFormModalOpen] = useState(false);
+  const [isApplicationSummaryOpen, setIsApplicationSummaryOpen] = useState(false);
   const [previewTemplate, setPreviewTemplate] = useState<FormTemplate | null>(null);
 
   const districts: District[] = [
@@ -159,6 +161,11 @@ const ApplicationForms = () => {
     setIsConfigurationOpen(true);
   };
 
+  const handleViewApplicationSummary = (form: ApplicationForm) => {
+    setSelectedForm(form);
+    setIsApplicationSummaryOpen(true);
+  };
+
   const handleDisplayTemplate = () => {
     // Mock template data for preview
     const mockTemplate: FormTemplate = {
@@ -258,7 +265,12 @@ const ApplicationForms = () => {
                 <TableRow key={form.id} className="hover:bg-slate-50">
                   <TableCell>
                     <div className="flex items-center gap-3">
-                      <span className="font-medium text-blue-600">{form.name}</span>
+                      <button
+                        className="font-medium text-blue-600 hover:text-blue-800 hover:underline cursor-pointer text-left"
+                        onClick={() => handleViewApplicationSummary(form)}
+                      >
+                        {form.name}
+                      </button>
                       <Badge variant={getStatusBadgeVariant(form.status)}>
                         {form.status}
                       </Badge>
@@ -326,6 +338,13 @@ const ApplicationForms = () => {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Application Summary Modal */}
+      <ApplicationSummaryModal
+        isOpen={isApplicationSummaryOpen}
+        onClose={() => setIsApplicationSummaryOpen(false)}
+        form={selectedForm}
+      />
 
       {/* Template Preview Dialog */}
       <TemplatePreview 
