@@ -1,25 +1,22 @@
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
-import { QueryClient } from '@tanstack/react-query';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Dashboard from '@/pages/Dashboard';
-import Login from '@/pages/Login';
-import Applications from '@/pages/Applications';
-import ApplicationDetails from '@/pages/ApplicationDetails';
-import ReviewQueue from '@/pages/caseworker/ReviewQueue';
-import PlacementManagement from '@/pages/caseworker/PlacementManagement';
-import Messages from '@/pages/Messages';
-import Kindergartens from '@/pages/admin/Kindergartens';
-import Users from '@/pages/admin/Users';
-import PlacementCalendar from '@/pages/admin/PlacementCalendar';
-import Policies from '@/pages/admin/Policies';
-import SelfService from '@/pages/admin/SelfService';
-import Analytics from '@/pages/admin/Analytics';
-import AuditLogs from '@/pages/admin/AuditLogs';
-import Attendance from '@/pages/educator/Attendance';
-import Children from '@/pages/educator/Children';
-import Reports from '@/pages/educator/Reports';
-import Calendar from '@/pages/educator/Calendar';
+import Layout from '@/components/layout/Layout';
+import ProtectedRoute from '@/components/auth/ProtectedRoute';
+
+// Import existing pages
+import LoginPage from '@/pages/auth/LoginPage';
+import GuardianDashboard from '@/pages/guardian/GuardianDashboard';
+import CaseWorkerDashboard from '@/pages/caseworker/CaseWorkerDashboard';
+import MunicipalityAdminDashboard from '@/pages/admin/MunicipalityAdminDashboard';
+import EducatorDashboard from '@/pages/educator/EducatorDashboard';
+import PublicKindergartenDashboard from '@/pages/staff/PublicKindergartenDashboard';
+import PrivateKindergartenDashboard from '@/pages/staff/PrivateKindergartenDashboard';
+import DistrictAdminDashboard from '@/pages/district-admin/DistrictAdminDashboard';
+
+// Admin pages
 import ApplicationForms from '@/pages/admin/ApplicationForms';
 import Approve from '@/pages/admin/Approve';
 import ChildcareMember from '@/pages/admin/ChildcareMember';
@@ -42,114 +39,199 @@ import PersonRegister from '@/pages/admin/PersonRegister';
 import ReportsExport from '@/pages/admin/ReportsExport';
 import Communications from '@/pages/admin/Communications';
 import Settings from '@/pages/admin/Settings';
-import Logs from './pages/admin/Logs';
+import Logs from '@/pages/admin/Logs';
+import Applications from '@/pages/admin/Applications';
 
-const ProtectedRoute = ({ allowedRoles, children }: { allowedRoles: string[], children: React.ReactNode }) => {
-  const auth = localStorage.getItem('auth');
-  const user = auth ? JSON.parse(auth) : null;
-
-  if (!user) {
-    return <Navigate to="/login" />;
-  }
-
-  if (allowedRoles && !allowedRoles.includes(user.role)) {
-    return <Navigate to="/" />;
-  }
-
-  return <>{children}</>;
-};
+const queryClient = new QueryClient();
 
 function App() {
   return (
     <AuthProvider>
       <LanguageProvider>
-        <QueryClient>
+        <QueryClientProvider client={queryClient}>
           <BrowserRouter>
             <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/" element={<ProtectedRoute allowedRoles={['guardian', 'caseworker', 'admin', 'educator', 'staff', 'partner', 'district-admin']}><Dashboard /></ProtectedRoute>} />
-              <Route path="/application/:id" element={<ProtectedRoute allowedRoles={['guardian']}><ApplicationDetails /></ProtectedRoute>} />
+              <Route path="/login" element={<LoginPage />} />
               
-              {/* Caseworker Routes */}
-              <Route path="/caseworker" element={<ProtectedRoute allowedRoles={['caseworker']} />}>
-                <Route index element={<Dashboard />} />
-                <Route path="review-queue" element={<ReviewQueue />} />
-                <Route path="placement-management" element={<PlacementManagement />} />
-                <Route path="messages" element={<Messages />} />
-              </Route>
-
-              {/* Kindergarten Routes */}
-              <Route path="/kindergarten" element={<ProtectedRoute allowedRoles={['staff', 'partner']} />}>
-                <Route index element={<Dashboard />} />
-                <Route path="children" element={<Children />} />
-                <Route path="attendance" element={<Attendance />} />
-                <Route path="reports" element={<Reports />} />
-                <Route path="messages" element={<Messages />} />
-                {/* Partner Specific Routes */}
-                <Route path="applications" element={<Applications />} />
-              </Route>
-
-              {/* Educator Routes */}
-               <Route path="/educator" element={<ProtectedRoute allowedRoles={['educator']} />}>
-                <Route index element={<Dashboard />} />
-                <Route path="attendance" element={<Attendance />} />
-                <Route path="children" element={<Children />} />
-                <Route path="messages" element={<Messages />} />
-                <Route path="reports" element={<Reports />} />
-                <Route path="calendar" element={<Calendar />} />
-              </Route>
-
-              {/* Guardian Routes */}
-              <Route path="/guardian" element={<ProtectedRoute allowedRoles={['guardian']} />}>
-                <Route index element={<Dashboard />} />
-                <Route path="applications" element={<Applications />} />
+              <Route path="/" element={<Layout />}>
+                {/* Guardian Routes */}
+                <Route path="/guardian" element={
+                  <ProtectedRoute allowedRoles={['guardian']}>
+                    <GuardianDashboard />
+                  </ProtectedRoute>
+                } />
+                
+                {/* Caseworker Routes */}
+                <Route path="/caseworker" element={
+                  <ProtectedRoute allowedRoles={['caseworker']}>
+                    <CaseWorkerDashboard />
+                  </ProtectedRoute>
+                } />
+                
+                {/* Admin Routes */}
+                <Route path="/admin" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <MunicipalityAdminDashboard />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/application-forms" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <ApplicationForms />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/approve" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <Approve />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/childcare-member" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <ChildcareMember />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/debt-management" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <DebtManagement />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/guarantee-list" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <GuaranteeList />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/logs" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <Logs />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/manage-childinfo-categories" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <ManageChildinfoCategories />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/modified-applications" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <ModifiedApplications />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/queue-handling" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <QueueHandling />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/queue-exception" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <QueueException />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/stay-request-job" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <StayRequestJob />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/suggested-admissions" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <SuggestedAdmissions />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/unit-children-overview" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <UnitChildrenOverview />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/activity-plans" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <ActivityPlans />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/parent-teacher-meeting" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <ParentTeacherMeeting />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/organization" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <Organization />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/schools" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <Schools />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/staff" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <Staff />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/applications" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <Applications />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/admissions-management" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <AdmissionsManagement />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/person-register" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <PersonRegister />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/reports-export" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <ReportsExport />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/communications" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <Communications />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/settings" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <Settings />
+                  </ProtectedRoute>
+                } />
+                
+                {/* Educator Routes */}
+                <Route path="/educator" element={
+                  <ProtectedRoute allowedRoles={['educator']}>
+                    <EducatorDashboard />
+                  </ProtectedRoute>
+                } />
+                
+                {/* Staff Routes */}
+                <Route path="/staff" element={
+                  <ProtectedRoute allowedRoles={['staff']}>
+                    <PublicKindergartenDashboard />
+                  </ProtectedRoute>
+                } />
+                
+                {/* Partner Routes */}
+                <Route path="/partner" element={
+                  <ProtectedRoute allowedRoles={['partner']}>
+                    <PrivateKindergartenDashboard />
+                  </ProtectedRoute>
+                } />
+                
+                {/* District Admin Routes */}
+                <Route path="/district-admin" element={
+                  <ProtectedRoute allowedRoles={['district-admin']}>
+                    <DistrictAdminDashboard />
+                  </ProtectedRoute>
+                } />
+                
+                {/* Default redirect based on role */}
+                <Route index element={<Navigate to="/admin" replace />} />
               </Route>
               
-              {/* District Admin Routes */}
-              <Route path="/district-admin" element={<ProtectedRoute allowedRoles={['district-admin']} />}>
-                <Route index element={<Dashboard />} />
-                <Route path="kindergartens" element={<Kindergartens />} />
-                <Route path="users" element={<Users />} />
-                <Route path="placement-calendar" element={<PlacementCalendar />} />
-                <Route path="policies" element={<Policies />} />
-                <Route path="self-service" element={<SelfService />} />
-                <Route path="analytics" element={<Analytics />} />
-                <Route path="audit-logs" element={<AuditLogs />} />
-              </Route>
-              
-              {/* Admin Routes */}
-              <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin']} />}>
-                <Route index element={<Dashboard />} />
-                <Route path="application-forms" element={<ApplicationForms />} />
-                <Route path="approve" element={<Approve />} />
-                <Route path="childcare-member" element={<ChildcareMember />} />
-                <Route path="debt-management" element={<DebtManagement />} />
-                <Route path="guarantee-list" element={<GuaranteeList />} />
-                <Route path="manage-childinfo-categories" element={<ManageChildinfoCategories />} />
-                <Route path="modified-applications" element={<ModifiedApplications />} />
-                <Route path="queue-handling" element={<QueueHandling />} />
-                <Route path="queue-exception" element={<QueueException />} />
-                <Route path="stay-request-job" element={<StayRequestJob />} />
-                <Route path="suggested-admissions" element={<SuggestedAdmissions />} />
-                <Route path="unit-children-overview" element={<UnitChildrenOverview />} />
-                <Route path="activity-plans" element={<ActivityPlans />} />
-                <Route path="parent-teacher-meeting" element={<ParentTeacherMeeting />} />
-                <Route path="organization" element={<Organization />} />
-                <Route path="schools" element={<Schools />} />
-                <Route path="staff" element={<Staff />} />
-                <Route path="admissions-management" element={<AdmissionsManagement />} />
-                <Route path="person-register" element={<PersonRegister />} />
-                <Route path="reports-export" element={<ReportsExport />} />
-                <Route path="communications" element={<Communications />} />
-                <Route path="settings" element={<Settings />} />
-                <Route path="logs" element={<Logs />} />
-              </Route>
-              
-              {/* Default Route */}
-              <Route path="*" element={<Navigate to="/" />} />
+              {/* Catch all route */}
+              <Route path="*" element={<Navigate to="/admin" replace />} />
             </Routes>
           </BrowserRouter>
-        </QueryClient>
+        </QueryClientProvider>
       </LanguageProvider>
     </AuthProvider>
   );
