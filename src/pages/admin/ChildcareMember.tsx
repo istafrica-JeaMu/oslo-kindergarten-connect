@@ -2,24 +2,8 @@
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { 
-  Search, 
-  Filter, 
-  Download, 
-  RefreshCw, 
-  Plus, 
-  Edit, 
-  Eye, 
-  Calendar,
-  Users,
-  FileText,
-  Mail,
-  Settings
-} from 'lucide-react';
+import { RefreshCw, Download } from 'lucide-react';
 import ChildcareHeader from '@/components/admin/childcare/ChildcareHeader';
 import ChildcareFilters from '@/components/admin/childcare/ChildcareFilters';
 import AdmissionsTable from '@/components/admin/childcare/AdmissionsTable';
@@ -168,6 +152,7 @@ const ChildcareMember = () => {
         switch (activeTab) {
           case 'current': return admission.status === 'active';
           case 'future': return admission.status === 'future';
+          case 'future-changes': return admission.status === 'future';
           case 'historical': return admission.status === 'historical';
           case 'terminated': return admission.status === 'terminated';
           case 'deleted': return admission.status === 'deleted';
@@ -223,6 +208,19 @@ const ChildcareMember = () => {
     // Implement bulk action logic
   };
 
+  const getTabDisplayName = (tab: AdmissionTab) => {
+    switch (tab) {
+      case 'current': return 'Manage current admissions';
+      case 'future': return 'Future admissions';
+      case 'future-changes': return 'Future admissions changes';
+      case 'historical': return 'Manage historical admissions';
+      case 'all': return 'Manage all admissions';
+      case 'deleted': return 'Deleted admissions';
+      case 'terminated': return 'Terminated admissions';
+      default: return tab;
+    }
+  };
+
   return (
     <div className="space-y-6 p-6">
       <ChildcareHeader 
@@ -238,14 +236,49 @@ const ChildcareMember = () => {
       <Card>
         <CardContent className="pt-6">
           <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as AdmissionTab)}>
-            <TabsList className="grid w-full grid-cols-7">
-              <TabsTrigger value="current">Manage current admissions</TabsTrigger>
-              <TabsTrigger value="future">Future admissions</TabsTrigger>
-              <TabsTrigger value="future-changes">Future admissions changes</TabsTrigger>
-              <TabsTrigger value="historical">Manage historical admissions</TabsTrigger>
-              <TabsTrigger value="all">Manage all admissions</TabsTrigger>
-              <TabsTrigger value="deleted">Deleted admissions</TabsTrigger>
-              <TabsTrigger value="terminated">Terminated admissions</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-7 h-auto">
+              <TabsTrigger 
+                value="current" 
+                className={`text-xs px-2 py-2 ${activeTab === 'current' ? 'font-bold' : ''}`}
+              >
+                Manage current admissions
+              </TabsTrigger>
+              <TabsTrigger 
+                value="future"
+                className={`text-xs px-2 py-2 ${activeTab === 'future' ? 'font-bold' : ''}`}
+              >
+                Future admissions
+              </TabsTrigger>
+              <TabsTrigger 
+                value="future-changes"
+                className={`text-xs px-2 py-2 ${activeTab === 'future-changes' ? 'font-bold' : ''}`}
+              >
+                Future admissions changes
+              </TabsTrigger>
+              <TabsTrigger 
+                value="historical"
+                className={`text-xs px-2 py-2 ${activeTab === 'historical' ? 'font-bold' : ''}`}
+              >
+                Manage historical admissions
+              </TabsTrigger>
+              <TabsTrigger 
+                value="all"
+                className={`text-xs px-2 py-2 ${activeTab === 'all' ? 'font-bold' : ''}`}
+              >
+                Manage all admissions
+              </TabsTrigger>
+              <TabsTrigger 
+                value="deleted"
+                className={`text-xs px-2 py-2 ${activeTab === 'deleted' ? 'font-bold' : ''}`}
+              >
+                Deleted admissions
+              </TabsTrigger>
+              <TabsTrigger 
+                value="terminated"
+                className={`text-xs px-2 py-2 ${activeTab === 'terminated' ? 'font-bold' : ''}`}
+              >
+                Terminated admissions
+              </TabsTrigger>
             </TabsList>
           </Tabs>
         </CardContent>
@@ -299,6 +332,7 @@ const ChildcareMember = () => {
               itemsPerPage={itemsPerPage}
               onPageChange={setCurrentPage}
               onItemsPerPageChange={setItemsPerPage}
+              activeTab={activeTab}
             />
           </CardContent>
         </Card>

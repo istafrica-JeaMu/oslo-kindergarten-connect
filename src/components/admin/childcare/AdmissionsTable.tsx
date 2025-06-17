@@ -22,7 +22,7 @@ import {
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
-import { Admission } from '@/types/childcare';
+import { Admission, AdmissionTab } from '@/types/childcare';
 
 interface AdmissionsTableProps {
   admissions: Admission[];
@@ -39,6 +39,7 @@ interface AdmissionsTableProps {
   itemsPerPage: number;
   onPageChange: (page: number) => void;
   onItemsPerPageChange: (itemsPerPage: number) => void;
+  activeTab: AdmissionTab;
 }
 
 const AdmissionsTable = ({
@@ -55,7 +56,8 @@ const AdmissionsTable = ({
   totalPages,
   itemsPerPage,
   onPageChange,
-  onItemsPerPageChange
+  onItemsPerPageChange,
+  activeTab
 }: AdmissionsTableProps) => {
   const handleSort = (field: string) => {
     if (sortField === field) {
@@ -102,6 +104,266 @@ const AdmissionsTable = ({
     );
   };
 
+  const getTableHeaders = () => {
+    const baseHeaders = [
+      <TableHead key="checkbox" className="w-12">
+        <Checkbox
+          checked={admissions.length > 0 && selectedRows.length === admissions.length}
+          onCheckedChange={onSelectAll}
+        />
+      </TableHead>,
+      <TableHead key="number" className="text-xs">#</TableHead>
+    ];
+
+    if (activeTab === 'terminated') {
+      return [
+        ...baseHeaders,
+        <TableHead key="edit" className="text-xs">Edit</TableHead>,
+        <SortableHeader key="childInfo" field="childInfo">Child info</SortableHeader>,
+        <SortableHeader key="childCivicNumber" field="childCivicNumber">Child civic number</SortableHeader>,
+        <SortableHeader key="childName" field="childName">Child name</SortableHeader>,
+        <SortableHeader key="department" field="department">Department</SortableHeader>,
+        <SortableHeader key="admissionStart" field="admissionStart">Admission start</SortableHeader>,
+        <SortableHeader key="endDate" field="endDate">End date</SortableHeader>,
+        <SortableHeader key="startDate" field="startDate">Start date</SortableHeader>,
+        <SortableHeader key="changeStop" field="changeStop">Change stop</SortableHeader>,
+        <SortableHeader key="terminationAppealDate" field="terminationAppealDate">Termination appeal date</SortableHeader>,
+        <SortableHeader key="terminationDate" field="terminationDate">Termination date</SortableHeader>,
+        <SortableHeader key="terminationStatus" field="terminationStatus">Termination status</SortableHeader>,
+        <SortableHeader key="terminationReason" field="terminationReason">Termination reason</SortableHeader>
+      ];
+    } else if (activeTab === 'deleted') {
+      return [
+        ...baseHeaders,
+        <SortableHeader key="childInfo" field="childInfo">Child info</SortableHeader>,
+        <SortableHeader key="childCivicNumber" field="childCivicNumber">Child civic number</SortableHeader>,
+        <SortableHeader key="childName" field="childName">Child name</SortableHeader>,
+        <SortableHeader key="department" field="department">Department</SortableHeader>,
+        <SortableHeader key="admissionStart" field="admissionStart">Admission start</SortableHeader>,
+        <SortableHeader key="endDate" field="endDate">End date</SortableHeader>,
+        <SortableHeader key="startDate" field="startDate">Start date</SortableHeader>,
+        <SortableHeader key="changeStop" field="changeStop">Change stop</SortableHeader>,
+        <SortableHeader key="rateCategory" field="rateCategory">Ratecategory</SortableHeader>,
+        <SortableHeader key="averageTime" field="averageTime">Average time</SortableHeader>,
+        <SortableHeader key="reasonType" field="reasonType">Reasontype</SortableHeader>,
+        <SortableHeader key="timetable" field="timetable">Timetable</SortableHeader>,
+        <TableHead key="showTimetable" className="text-xs">Show timetable</TableHead>,
+        <TableHead key="journalNote" className="text-xs">Journal note</TableHead>,
+        <TableHead key="delete" className="text-xs">Delete</TableHead>
+      ];
+    } else {
+      // Default columns for current, future, historical, and all admissions
+      return [
+        ...baseHeaders,
+        <TableHead key="edit" className="text-xs">Edit</TableHead>,
+        <SortableHeader key="childInfo" field="childInfo">Child info</SortableHeader>,
+        <SortableHeader key="childCivicNumber" field="childCivicNumber">Child civic number</SortableHeader>,
+        <SortableHeader key="childName" field="childName">Child name</SortableHeader>,
+        <SortableHeader key="department" field="department">Department</SortableHeader>,
+        <SortableHeader key="admissionStart" field="admissionStart">Admission start</SortableHeader>,
+        <SortableHeader key="endDate" field="endDate">End date</SortableHeader>,
+        <SortableHeader key="startDate" field="startDate">Start date</SortableHeader>,
+        <SortableHeader key="changeStop" field="changeStop">Change stop</SortableHeader>,
+        <SortableHeader key="rateCategory" field="rateCategory">Ratecategory</SortableHeader>,
+        <SortableHeader key="averageTime" field="averageTime">Average time</SortableHeader>,
+        <SortableHeader key="reasonType" field="reasonType">Reasontype</SortableHeader>,
+        <SortableHeader key="timetable" field="timetable">Timetable</SortableHeader>,
+        <TableHead key="showTimetable" className="text-xs">Show timetable</TableHead>,
+        <TableHead key="journalNote" className="text-xs">Journal note</TableHead>
+      ];
+    }
+  };
+
+  const getTableCells = (admission: Admission, index: number) => {
+    const baseCells = [
+      <TableCell key="checkbox">
+        <Checkbox
+          checked={selectedRows.includes(admission.id)}
+          onCheckedChange={(checked) => onSelectRow(admission.id, checked as boolean)}
+        />
+      </TableCell>,
+      <TableCell key="number" className="font-medium text-xs">
+        {(currentPage - 1) * itemsPerPage + index + 1}
+      </TableCell>
+    ];
+
+    if (activeTab === 'terminated') {
+      return [
+        ...baseCells,
+        <TableCell key="edit">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onEditChild(admission)}
+            className="w-8 h-8 p-0"
+          >
+            <Edit className="w-3 h-3" />
+          </Button>
+        </TableCell>,
+        <TableCell key="childInfo">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onViewAdmission(admission)}
+            className="text-blue-600 hover:text-blue-800"
+          >
+            <Eye className="w-4 h-4 mr-1" />
+            View
+          </Button>
+        </TableCell>,
+        <TableCell key="childCivicNumber" className="text-xs font-mono">
+          {admission.child.civicNumber}
+        </TableCell>,
+        <TableCell key="childName" className="text-xs font-medium">
+          <div className="flex items-center gap-2">
+            {admission.child.fullName}
+            {admission.child.specialNeedsFlag && (
+              <Badge variant="outline" className="text-xs">Special needs</Badge>
+            )}
+          </div>
+        </TableCell>,
+        <TableCell key="department" className="text-xs">
+          <div>
+            <div className="font-medium">{admission.department.name}</div>
+            <div className="text-gray-500 text-xs">{admission.department.unitName}</div>
+          </div>
+        </TableCell>,
+        <TableCell key="admissionStart" className="text-xs">{admission.admissionStart}</TableCell>,
+        <TableCell key="endDate" className="text-xs">{admission.endDate}</TableCell>,
+        <TableCell key="startDate" className="text-xs">{admission.startDate}</TableCell>,
+        <TableCell key="changeStop" className="text-xs">{admission.changeStop || '-'}</TableCell>,
+        <TableCell key="terminationAppealDate" className="text-xs">-</TableCell>,
+        <TableCell key="terminationDate" className="text-xs">-</TableCell>,
+        <TableCell key="terminationStatus" className="text-xs">-</TableCell>,
+        <TableCell key="terminationReason" className="text-xs">-</TableCell>
+      ];
+    } else if (activeTab === 'deleted') {
+      return [
+        ...baseCells,
+        <TableCell key="childInfo">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onViewAdmission(admission)}
+            className="text-blue-600 hover:text-blue-800"
+          >
+            <Eye className="w-4 h-4 mr-1" />
+            View
+          </Button>
+        </TableCell>,
+        <TableCell key="childCivicNumber" className="text-xs font-mono">
+          {admission.child.civicNumber}
+        </TableCell>,
+        <TableCell key="childName" className="text-xs font-medium">
+          <div className="flex items-center gap-2">
+            {admission.child.fullName}
+            {admission.child.specialNeedsFlag && (
+              <Badge variant="outline" className="text-xs">Special needs</Badge>
+            )}
+          </div>
+        </TableCell>,
+        <TableCell key="department" className="text-xs">
+          <div>
+            <div className="font-medium">{admission.department.name}</div>
+            <div className="text-gray-500 text-xs">{admission.department.unitName}</div>
+          </div>
+        </TableCell>,
+        <TableCell key="admissionStart" className="text-xs">{admission.admissionStart}</TableCell>,
+        <TableCell key="endDate" className="text-xs">{admission.endDate}</TableCell>,
+        <TableCell key="startDate" className="text-xs">{admission.startDate}</TableCell>,
+        <TableCell key="changeStop" className="text-xs">{admission.changeStop || '-'}</TableCell>,
+        <TableCell key="rateCategory" className="text-xs">
+          <Badge variant="outline">{admission.rateCategory.name}</Badge>
+        </TableCell>,
+        <TableCell key="averageTime" className="text-xs">{admission.averageTime}</TableCell>,
+        <TableCell key="reasonType" className="text-xs">{admission.reasonType}</TableCell>,
+        <TableCell key="timetable" className="text-xs">
+          <Badge variant="outline">
+            {admission.timetable.schedulePattern}
+          </Badge>
+        </TableCell>,
+        <TableCell key="showTimetable">
+          <Button variant="ghost" size="sm" className="w-8 h-8 p-0">
+            <Calendar className="w-3 h-3" />
+          </Button>
+        </TableCell>,
+        <TableCell key="journalNote">
+          <Button variant="ghost" size="sm" className="w-8 h-8 p-0">
+            <FileText className="w-3 h-3" />
+          </Button>
+        </TableCell>,
+        <TableCell key="delete" className="text-xs">Delete</TableCell>
+      ];
+    } else {
+      // Default cells for current, future, historical, and all admissions
+      return [
+        ...baseCells,
+        <TableCell key="edit">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onEditChild(admission)}
+            className="w-8 h-8 p-0"
+          >
+            <Edit className="w-3 h-3" />
+          </Button>
+        </TableCell>,
+        <TableCell key="childInfo">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onViewAdmission(admission)}
+            className="text-blue-600 hover:text-blue-800"
+          >
+            <Eye className="w-4 h-4 mr-1" />
+            View
+          </Button>
+        </TableCell>,
+        <TableCell key="childCivicNumber" className="text-xs font-mono">
+          {admission.child.civicNumber}
+        </TableCell>,
+        <TableCell key="childName" className="text-xs font-medium">
+          <div className="flex items-center gap-2">
+            {admission.child.fullName}
+            {admission.child.specialNeedsFlag && (
+              <Badge variant="outline" className="text-xs">Special needs</Badge>
+            )}
+          </div>
+        </TableCell>,
+        <TableCell key="department" className="text-xs">
+          <div>
+            <div className="font-medium">{admission.department.name}</div>
+            <div className="text-gray-500 text-xs">{admission.department.unitName}</div>
+          </div>
+        </TableCell>,
+        <TableCell key="admissionStart" className="text-xs">{admission.admissionStart}</TableCell>,
+        <TableCell key="endDate" className="text-xs">{admission.endDate}</TableCell>,
+        <TableCell key="startDate" className="text-xs">{admission.startDate}</TableCell>,
+        <TableCell key="changeStop" className="text-xs">{admission.changeStop || '-'}</TableCell>,
+        <TableCell key="rateCategory" className="text-xs">
+          <Badge variant="outline">{admission.rateCategory.name}</Badge>
+        </TableCell>,
+        <TableCell key="averageTime" className="text-xs">{admission.averageTime}</TableCell>,
+        <TableCell key="reasonType" className="text-xs">{admission.reasonType}</TableCell>,
+        <TableCell key="timetable" className="text-xs">
+          <Badge variant="outline">
+            {admission.timetable.schedulePattern}
+          </Badge>
+        </TableCell>,
+        <TableCell key="showTimetable">
+          <Button variant="ghost" size="sm" className="w-8 h-8 p-0">
+            <Calendar className="w-3 h-3" />
+          </Button>
+        </TableCell>,
+        <TableCell key="journalNote">
+          <Button variant="ghost" size="sm" className="w-8 h-8 p-0">
+            <FileText className="w-3 h-3" />
+          </Button>
+        </TableCell>
+      ];
+    }
+  };
+
   if (admissions.length === 0) {
     return (
       <div className="text-center py-12">
@@ -128,104 +390,13 @@ const AdmissionsTable = ({
         <Table>
           <TableHeader>
             <TableRow className="bg-slate-50">
-              <TableHead className="w-12">
-                <Checkbox
-                  checked={admissions.length > 0 && selectedRows.length === admissions.length}
-                  onCheckedChange={onSelectAll}
-                />
-              </TableHead>
-              <TableHead className="text-xs">#</TableHead>
-              <TableHead className="text-xs">Edit</TableHead>
-              <SortableHeader field="childInfo">Child info</SortableHeader>
-              <SortableHeader field="childCivicNumber">Child civic number</SortableHeader>
-              <SortableHeader field="childName">Child name</SortableHeader>
-              <SortableHeader field="department">Department</SortableHeader>
-              <SortableHeader field="admissionStart">Admission start</SortableHeader>
-              <SortableHeader field="endDate">End date</SortableHeader>
-              <SortableHeader field="startDate">Start date</SortableHeader>
-              <SortableHeader field="changeStop">Change stop</SortableHeader>
-              <SortableHeader field="rateCategory">Rate category</SortableHeader>
-              <SortableHeader field="averageTime">Average time</SortableHeader>
-              <SortableHeader field="reasonType">Reason type</SortableHeader>
-              <SortableHeader field="timetable">Timetable</SortableHeader>
-              <TableHead className="text-xs">Show timetable</TableHead>
-              <TableHead className="text-xs">Journal note</TableHead>
+              {getTableHeaders()}
             </TableRow>
           </TableHeader>
           <TableBody>
             {admissions.map((admission, index) => (
               <TableRow key={admission.id} className="hover:bg-slate-50">
-                <TableCell>
-                  <Checkbox
-                    checked={selectedRows.includes(admission.id)}
-                    onCheckedChange={(checked) => onSelectRow(admission.id, checked as boolean)}
-                  />
-                </TableCell>
-                <TableCell className="font-medium text-xs">
-                  {(currentPage - 1) * itemsPerPage + index + 1}
-                </TableCell>
-                <TableCell>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onEditChild(admission)}
-                    className="w-8 h-8 p-0"
-                  >
-                    <Edit className="w-3 h-3" />
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onViewAdmission(admission)}
-                    className="text-blue-600 hover:text-blue-800"
-                  >
-                    <Eye className="w-4 h-4 mr-1" />
-                    View
-                  </Button>
-                </TableCell>
-                <TableCell className="text-xs font-mono">
-                  {admission.child.civicNumber}
-                </TableCell>
-                <TableCell className="text-xs font-medium">
-                  <div className="flex items-center gap-2">
-                    {admission.child.fullName}
-                    {admission.child.specialNeedsFlag && (
-                      <Badge variant="outline" className="text-xs">Special needs</Badge>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell className="text-xs">
-                  <div>
-                    <div className="font-medium">{admission.department.name}</div>
-                    <div className="text-gray-500 text-xs">{admission.department.unitName}</div>
-                  </div>
-                </TableCell>
-                <TableCell className="text-xs">{admission.admissionStart}</TableCell>
-                <TableCell className="text-xs">{admission.endDate}</TableCell>
-                <TableCell className="text-xs">{admission.startDate}</TableCell>
-                <TableCell className="text-xs">{admission.changeStop || '-'}</TableCell>
-                <TableCell className="text-xs">
-                  <Badge variant="outline">{admission.rateCategory.name}</Badge>
-                </TableCell>
-                <TableCell className="text-xs">{admission.averageTime}</TableCell>
-                <TableCell className="text-xs">{admission.reasonType}</TableCell>
-                <TableCell className="text-xs">
-                  <Badge variant="outline">
-                    {admission.timetable.schedulePattern}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                  <Button variant="ghost" size="sm" className="w-8 h-8 p-0">
-                    <Calendar className="w-3 h-3" />
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Button variant="ghost" size="sm" className="w-8 h-8 p-0">
-                    <FileText className="w-3 h-3" />
-                  </Button>
-                </TableCell>
+                {getTableCells(admission, index)}
               </TableRow>
             ))}
           </TableBody>

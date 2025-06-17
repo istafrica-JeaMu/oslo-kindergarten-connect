@@ -96,54 +96,40 @@ const BulkActionsPanel = ({ selectedCount, onBulkAction }: BulkActionsPanelProps
   ];
 
   return (
-    <Card>
-      <CardContent className="pt-6">
-        <div className="space-y-6">
-          {/* Bulk Actions */}
-          <div>
-            <h3 className="text-sm font-medium mb-4">
-              Bulk Actions {selectedCount > 0 && `(${selectedCount} selected)`}
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {bulkActions.map((action) => (
-                <Button
-                  key={action.id}
-                  onClick={() => onBulkAction(action.id)}
-                  disabled={selectedCount === 0}
-                  className={`${action.color} text-white disabled:opacity-50 disabled:bg-gray-400`}
-                  size="sm"
-                  title={action.description}
-                >
-                  <action.icon className="w-4 h-4 mr-2" />
-                  {action.label}
-                </Button>
-              ))}
-            </div>
-          </div>
+    <div className="space-y-4">
+      {/* Bulk Actions Row */}
+      <div className="flex flex-wrap gap-2 justify-end">
+        {bulkActions.map((action) => (
+          <Button
+            key={action.id}
+            onClick={() => onBulkAction(action.id)}
+            disabled={selectedCount === 0}
+            className={`${action.color} text-white disabled:opacity-50 disabled:bg-gray-400`}
+            size="sm"
+            title={action.description}
+          >
+            <action.icon className="w-4 h-4 mr-2" />
+            {action.label}
+          </Button>
+        ))}
+      </div>
 
-          <Separator />
-
-          {/* Individual Actions */}
-          <div>
-            <h3 className="text-sm font-medium mb-4">Individual Actions</h3>
-            <div className="flex flex-wrap gap-2">
-              {individualActions.map((action) => (
-                <Button
-                  key={action.id}
-                  onClick={() => onBulkAction(action.id)}
-                  variant="outline"
-                  size="sm"
-                  title={action.description}
-                >
-                  <action.icon className="w-4 h-4 mr-2" />
-                  {action.label}
-                </Button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+      {/* Individual Actions Row */}
+      <div className="flex flex-wrap gap-2 justify-end">
+        {individualActions.map((action) => (
+          <Button
+            key={action.id}
+            onClick={() => onBulkAction(action.id)}
+            variant="outline"
+            size="sm"
+            title={action.description}
+          >
+            <action.icon className="w-4 h-4 mr-2" />
+            {action.label}
+          </Button>
+        ))}
+      </div>
+    </div>
   );
 };
 
