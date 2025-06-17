@@ -1,12 +1,11 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Table,
   TableBody,
@@ -16,181 +15,148 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible';
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
 import { 
-  CheckCircle, 
-  Calendar, 
-  Users, 
-  Filter, 
-  ChevronDown, 
-  ChevronUp,
-  Plus,
-  Minus,
   Search,
+  Filter,
   Download,
   MoreHorizontal,
-  Clock,
-  MapPin
+  Check,
+  X
 } from 'lucide-react';
 
-interface PlacementApplication {
+interface PlacementRecord {
   id: string;
-  timetableId: string;
-  status: 'New' | 'In Progress' | 'Approved' | 'Rejected';
-  childCivicNumber: string;
+  applicationNumber: string;
   childName: string;
-  unit: string;
-  startDate: string;
-  endDate: string;
-  timetableType: 'Full-time' | 'Part-time' | 'Flexible';
+  birthDate: string;
+  guardianName: string;
+  preferredUnit: string;
   requestedStartDate: string;
-  contractedTime: number;
-  averageTime: number;
-  rateCategory: string;
-}
-
-interface FilterCondition {
-  id: string;
-  field: string;
-  operator: string;
-  value: string;
+  priority: number;
+  status: 'Pending' | 'Approved' | 'Rejected' | 'Under Review';
+  submissionDate: string;
+  municipality: 'förskola' | 'fritidshem';
 }
 
 const PlacementManagement = () => {
   const [selectedMunicipality, setSelectedMunicipality] = useState<'förskola' | 'fritidshem'>('förskola');
-  const [showOnlyCurrentUnits, setShowOnlyCurrentUnits] = useState(false);
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [filterConditions, setFilterConditions] = useState<FilterCondition[]>([
-    { id: '1', field: '', operator: '', value: '' }
-  ]);
-  const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [statusFilter, setStatusFilter] = useState('all');
+  const itemsPerPage = 10;
 
-  // Mock data
-  const mockApplications: PlacementApplication[] = [
+  // Mock data for the table
+  const mockData: PlacementRecord[] = [
     {
       id: '1',
-      timetableId: 'TT-2024-001',
-      status: 'New',
-      childCivicNumber: '20220315-****',
+      applicationNumber: 'APP-2024-001',
       childName: 'Emma Andersson',
-      unit: 'Solbacka Förskola',
-      startDate: '2024-02-01',
-      endDate: '2024-08-31',
-      timetableType: 'Full-time',
-      requestedStartDate: '2024-01-15',
-      contractedTime: 8,
-      averageTime: 7.5,
-      rateCategory: 'Standard'
+      birthDate: '2022-03-15',
+      guardianName: 'Anna Andersson',
+      preferredUnit: 'Solbacka Förskola',
+      requestedStartDate: '2024-08-01',
+      priority: 1,
+      status: 'Pending',
+      submissionDate: '2024-01-15',
+      municipality: 'förskola'
     },
     {
       id: '2',
-      timetableId: 'TT-2024-002',
-      status: 'In Progress',
-      childCivicNumber: '20210820-****',
+      applicationNumber: 'APP-2024-002',
       childName: 'Lucas Nilsson',
-      unit: 'Björkträd Fritidshem',
-      startDate: '2024-01-20',
-      endDate: '2024-06-15',
-      timetableType: 'Part-time',
-      requestedStartDate: '2024-01-10',
-      contractedTime: 4,
-      averageTime: 4.2,
-      rateCategory: 'Reduced'
+      birthDate: '2021-08-20',
+      guardianName: 'Erik Nilsson',
+      preferredUnit: 'Björkträd Fritidshem',
+      requestedStartDate: '2024-08-15',
+      priority: 2,
+      status: 'Under Review',
+      submissionDate: '2024-01-20',
+      municipality: 'fritidshem'
     },
     {
       id: '3',
-      timetableId: 'TT-2024-003',
-      status: 'Approved',
-      childCivicNumber: '20230505-****',
+      applicationNumber: 'APP-2024-003',
       childName: 'Astrid Johansson',
-      unit: 'Rosengård Förskola',
-      startDate: '2024-03-01',
-      endDate: '2024-12-20',
-      timetableType: 'Flexible',
-      requestedStartDate: '2024-02-15',
-      contractedTime: 6,
-      averageTime: 5.8,
-      rateCategory: 'Standard'
+      birthDate: '2023-05-05',
+      guardianName: 'Maria Johansson',
+      preferredUnit: 'Rosengård Förskola',
+      requestedStartDate: '2024-09-01',
+      priority: 1,
+      status: 'Approved',
+      submissionDate: '2024-02-01',
+      municipality: 'förskola'
+    },
+    {
+      id: '4',
+      applicationNumber: 'APP-2024-004',
+      childName: 'Oliver Berg',
+      birthDate: '2022-11-12',
+      guardianName: 'Sara Berg',
+      preferredUnit: 'Centrum Förskola',
+      requestedStartDate: '2024-08-20',
+      priority: 3,
+      status: 'Pending',
+      submissionDate: '2024-01-25',
+      municipality: 'förskola'
+    },
+    {
+      id: '5',
+      applicationNumber: 'APP-2024-005',
+      childName: 'Maja Larsson',
+      birthDate: '2021-04-08',
+      guardianName: 'John Larsson',
+      preferredUnit: 'Västra Fritidshem',
+      requestedStartDate: '2024-08-12',
+      priority: 2,
+      status: 'Rejected',
+      submissionDate: '2024-02-10',
+      municipality: 'fritidshem'
     }
   ];
 
-  const filterFields = [
-    'Status application',
-    'Child name',
-    'Unit',
-    'Start date',
-    'End date',
-    'Timetable type',
-    'Rate category'
-  ];
-
-  const filterOperators = [
-    'Equals',
-    'Contains',
-    'In',
-    'Not in',
-    'Greater than',
-    'Less than'
-  ];
-
-  const statusOptions = ['New', 'In Progress', 'Approved', 'Rejected'];
-  const timetableTypes = ['Full-time', 'Part-time', 'Flexible'];
-  const rateCategories = ['Standard', 'Reduced', 'Premium'];
-
-  const getStatusBadgeVariant = (status: string) => {
+  const getStatusBadgeColor = (status: string) => {
     switch (status) {
-      case 'New':
-        return 'secondary';
-      case 'In Progress':
-        return 'default';
+      case 'Pending':
+        return 'bg-yellow-100 text-yellow-800 border-yellow-300';
       case 'Approved':
-        return 'default';
+        return 'bg-green-100 text-green-800 border-green-300';
       case 'Rejected':
-        return 'destructive';
+        return 'bg-red-100 text-red-800 border-red-300';
+      case 'Under Review':
+        return 'bg-blue-100 text-blue-800 border-blue-300';
       default:
-        return 'secondary';
+        return 'bg-gray-100 text-gray-800 border-gray-300';
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'New':
-        return 'bg-blue-100 text-blue-800';
-      case 'In Progress':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'Approved':
-        return 'bg-green-100 text-green-800';
-      case 'Rejected':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
+  const filteredData = mockData.filter(record => {
+    const matchesMunicipality = record.municipality === selectedMunicipality;
+    const matchesSearch = !searchTerm || 
+      record.childName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      record.applicationNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      record.guardianName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      record.preferredUnit.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || record.status === statusFilter;
+    
+    return matchesMunicipality && matchesSearch && matchesStatus;
+  });
 
-  const addFilterCondition = () => {
-    setFilterConditions([
-      ...filterConditions,
-      { id: Date.now().toString(), field: '', operator: '', value: '' }
-    ]);
-  };
-
-  const removeFilterCondition = (id: string) => {
-    setFilterConditions(filterConditions.filter(condition => condition.id !== id));
-  };
-
-  const updateFilterCondition = (id: string, field: string, value: any) => {
-    setFilterConditions(filterConditions.map(condition =>
-      condition.id === id ? { ...condition, [field]: value } : condition
-    ));
-  };
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedData = filteredData.slice(startIndex, startIndex + itemsPerPage);
 
   const handleSelectAll = (checked: boolean | "indeterminate") => {
     if (checked === true) {
-      setSelectedRows(mockApplications.map(app => app.id));
+      setSelectedRows(paginatedData.map(record => record.id));
     } else {
       setSelectedRows([]);
     }
@@ -204,344 +170,247 @@ const PlacementManagement = () => {
     }
   };
 
-  const handleShowOnlyCurrentUnits = (checked: boolean | "indeterminate") => {
-    setShowOnlyCurrentUnits(checked === true);
+  const handleBulkAction = (action: 'approve' | 'reject') => {
+    console.log(`Bulk ${action} for records:`, selectedRows);
+    setSelectedRows([]);
   };
-
-  const filteredApplications = mockApplications.filter(app => {
-    // Filter by municipality type
-    const municipalityMatch = selectedMunicipality === 'förskola' 
-      ? app.unit.includes('Förskola')
-      : app.unit.includes('Fritidshem');
-    
-    // Filter by search term
-    const searchMatch = !searchTerm || 
-      app.childName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      app.timetableId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      app.unit.toLowerCase().includes(searchTerm.toLowerCase());
-
-    return municipalityMatch && searchMatch;
-  });
 
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
-        <CheckCircle className="w-8 h-8 text-green-600" />
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Placement Management</h1>
-          <p className="text-slate-600">Process applications, manage timetables, and track placements</p>
+          <p className="text-slate-600">Process and approve kindergarten placement applications</p>
         </div>
       </div>
 
-      {/* Municipality Selector */}
+      {/* Municipality Toggle */}
       <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>Municipality & Settings</CardTitle>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center space-x-2">
-                <Checkbox 
-                  id="currentUnits" 
-                  checked={showOnlyCurrentUnits}
-                  onCheckedChange={handleShowOnlyCurrentUnits}
-                />
-                <Label htmlFor="currentUnits">Show only current units</Label>
-              </div>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           <div className="flex items-center gap-4">
-            <Label>Municipality Type:</Label>
-            <Select value={selectedMunicipality} onValueChange={(value: 'förskola' | 'fritidshem') => setSelectedMunicipality(value)}>
-              <SelectTrigger className="w-48">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="förskola">Förskola (Preschool)</SelectItem>
-                <SelectItem value="fritidshem">Fritidshem (After-school)</SelectItem>
-              </SelectContent>
-            </Select>
-            <Badge variant="outline" className="ml-2">
-              {filteredApplications.length} applications
+            <span className="text-sm font-medium">Municipality Type:</span>
+            <div className="flex border rounded-lg overflow-hidden">
+              <Button
+                variant={selectedMunicipality === 'förskola' ? 'default' : 'ghost'}
+                className={`rounded-none border-0 ${
+                  selectedMunicipality === 'förskola' 
+                    ? 'bg-oslo-blue text-white' 
+                    : 'bg-white text-slate-600 hover:bg-slate-50'
+                }`}
+                onClick={() => setSelectedMunicipality('förskola')}
+              >
+                Förskola
+              </Button>
+              <Button
+                variant={selectedMunicipality === 'fritidshem' ? 'default' : 'ghost'}
+                className={`rounded-none border-0 ${
+                  selectedMunicipality === 'fritidshem' 
+                    ? 'bg-oslo-blue text-white' 
+                    : 'bg-white text-slate-600 hover:bg-slate-50'
+                }`}
+                onClick={() => setSelectedMunicipality('fritidshem')}
+              >
+                Fritidshem
+              </Button>
+            </div>
+            <Badge variant="outline" className="ml-auto">
+              {filteredData.length} applications
             </Badge>
           </div>
         </CardContent>
       </Card>
 
-      {/* Main Tabs */}
-      <Tabs defaultValue="accept" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-6">
-          <TabsTrigger value="accept">Accept</TabsTrigger>
-          <TabsTrigger value="timetable">Timetable</TabsTrigger>
-          <TabsTrigger value="end-request">End Request</TabsTrigger>
-          <TabsTrigger value="replace-request">Replace Request</TabsTrigger>
-          <TabsTrigger value="rate-category">Rate Category</TabsTrigger>
-          <TabsTrigger value="reasontype">Reasontype</TabsTrigger>
-        </TabsList>
+      {/* Search and Filters */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Input
+                placeholder="Search applications... (ctrl+shift+s)"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Filter by status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                <SelectItem value="Pending">Pending</SelectItem>
+                <SelectItem value="Under Review">Under Review</SelectItem>
+                <SelectItem value="Approved">Approved</SelectItem>
+                <SelectItem value="Rejected">Rejected</SelectItem>
+              </SelectContent>
+            </Select>
 
-        <TabsContent value="accept" className="space-y-6">
-          {/* Advanced Filtering */}
-          <Card>
-            <Collapsible open={isFilterOpen} onOpenChange={setIsFilterOpen}>
-              <CollapsibleTrigger asChild>
-                <CardHeader className="cursor-pointer hover:bg-slate-50">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="flex items-center gap-2">
-                      <Filter className="w-5 h-5" />
-                      Advanced Filters
-                    </CardTitle>
-                    {isFilterOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                  </div>
-                </CardHeader>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <CardContent className="space-y-4">
-                  {filterConditions.map((condition, index) => (
-                    <div key={condition.id} className="flex items-center gap-4">
-                      <Select value={condition.field} onValueChange={(value) => updateFilterCondition(condition.id, 'field', value)}>
-                        <SelectTrigger className="w-48">
-                          <SelectValue placeholder="Select field" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {filterFields.map(field => (
-                            <SelectItem key={field} value={field}>{field}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+            <Button variant="outline" size="sm">
+              <Filter className="w-4 h-4 mr-2" />
+              Filters
+            </Button>
 
-                      <Select value={condition.operator} onValueChange={(value) => updateFilterCondition(condition.id, 'operator', value)}>
-                        <SelectTrigger className="w-32">
-                          <SelectValue placeholder="Operator" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {filterOperators.map(operator => (
-                            <SelectItem key={operator} value={operator}>{operator}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+            <Button variant="outline" size="sm">
+              <Download className="w-4 h-4 mr-2" />
+              Export
+            </Button>
+          </div>
 
-                      <Input
-                        placeholder="Value"
-                        value={condition.value}
-                        onChange={(e) => updateFilterCondition(condition.id, 'value', e.target.value)}
-                        className="w-48"
-                      />
+          {selectedRows.length > 0 && (
+            <div className="flex items-center gap-2 mb-4">
+              <Badge variant="secondary">{selectedRows.length} selected</Badge>
+              <Button 
+                size="sm" 
+                variant="outline"
+                onClick={() => handleBulkAction('approve')}
+                className="text-green-600 border-green-300 hover:bg-green-50"
+              >
+                <Check className="w-4 h-4 mr-1" />
+                Approve Selected
+              </Button>
+              <Button 
+                size="sm" 
+                variant="outline"
+                onClick={() => handleBulkAction('reject')}
+                className="text-red-600 border-red-300 hover:bg-red-50"
+              >
+                <X className="w-4 h-4 mr-1" />
+                Reject Selected
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => removeFilterCondition(condition.id)}
-                        disabled={filterConditions.length === 1}
-                      >
-                        <Minus className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  ))}
-                  
-                  <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" onClick={addFilterCondition}>
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add Filter
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      Apply Filters
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      Clear All
-                    </Button>
-                  </div>
-                </CardContent>
-              </CollapsibleContent>
-            </Collapsible>
-          </Card>
-
-          {/* Search and Actions */}
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4 flex-1">
-                  <div className="relative flex-1 max-w-md">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
-                    <Input
-                      placeholder="Search applications..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10"
+      {/* Data Table */}
+      <Card>
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-slate-50">
+                  <TableHead className="w-12">
+                    <Checkbox
+                      checked={
+                        paginatedData.length > 0 && 
+                        selectedRows.length === paginatedData.length
+                      }
+                      onCheckedChange={handleSelectAll}
                     />
-                  </div>
-                  {selectedRows.length > 0 && (
-                    <Badge variant="secondary">
-                      {selectedRows.length} selected
-                    </Badge>
-                  )}
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm">
-                    <Download className="w-4 h-4 mr-2" />
-                    Export
-                  </Button>
-                  {selectedRows.length > 0 && (
-                    <>
-                      <Button variant="outline" size="sm">
-                        Bulk Approve
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        Bulk Reject
-                      </Button>
-                    </>
-                  )}
-                </div>
-              </div>
-            </CardHeader>
-          </Card>
-
-          {/* Data Table */}
-          <Card>
-            <CardContent className="p-0">
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-slate-50">
-                      <TableHead className="w-12">
+                  </TableHead>
+                  <TableHead>Application #</TableHead>
+                  <TableHead>Child Name</TableHead>
+                  <TableHead>Birth Date</TableHead>
+                  <TableHead>Guardian</TableHead>
+                  <TableHead>Preferred Unit</TableHead>
+                  <TableHead>Start Date</TableHead>
+                  <TableHead>Priority</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Submitted</TableHead>
+                  <TableHead className="w-12">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {paginatedData.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={11} className="text-center py-8 text-slate-500">
+                      No results found
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  paginatedData.map((record) => (
+                    <TableRow key={record.id} className="hover:bg-slate-50">
+                      <TableCell>
                         <Checkbox
-                          checked={selectedRows.length === filteredApplications.length}
-                          onCheckedChange={handleSelectAll}
+                          checked={selectedRows.includes(record.id)}
+                          onCheckedChange={(checked) => handleSelectRow(record.id, checked)}
                         />
-                      </TableHead>
-                      <TableHead>Timetable ID</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Child's Civic Number</TableHead>
-                      <TableHead>Child's Name</TableHead>
-                      <TableHead>Unit</TableHead>
-                      <TableHead>Start Date</TableHead>
-                      <TableHead>End Date</TableHead>
-                      <TableHead>Timetable Type</TableHead>
-                      <TableHead>Requested Start</TableHead>
-                      <TableHead>Contracted Time</TableHead>
-                      <TableHead>Average Time</TableHead>
-                      <TableHead>Rate Category</TableHead>
-                      <TableHead className="w-12">Actions</TableHead>
+                      </TableCell>
+                      <TableCell className="font-medium">{record.applicationNumber}</TableCell>
+                      <TableCell className="font-medium">{record.childName}</TableCell>
+                      <TableCell>{record.birthDate}</TableCell>
+                      <TableCell>{record.guardianName}</TableCell>
+                      <TableCell>{record.preferredUnit}</TableCell>
+                      <TableCell>{record.requestedStartDate}</TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{record.priority}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge className={getStatusBadgeColor(record.status)}>
+                          {record.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{record.submissionDate}</TableCell>
+                      <TableCell>
+                        <Button variant="ghost" size="sm">
+                          <MoreHorizontal className="w-4 h-4" />
+                        </Button>
+                      </TableCell>
                     </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredApplications.map((application) => (
-                      <TableRow key={application.id} className="hover:bg-slate-50">
-                        <TableCell>
-                          <Checkbox
-                            checked={selectedRows.includes(application.id)}
-                            onCheckedChange={(checked) => handleSelectRow(application.id, checked)}
-                          />
-                        </TableCell>
-                        <TableCell className="font-medium">{application.timetableId}</TableCell>
-                        <TableCell>
-                          <Badge className={getStatusColor(application.status)}>
-                            {application.status}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="font-mono text-sm">{application.childCivicNumber}</TableCell>
-                        <TableCell className="font-medium">{application.childName}</TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-1">
-                            <MapPin className="w-4 h-4 text-slate-400" />
-                            {application.unit}
-                          </div>
-                        </TableCell>
-                        <TableCell>{application.startDate}</TableCell>
-                        <TableCell>{application.endDate}</TableCell>
-                        <TableCell>
-                          <Badge variant="outline">{application.timetableType}</Badge>
-                        </TableCell>
-                        <TableCell>{application.requestedStartDate}</TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-1">
-                            <Clock className="w-4 h-4 text-slate-400" />
-                            {application.contractedTime}h
-                          </div>
-                        </TableCell>
-                        <TableCell>{application.averageTime}h</TableCell>
-                        <TableCell>{application.rateCategory}</TableCell>
-                        <TableCell>
-                          <Button variant="ghost" size="sm">
-                            <MoreHorizontal className="w-4 h-4" />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
 
-        <TabsContent value="timetable" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="w-5 h-5" />
-                Timetable Management
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-slate-600">
-                Timetable management interface will be implemented here. This will include:
-              </p>
-              <ul className="list-disc list-inside mt-4 space-y-2 text-slate-600">
-                <li>Schedule builder for individual children</li>
-                <li>Recurring pattern management</li>
-                <li>Holiday and exception handling</li>
-                <li>Capacity management and conflict detection</li>
-                <li>Bulk schedule updates</li>
-              </ul>
-            </CardContent>
-          </Card>
-        </TabsContent>
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex justify-center">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious 
+                  href="#" 
+                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                  className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
+                />
+              </PaginationItem>
+              
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <PaginationItem key={page}>
+                  <PaginationLink
+                    href="#"
+                    onClick={() => setCurrentPage(page)}
+                    isActive={currentPage === page}
+                  >
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              
+              <PaginationItem>
+                <PaginationNext 
+                  href="#" 
+                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                  className={currentPage === totalPages ? 'pointer-events-none opacity-50' : ''}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
 
-        <TabsContent value="end-request" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>End Request Management</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-slate-600">End request processing interface will be implemented here.</p>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="replace-request" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Replacement Request Management</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-slate-600">Replacement request processing interface will be implemented here.</p>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="rate-category" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Rate Category & Average Time</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-slate-600">Rate category and average time management interface will be implemented here.</p>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="reasontype" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Reason Type Management</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-slate-600">Reason type configuration and management interface will be implemented here.</p>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+      {/* Action Buttons */}
+      <div className="flex justify-end gap-2">
+        <Button variant="outline">
+          Cancel
+        </Button>
+        <Button 
+          variant="outline"
+          className="text-red-600 border-red-300 hover:bg-red-50"
+        >
+          <X className="w-4 h-4 mr-2" />
+          Reject
+        </Button>
+        <Button className="bg-green-600 hover:bg-green-700">
+          <Check className="w-4 h-4 mr-2" />
+          Approve
+        </Button>
+      </div>
     </div>
   );
 };
