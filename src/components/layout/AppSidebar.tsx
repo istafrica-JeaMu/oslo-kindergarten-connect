@@ -475,15 +475,15 @@ export function AppSidebar() {
         {/* Dashboard - Primary Navigation */}
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-0.5">
+            <SidebarMenu className="space-y-0">
               {items.primary?.map((item: any) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton 
                     asChild 
                     isActive={location.pathname === item.url}
-                    className="rounded-lg hover:bg-oslo-blue/10 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 min-h-[44px]"
+                    className="rounded-lg hover:bg-oslo-blue/10 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 min-h-[40px]"
                   >
-                    <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
+                    <Link to={item.url} className="flex items-center gap-3 px-3 py-1.5">
                       <item.icon className="h-5 w-5" />
                       <span className="font-medium">{item.title}</span>
                     </Link>
@@ -494,7 +494,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <Separator className="my-3" />
+        <Separator className="my-2" />
 
         {/* Administration Dropdown */}
         <SidebarGroup>
@@ -503,7 +503,7 @@ export function AppSidebar() {
               <CollapsibleTrigger asChild>
                 <Button 
                   variant="ghost" 
-                  className="w-full justify-between hover:bg-slate-100 data-[state=open]:bg-slate-100 transition-colors duration-200 min-h-[44px] rounded-lg"
+                  className="w-full justify-between hover:bg-slate-100 data-[state=open]:bg-slate-100 transition-colors duration-200 min-h-[40px] rounded-lg"
                 >
                   <div className="flex items-center gap-3">
                     <Settings className="h-4 w-4 text-slate-600" />
@@ -519,16 +519,16 @@ export function AppSidebar() {
               
               <CollapsibleContent className="overflow-hidden">
                 <ScrollArea className="h-auto max-h-[60vh]">
-                  <div className="space-y-0.5 ml-2 mt-2 pb-2">
-                    <SidebarMenu className="space-y-0.5">
+                  <div className="space-y-0 ml-2 mt-1 pb-1">
+                    <SidebarMenu className="space-y-0">
                       {items.administration?.map((item: any) => (
                         <SidebarMenuItem key={item.title}>
                           <SidebarMenuButton 
                             asChild 
                             isActive={location.pathname === item.url}
-                            className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 ml-2 min-h-[36px]"
+                            className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 ml-2 min-h-[32px]"
                           >
-                            <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
+                            <Link to={item.url} className="flex items-center gap-3 px-3 py-1">
                               <item.icon className="h-4 w-4 flex-shrink-0" />
                               <span className="font-medium text-sm truncate">{item.title}</span>
                             </Link>
@@ -543,7 +543,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <Separator className="my-3" />
+        <Separator className="my-2" />
 
         {/* Admissions Dropdown */}
         <SidebarGroup>
@@ -552,7 +552,7 @@ export function AppSidebar() {
               <CollapsibleTrigger asChild>
                 <Button 
                   variant="ghost" 
-                  className="w-full justify-between hover:bg-slate-100 data-[state=open]:bg-slate-100 transition-colors duration-200 min-h-[44px] rounded-lg"
+                  className="w-full justify-between hover:bg-slate-100 data-[state=open]:bg-slate-100 transition-colors duration-200 min-h-[40px] rounded-lg"
                 >
                   <div className="flex items-center gap-3">
                     <FileText className="h-4 w-4 text-slate-600" />
@@ -567,16 +567,16 @@ export function AppSidebar() {
               </CollapsibleTrigger>
               
               <CollapsibleContent className="overflow-hidden">
-                <div className="space-y-0.5 ml-2 mt-2 pb-2">
-                  <SidebarMenu className="space-y-0.5">
-                    {items.admissions?.map((item: any) => (
+                <div className="space-y-0 ml-2 mt-1 pb-1">
+                  <SidebarMenu className="space-y-0">
+                    {items.admissions?.filter((item: any) => !['Person register', 'Report & export data'].includes(item.title)).map((item: any) => (
                       <SidebarMenuItem key={item.title}>
                         <SidebarMenuButton 
                           asChild 
                           isActive={location.pathname === item.url}
-                          className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 ml-2 min-h-[36px]"
+                          className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 ml-2 min-h-[32px]"
                         >
-                          <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
+                          <Link to={item.url} className="flex items-center gap-3 px-3 py-1">
                             <item.icon className="h-4 w-4 flex-shrink-0" />
                             <span className="font-medium text-sm truncate">{item.title}</span>
                           </Link>
@@ -590,20 +590,63 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <Separator className="my-3" />
+        <Separator className="my-2" />
 
         {/* Standalone Items */}
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-0.5">
+            <SidebarMenu className="space-y-0">
+              {/* Person register */}
+              <SidebarMenuItem>
+                <SidebarMenuButton 
+                  asChild 
+                  isActive={location.pathname === '/admin/person-register'}
+                  className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 min-h-[40px]"
+                >
+                  <Link to="/admin/person-register" className="flex items-center gap-3 px-3 py-1.5">
+                    <Users className="h-5 w-5 text-slate-600" />
+                    <span className="font-medium">Person register</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              
+              {/* Report & export data */}
+              <SidebarMenuItem>
+                <SidebarMenuButton 
+                  asChild 
+                  isActive={location.pathname === '/admin/reports-export'}
+                  className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 min-h-[40px]"
+                >
+                  <Link to="/admin/reports-export" className="flex items-center gap-3 px-3 py-1.5">
+                    <BarChart className="h-5 w-5 text-slate-600" />
+                    <span className="font-medium">Report & export data</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
+              {/* Logs */}
+              <SidebarMenuItem>
+                <SidebarMenuButton 
+                  asChild 
+                  isActive={location.pathname === '/admin/logs'}
+                  className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 min-h-[40px]"
+                >
+                  <Link to="/admin/logs" className="flex items-center gap-3 px-3 py-1.5">
+                    <FileText className="h-5 w-5 text-slate-600" />
+                    <span className="font-medium">Logs</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
+              {/* Other items */}
               {items.other?.map((item: any) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton 
                     asChild 
                     isActive={location.pathname === item.url}
-                    className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 min-h-[44px]"
+                    className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 min-h-[40px]"
                   >
-                    <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
+                    <Link to={item.url} className="flex items-center gap-3 px-3 py-1.5">
                       <item.icon className="h-5 w-5 text-slate-600" />
                       <span className="font-medium">{item.title}</span>
                     </Link>
