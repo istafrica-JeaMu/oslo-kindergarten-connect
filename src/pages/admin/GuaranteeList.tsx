@@ -20,23 +20,36 @@ const GuaranteeList = () => {
   const mockAdmissions: Admission[] = [
     {
       id: '1',
+      childId: '1',
       child: {
         id: '1',
         civicNumber: '20200521-1110',
         firstName: 'Knoura',
         lastName: 'Björnsson',
         fullName: 'Knoura Björnsson',
-        unitId: '1',
-        unitName: 'Månadens förskola',
-        specialNeedsFlag: false
+        birthDate: '2020-05-21',
+        specialNeedsFlag: false,
+        emergencyContacts: [],
+        medicalInfo: {
+          allergies: [],
+          medications: [],
+          specialNeeds: []
+        },
+        guardians: []
       },
       department: {
         id: '1',
         name: 'Månadens förskola',
+        unitId: '1',
         unitName: 'Förskola',
         capacity: 25,
-        currentOccupancy: 20
+        currentEnrollment: 20,
+        ageMin: 1,
+        ageMax: 5,
+        staffRatio: 5,
+        municipality: 'förskola'
       },
+      departmentId: '1',
       admissionStart: '2023-11-20',
       endDate: '2024-06-15',
       startDate: '2023-11-20',
@@ -45,6 +58,9 @@ const GuaranteeList = () => {
       rateCategory: {
         id: '1',
         name: 'Standard',
+        hourlyRate: 150,
+        ageGroup: '3-5',
+        municipalityId: '1',
         description: 'Standard rate'
       },
       averageTime: '40',
@@ -53,8 +69,13 @@ const GuaranteeList = () => {
         id: '1',
         schedulePattern: 'full-time',
         weeklyHours: 40,
-        flexibleSchedule: false
-      }
+        dailySchedule: [],
+        contractedHours: '40'
+      },
+      journalNotes: [],
+      createdAt: '2023-10-01',
+      updatedAt: '2023-11-15',
+      createdBy: 'admin'
     }
   ];
 
