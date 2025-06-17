@@ -65,8 +65,8 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({
     address: MapPin
   };
 
-  const getInputTypeLabel = (type: string) => {
-    const labels = {
+  const getInputTypeLabel = (type: QuestionInput['type']) => {
+    const labels: Record<QuestionInput['type'], string> = {
       open: 'Open Text',
       single: 'Single Choice',
       multiple: 'Multiple Choice',
@@ -77,10 +77,10 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({
       phone: 'Phone Number',
       address: 'Address Field'
     };
-    return labels[type as keyof typeof labels] || type;
+    return labels[type] || type;
   };
 
-  const requiredInputTypes = ['open', 'date', 'email', 'phone'];
+  const requiredInputTypes: QuestionInput['type'][] = ['open', 'date', 'email', 'phone'];
   const presentInputTypes = template?.inputs.map(input => input.type) || [];
   const missingInputTypes = requiredInputTypes.filter(type => !presentInputTypes.includes(type));
 
