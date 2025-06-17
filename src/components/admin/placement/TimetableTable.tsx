@@ -85,35 +85,60 @@ const TimetableTable = ({ data, selectedRows, onSelectAll, onSelectRow, activeTa
 
   const getSortIcon = (field: string) => {
     if (sortField !== field) {
-      return <ChevronsUpDown className="w-3 h-3 ml-1" />;
+      return <ChevronsUpDown className="w-3 h-3 ml-1 text-gray-400" />;
     }
     if (sortDirection === 'asc') {
-      return <ChevronUp className="w-3 h-3 ml-1" />;
+      return <ChevronUp className="w-3 h-3 ml-1 text-blue-600" />;
     }
     if (sortDirection === 'desc') {
-      return <ChevronDown className="w-3 h-3 ml-1" />;
+      return <ChevronDown className="w-3 h-3 ml-1 text-blue-600" />;
     }
-    return <ChevronsUpDown className="w-3 h-3 ml-1" />;
+    return <ChevronsUpDown className="w-3 h-3 ml-1 text-gray-400" />;
   };
 
   const sortedData = React.useMemo(() => {
     if (!sortField || !sortDirection) return data;
 
     return [...data].sort((a, b) => {
-      const aValue = (a as any)[sortField] || '';
-      const bValue = (b as any)[sortField] || '';
+      const aValue = (a as any)[sortField];
+      const bValue = (b as any)[sortField];
       
-      if (sortDirection === 'asc') {
-        return aValue.localeCompare(bValue);
-      } else {
-        return bValue.localeCompare(aValue);
+      // Handle null/undefined values
+      if (aValue == null && bValue == null) return 0;
+      if (aValue == null) return sortDirection === 'asc' ? 1 : -1;
+      if (bValue == null) return sortDirection === 'asc' ? -1 : 1;
+
+      // Handle different data types
+      let comparison = 0;
+      
+      // Check if values are dates (YYYY-MM-DD format)
+      if (typeof aValue === 'string' && typeof bValue === 'string' && 
+          aValue.match(/^\d{4}-\d{2}-\d{2}$/) && bValue.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        comparison = new Date(aValue).getTime() - new Date(bValue).getTime();
       }
+      // Check if values are numbers (including those with 'h' suffix like "40h")
+      else if (typeof aValue === 'string' && typeof bValue === 'string' &&
+               aValue.match(/^\d+h?$/) && bValue.match(/^\d+h?$/)) {
+        const aNum = parseInt(aValue.replace('h', ''));
+        const bNum = parseInt(bValue.replace('h', ''));
+        comparison = aNum - bNum;
+      }
+      // Check if values are pure numbers
+      else if (!isNaN(Number(aValue)) && !isNaN(Number(bValue))) {
+        comparison = Number(aValue) - Number(bValue);
+      }
+      // Default to string comparison
+      else {
+        comparison = String(aValue).localeCompare(String(bValue));
+      }
+      
+      return sortDirection === 'asc' ? comparison : -comparison;
     });
   }, [data, sortField, sortDirection]);
 
   const SortableHeader = ({ field, children, className = "" }: { field: string; children: React.ReactNode; className?: string }) => (
     <TableHead 
-      className={`text-xs cursor-pointer hover:bg-slate-100 ${className}`}
+      className={`text-xs cursor-pointer hover:bg-slate-100 select-none ${className} ${sortField === field ? 'bg-slate-50' : ''}`}
       onClick={() => handleSort(field)}
     >
       <div className="flex items-center">
