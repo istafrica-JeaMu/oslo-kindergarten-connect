@@ -1,308 +1,157 @@
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Navigate,
-} from 'react-router-dom';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { LanguageProvider } from './contexts/LanguageContext';
-import Layout from './components/layout/Layout';
-import Index from './pages/Index';
-import EducatorDashboard from './pages/educator/EducatorDashboard';
-import EducatorAttendance from './pages/staff/EducatorAttendance';
-import EducatorChildren from './pages/educator/EducatorChildren';
-import EducatorMessages from './pages/educator/EducatorMessages';
-import EducatorReports from './pages/educator/EducatorReports';
-import EducatorCalendar from './pages/educator/EducatorCalendar';
-import EducatorLocationTracker from './pages/educator/EducatorLocationTracker';
-import EducatorAppointments from './pages/educator/EducatorAppointments';
-import EducatorNotes from './pages/educator/EducatorNotes';
-import EducatorBulletinBoard from './pages/educator/EducatorBulletinBoard';
-import EducatorTeamCollab from './pages/educator/EducatorTeamCollab';
-import GuardianDashboard from './pages/guardian/GuardianDashboard';
-import GuardianMessages from './pages/guardian/Messages';
-import GuardianDailySchedule from './pages/guardian/DailySchedule';
-import GuardianAttendanceTracking from './pages/guardian/AttendanceTracking';
-import GuardianNoticeBoard from './pages/guardian/NoticeBoard';
-import GuardianApplicationStatus from './pages/guardian/ApplicationStatus';
-import GuardianChildProfile from './pages/guardian/ChildProfile';
-import ChildrenList from './pages/guardian/ChildrenList';
-import ChildProfileDetail from './pages/guardian/ChildProfileDetail';
-import GuardianPayments from './pages/guardian/Payments';
-import GuardianDocuments from './pages/guardian/Documents';
-import GuardianNewApplication from './pages/guardian/NewApplication';
-import GuardianLivingArrangements from './pages/guardian/LivingArrangements';
-import GuardianDualPlacementManagement from './pages/guardian/DualPlacementManagement';
-import PostDetail from './pages/guardian/PostDetail';
-import CaseWorkerDashboard from './pages/caseworker/CaseWorkerDashboard';
-import ReviewQueue from './pages/caseworker/ReviewQueue';
-import PlacementManagement from './pages/caseworker/PlacementManagement';
-import CaseWorkerMessages from './pages/caseworker/Messages';
-import ManualApplication from './pages/caseworker/ManualApplication';
-import ApplicationsInProgress from './pages/caseworker/ApplicationsInProgress';
-import ApplicationsSubmitted from './pages/caseworker/ApplicationsSubmitted';
-import ApplicationsFollowUp from './pages/caseworker/ApplicationsFollowUp';
-import ApplicationView from './pages/caseworker/ApplicationView';
-import DualPlacementSetup from './pages/caseworker/DualPlacementSetup';
-import MunicipalityAdminDashboard from './pages/admin/MunicipalityAdminDashboard';
-import Reports from './pages/admin/Reports';
-import SystemSettings from './pages/admin/SystemSettings';
-import StaffDashboard from './pages/staff/StaffDashboard';
-import PartnerDashboard from './pages/partner/PartnerDashboard';
-import DistrictAdminDashboard from './pages/district-admin/DistrictAdminDashboard';
-import KindergartenManagement from './pages/district-admin/KindergartenManagement';
-import UserManagement from './pages/district-admin/UserManagement';
-import PlacementCalendar from './pages/district-admin/PlacementCalendar';
-import PolicyConfiguration from './pages/district-admin/PolicyConfiguration';
-import SelfServiceFeatures from './pages/district-admin/SelfServiceFeatures';
-import Analytics from './pages/district-admin/Analytics';
-import AuditLogs from './pages/district-admin/AuditLogs';
-import KindergartenDashboard from './pages/kindergarten/KindergartenDashboard';
-import KindergartenAttendance from './pages/kindergarten/KindergartenAttendance';
-import KindergartenReports from './pages/kindergarten/KindergartenReports';
-import ChildrenManagement from './pages/staff/ChildrenManagement';
-import StaffMessages from './pages/staff/StaffMessages';
-import PrivateKindergartenApplications from './pages/staff/PrivateKindergartenApplications';
-import PrivateKindergartenCapacity from './pages/staff/PrivateKindergartenCapacity';
-import ApplicationDetail from './pages/staff/ApplicationDetail';
-import LoginPage from './pages/auth/LoginPage';
-import NotFound from './pages/NotFound';
+import { AuthProvider } from '@/contexts/AuthContext';
+import { LanguageProvider } from '@/contexts/LanguageContext';
+import { QueryClient } from '@tanstack/react-query';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import Dashboard from '@/pages/Dashboard';
+import Login from '@/pages/Login';
+import Applications from '@/pages/Applications';
+import ApplicationDetails from '@/pages/ApplicationDetails';
+import ReviewQueue from '@/pages/caseworker/ReviewQueue';
+import PlacementManagement from '@/pages/caseworker/PlacementManagement';
+import Messages from '@/pages/Messages';
+import Kindergartens from '@/pages/admin/Kindergartens';
+import Users from '@/pages/admin/Users';
+import PlacementCalendar from '@/pages/admin/PlacementCalendar';
+import Policies from '@/pages/admin/Policies';
+import SelfService from '@/pages/admin/SelfService';
+import Analytics from '@/pages/admin/Analytics';
+import AuditLogs from '@/pages/admin/AuditLogs';
+import Attendance from '@/pages/educator/Attendance';
+import Children from '@/pages/educator/Children';
+import Reports from '@/pages/educator/Reports';
+import Calendar from '@/pages/educator/Calendar';
+import ApplicationForms from '@/pages/admin/ApplicationForms';
+import Approve from '@/pages/admin/Approve';
+import ChildcareMember from '@/pages/admin/ChildcareMember';
+import DebtManagement from '@/pages/admin/DebtManagement';
+import GuaranteeList from '@/pages/admin/GuaranteeList';
+import ManageChildinfoCategories from '@/pages/admin/ManageChildinfoCategories';
+import ModifiedApplications from '@/pages/admin/ModifiedApplications';
+import QueueHandling from '@/pages/admin/QueueHandling';
+import QueueException from '@/pages/admin/QueueException';
+import StayRequestJob from '@/pages/admin/StayRequestJob';
+import SuggestedAdmissions from '@/pages/admin/SuggestedAdmissions';
+import UnitChildrenOverview from '@/pages/admin/UnitChildrenOverview';
+import ActivityPlans from '@/pages/admin/ActivityPlans';
+import ParentTeacherMeeting from '@/pages/admin/ParentTeacherMeeting';
+import Organization from '@/pages/admin/Organization';
+import Schools from '@/pages/admin/Schools';
+import Staff from '@/pages/admin/Staff';
+import AdmissionsManagement from '@/pages/admin/AdmissionsManagement';
+import PersonRegister from '@/pages/admin/PersonRegister';
+import ReportsExport from '@/pages/admin/ReportsExport';
+import Communications from '@/pages/admin/Communications';
+import Settings from '@/pages/admin/Settings';
+import Logs from './pages/admin/Logs';
 
-// Municipality Admin Components (placeholders for now)
-import GlobalConfig from './pages/admin/GlobalConfig';
-import Districts from './pages/admin/Districts';
-import Policies from './pages/admin/Policies';
-import UserTemplates from './pages/admin/UserTemplates';
-import KindergartenTypes from './pages/admin/KindergartenTypes';
-import PlacementWindows from './pages/admin/PlacementWindows';
-import Features from './pages/admin/Features';
-import Security from './pages/admin/Security';
-import AdminAnalytics from './pages/admin/AdminAnalytics';
-import Integrations from './pages/admin/Integrations';
-import Communications from './pages/admin/Communications';
-import Releases from './pages/admin/Releases';
+const ProtectedRoute = ({ allowedRoles, children }: { allowedRoles: string[], children: React.ReactNode }) => {
+  const auth = localStorage.getItem('auth');
+  const user = auth ? JSON.parse(auth) : null;
 
-function AppRoutes() {
-  function PrivateRoute({ children }: { children: JSX.Element }) {
-    const { user, isLoading } = useAuth();
-    
-    if (isLoading) {
-      return (
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        </div>
-      );
-    }
-    
-    return user ? children : <Navigate to="/login" />;
+  if (!user) {
+    return <Navigate to="/login" />;
   }
 
-  function AdminRoute({ children }: { children: JSX.Element }) {
-    const { user } = useAuth();
-    if (!user) {
-      return <Navigate to="/login" />;
-    }
-    // Check if the user has admin role
-    const isAdmin = user.role === 'admin';
-    return isAdmin ? children : <Navigate to="/" />;
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    return <Navigate to="/" />;
   }
 
-  return (
-    <Routes>
-      {/* Public Routes */}
-      <Route path="/" element={<Index />} />
-      <Route path="/login" element={<LoginPage />} />
-
-      {/* Guardian Routes */}
-      <Route
-        path="/guardian"
-        element={
-          <PrivateRoute>
-            <Layout />
-          </PrivateRoute>
-        }
-      >
-        <Route index element={<GuardianDashboard />} />
-        <Route path="messages" element={<GuardianMessages />} />
-        <Route path="daily-schedule" element={<GuardianDailySchedule />} />
-        <Route path="attendance-tracking" element={<GuardianAttendanceTracking />} />
-        <Route path="notice-board" element={<GuardianNoticeBoard />} />
-        <Route path="notice-board/post/:id" element={<PostDetail />} />
-        <Route path="application-status" element={<GuardianApplicationStatus />} />
-        <Route path="child-profile" element={<GuardianChildProfile />} />
-        <Route path="children" element={<ChildrenList />} />
-        <Route path="child-profile/:childId" element={<ChildProfileDetail />} />
-        <Route path="child-profile/:childId/application-details" element={<ChildProfileDetail />} />
-        <Route path="child-profile/:childId/attendance" element={<ChildProfileDetail />} />
-        <Route path="child-profile/:childId/consents" element={<ChildProfileDetail />} />
-        <Route path="child-profile/:childId/living-arrangements" element={<ChildProfileDetail />} />
-        <Route path="child-profile/:childId/documents" element={<ChildProfileDetail />} />
-        <Route path="child-profile/:childId/contacts" element={<ChildProfileDetail />} />
-        <Route path="payments" element={<GuardianPayments />} />
-        <Route path="documents" element={<GuardianDocuments />} />
-        <Route path="new-application" element={<GuardianNewApplication />} />
-        <Route path="living-arrangements" element={<GuardianLivingArrangements />} />
-        <Route path="dual-placement/:id" element={<GuardianDualPlacementManagement />} />
-      </Route>
-
-      {/* Caseworker Routes */}
-      <Route
-        path="/caseworker"
-        element={
-          <PrivateRoute>
-            <Layout />
-          </PrivateRoute>
-        }
-      >
-        <Route index element={<CaseWorkerDashboard />} />
-        <Route path="review-queue" element={<ReviewQueue />} />
-        <Route path="placement-management" element={<PlacementManagement />} />
-        <Route path="messages" element={<CaseWorkerMessages />} />
-        <Route path="manual-application" element={<ManualApplication />} />
-        <Route path="application/:id" element={<ApplicationView />} />
-        <Route path="dual-placement-setup/:id" element={<DualPlacementSetup />} />
-        <Route path="applications/in-progress" element={<ApplicationsInProgress />} />
-        <Route path="applications/submitted" element={<ApplicationsSubmitted />} />
-        <Route path="applications/follow-up" element={<ApplicationsFollowUp />} />
-      </Route>
-
-      {/* Admin Routes */}
-      <Route
-        path="/admin"
-        element={
-          <PrivateRoute>
-            <Layout />
-          </PrivateRoute>
-        }
-      >
-        <Route index element={<MunicipalityAdminDashboard />} />
-        <Route path="reports" element={<Reports />} />
-        <Route path="settings" element={<SystemSettings />} />
-        <Route path="global-config" element={<GlobalConfig />} />
-        <Route path="districts" element={<Districts />} />
-        <Route path="policies" element={<Policies />} />
-        <Route path="user-templates" element={<UserTemplates />} />
-        <Route path="kindergarten-types" element={<KindergartenTypes />} />
-        <Route path="placement-windows" element={<PlacementWindows />} />
-        <Route path="features" element={<Features />} />
-        <Route path="security" element={<Security />} />
-        <Route path="analytics" element={<AdminAnalytics />} />
-        <Route path="integrations" element={<Integrations />} />
-        <Route path="communications" element={<Communications />} />
-        <Route path="releases" element={<Releases />} />
-      </Route>
-
-      {/* Staff Routes */}
-      <Route
-        path="/staff"
-        element={
-          <PrivateRoute>
-            <Layout />
-          </PrivateRoute>
-        }
-      >
-        <Route index element={<StaffDashboard />} />
-      </Route>
-
-      {/* Partner Routes */}
-      <Route
-        path="/partner"
-        element={
-          <PrivateRoute>
-            <Layout />
-          </PrivateRoute>
-        }
-      >
-        <Route index element={<PartnerDashboard />} />
-      </Route>
-
-      {/* District Admin Routes */}
-      <Route
-        path="/district-admin"
-        element={
-          <PrivateRoute>
-            <Layout />
-          </PrivateRoute>
-        }
-      >
-        <Route index element={<DistrictAdminDashboard />} />
-        <Route path="kindergartens" element={<KindergartenManagement />} />
-        <Route path="users" element={<UserManagement />} />
-        <Route path="placement-calendar" element={<PlacementCalendar />} />
-        <Route path="policies" element={<PolicyConfiguration />} />
-        <Route path="self-service" element={<SelfServiceFeatures />} />
-        <Route path="analytics" element={<Analytics />} />
-        <Route path="audit-logs" element={<AuditLogs />} />
-      </Route>
-
-      {/* Kindergarten Routes (for staff and partners) */}
-      <Route
-        path="/kindergarten"
-        element={
-          <PrivateRoute>
-            <Layout />
-          </PrivateRoute>
-        }
-      >
-        <Route index element={<KindergartenDashboard />} />
-        <Route path="children" element={<ChildrenManagement />} />
-        <Route path="attendance" element={<KindergartenAttendance />} />
-        <Route path="reports" element={<KindergartenReports />} />
-        <Route path="messages" element={<StaffMessages />} />
-        <Route path="applications" element={<PrivateKindergartenApplications />} />
-        <Route path="applications/:id" element={<ApplicationDetail />} />
-        <Route path="capacity" element={<PrivateKindergartenCapacity />} />
-      </Route>
-
-      {/* Educator Routes */}
-      <Route
-        path="/educator"
-        element={
-          <PrivateRoute>
-            <Layout />
-          </PrivateRoute>
-        }
-      >
-        <Route index element={<EducatorDashboard />} />
-        <Route path="attendance" element={<EducatorAttendance />} />
-        <Route path="children" element={<EducatorChildren />} />
-        <Route path="messages" element={<EducatorMessages />} />
-        <Route path="reports" element={<EducatorReports />} />
-        <Route path="calendar" element={<EducatorCalendar />} />
-        <Route path="location-tracker" element={<EducatorLocationTracker />} />
-        <Route path="appointments" element={<EducatorAppointments />} />
-        <Route path="notes" element={<EducatorNotes />} />
-        <Route path="bulletin-board" element={<EducatorBulletinBoard />} />
-        <Route path="team-collaboration" element={<EducatorTeamCollab />} />
-      </Route>
-
-      {/* Living Arrangements - Available to all authenticated users */}
-      <Route
-        path="/living-arrangements"
-        element={
-          <PrivateRoute>
-            <Layout />
-          </PrivateRoute>
-        }
-      >
-        <Route index element={<GuardianLivingArrangements />} />
-      </Route>
-
-      {/* 404 Route */}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
-  );
-}
+  return <>{children}</>;
+};
 
 function App() {
   return (
-    <LanguageProvider>
-      <AuthProvider>
-        <Router>
-          <AppRoutes />
-        </Router>
-      </AuthProvider>
-    </LanguageProvider>
+    <AuthProvider>
+      <LanguageProvider>
+        <QueryClient>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/" element={<ProtectedRoute allowedRoles={['guardian', 'caseworker', 'admin', 'educator', 'staff', 'partner', 'district-admin']}><Dashboard /></ProtectedRoute>} />
+              <Route path="/application/:id" element={<ProtectedRoute allowedRoles={['guardian']}><ApplicationDetails /></ProtectedRoute>} />
+              
+              {/* Caseworker Routes */}
+              <Route path="/caseworker" element={<ProtectedRoute allowedRoles={['caseworker']} />}>
+                <Route index element={<Dashboard />} />
+                <Route path="review-queue" element={<ReviewQueue />} />
+                <Route path="placement-management" element={<PlacementManagement />} />
+                <Route path="messages" element={<Messages />} />
+              </Route>
+
+              {/* Kindergarten Routes */}
+              <Route path="/kindergarten" element={<ProtectedRoute allowedRoles={['staff', 'partner']} />}>
+                <Route index element={<Dashboard />} />
+                <Route path="children" element={<Children />} />
+                <Route path="attendance" element={<Attendance />} />
+                <Route path="reports" element={<Reports />} />
+                <Route path="messages" element={<Messages />} />
+                {/* Partner Specific Routes */}
+                <Route path="applications" element={<Applications />} />
+              </Route>
+
+              {/* Educator Routes */}
+               <Route path="/educator" element={<ProtectedRoute allowedRoles={['educator']} />}>
+                <Route index element={<Dashboard />} />
+                <Route path="attendance" element={<Attendance />} />
+                <Route path="children" element={<Children />} />
+                <Route path="messages" element={<Messages />} />
+                <Route path="reports" element={<Reports />} />
+                <Route path="calendar" element={<Calendar />} />
+              </Route>
+
+              {/* Guardian Routes */}
+              <Route path="/guardian" element={<ProtectedRoute allowedRoles={['guardian']} />}>
+                <Route index element={<Dashboard />} />
+                <Route path="applications" element={<Applications />} />
+              </Route>
+              
+              {/* District Admin Routes */}
+              <Route path="/district-admin" element={<ProtectedRoute allowedRoles={['district-admin']} />}>
+                <Route index element={<Dashboard />} />
+                <Route path="kindergartens" element={<Kindergartens />} />
+                <Route path="users" element={<Users />} />
+                <Route path="placement-calendar" element={<PlacementCalendar />} />
+                <Route path="policies" element={<Policies />} />
+                <Route path="self-service" element={<SelfService />} />
+                <Route path="analytics" element={<Analytics />} />
+                <Route path="audit-logs" element={<AuditLogs />} />
+              </Route>
+              
+              {/* Admin Routes */}
+              <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin']} />}>
+                <Route index element={<Dashboard />} />
+                <Route path="application-forms" element={<ApplicationForms />} />
+                <Route path="approve" element={<Approve />} />
+                <Route path="childcare-member" element={<ChildcareMember />} />
+                <Route path="debt-management" element={<DebtManagement />} />
+                <Route path="guarantee-list" element={<GuaranteeList />} />
+                <Route path="manage-childinfo-categories" element={<ManageChildinfoCategories />} />
+                <Route path="modified-applications" element={<ModifiedApplications />} />
+                <Route path="queue-handling" element={<QueueHandling />} />
+                <Route path="queue-exception" element={<QueueException />} />
+                <Route path="stay-request-job" element={<StayRequestJob />} />
+                <Route path="suggested-admissions" element={<SuggestedAdmissions />} />
+                <Route path="unit-children-overview" element={<UnitChildrenOverview />} />
+                <Route path="activity-plans" element={<ActivityPlans />} />
+                <Route path="parent-teacher-meeting" element={<ParentTeacherMeeting />} />
+                <Route path="organization" element={<Organization />} />
+                <Route path="schools" element={<Schools />} />
+                <Route path="staff" element={<Staff />} />
+                <Route path="admissions-management" element={<AdmissionsManagement />} />
+                <Route path="person-register" element={<PersonRegister />} />
+                <Route path="reports-export" element={<ReportsExport />} />
+                <Route path="communications" element={<Communications />} />
+                <Route path="settings" element={<Settings />} />
+                <Route path="logs" element={<Logs />} />
+              </Route>
+              
+              {/* Default Route */}
+              <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+          </BrowserRouter>
+        </QueryClient>
+      </LanguageProvider>
+    </AuthProvider>
   );
 }
 

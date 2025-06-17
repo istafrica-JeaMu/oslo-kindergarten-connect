@@ -143,6 +143,11 @@ export function AppSidebar() {
               icon: Shield,
             },
             {
+              title: 'Logs',
+              url: `${baseUrl}/logs`,
+              icon: FileText,
+            },
+            {
               title: 'Manage childinfo catego...',
               url: `${baseUrl}/manage-childinfo-categories`,
               icon: ListChecks,
