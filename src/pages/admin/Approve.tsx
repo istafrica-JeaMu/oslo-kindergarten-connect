@@ -4,7 +4,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Search, CheckCircle } from 'lucide-react';
 import MunicipalityToggle from '@/components/admin/placement/MunicipalityToggle';
 import TimetableActionButtons from '@/components/admin/placement/TimetableActionButtons';
@@ -37,6 +36,7 @@ const Approve = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [statusFilter, setStatusFilter] = useState('all');
   const [showOnlyCurrentUnits, setShowOnlyCurrentUnits] = useState(false);
+  const [activeTab, setActiveTab] = useState('end-request');
 
   // Mock data for the table
   const mockData: TimetableRecord[] = [
@@ -127,6 +127,23 @@ const Approve = () => {
     setShowOnlyCurrentUnits(false);
   };
 
+  const getTabTitle = () => {
+    switch (activeTab) {
+      case 'request-replace':
+        return 'Request for a replace';
+      case 'rate-category':
+        return 'Rate category change';
+      case 'timetable':
+        return 'Timetable';
+      case 'reasontype':
+        return 'Reason type';
+      case 'leave':
+        return 'Leave';
+      default:
+        return 'Request for a replace';
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
@@ -137,94 +154,89 @@ const Approve = () => {
         </div>
       </div>
 
-      {/* Tabs */}
-      <Tabs defaultValue="accept" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="accept">Accept</TabsTrigger>
-          <TabsTrigger value="timetable">Timetable</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="accept" className="space-y-6">
-          {/* Controls Section */}
-          <Card>
-            <CardContent className="pt-6">
-              <div className="space-y-4">
-                {/* Show only current units checkbox */}
-                <div className="flex items-center gap-2">
-                  <Checkbox 
-                    id="current-units"
-                    checked={showOnlyCurrentUnits}
-                    onCheckedChange={(checked) => setShowOnlyCurrentUnits(checked === true)}
-                  />
-                  <label htmlFor="current-units" className="text-sm font-medium">
-                    Show only current units
-                  </label>
-                </div>
-
-                {/* Municipality Toggle */}
-                <MunicipalityToggle 
-                  selectedMunicipality={selectedMunicipality}
-                  onMunicipalityChange={setSelectedMunicipality}
-                />
-
-                {/* Search Bar */}
-                <div className="relative max-w-md">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
-                  <Input
-                    placeholder="ArnoldPreSchool2 (ctrl+shift+s)"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-
-                {/* Action Buttons */}
-                <TimetableActionButtons />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Filters */}
-          <TimetableFilters 
-            statusFilter={statusFilter}
-            onStatusFilterChange={setStatusFilter}
-            onClearFilters={handleClearFilters}
+      {/* Tab Navigation */}
+      <Card>
+        <CardContent className="pt-6">
+          <TimetableActionButtons 
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
           />
+        </CardContent>
+      </Card>
 
-          {/* Table */}
-          <TimetableTable 
-            data={paginatedData}
-            selectedRows={selectedRows}
-            onSelectAll={handleSelectAll}
-            onSelectRow={handleSelectRow}
-          />
+      {/* Tab Title */}
+      <div>
+        <h2 className="text-xl font-semibold text-slate-900">{getTabTitle()}</h2>
+      </div>
 
-          {/* Pagination */}
-          <TimetablePagination 
-            currentPage={currentPage}
-            totalPages={totalPages}
-            itemsPerPage={itemsPerPage}
-            totalItems={filteredData.length}
-            onPageChange={setCurrentPage}
-            onItemsPerPageChange={setItemsPerPage}
-          />
+      {/* Controls Section */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="space-y-4">
+            {/* Show only current units checkbox */}
+            <div className="flex items-center gap-2">
+              <Checkbox 
+                id="current-units"
+                checked={showOnlyCurrentUnits}
+                onCheckedChange={(checked) => setShowOnlyCurrentUnits(checked === true)}
+              />
+              <label htmlFor="current-units" className="text-sm font-medium">
+                Show only current units
+              </label>
+            </div>
 
-          {/* Bottom Action Button */}
-          <div className="flex justify-end">
-            <Button className="bg-green-600 hover:bg-green-700">
-              Approve/reject
-            </Button>
+            {/* Municipality Toggle */}
+            <MunicipalityToggle 
+              selectedMunicipality={selectedMunicipality}
+              onMunicipalityChange={setSelectedMunicipality}
+            />
+
+            {/* Search Bar */}
+            <div className="relative max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Input
+                placeholder="ArnoldPreSchool2 (ctrl+shift+s)"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
           </div>
-        </TabsContent>
+        </CardContent>
+      </Card>
 
-        <TabsContent value="timetable">
-          <Card>
-            <CardContent className="pt-6">
-              <p className="text-slate-600">Timetable management functionality will be implemented here.</p>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+      {/* Filters */}
+      <TimetableFilters 
+        statusFilter={statusFilter}
+        onStatusFilterChange={setStatusFilter}
+        onClearFilters={handleClearFilters}
+      />
+
+      {/* Table */}
+      <TimetableTable 
+        data={paginatedData}
+        selectedRows={selectedRows}
+        onSelectAll={handleSelectAll}
+        onSelectRow={handleSelectRow}
+        activeTab={activeTab}
+      />
+
+      {/* Pagination */}
+      <TimetablePagination 
+        currentPage={currentPage}
+        totalPages={totalPages}
+        itemsPerPage={itemsPerPage}
+        totalItems={filteredData.length}
+        onPageChange={setCurrentPage}
+        onItemsPerPageChange={setItemsPerPage}
+      />
+
+      {/* Bottom Action Button */}
+      <div className="flex justify-end">
+        <Button className="bg-green-600 hover:bg-green-700">
+          Approve/reject
+        </Button>
+      </div>
     </div>
   );
 };
