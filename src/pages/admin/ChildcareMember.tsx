@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -214,20 +215,21 @@ const ChildcareMember = () => {
   };
 
   const getTabDisplayName = (tab: AdmissionTab) => {
-    // Shortened names for mobile
+    // Updated names as requested
     switch (tab) {
-      case 'current': return 'Current';
-      case 'future': return 'Future';
-      case 'future-changes': return 'Changes';
-      case 'historical': return 'Historical';
-      case 'all': return 'All';
-      case 'deleted': return 'Deleted';
-      case 'terminated': return 'Terminated';
+      case 'current': return 'Manage current admissions';
+      case 'future': return 'Future admissions';
+      case 'future-changes': return 'Future admissions changes';
+      case 'historical': return 'Manage historical admissions';
+      case 'all': return 'Manage all admissions';
+      case 'deleted': return 'Deleted admissions';
+      case 'terminated': return 'Terminated admissions';
       default: return tab;
     }
   };
 
   const getTabFullName = (tab: AdmissionTab) => {
+    // Updated names as requested
     switch (tab) {
       case 'current': return 'Manage current admissions';
       case 'future': return 'Future admissions';
