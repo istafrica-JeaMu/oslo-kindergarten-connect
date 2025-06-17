@@ -258,7 +258,7 @@ const ChildcareMember = () => {
         <CardContent className="pt-6">
           <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as AdmissionTab)}>
             {/* Desktop Tabs */}
-            <div className="hidden lg:block">
+            <div className="hidden xl:block">
               <TabsList className="grid w-full grid-cols-7 h-auto">
                 {['current', 'future', 'future-changes', 'historical', 'all', 'deleted', 'terminated'].map((tab) => (
                   <TabsTrigger 
@@ -273,21 +273,61 @@ const ChildcareMember = () => {
               </TabsList>
             </div>
 
-            {/* Mobile/Tablet Tabs - Scrollable */}
+            {/* Tablet Tabs - 2 rows layout */}
+            <div className="hidden lg:block xl:hidden">
+              <div className="space-y-2">
+                <div className="flex gap-1">
+                  {['current', 'future', 'future-changes', 'historical'].map((tab) => (
+                    <Button
+                      key={tab}
+                      variant={activeTab === tab ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setActiveTab(tab as AdmissionTab)}
+                      className={`flex-1 text-xs ${activeTab === tab ? 'font-bold bg-blue-600 text-white' : ''}`}
+                      title={getTabFullName(tab as AdmissionTab)}
+                    >
+                      {getTabDisplayName(tab as AdmissionTab)}
+                    </Button>
+                  ))}
+                </div>
+                <div className="flex gap-1">
+                  {['all', 'deleted', 'terminated'].map((tab) => (
+                    <Button
+                      key={tab}
+                      variant={activeTab === tab ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setActiveTab(tab as AdmissionTab)}
+                      className={`flex-1 text-xs ${activeTab === tab ? 'font-bold bg-blue-600 text-white' : ''}`}
+                      title={getTabFullName(tab as AdmissionTab)}
+                    >
+                      {getTabDisplayName(tab as AdmissionTab)}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile Tabs - Horizontal scrollable */}
             <div className="lg:hidden">
-              <div className="flex overflow-x-auto scrollbar-hide gap-2 pb-2">
-                {['current', 'future', 'future-changes', 'historical', 'all', 'deleted', 'terminated'].map((tab) => (
-                  <Button
-                    key={tab}
-                    variant={activeTab === tab ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setActiveTab(tab as AdmissionTab)}
-                    className={`whitespace-nowrap flex-shrink-0 ${activeTab === tab ? 'font-bold bg-blue-600 text-white' : ''}`}
-                    title={getTabFullName(tab as AdmissionTab)}
-                  >
-                    {getTabDisplayName(tab as AdmissionTab)}
-                  </Button>
-                ))}
+              <div className="overflow-x-auto">
+                <div className="flex gap-2 pb-2 min-w-max px-1">
+                  {['current', 'future', 'future-changes', 'historical', 'all', 'deleted', 'terminated'].map((tab) => (
+                    <Button
+                      key={tab}
+                      variant={activeTab === tab ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setActiveTab(tab as AdmissionTab)}
+                      className={`whitespace-nowrap flex-shrink-0 min-w-fit text-xs px-3 ${activeTab === tab ? 'font-bold bg-blue-600 text-white' : ''}`}
+                      title={getTabFullName(tab as AdmissionTab)}
+                    >
+                      {getTabDisplayName(tab as AdmissionTab)}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+              {/* Scroll indicator for mobile */}
+              <div className="text-xs text-gray-500 mt-1 text-center">
+                ← Scroll to see all tabs →
               </div>
             </div>
           </Tabs>
