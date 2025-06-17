@@ -152,7 +152,7 @@ const AdmissionsTable = ({
         <SortableHeader key="rateCategory" field="rateCategory">Ratecategory</SortableHeader>,
         <SortableHeader key="averageTime" field="averageTime">Average time</SortableHeader>,
         <SortableHeader key="reasonType" field="reasonType">Reasontype</SortableHeader>,
-        <SortableHeader key="timetable" field="timetable">Timetable</TableHead>,
+        <SortableHeader key="timetable" field="timetable">Timetable</SortableHeader>,
         <TableHead key="showTimetable" className="text-xs">Show timetable</TableHead>,
         <TableHead key="journalNote" className="text-xs">Journal note</TableHead>
       ];
