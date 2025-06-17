@@ -35,7 +35,7 @@ const ChildcareFilters = ({ filters, onFiltersChange }: ChildcareFiltersProps) =
   };
 
   const activeFiltersCount = Object.values(filters).filter(value => {
-    if (typeof value === 'string') return value !== '';
+    if (typeof value === 'string') return value !== '' && value !== 'all';
     if (typeof value === 'object' && value !== null) {
       return Object.keys(value).length > 0;
     }
@@ -92,12 +92,12 @@ const ChildcareFilters = ({ filters, onFiltersChange }: ChildcareFiltersProps) =
               {/* Department */}
               <div>
                 <label className="text-sm font-medium mb-2 block">Department</label>
-                <Select value={filters.department} onValueChange={(value) => updateFilter('department', value)}>
+                <Select value={filters.department || 'all'} onValueChange={(value) => updateFilter('department', value === 'all' ? '' : value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="All departments" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All departments</SelectItem>
+                    <SelectItem value="all">All departments</SelectItem>
                     <SelectItem value="Sunflower Group">Sunflower Group</SelectItem>
                     <SelectItem value="Rainbow Group">Rainbow Group</SelectItem>
                     <SelectItem value="Star Group">Star Group</SelectItem>
@@ -109,12 +109,12 @@ const ChildcareFilters = ({ filters, onFiltersChange }: ChildcareFiltersProps) =
               {/* Rate Category */}
               <div>
                 <label className="text-sm font-medium mb-2 block">Rate Category</label>
-                <Select value={filters.rateCategory} onValueChange={(value) => updateFilter('rateCategory', value)}>
+                <Select value={filters.rateCategory || 'all'} onValueChange={(value) => updateFilter('rateCategory', value === 'all' ? '' : value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="All categories" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All categories</SelectItem>
+                    <SelectItem value="all">All categories</SelectItem>
                     <SelectItem value="Full Time">Full Time</SelectItem>
                     <SelectItem value="Part Time">Part Time</SelectItem>
                     <SelectItem value="Flexible">Flexible</SelectItem>
@@ -126,12 +126,12 @@ const ChildcareFilters = ({ filters, onFiltersChange }: ChildcareFiltersProps) =
               {/* Reason Type */}
               <div>
                 <label className="text-sm font-medium mb-2 block">Reason Type</label>
-                <Select value={filters.reasonType} onValueChange={(value) => updateFilter('reasonType', value)}>
+                <Select value={filters.reasonType || 'all'} onValueChange={(value) => updateFilter('reasonType', value === 'all' ? '' : value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="All reasons" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All reasons</SelectItem>
+                    <SelectItem value="all">All reasons</SelectItem>
                     <SelectItem value="Regular admission">Regular admission</SelectItem>
                     <SelectItem value="Special needs">Special needs</SelectItem>
                     <SelectItem value="Transfer">Transfer</SelectItem>
