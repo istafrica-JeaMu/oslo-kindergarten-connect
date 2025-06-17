@@ -391,8 +391,8 @@ export function AppSidebar() {
     return items && typeof items === 'object' && 'primary' in items && 'secondary' in items;
   };
 
-  const isAdminNavigation = (items: any): items is { primary: any[], systemOverview: any } => {
-    return items && typeof items === 'object' && 'primary' in items && 'systemOverview' in items;
+  const isAdminNavigation = (items: any): items is { primary: any[], administration: any, admissions: any, other: any } => {
+    return items && typeof items === 'object' && 'primary' in items && 'administration' in items && 'admissions' in items && 'other' in items;
   };
 
   const renderGuardianNavigation = () => {
