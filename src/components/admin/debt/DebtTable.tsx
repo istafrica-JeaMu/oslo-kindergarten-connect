@@ -92,7 +92,6 @@ const DebtTable = ({
               <TableHead className="w-12">
                 <Checkbox
                   checked={allSelected}
-                  indeterminate={someSelected}
                   onCheckedChange={onSelectAll}
                 />
               </TableHead>
