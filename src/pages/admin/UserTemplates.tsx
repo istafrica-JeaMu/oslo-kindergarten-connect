@@ -464,30 +464,6 @@ const UserTemplates = () => {
     }
   };
 
-  const getFilteredData = () => {
-    switch (activeTab) {
-      case 'roles':
-        return roles.filter(role =>
-          role.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          role.description.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-      case 'module-groups':
-        return moduleGroups.filter(group =>
-          group.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          group.description.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-      case 'modules':
-        return modules.filter(module => {
-          const matchesSearch = module.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                               module.description.toLowerCase().includes(searchTerm.toLowerCase());
-          const matchesSource = selectedSource === 'all-sources' || !selectedSource || module.source === selectedSource;
-          return matchesSearch && matchesSource;
-        });
-      default:
-        return [];
-    }
-  };
-
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Sidebar */}
