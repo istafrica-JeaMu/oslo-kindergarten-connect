@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,7 +10,9 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Search, Edit, Trash2, ArrowUpDown, ChevronLeft, ChevronRight, Users, UserMinus, Grid3X3, Package, Shield, Building2, Lock, Paperclip } from 'lucide-react';
+import { Search, Edit, Trash2, ArrowUpDown, ChevronLeft, ChevronRight, Building2, Lock, Paperclip } from 'lucide-react';
+import AdminPageHeader from '@/components/admin/shared/AdminPageHeader';
+import { Shield } from 'lucide-react';
 
 interface Role {
   id: number;
@@ -158,54 +161,69 @@ const UserTemplates = () => {
     setModuleGroups(moduleGroups.filter(group => group.id !== id));
   };
 
+  const getBreadcrumbTitle = () => {
+    switch (activeTab) {
+      case 'roles':
+        return 'Roles';
+      case 'limited-roles':
+        return 'Limited Roles';
+      case 'module-groups':
+        return 'Module Groups';
+      case 'modules':
+        return 'Modules';
+      default:
+        return 'Access Rights';
+    }
+  };
+
   const renderTabContent = () => {
     switch (activeTab) {
       case 'roles':
         return (
-          <>
-            {/* Header */}
-            <div className="flex items-center justify-between mb-6">
-              <h1 className="text-2xl font-bold text-gray-900">Roles Management</h1>
-              <div className="flex items-center gap-2">
-                <Button variant="outline" className="text-gray-600">EXPORT</Button>
-                <Button variant="outline" className="text-gray-600">COMPARE</Button>
-                <Button variant="outline" className="text-gray-600">DELETE</Button>
-                <Button onClick={() => setShowCreateModal(true)} className="bg-teal-600 hover:bg-teal-700 text-white">NEW ROLE</Button>
-                <Button onClick={() => setShowImportModal(true)} className="bg-teal-600 hover:bg-teal-700 text-white">IMPORT</Button>
-              </div>
+          <div className="bg-gray-100 min-h-screen p-8">
+            {/* Breadcrumb */}
+            <div className="mb-4">
+              <h1 className="text-2xl font-bold text-gray-900">{getBreadcrumbTitle()}</h1>
             </div>
 
-            {/* Search */}
-            <div className="flex items-center gap-4 mb-6">
+            {/* Action Buttons */}
+            <div className="flex items-center justify-between mb-6">
               <div className="relative flex-1 max-w-md">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <Input
                   placeholder="Type to search..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 bg-white"
                 />
+              </div>
+              <div className="flex items-center gap-2 ml-4">
+                <Button variant="outline" className="text-gray-600 bg-gray-200">EXPORT</Button>
+                <Button variant="outline" className="text-gray-600 bg-gray-200">COMPARE</Button>
+                <Button variant="outline" className="text-gray-600 bg-gray-200">DELETE</Button>
+                <Button onClick={() => setShowCreateModal(true)} className="bg-teal-600 hover:bg-teal-700 text-white">NEW ROLE</Button>
+                <Button onClick={() => setShowImportModal(true)} className="bg-teal-600 hover:bg-teal-700 text-white">IMPORT</Button>
               </div>
             </div>
 
             {/* Data Table */}
-            <div className="bg-white rounded-lg border">
+            <div className="bg-white rounded-lg border shadow-sm">
               <Table>
                 <TableHeader>
-                  <TableRow>
+                  <TableRow className="bg-gray-50">
                     <TableHead className="w-12">
                       <Checkbox
                         checked={roles.every(role => role.selected)}
                         onCheckedChange={handleSelectAll}
                       />
                     </TableHead>
-                    <TableHead className="cursor-pointer hover:bg-gray-50">
-                      <div className="flex items-center gap-1">
+                    <TableHead className="cursor-pointer hover:bg-gray-100">
+                      <div className="flex items-center gap-1 font-semibold">
                         Name
                         <ArrowUpDown className="h-4 w-4" />
                       </div>
                     </TableHead>
-                    <TableHead>Description</TableHead>
+                    <TableHead className="font-semibold">Description</TableHead>
                     <TableHead className="w-12"></TableHead>
                   </TableRow>
                 </TableHeader>
@@ -218,7 +236,7 @@ const UserTemplates = () => {
                           onCheckedChange={(checked) => handleSelectRole(role.id, checked === true)}
                         />
                       </TableCell>
-                      <TableCell className="font-medium">{role.name}</TableCell>
+                      <TableCell className="font-medium text-gray-900">{role.name}</TableCell>
                       <TableCell className="text-gray-600">{role.description}</TableCell>
                       <TableCell>
                         <Button variant="ghost" size="sm" className="text-gray-400 hover:text-gray-600">
@@ -231,13 +249,13 @@ const UserTemplates = () => {
               </Table>
 
               {/* Pagination */}
-              <div className="flex items-center justify-between px-6 py-4 border-t">
+              <div className="flex items-center justify-between px-6 py-4 border-t bg-gray-50">
                 <div className="text-sm text-gray-700">
                   Rows per page: 
                   <select
                     value={rowsPerPage}
                     onChange={(e) => setRowsPerPage(Number(e.target.value))}
-                    className="ml-2 border border-gray-300 rounded px-2 py-1"
+                    className="ml-2 border border-gray-300 rounded px-2 py-1 bg-white"
                   >
                     <option value={20}>20</option>
                     <option value={50}>50</option>
@@ -269,17 +287,20 @@ const UserTemplates = () => {
                 </div>
               </div>
             </div>
-          </>
+          </div>
         );
 
       case 'limited-roles':
         return (
-          <>
-            <h1 className="text-2xl font-bold text-gray-900 mb-6">Limited Roles Assignment</h1>
+          <div className="bg-gray-100 min-h-screen p-8">
+            {/* Breadcrumb */}
+            <div className="mb-4">
+              <h1 className="text-2xl font-bold text-gray-900">{getBreadcrumbTitle()}</h1>
+            </div>
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Roles Panel */}
-              <Card>
+              <Card className="bg-white shadow-sm">
                 <CardHeader>
                   <CardTitle>Roles</CardTitle>
                   <div className="relative">
@@ -288,7 +309,7 @@ const UserTemplates = () => {
                       placeholder="Type to search..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10"
+                      className="pl-10 bg-white"
                     />
                   </div>
                 </CardHeader>
@@ -318,14 +339,14 @@ const UserTemplates = () => {
               </Card>
 
               {/* Organization Elements Panel */}
-              <Card>
+              <Card className="bg-white shadow-sm">
                 <CardHeader>
                   <CardTitle>Organisation Elements</CardTitle>
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                     <Input
                       placeholder="Type to search..."
-                      className="pl-10"
+                      className="pl-10 bg-white"
                     />
                   </div>
                 </CardHeader>
@@ -345,43 +366,45 @@ const UserTemplates = () => {
                 </CardContent>
               </Card>
             </div>
-          </>
+          </div>
         );
 
       case 'module-groups':
         return (
-          <>
-            {/* Header */}
+          <div className="bg-gray-100 min-h-screen p-8">
+            {/* Breadcrumb */}
+            <div className="mb-4">
+              <h1 className="text-2xl font-bold text-gray-900">{getBreadcrumbTitle()}</h1>
+            </div>
+
+            {/* Header with Search and New Group Button */}
             <div className="flex items-center justify-between mb-6">
-              <h1 className="text-2xl font-bold text-gray-900">Module Groups</h1>
+              <div className="relative max-w-md">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Input
+                  placeholder="Type to search..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 bg-white"
+                />
+              </div>
               <Button onClick={() => setShowCreateModal(true)} className="bg-teal-600 hover:bg-teal-700 text-white">NEW GROUP</Button>
             </div>
 
-            {/* Search */}
-            <div className="relative max-w-md mb-6">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
-                placeholder="Type to search..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-
             {/* Data Table */}
-            <div className="bg-white rounded-lg border">
+            <div className="bg-white rounded-lg border shadow-sm">
               <Table>
                 <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Description</TableHead>
+                  <TableRow className="bg-gray-50">
+                    <TableHead className="font-semibold">Name</TableHead>
+                    <TableHead className="font-semibold">Description</TableHead>
                     <TableHead className="w-12"></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {displayedData.map((group: any) => (
                     <TableRow key={group.id} className="hover:bg-gray-50">
-                      <TableCell className="font-medium">{group.name}</TableCell>
+                      <TableCell className="font-medium text-gray-900">{group.name}</TableCell>
                       <TableCell className="text-gray-600">{group.description}</TableCell>
                       <TableCell>
                         <Button
@@ -398,14 +421,16 @@ const UserTemplates = () => {
                 </TableBody>
               </Table>
             </div>
-          </>
+          </div>
         );
 
       case 'modules':
         return (
-          <>
-            {/* Header */}
-            <h1 className="text-2xl font-bold text-gray-900 mb-6">Modules</h1>
+          <div className="bg-gray-100 min-h-screen p-8">
+            {/* Breadcrumb */}
+            <div className="mb-4">
+              <h1 className="text-2xl font-bold text-gray-900">{getBreadcrumbTitle()}</h1>
+            </div>
 
             {/* Search and Filters */}
             <div className="flex items-center gap-4 mb-6">
@@ -415,11 +440,11 @@ const UserTemplates = () => {
                   placeholder="Type to search..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 bg-white"
                 />
               </div>
               <Select value={selectedSource} onValueChange={setSelectedSource}>
-                <SelectTrigger className="w-64">
+                <SelectTrigger className="w-64 bg-white">
                   <SelectValue placeholder="Choose sources" />
                 </SelectTrigger>
                 <SelectContent>
@@ -432,19 +457,19 @@ const UserTemplates = () => {
             </div>
 
             {/* Data Table */}
-            <div className="bg-white rounded-lg border">
+            <div className="bg-white rounded-lg border shadow-sm">
               <Table>
                 <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Description</TableHead>
-                    <TableHead>Source</TableHead>
+                  <TableRow className="bg-gray-50">
+                    <TableHead className="font-semibold">Name</TableHead>
+                    <TableHead className="font-semibold">Description</TableHead>
+                    <TableHead className="font-semibold">Source</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {displayedData.map((module: any) => (
                     <TableRow key={module.id} className="hover:bg-gray-50">
-                      <TableCell className="font-medium">{module.name}</TableCell>
+                      <TableCell className="font-medium text-gray-900">{module.name}</TableCell>
                       <TableCell className="text-gray-600">{module.description}</TableCell>
                       <TableCell>
                         <Badge variant="outline" className="text-xs">
@@ -456,7 +481,7 @@ const UserTemplates = () => {
                 </TableBody>
               </Table>
             </div>
-          </>
+          </div>
         );
 
       default:
@@ -480,7 +505,6 @@ const UserTemplates = () => {
                 activeTab === 'roles' ? 'bg-teal-700' : 'hover:bg-teal-700'
               }`}
             >
-              <Users className="h-4 w-4" />
               <span>Roles</span>
             </button>
             <button
@@ -489,7 +513,6 @@ const UserTemplates = () => {
                 activeTab === 'limited-roles' ? 'bg-teal-700' : 'hover:bg-teal-700'
               }`}
             >
-              <UserMinus className="h-4 w-4" />
               <span>Limited Roles</span>
             </button>
             <button
@@ -498,7 +521,6 @@ const UserTemplates = () => {
                 activeTab === 'module-groups' ? 'bg-teal-700' : 'hover:bg-teal-700'
               }`}
             >
-              <Grid3X3 className="h-4 w-4" />
               <span>Module Groups</span>
             </button>
             <button
@@ -507,7 +529,6 @@ const UserTemplates = () => {
                 activeTab === 'modules' ? 'bg-teal-700' : 'hover:bg-teal-700'
               }`}
             >
-              <Package className="h-4 w-4" />
               <span>Modules</span>
             </button>
           </nav>
@@ -515,7 +536,7 @@ const UserTemplates = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-6">
+      <div className="flex-1">
         {renderTabContent()}
       </div>
 
