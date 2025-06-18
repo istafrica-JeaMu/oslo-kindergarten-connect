@@ -1,3 +1,4 @@
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/AuthContext';
@@ -41,6 +42,7 @@ import Settings from '@/pages/admin/Settings';
 import Logs from '@/pages/admin/Logs';
 import Applications from '@/pages/admin/Applications';
 import PlacementManagement from '@/pages/admin/PlacementManagement';
+import UserTemplates from '@/pages/admin/UserTemplates';
 
 const queryClient = new QueryClient();
 
@@ -197,6 +199,11 @@ function App() {
                 <Route path="/admin/settings" element={
                   <ProtectedRoute allowedRoles={['admin']}>
                     <Settings />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/user-templates" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <UserTemplates />
                   </ProtectedRoute>
                 } />
                 

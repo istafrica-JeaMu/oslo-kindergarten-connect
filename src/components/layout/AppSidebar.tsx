@@ -1,3 +1,4 @@
+
 import {
   Home,
   FileText,
@@ -36,7 +37,10 @@ import {
   UserPlus,
   BarChart,
   Mail,
-  Cog
+  Cog,
+  UserMinus,
+  Grid3X3,
+  Package
 } from 'lucide-react';
 
 import {
@@ -75,6 +79,7 @@ export function AppSidebar() {
   const [isSystemOverviewOpen, setIsSystemOverviewOpen] = useState(false);
   const [isAdministrationOpen, setIsAdministrationOpen] = useState(false);
   const [isAdmissionsOpen, setIsAdmissionsOpen] = useState(false);
+  const [isAccessRightsOpen, setIsAccessRightsOpen] = useState(false);
 
   const getMenuItems = () => {
     const baseUrl = `/${user?.role}`;
@@ -228,6 +233,28 @@ export function AppSidebar() {
               title: 'Report & export data',
               url: `${baseUrl}/reports-export`,
               icon: BarChart,
+            }
+          ],
+          accessRights: [
+            {
+              title: 'Roles',
+              url: `${baseUrl}/user-templates`,
+              icon: Users,
+            },
+            {
+              title: 'Limited Roles',
+              url: `${baseUrl}/user-templates`,
+              icon: UserMinus,
+            },
+            {
+              title: 'Module Groups', 
+              url: `${baseUrl}/user-templates`,
+              icon: Grid3X3,
+            },
+            {
+              title: 'Modules',
+              url: `${baseUrl}/user-templates`,
+              icon: Package,
             }
           ],
           other: [
@@ -570,6 +597,53 @@ export function AppSidebar() {
                 <div className="space-y-0 ml-2 mt-1 pb-1">
                   <SidebarMenu className="space-y-0">
                     {items.admissions?.filter((item: any) => !['Person register', 'Report & export data'].includes(item.title)).map((item: any) => (
+                      <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton 
+                          asChild 
+                          isActive={location.pathname === item.url}
+                          className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 ml-2 min-h-[32px]"
+                        >
+                          <Link to={item.url} className="flex items-center gap-3 px-3 py-1">
+                            <item.icon className="h-4 w-4 flex-shrink-0" />
+                            <span className="font-medium text-sm truncate">{item.title}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <Separator className="my-2" />
+
+        {/* Access Rights Dropdown */}
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <Collapsible open={isAccessRightsOpen} onOpenChange={setIsAccessRightsOpen}>
+              <CollapsibleTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-between hover:bg-slate-100 data-[state=open]:bg-slate-100 transition-colors duration-200 min-h-[40px] rounded-lg"
+                >
+                  <div className="flex items-center gap-3">
+                    <Shield className="h-4 w-4 text-slate-600" />
+                    <span className="font-semibold text-slate-700">Access Rights</span>
+                  </div>
+                  {isAccessRightsOpen ? (
+                    <ChevronDown className="h-4 w-4 text-slate-600" />
+                  ) : (
+                    <ChevronRight className="h-4 w-4 text-slate-600" />
+                  )}
+                </Button>
+              </CollapsibleTrigger>
+              
+              <CollapsibleContent className="overflow-hidden">
+                <div className="space-y-0 ml-2 mt-1 pb-1">
+                  <SidebarMenu className="space-y-0">
+                    {items.accessRights?.map((item: any) => (
                       <SidebarMenuItem key={item.title}>
                         <SidebarMenuButton 
                           asChild 
