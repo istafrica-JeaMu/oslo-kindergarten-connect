@@ -62,7 +62,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import ApplicationsSidebar from '@/components/caseworker/ApplicationsSidebar';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Collapsible,
   CollapsibleContent,
@@ -79,6 +79,13 @@ export function AppSidebar() {
   const [isAdministrationOpen, setIsAdministrationOpen] = useState(false);
   const [isAdmissionsOpen, setIsAdmissionsOpen] = useState(false);
   const [isAccessRightOpen, setIsAccessRightOpen] = useState(false);
+
+  // Set initial state based on current route
+  useEffect(() => {
+    if (location.pathname.includes('/user-templates')) {
+      setIsAccessRightOpen(true);
+    }
+  }, [location.pathname]);
 
   const getMenuItems = () => {
     const baseUrl = `/${user?.role}`;
@@ -595,20 +602,26 @@ export function AppSidebar() {
               <CollapsibleContent className="overflow-hidden">
                 <div className="space-y-0 ml-2 mt-1 pb-1">
                   <SidebarMenu className="space-y-0">
-                    {items.accessRight?.map((item: any) => (
-                      <SidebarMenuItem key={item.title}>
-                        <SidebarMenuButton 
-                          asChild 
-                          isActive={location.pathname.includes('/user-templates') && location.search.includes(item.url.split('=')[1])}
-                          className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 ml-2 min-h-[32px]"
-                        >
-                          <Link to={item.url} className="flex items-center gap-3 px-3 py-1">
-                            <item.icon className="h-4 w-4 flex-shrink-0" />
-                            <span className="font-medium text-sm truncate">{item.title}</span>
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    ))}
+                    {items.accessRight?.map((item: any) => {
+                      const tabParam = new URLSearchParams(item.url.split('?')[1]).get('tab');
+                      const currentTab = new URLSearchParams(location.search).get('tab');
+                      const isActive = location.pathname.includes('/user-templates') && currentTab === tabParam;
+                      
+                      return (
+                        <SidebarMenuItem key={item.title}>
+                          <SidebarMenuButton 
+                            asChild 
+                            isActive={isActive}
+                            className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 ml-2 min-h-[32px]"
+                          >
+                            <Link to={item.url} className="flex items-center gap-3 px-3 py-1">
+                              <item.icon className="h-4 w-4 flex-shrink-0" />
+                              <span className="font-medium text-sm truncate">{item.title}</span>
+                            </Link>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      );
+                    })}
                   </SidebarMenu>
                 </div>
               </CollapsibleContent>
