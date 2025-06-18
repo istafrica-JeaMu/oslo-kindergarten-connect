@@ -197,16 +197,15 @@ const UserTemplates = () => {
     ));
   };
 
-  // Filter roles based on search and filters
+  const handleModuleGroupDelete = (groupId: number) => {
+    setModuleGroups(prev => prev.filter(group => group.id !== groupId));
+  };
+
+  // Filter roles based on search only
   const filteredRoles = roles.filter(role => {
     const matchesSearch = role.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          role.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || role.status.toLowerCase() === statusFilter;
-    const matchesType = roleTypeFilter === 'all' || 
-                       (roleTypeFilter === 'admin' && role.name.toLowerCase().includes('admin')) ||
-                       (roleTypeFilter === 'user' && !role.name.toLowerCase().includes('admin'));
-    
-    return matchesSearch && matchesStatus && matchesType;
+    return matchesSearch;
   });
 
   const PageIcon = getPageIcon();
@@ -224,26 +223,6 @@ const UserTemplates = () => {
               className="pl-10 w-80"
             />
           </div>
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-32">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="active">Active</SelectItem>
-              <SelectItem value="inactive">Inactive</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select value={roleTypeFilter} onValueChange={setRoleTypeFilter}>
-            <SelectTrigger className="w-32">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Types</SelectItem>
-              <SelectItem value="admin">Admin</SelectItem>
-              <SelectItem value="user">User</SelectItem>
-            </SelectContent>
-          </Select>
         </div>
         <div className="flex items-center gap-2">
           
@@ -365,9 +344,6 @@ const UserTemplates = () => {
                   <TableCell>{role.created}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <Button variant="ghost" size="sm" onClick={() => handleRoleAction(role, 'view')}>
-                        <Eye className="w-4 h-4" />
-                      </Button>
                       <Button variant="ghost" size="sm" onClick={() => handleRoleAction(role, 'edit')}>
                         <Edit className="w-4 h-4" />
                       </Button>
@@ -559,12 +535,9 @@ const UserTemplates = () => {
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-2">
                       <Button variant="ghost" size="sm" onClick={() => handleModuleGroupEdit(group)}>
-                        <Settings className="w-4 h-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm">
                         <Edit className="w-4 h-4" />
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={() => handleModuleGroupDelete(group.id)}>
                         <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
