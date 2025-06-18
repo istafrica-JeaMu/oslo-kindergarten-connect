@@ -1,8 +1,7 @@
-
 import React, { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Users } from 'lucide-react';
-import AdminPageHeader from '@/components/admin/shared/AdminPageHeader';
+import AdminLayout from '@/components/admin/shared/AdminLayout';
+import AdminTabNavigation from '@/components/admin/shared/AdminTabNavigation';
 import AdminFilters from '@/components/admin/shared/AdminFilters';
 import AdminTable from '@/components/admin/shared/AdminTable';
 
@@ -229,46 +228,38 @@ const QueueHandling = () => {
     }
   };
 
+  const tabItems = Object.keys(tabConfig).map(key => ({
+    key,
+    title: tabConfig[key].title,
+    fullTitle: tabConfig[key].title
+  }));
+
   const currentTab = tabConfig[activeTab];
   const breadcrumb = ['Queue handling', currentTab.title];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <AdminPageHeader
-        icon={Users}
-        title="Queue Handling"
-        description="Manage childcare queue and admissions across different categories"
-        breadcrumb={breadcrumb}
-        showOnlyCurrentUnits={showOnlyCurrentUnits}
-        onShowOnlyCurrentUnitsChange={setShowOnlyCurrentUnits}
-        selectedMunicipality={serviceType}
-        onMunicipalityChange={setServiceType}
-        selectedDistrict={districtSearch}
-        onDistrictChange={setDistrictSearch}
-        districtPlaceholder="Norra Distriktet (ctrl+shift+s)"
-      />
-
+    <AdminLayout
+      icon={Users}
+      title="Queue Handling"
+      description="Manage childcare queue and admissions across different categories"
+      breadcrumb={breadcrumb}
+      showOnlyCurrentUnits={showOnlyCurrentUnits}
+      onShowOnlyCurrentUnitsChange={setShowOnlyCurrentUnits}
+      selectedMunicipality={serviceType}
+      onMunicipalityChange={setServiceType}
+      selectedDistrict={districtSearch}
+      onDistrictChange={setDistrictSearch}
+      districtPlaceholder="Norra Distriktet (ctrl+shift+s)"
+    >
       {/* Tab Navigation */}
-      <div className="border-b border-gray-200 mb-6">
-        <nav className="flex space-x-8 overflow-x-auto">
-          {Object.keys(tabConfig).map((tabKey) => (
-            <button
-              key={tabKey}
-              onClick={() => {
-                setActiveTab(tabKey);
-                setSelectedRows(new Set());
-              }}
-              className={`py-2 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
-                activeTab === tabKey
-                  ? 'border-teal-500 text-teal-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              {tabConfig[tabKey].title}
-            </button>
-          ))}
-        </nav>
-      </div>
+      <AdminTabNavigation
+        tabs={tabItems}
+        activeTab={activeTab}
+        onTabChange={(tabKey) => {
+          setActiveTab(tabKey);
+          setSelectedRows(new Set());
+        }}
+      />
 
       {/* Filters */}
       <AdminFilters
@@ -281,23 +272,21 @@ const QueueHandling = () => {
       />
 
       {/* Main Content */}
-      <div className="mt-6">
-        <AdminTable
-          columns={currentTab.columns}
-          data={currentTab.data}
-          actions={currentTab.actions}
-          hasMultiSelect={currentTab.hasMultiSelect}
-          hasActionColumns={currentTab.hasActionColumns}
-          selectedRows={selectedRows}
-          onSelectAll={handleSelectAll}
-          onSelectRow={handleRowSelection}
-          currentPage={1}
-          totalPages={1}
-          itemsPerPage={15}
-          emptyMessage="No results found."
-        />
-      </div>
-    </div>
+      <AdminTable
+        columns={currentTab.columns}
+        data={currentTab.data}
+        actions={currentTab.actions}
+        hasMultiSelect={currentTab.hasMultiSelect}
+        hasActionColumns={currentTab.hasActionColumns}
+        selectedRows={selectedRows}
+        onSelectAll={handleSelectAll}
+        onSelectRow={handleRowSelection}
+        currentPage={1}
+        totalPages={1}
+        itemsPerPage={15}
+        emptyMessage="No results found."
+      />
+    </AdminLayout>
   );
 };
 

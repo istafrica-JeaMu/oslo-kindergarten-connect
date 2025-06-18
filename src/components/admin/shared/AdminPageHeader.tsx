@@ -1,11 +1,11 @@
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
 import { LucideIcon } from 'lucide-react';
+import UniversalMunicipalityToggle from './UniversalMunicipalityToggle';
+import { adminClasses } from '@/styles/admin-tokens';
 
 interface AdminPageHeaderProps {
   icon: LucideIcon;
@@ -35,23 +35,23 @@ const AdminPageHeader = ({
   districtPlaceholder = "Select district..."
 }: AdminPageHeaderProps) => {
   return (
-    <div className="space-y-6">
+    <div className={adminClasses.spacingY}>
       {/* Page Header */}
       <div className="flex items-center gap-3">
         <Icon className="w-8 h-8 text-teal-600" />
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">{title}</h1>
-          <p className="text-slate-600">{description}</p>
+          <h1 className={adminClasses.pageTitle}>{title}</h1>
+          <p className={adminClasses.pageDescription}>{description}</p>
         </div>
       </div>
 
-      {/* Exact ChildcareMember layout - single row with all controls */}
-      <Card>
+      {/* Controls Section */}
+      <Card className={adminClasses.card}>
         <CardContent className="pt-6">
-          <div className="flex items-center justify-between w-full">
+          <div className={adminClasses.flexBetween}>
             {/* Left side - Bullet point, text, and checkbox in a row */}
             <div className="flex items-center gap-6">
-              {/* Bullet point and Manage admissions text */}
+              {/* Bullet point and text */}
               <div className="flex items-center gap-3">
                 <div className="w-2 h-2 bg-black rounded-full"></div>
                 <span className="font-medium text-base">
@@ -76,26 +76,13 @@ const AdminPageHeader = ({
 
             {/* Right side - Municipality buttons and district dropdown */}
             <div className="flex items-center gap-4">
-              {/* Municipality Toggle Buttons */}
+              {/* Municipality Toggle */}
               {onMunicipalityChange && selectedMunicipality && (
-                <div className="flex items-center">
-                  <Button
-                    variant={selectedMunicipality === 'förskola' ? 'default' : 'outline'}
-                    onClick={() => onMunicipalityChange('förskola')}
-                    className={`rounded-r-none ${selectedMunicipality === 'förskola' ? 'bg-teal-600 hover:bg-teal-700' : ''}`}
-                    size="sm"
-                  >
-                    Förskola
-                  </Button>
-                  <Button
-                    variant={selectedMunicipality === 'fritidshem' ? 'default' : 'outline'}
-                    onClick={() => onMunicipalityChange('fritidshem')}
-                    className={`rounded-l-none border-l-0 ${selectedMunicipality === 'fritidshem' ? 'bg-teal-600 hover:bg-teal-700' : ''}`}
-                    size="sm"
-                  >
-                    Fritidshem
-                  </Button>
-                </div>
+                <UniversalMunicipalityToggle
+                  selectedMunicipality={selectedMunicipality}
+                  onMunicipalityChange={onMunicipalityChange}
+                  size="sm"
+                />
               )}
 
               {/* District Selection Dropdown */}
