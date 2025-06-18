@@ -41,6 +41,7 @@ import Settings from '@/pages/admin/Settings';
 import Logs from '@/pages/admin/Logs';
 import Applications from '@/pages/admin/Applications';
 import PlacementManagement from '@/pages/admin/PlacementManagement';
+import UserTemplates from '@/pages/admin/UserTemplates';
 
 const queryClient = new QueryClient();
 
@@ -72,6 +73,11 @@ function App() {
                 <Route path="/admin" element={
                   <ProtectedRoute allowedRoles={['admin']}>
                     <MunicipalityAdminDashboard />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/user-templates" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <UserTemplates />
                   </ProtectedRoute>
                 } />
                 <Route path="/admin/application-forms" element={

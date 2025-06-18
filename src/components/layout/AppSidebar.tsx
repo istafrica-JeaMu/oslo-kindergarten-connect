@@ -36,7 +36,10 @@ import {
   UserPlus,
   BarChart,
   Mail,
-  Cog
+  Cog,
+  UserMinus,
+  Grid3X3,
+  Package
 } from 'lucide-react';
 
 import {
@@ -75,6 +78,7 @@ export function AppSidebar() {
   const [isSystemOverviewOpen, setIsSystemOverviewOpen] = useState(false);
   const [isAdministrationOpen, setIsAdministrationOpen] = useState(false);
   const [isAdmissionsOpen, setIsAdmissionsOpen] = useState(false);
+  const [isAccessRightOpen, setIsAccessRightOpen] = useState(false);
 
   const getMenuItems = () => {
     const baseUrl = `/${user?.role}`;
@@ -206,6 +210,28 @@ export function AppSidebar() {
               title: 'Staff',
               url: `${baseUrl}/staff`,
               icon: Users,
+            }
+          ],
+          accessRight: [
+            {
+              title: 'Roles',
+              url: `${baseUrl}/user-templates?tab=roles`,
+              icon: UserCheck,
+            },
+            {
+              title: 'Limited Roles',
+              url: `${baseUrl}/user-templates?tab=limited-roles`,
+              icon: UserMinus,
+            },
+            {
+              title: 'Module Groups',
+              url: `${baseUrl}/user-templates?tab=module-groups`,
+              icon: Grid3X3,
+            },
+            {
+              title: 'Modules',
+              url: `${baseUrl}/user-templates?tab=modules`,
+              icon: Package,
             }
           ],
           admissions: [
@@ -396,8 +422,8 @@ export function AppSidebar() {
     return items && typeof items === 'object' && 'primary' in items && 'secondary' in items;
   };
 
-  const isAdminNavigation = (items: any): items is { primary: any[], administration: any, admissions: any, other: any } => {
-    return items && typeof items === 'object' && 'primary' in items && 'administration' in items && 'admissions' in items && 'other' in items;
+  const isAdminNavigation = (items: any): items is { primary: any[], administration: any, accessRight: any, admissions: any, other: any } => {
+    return items && typeof items === 'object' && 'primary' in items && 'administration' in items && 'admissions' in items && 'other' in items && 'accessRight' in items;
   };
 
   const renderGuardianNavigation = () => {
@@ -538,6 +564,53 @@ export function AppSidebar() {
                     </SidebarMenu>
                   </div>
                 </ScrollArea>
+              </CollapsibleContent>
+            </Collapsible>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <Separator className="my-2" />
+
+        {/* Access Right Dropdown */}
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <Collapsible open={isAccessRightOpen} onOpenChange={setIsAccessRightOpen}>
+              <CollapsibleTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-between hover:bg-slate-100 data-[state=open]:bg-slate-100 transition-colors duration-200 min-h-[40px] rounded-lg"
+                >
+                  <div className="flex items-center gap-3">
+                    <Shield className="h-4 w-4 text-slate-600" />
+                    <span className="font-semibold text-slate-700">Access Right</span>
+                  </div>
+                  {isAccessRightOpen ? (
+                    <ChevronDown className="h-4 w-4 text-slate-600" />
+                  ) : (
+                    <ChevronRight className="h-4 w-4 text-slate-600" />
+                  )}
+                </Button>
+              </CollapsibleTrigger>
+              
+              <CollapsibleContent className="overflow-hidden">
+                <div className="space-y-0 ml-2 mt-1 pb-1">
+                  <SidebarMenu className="space-y-0">
+                    {items.accessRight?.map((item: any) => (
+                      <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton 
+                          asChild 
+                          isActive={location.pathname.includes('/user-templates') && location.search.includes(item.url.split('=')[1])}
+                          className="rounded-lg hover:bg-slate-100 data-[active=true]:bg-oslo-blue data-[active=true]:text-white transition-colors duration-200 ml-2 min-h-[32px]"
+                        >
+                          <Link to={item.url} className="flex items-center gap-3 px-3 py-1">
+                            <item.icon className="h-4 w-4 flex-shrink-0" />
+                            <span className="font-medium text-sm truncate">{item.title}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </div>
               </CollapsibleContent>
             </Collapsible>
           </SidebarGroupContent>
