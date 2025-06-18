@@ -6,7 +6,7 @@ import { adminTokens } from '@/styles/admin-tokens';
 interface UniversalMunicipalityToggleProps {
   selectedMunicipality: 'förskola' | 'fritidshem';
   onMunicipalityChange: (municipality: 'förskola' | 'fritidshem') => void;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'default' | 'lg';
   className?: string;
 }
 
