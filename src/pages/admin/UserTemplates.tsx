@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Search, Edit, Trash2, ArrowUpDown, ChevronLeft, ChevronRight, Users, UserMinus, Grid3X3, Package, Shield, Building, Lock, Paperclip } from 'lucide-react';
+import { Search, Edit, Trash2, ArrowUpDown, ChevronLeft, ChevronRight, Users, UserMinus, Grid3X3, Package, Shield, Building2, Lock, Paperclip } from 'lucide-react';
 
 interface Role {
   id: number;
@@ -105,7 +104,7 @@ const UserTemplates = () => {
         return modules.filter(module => {
           const matchesSearch = module.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                                module.description.toLowerCase().includes(searchTerm.toLowerCase());
-          const matchesSource = !selectedSource || module.source === selectedSource;
+          const matchesSource = selectedSource === 'all-sources' || !selectedSource || module.source === selectedSource;
           return matchesSearch && matchesSource;
         });
       default:
@@ -338,7 +337,7 @@ const UserTemplates = () => {
                     {organizationElements.map((element) => (
                       <div key={element.id} className="flex items-center gap-2 py-1">
                         <Checkbox />
-                        <Building className="h-4 w-4 text-gray-400" />
+                        <Building2 className="h-4 w-4 text-gray-400" />
                         <span className="text-sm">{element.name}</span>
                       </div>
                     ))}
@@ -424,7 +423,7 @@ const UserTemplates = () => {
                   <SelectValue placeholder="Choose sources" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Sources</SelectItem>
+                  <SelectItem value="all-sources">All Sources</SelectItem>
                   {sources.map(source => (
                     <SelectItem key={source} value={source}>{source}</SelectItem>
                   ))}
@@ -462,6 +461,30 @@ const UserTemplates = () => {
 
       default:
         return null;
+    }
+  };
+
+  const getFilteredData = () => {
+    switch (activeTab) {
+      case 'roles':
+        return roles.filter(role =>
+          role.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          role.description.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      case 'module-groups':
+        return moduleGroups.filter(group =>
+          group.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          group.description.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      case 'modules':
+        return modules.filter(module => {
+          const matchesSearch = module.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                               module.description.toLowerCase().includes(searchTerm.toLowerCase());
+          const matchesSource = selectedSource === 'all-sources' || !selectedSource || module.source === selectedSource;
+          return matchesSearch && matchesSource;
+        });
+      default:
+        return [];
     }
   };
 
