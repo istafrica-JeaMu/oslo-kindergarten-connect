@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -62,6 +61,11 @@ import {
   X
 } from 'lucide-react';
 
+// Import the new components
+import RoleActionsModal from '@/components/admin/roles/RoleActionsModal';
+import CreateLimitedRoleModal from '@/components/admin/roles/CreateLimitedRoleModal';
+import ModuleGroupEditModal from '@/components/admin/roles/ModuleGroupEditModal';
+
 // Mock data for demonstration
 const mockRoles = [
   { id: 1, name: 'Super Administrator', description: 'Full system access', users: 2, status: 'Active', created: '2024-01-15' },
@@ -91,6 +95,8 @@ const mockModules = [
   { id: 4, name: 'Parent Communication', group: 'Child Care Operations', source: 'Core System', status: 'Active', version: '2.0.5' },
   { id: 5, name: 'Payment Processing', group: 'Financial Management', source: 'External API', status: 'Active', version: '3.2.1' },
   { id: 6, name: 'Monthly Reports', group: 'Reporting & Analytics', source: 'Core System', status: 'Active', version: '1.9.2' },
+  { id: 7, name: 'Backup Management', group: 'User Management', source: 'Core System', status: 'Active', version: '1.5.0' },
+  { id: 8, name: 'Security Audit', group: 'User Management', source: 'Third Party', status: 'Active', version: '2.3.1' },
 ];
 
 const UserTemplates = () => {
@@ -102,6 +108,25 @@ const UserTemplates = () => {
   const [isCreateRoleOpen, setIsCreateRoleOpen] = useState(false);
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
   const [isImportOpen, setIsImportOpen] = useState(false);
+  const [isCreateLimitedRoleOpen, setIsCreateLimitedRoleOpen] = useState(false);
+  const [isModuleGroupEditOpen, setIsModuleGroupEditOpen] = useState(false);
+  const [selectedModuleGroup, setSelectedModuleGroup] = useState(null);
+  
+  // Role actions modal state
+  const [roleActionModal, setRoleActionModal] = useState({
+    isOpen: false,
+    role: null,
+    action: null as 'view' | 'edit' | 'delete' | null
+  });
+
+  // Filter states
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [roleTypeFilter, setRoleTypeFilter] = useState('all');
+
+  // Data states
+  const [roles, setRoles] = useState(mockRoles);
+  const [limitedRoles, setLimitedRoles] = useState(mockLimitedRoles);
+  const [moduleGroups, setModuleGroups] = useState(mockModuleGroups);
 
   const activeTab = searchParams.get('tab') || 'roles';
 
@@ -138,6 +163,52 @@ const UserTemplates = () => {
     }
   };
 
+  // Role action handlers
+  const handleRoleAction = (role: any, action: 'view' | 'edit' | 'delete') => {
+    setRoleActionModal({
+      isOpen: true,
+      role,
+      action
+    });
+  };
+
+  const handleRoleSave = (updatedRole: any) => {
+    setRoles(prev => prev.map(role => 
+      role.id === updatedRole.id ? updatedRole : role
+    ));
+  };
+
+  const handleRoleDelete = (roleId: number) => {
+    setRoles(prev => prev.filter(role => role.id !== roleId));
+  };
+
+  const handleCreateLimitedRole = (newLimitedRole: any) => {
+    setLimitedRoles(prev => [...prev, newLimitedRole]);
+  };
+
+  const handleModuleGroupEdit = (group: any) => {
+    setSelectedModuleGroup(group);
+    setIsModuleGroupEditOpen(true);
+  };
+
+  const handleModuleGroupSave = (updatedGroup: any, selectedModules: any[]) => {
+    setModuleGroups(prev => prev.map(group => 
+      group.id === updatedGroup.id ? updatedGroup : group
+    ));
+  };
+
+  // Filter roles based on search and filters
+  const filteredRoles = roles.filter(role => {
+    const matchesSearch = role.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         role.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || role.status.toLowerCase() === statusFilter;
+    const matchesType = roleTypeFilter === 'all' || 
+                       (roleTypeFilter === 'admin' && role.name.toLowerCase().includes('admin')) ||
+                       (roleTypeFilter === 'user' && !role.name.toLowerCase().includes('admin'));
+    
+    return matchesSearch && matchesStatus && matchesType;
+  });
+
   const PageIcon = getPageIcon();
 
   const renderRolesTab = () => (
@@ -153,12 +224,29 @@ const UserTemplates = () => {
               className="pl-10 w-80"
             />
           </div>
-          <Button variant="outline" size="sm">
-            <Filter className="w-4 h-4 mr-2" />
-            Filter
-          </Button>
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-32">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="active">Active</SelectItem>
+              <SelectItem value="inactive">Inactive</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={roleTypeFilter} onValueChange={setRoleTypeFilter}>
+            <SelectTrigger className="w-32">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Types</SelectItem>
+              <SelectItem value="admin">Admin</SelectItem>
+              <SelectItem value="user">User</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <div className="flex items-center gap-2">
+          
           <Dialog open={isImportOpen} onOpenChange={setIsImportOpen}>
             <DialogTrigger asChild>
               <Button variant="outline" size="sm">
@@ -259,7 +347,7 @@ const UserTemplates = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockRoles.map((role) => (
+              {filteredRoles.map((role) => (
                 <TableRow key={role.id}>
                   <TableCell>
                     <Checkbox />
@@ -277,13 +365,13 @@ const UserTemplates = () => {
                   <TableCell>{role.created}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={() => handleRoleAction(role, 'view')}>
                         <Eye className="w-4 h-4" />
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={() => handleRoleAction(role, 'edit')}>
                         <Edit className="w-4 h-4" />
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={() => handleRoleAction(role, 'delete')}>
                         <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
@@ -295,6 +383,7 @@ const UserTemplates = () => {
         </CardContent>
       </Card>
 
+      
       <Pagination>
         <PaginationContent>
           <PaginationItem>
@@ -346,7 +435,7 @@ const UserTemplates = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-lg">Limited Roles</CardTitle>
-            <Button size="sm">
+            <Button size="sm" onClick={() => setIsCreateLimitedRoleOpen(true)}>
               <Plus className="w-4 h-4 mr-2" />
               Create Limited Role
             </Button>
@@ -363,7 +452,7 @@ const UserTemplates = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {mockLimitedRoles.map((role) => (
+                {limitedRoles.map((role) => (
                   <TableRow key={role.id}>
                     <TableCell className="font-medium">{role.name}</TableCell>
                     <TableCell>{role.baseRole}</TableCell>
@@ -455,7 +544,7 @@ const UserTemplates = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockModuleGroups.map((group) => (
+              {moduleGroups.map((group) => (
                 <TableRow key={group.id}>
                   <TableCell className="font-medium">{group.name}</TableCell>
                   <TableCell className="text-gray-600">{group.description}</TableCell>
@@ -469,7 +558,7 @@ const UserTemplates = () => {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={() => handleModuleGroupEdit(group)}>
                         <Settings className="w-4 h-4" />
                       </Button>
                       <Button variant="ghost" size="sm">
@@ -514,10 +603,6 @@ const UserTemplates = () => {
             </SelectContent>
           </Select>
         </div>
-        <Button size="sm">
-          <Plus className="w-4 h-4 mr-2" />
-          Add Module
-        </Button>
       </div>
 
       <Card>
@@ -612,6 +697,33 @@ const UserTemplates = () => {
           {renderModulesTab()}
         </TabsContent>
       </Tabs>
+
+      {/* Role Actions Modal */}
+      <RoleActionsModal
+        role={roleActionModal.role}
+        action={roleActionModal.action}
+        isOpen={roleActionModal.isOpen}
+        onClose={() => setRoleActionModal({ isOpen: false, role: null, action: null })}
+        onSave={handleRoleSave}
+        onDelete={handleRoleDelete}
+      />
+
+      {/* Create Limited Role Modal */}
+      <CreateLimitedRoleModal
+        isOpen={isCreateLimitedRoleOpen}
+        onClose={() => setIsCreateLimitedRoleOpen(false)}
+        onSave={handleCreateLimitedRole}
+        baseRoles={mockRoles}
+      />
+
+      {/* Module Group Edit Modal */}
+      <ModuleGroupEditModal
+        isOpen={isModuleGroupEditOpen}
+        onClose={() => setIsModuleGroupEditOpen(false)}
+        group={selectedModuleGroup}
+        availableModules={mockModules}
+        onSave={handleModuleGroupSave}
+      />
     </div>
   );
 };
