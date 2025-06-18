@@ -1,16 +1,15 @@
+
 import React, { useState } from 'react';
-import { CheckCircle, Search } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import AdminLayout from '@/components/admin/shared/AdminLayout';
-import AdminCard from '@/components/admin/shared/AdminCard';
-import UniversalMunicipalityToggle from '@/components/admin/shared/UniversalMunicipalityToggle';
+import { Search, CheckCircle } from 'lucide-react';
+import MunicipalityToggle from '@/components/admin/placement/MunicipalityToggle';
 import TimetableActionButtons from '@/components/admin/placement/TimetableActionButtons';
 import TimetableFilters from '@/components/admin/placement/TimetableFilters';
 import TimetableTable from '@/components/admin/placement/TimetableTable';
 import TimetablePagination from '@/components/admin/placement/TimetablePagination';
-import { Button } from '@/components/ui/button';
-import { adminClasses } from '@/styles/admin-tokens';
 
 interface TimetableRecord {
   id: string;
@@ -146,58 +145,65 @@ const Approve = () => {
   };
 
   return (
-    <AdminLayout
-      icon={CheckCircle}
-      title="Approval Management"
-      description="Manage timetables and placement approvals"
-      breadcrumb={['Approval Management', getTabTitle()]}
-    >
+    <div className="space-y-6">
+      <div className="flex items-center gap-3">
+        <CheckCircle className="w-8 h-8 text-green-600" />
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900">Approval Management</h1>
+          <p className="text-slate-600">Manage timetables and placement approvals</p>
+        </div>
+      </div>
+
       {/* Tab Navigation */}
-      <AdminCard>
-        <TimetableActionButtons 
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-        />
-      </AdminCard>
+      <Card>
+        <CardContent className="pt-6">
+          <TimetableActionButtons 
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+          />
+        </CardContent>
+      </Card>
 
       {/* Tab Title */}
       <div>
-        <h2 className={adminClasses.sectionTitle}>{getTabTitle()}</h2>
+        <h2 className="text-xl font-semibold text-slate-900">{getTabTitle()}</h2>
       </div>
 
       {/* Controls Section */}
-      <AdminCard>
-        <div className={adminClasses.spacingY}>
-          {/* Show only current units checkbox */}
-          <div className="flex items-center gap-2">
-            <Checkbox 
-              id="current-units"
-              checked={showOnlyCurrentUnits}
-              onCheckedChange={(checked) => setShowOnlyCurrentUnits(checked === true)}
-            />
-            <label htmlFor="current-units" className="text-sm font-medium">
-              Show only current units
-            </label>
-          </div>
+      <Card>
+        <CardContent className="pt-6">
+          <div className="space-y-4">
+            {/* Show only current units checkbox */}
+            <div className="flex items-center gap-2">
+              <Checkbox 
+                id="current-units"
+                checked={showOnlyCurrentUnits}
+                onCheckedChange={(checked) => setShowOnlyCurrentUnits(checked === true)}
+              />
+              <label htmlFor="current-units" className="text-sm font-medium">
+                Show only current units
+              </label>
+            </div>
 
-          {/* Municipality Toggle */}
-          <UniversalMunicipalityToggle 
-            selectedMunicipality={selectedMunicipality}
-            onMunicipalityChange={setSelectedMunicipality}
-          />
-
-          {/* Search Bar */}
-          <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <Input
-              placeholder="ArnoldPreSchool2 (ctrl+shift+s)"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+            {/* Municipality Toggle */}
+            <MunicipalityToggle 
+              selectedMunicipality={selectedMunicipality}
+              onMunicipalityChange={setSelectedMunicipality}
             />
+
+            {/* Search Bar */}
+            <div className="relative max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Input
+                placeholder="ArnoldPreSchool2 (ctrl+shift+s)"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
           </div>
-        </div>
-      </AdminCard>
+        </CardContent>
+      </Card>
 
       {/* Filters */}
       <TimetableFilters 
@@ -227,11 +233,11 @@ const Approve = () => {
 
       {/* Bottom Action Button */}
       <div className="flex justify-end">
-        <Button className={adminClasses.primaryButton}>
+        <Button className="bg-green-600 hover:bg-green-700">
           Approve/reject
         </Button>
       </div>
-    </AdminLayout>
+    </div>
   );
 };
 
