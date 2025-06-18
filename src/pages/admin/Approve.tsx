@@ -1,11 +1,9 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Search, CheckCircle } from 'lucide-react';
-import MunicipalityToggle from '@/components/admin/placement/MunicipalityToggle';
+import AdminPageHeader from '@/components/admin/shared/AdminPageHeader';
 import TimetableActionButtons from '@/components/admin/placement/TimetableActionButtons';
 import TimetableFilters from '@/components/admin/placement/TimetableFilters';
 import TimetableTable from '@/components/admin/placement/TimetableTable';
@@ -37,6 +35,7 @@ const Approve = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [showOnlyCurrentUnits, setShowOnlyCurrentUnits] = useState(false);
   const [activeTab, setActiveTab] = useState('end-request');
+  const [selectedDistrict, setSelectedDistrict] = useState('ArnoldPreSchool2');
 
   // Mock data for the table
   const mockData: TimetableRecord[] = [
@@ -144,15 +143,23 @@ const Approve = () => {
     }
   };
 
+  const breadcrumb = ['Approval Management', getTabTitle()];
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <CheckCircle className="w-8 h-8 text-green-600" />
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">Approval Management</h1>
-          <p className="text-slate-600">Manage timetables and placement approvals</p>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gray-50 p-6">
+      <AdminPageHeader
+        icon={CheckCircle}
+        title="Approval Management"
+        description="Manage timetables and placement approvals"
+        breadcrumb={breadcrumb}
+        showOnlyCurrentUnits={showOnlyCurrentUnits}
+        onShowOnlyCurrentUnitsChange={setShowOnlyCurrentUnits}
+        selectedMunicipality={selectedMunicipality}
+        onMunicipalityChange={setSelectedMunicipality}
+        selectedDistrict={selectedDistrict}
+        onDistrictChange={setSelectedDistrict}
+        districtPlaceholder="ArnoldPreSchool2 (ctrl+shift+s)"
+      />
 
       {/* Tab Navigation */}
       <Card>
@@ -164,43 +171,17 @@ const Approve = () => {
         </CardContent>
       </Card>
 
-      {/* Tab Title */}
-      <div>
-        <h2 className="text-xl font-semibold text-slate-900">{getTabTitle()}</h2>
-      </div>
-
-      {/* Controls Section */}
+      {/* Search Bar */}
       <Card>
         <CardContent className="pt-6">
-          <div className="space-y-4">
-            {/* Show only current units checkbox */}
-            <div className="flex items-center gap-2">
-              <Checkbox 
-                id="current-units"
-                checked={showOnlyCurrentUnits}
-                onCheckedChange={(checked) => setShowOnlyCurrentUnits(checked === true)}
-              />
-              <label htmlFor="current-units" className="text-sm font-medium">
-                Show only current units
-              </label>
-            </div>
-
-            {/* Municipality Toggle */}
-            <MunicipalityToggle 
-              selectedMunicipality={selectedMunicipality}
-              onMunicipalityChange={setSelectedMunicipality}
+          <div className="relative max-w-md">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Input
+              placeholder="ArnoldPreSchool2 (ctrl+shift+s)"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
             />
-
-            {/* Search Bar */}
-            <div className="relative max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <Input
-                placeholder="ArnoldPreSchool2 (ctrl+shift+s)"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
           </div>
         </CardContent>
       </Card>

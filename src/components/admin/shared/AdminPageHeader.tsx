@@ -1,11 +1,10 @@
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
 import { LucideIcon } from 'lucide-react';
+import StandardMunicipalityToggle from './StandardMunicipalityToggle';
+import StandardDistrictDropdown from './StandardDistrictDropdown';
 
 interface AdminPageHeaderProps {
   icon: LucideIcon;
@@ -45,13 +44,13 @@ const AdminPageHeader = ({
         </div>
       </div>
 
-      {/* Exact ChildcareMember layout - single row with all controls */}
+      {/* Controls Section - Unified Layout */}
       <Card>
         <CardContent className="pt-6">
           <div className="flex items-center justify-between w-full">
             {/* Left side - Bullet point, text, and checkbox in a row */}
             <div className="flex items-center gap-6">
-              {/* Bullet point and Manage admissions text */}
+              {/* Bullet point and text */}
               <div className="flex items-center gap-3">
                 <div className="w-2 h-2 bg-black rounded-full"></div>
                 <span className="font-medium text-base">
@@ -76,42 +75,21 @@ const AdminPageHeader = ({
 
             {/* Right side - Municipality buttons and district dropdown */}
             <div className="flex items-center gap-4">
-              {/* Municipality Toggle Buttons */}
+              {/* Municipality Toggle */}
               {onMunicipalityChange && selectedMunicipality && (
-                <div className="flex items-center">
-                  <Button
-                    variant={selectedMunicipality === 'förskola' ? 'default' : 'outline'}
-                    onClick={() => onMunicipalityChange('förskola')}
-                    className={`rounded-r-none ${selectedMunicipality === 'förskola' ? 'bg-teal-600 hover:bg-teal-700' : ''}`}
-                    size="sm"
-                  >
-                    Förskola
-                  </Button>
-                  <Button
-                    variant={selectedMunicipality === 'fritidshem' ? 'default' : 'outline'}
-                    onClick={() => onMunicipalityChange('fritidshem')}
-                    className={`rounded-l-none border-l-0 ${selectedMunicipality === 'fritidshem' ? 'bg-teal-600 hover:bg-teal-700' : ''}`}
-                    size="sm"
-                  >
-                    Fritidshem
-                  </Button>
-                </div>
+                <StandardMunicipalityToggle
+                  selectedMunicipality={selectedMunicipality}
+                  onMunicipalityChange={onMunicipalityChange}
+                />
               )}
 
               {/* District Selection Dropdown */}
               {onDistrictChange && (
-                <div className="min-w-[200px]">
-                  <Select value={selectedDistrict || ''} onValueChange={onDistrictChange}>
-                    <SelectTrigger className="bg-teal-600 text-white border-teal-700 hover:bg-teal-700">
-                      <SelectValue placeholder={districtPlaceholder} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="norra-distriktet">Norra Distriktet</SelectItem>
-                      <SelectItem value="arnoldpreschool2">ArnoldPreSchool2</SelectItem>
-                      <SelectItem value="sodra-distriktet">Södra Distriktet</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                <StandardDistrictDropdown
+                  selectedDistrict={selectedDistrict}
+                  onDistrictChange={onDistrictChange}
+                  placeholder={districtPlaceholder}
+                />
               )}
             </div>
           </div>
