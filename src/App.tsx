@@ -1,5 +1,3 @@
-
-
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/AuthContext';
@@ -66,6 +64,18 @@ import Logs from '@/pages/admin/Logs';
 import Applications from '@/pages/admin/Applications';
 import AdminPlacementManagement from '@/pages/admin/PlacementManagement';
 import UserTemplates from '@/pages/admin/UserTemplates';
+
+// Educator pages - add missing imports
+import EducatorAttendance from '@/pages/educator/EducatorAttendance';
+import EducatorChildren from '@/pages/educator/EducatorChildren';
+import EducatorMessages from '@/pages/educator/EducatorMessages';
+import EducatorReports from '@/pages/educator/EducatorReports';
+import EducatorCalendar from '@/pages/educator/EducatorCalendar';
+import EducatorAppointments from '@/pages/educator/EducatorAppointments';
+import EducatorBulletinBoard from '@/pages/educator/EducatorBulletinBoard';
+import EducatorNotes from '@/pages/educator/EducatorNotes';
+import EducatorLocationTracker from '@/pages/educator/EducatorLocationTracker';
+import EducatorTeamCollab from '@/pages/educator/EducatorTeamCollab';
 
 const queryClient = new QueryClient();
 
@@ -321,6 +331,56 @@ function App() {
                     <EducatorDashboard />
                   </ProtectedRoute>
                 } />
+                <Route path="/educator/attendance" element={
+                  <ProtectedRoute allowedRoles={['educator']}>
+                    <EducatorAttendance />
+                  </ProtectedRoute>
+                } />
+                <Route path="/educator/children" element={
+                  <ProtectedRoute allowedRoles={['educator']}>
+                    <EducatorChildren />
+                  </ProtectedRoute>
+                } />
+                <Route path="/educator/messages" element={
+                  <ProtectedRoute allowedRoles={['educator']}>
+                    <EducatorMessages />
+                  </ProtectedRoute>
+                } />
+                <Route path="/educator/reports" element={
+                  <ProtectedRoute allowedRoles={['educator']}>
+                    <EducatorReports />
+                  </ProtectedRoute>
+                } />
+                <Route path="/educator/calendar" element={
+                  <ProtectedRoute allowedRoles={['educator']}>
+                    <EducatorCalendar />
+                  </ProtectedRoute>
+                } />
+                <Route path="/educator/appointments" element={
+                  <ProtectedRoute allowedRoles={['educator']}>
+                    <EducatorAppointments />
+                  </ProtectedRoute>
+                } />
+                <Route path="/educator/bulletin-board" element={
+                  <ProtectedRoute allowedRoles={['educator']}>
+                    <EducatorBulletinBoard />
+                  </ProtectedRoute>
+                } />
+                <Route path="/educator/notes" element={
+                  <ProtectedRoute allowedRoles={['educator']}>
+                    <EducatorNotes />
+                  </ProtectedRoute>
+                } />
+                <Route path="/educator/location-tracker" element={
+                  <ProtectedRoute allowedRoles={['educator']}>
+                    <EducatorLocationTracker />
+                  </ProtectedRoute>
+                } />
+                <Route path="/educator/team-collaboration" element={
+                  <ProtectedRoute allowedRoles={['educator']}>
+                    <EducatorTeamCollab />
+                  </ProtectedRoute>
+                } />
                 
                 {/* Staff Routes */}
                 <Route path="/staff" element={
@@ -358,4 +418,3 @@ function App() {
 }
 
 export default App;
-
