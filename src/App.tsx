@@ -1,3 +1,4 @@
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/AuthContext';
@@ -76,6 +77,15 @@ import EducatorBulletinBoard from '@/pages/educator/EducatorBulletinBoard';
 import EducatorNotes from '@/pages/educator/EducatorNotes';
 import EducatorLocationTracker from '@/pages/educator/EducatorLocationTracker';
 import EducatorTeamCollab from '@/pages/educator/EducatorTeamCollab';
+
+// Kindergarten pages - add missing imports for staff role
+import KindergartenDashboard from '@/pages/kindergarten/KindergartenDashboard';
+import ChildrenManagement from '@/pages/staff/ChildrenManagement';
+import KindergartenAttendance from '@/pages/kindergarten/KindergartenAttendance';
+import KindergartenReports from '@/pages/kindergarten/KindergartenReports';
+import StaffMessages from '@/pages/staff/StaffMessages';
+import PrivateKindergartenApplications from '@/pages/staff/PrivateKindergartenApplications';
+import PrivateKindergartenCapacity from '@/pages/staff/PrivateKindergartenCapacity';
 
 const queryClient = new QueryClient();
 
@@ -382,17 +392,52 @@ function App() {
                   </ProtectedRoute>
                 } />
                 
-                {/* Staff Routes */}
+                {/* Staff Routes - Public Kindergarten */}
                 <Route path="/staff" element={
                   <ProtectedRoute allowedRoles={['staff']}>
                     <PublicKindergartenDashboard />
                   </ProtectedRoute>
                 } />
+                <Route path="/kindergarten" element={
+                  <ProtectedRoute allowedRoles={['staff']}>
+                    <KindergartenDashboard />
+                  </ProtectedRoute>
+                } />
+                <Route path="/kindergarten/children" element={
+                  <ProtectedRoute allowedRoles={['staff']}>
+                    <ChildrenManagement />
+                  </ProtectedRoute>
+                } />
+                <Route path="/kindergarten/attendance" element={
+                  <ProtectedRoute allowedRoles={['staff']}>
+                    <KindergartenAttendance />
+                  </ProtectedRoute>
+                } />
+                <Route path="/kindergarten/reports" element={
+                  <ProtectedRoute allowedRoles={['staff']}>
+                    <KindergartenReports />
+                  </ProtectedRoute>
+                } />
+                <Route path="/kindergarten/messages" element={
+                  <ProtectedRoute allowedRoles={['staff']}>
+                    <StaffMessages />
+                  </ProtectedRoute>
+                } />
                 
-                {/* Partner Routes */}
+                {/* Partner Routes - Private Kindergarten */}
                 <Route path="/partner" element={
                   <ProtectedRoute allowedRoles={['partner']}>
                     <PrivateKindergartenDashboard />
+                  </ProtectedRoute>
+                } />
+                <Route path="/kindergarten/applications" element={
+                  <ProtectedRoute allowedRoles={['partner']}>
+                    <PrivateKindergartenApplications />
+                  </ProtectedRoute>
+                } />
+                <Route path="/kindergarten/capacity" element={
+                  <ProtectedRoute allowedRoles={['partner']}>
+                    <PrivateKindergartenCapacity />
                   </ProtectedRoute>
                 } />
                 
