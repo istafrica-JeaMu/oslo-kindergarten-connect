@@ -1,3 +1,4 @@
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/AuthContext';
@@ -14,6 +15,19 @@ import EducatorDashboard from '@/pages/educator/EducatorDashboard';
 import PublicKindergartenDashboard from '@/pages/staff/PublicKindergartenDashboard';
 import PrivateKindergartenDashboard from '@/pages/staff/PrivateKindergartenDashboard';
 import DistrictAdminDashboard from '@/pages/district-admin/DistrictAdminDashboard';
+
+// Guardian pages - existing
+import DailySchedule from '@/pages/guardian/DailySchedule';
+import AttendanceTracking from '@/pages/guardian/AttendanceTracking';
+import Messages from '@/pages/guardian/Messages';
+import NoticeBoard from '@/pages/guardian/NoticeBoard';
+import ApplicationStatus from '@/pages/guardian/ApplicationStatus';
+import ChildProfileDetail from '@/pages/guardian/ChildProfileDetail';
+import Payments from '@/pages/guardian/Payments';
+import Documents from '@/pages/guardian/Documents';
+
+// Import ChildrenList component
+import ChildrenList from '@/pages/guardian/ChildrenList';
 
 // Admin pages
 import ApplicationForms from '@/pages/admin/ApplicationForms';
@@ -59,6 +73,56 @@ function App() {
                 <Route path="/guardian" element={
                   <ProtectedRoute allowedRoles={['guardian']}>
                     <GuardianDashboard />
+                  </ProtectedRoute>
+                } />
+                <Route path="/guardian/daily-schedule" element={
+                  <ProtectedRoute allowedRoles={['guardian']}>
+                    <DailySchedule />
+                  </ProtectedRoute>
+                } />
+                <Route path="/guardian/attendance-tracking" element={
+                  <ProtectedRoute allowedRoles={['guardian']}>
+                    <AttendanceTracking />
+                  </ProtectedRoute>
+                } />
+                <Route path="/guardian/messages" element={
+                  <ProtectedRoute allowedRoles={['guardian']}>
+                    <Messages />
+                  </ProtectedRoute>
+                } />
+                <Route path="/guardian/notice-board" element={
+                  <ProtectedRoute allowedRoles={['guardian']}>
+                    <NoticeBoard />
+                  </ProtectedRoute>
+                } />
+                <Route path="/guardian/application-status" element={
+                  <ProtectedRoute allowedRoles={['guardian']}>
+                    <ApplicationStatus />
+                  </ProtectedRoute>
+                } />
+                <Route path="/guardian/children" element={
+                  <ProtectedRoute allowedRoles={['guardian']}>
+                    <ChildrenList />
+                  </ProtectedRoute>
+                } />
+                <Route path="/guardian/child-profile/:id" element={
+                  <ProtectedRoute allowedRoles={['guardian']}>
+                    <ChildProfileDetail />
+                  </ProtectedRoute>
+                } />
+                <Route path="/guardian/child-profile" element={
+                  <ProtectedRoute allowedRoles={['guardian']}>
+                    <ChildrenList />
+                  </ProtectedRoute>
+                } />
+                <Route path="/guardian/payments" element={
+                  <ProtectedRoute allowedRoles={['guardian']}>
+                    <Payments />
+                  </ProtectedRoute>
+                } />
+                <Route path="/guardian/documents" element={
+                  <ProtectedRoute allowedRoles={['guardian']}>
+                    <Documents />
                   </ProtectedRoute>
                 } />
                 

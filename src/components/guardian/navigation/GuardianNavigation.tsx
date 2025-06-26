@@ -57,7 +57,7 @@ export const useGuardianNavigation = () => {
       },
       {
         title: 'Child Profile',
-        url: '/guardian/child-profile',
+        url: '/guardian/children',
         icon: User,
         description: "Living arrangements and pickup settings"
       },
