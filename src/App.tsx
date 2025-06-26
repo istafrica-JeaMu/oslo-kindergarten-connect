@@ -1,4 +1,5 @@
 
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/AuthContext';
@@ -28,6 +29,15 @@ import Documents from '@/pages/guardian/Documents';
 
 // Import ChildrenList component
 import ChildrenList from '@/pages/guardian/ChildrenList';
+
+// Caseworker pages
+import ReviewQueue from '@/pages/caseworker/ReviewQueue';
+import PlacementManagement from '@/pages/caseworker/PlacementManagement';
+import CaseworkerMessages from '@/pages/caseworker/Messages';
+import ManualApplication from '@/pages/caseworker/ManualApplication';
+import ApplicationsInProgress from '@/pages/caseworker/ApplicationsInProgress';
+import ApplicationsSubmitted from '@/pages/caseworker/ApplicationsSubmitted';
+import ApplicationsFollowUp from '@/pages/caseworker/ApplicationsFollowUp';
 
 // Admin pages
 import ApplicationForms from '@/pages/admin/ApplicationForms';
@@ -130,6 +140,41 @@ function App() {
                 <Route path="/caseworker" element={
                   <ProtectedRoute allowedRoles={['caseworker']}>
                     <CaseWorkerDashboard />
+                  </ProtectedRoute>
+                } />
+                <Route path="/caseworker/review-queue" element={
+                  <ProtectedRoute allowedRoles={['caseworker']}>
+                    <ReviewQueue />
+                  </ProtectedRoute>
+                } />
+                <Route path="/caseworker/placement-management" element={
+                  <ProtectedRoute allowedRoles={['caseworker']}>
+                    <PlacementManagement />
+                  </ProtectedRoute>
+                } />
+                <Route path="/caseworker/messages" element={
+                  <ProtectedRoute allowedRoles={['caseworker']}>
+                    <CaseworkerMessages />
+                  </ProtectedRoute>
+                } />
+                <Route path="/caseworker/manual-application" element={
+                  <ProtectedRoute allowedRoles={['caseworker']}>
+                    <ManualApplication />
+                  </ProtectedRoute>
+                } />
+                <Route path="/caseworker/applications/in-progress" element={
+                  <ProtectedRoute allowedRoles={['caseworker']}>
+                    <ApplicationsInProgress />
+                  </ProtectedRoute>
+                } />
+                <Route path="/caseworker/applications/submitted" element={
+                  <ProtectedRoute allowedRoles={['caseworker']}>
+                    <ApplicationsSubmitted />
+                  </ProtectedRoute>
+                } />
+                <Route path="/caseworker/applications/follow-up" element={
+                  <ProtectedRoute allowedRoles={['caseworker']}>
+                    <ApplicationsFollowUp />
                   </ProtectedRoute>
                 } />
                 
