@@ -1,3 +1,4 @@
+
 import {
   Home,
   FileText,
@@ -312,7 +313,6 @@ export function AppSidebar() {
         ];
 
       case 'staff':
-      case 'partner':
         return [
           {
             title: 'Dashboard',
@@ -339,18 +339,45 @@ export function AppSidebar() {
             url: '/kindergarten/messages',
             icon: MessageSquare,
           },
-          ...(user?.role === 'partner' ? [
-            {
-              title: 'Applications',
-              url: '/kindergarten/applications',
-              icon: FileText,
-            },
-            {
-              title: 'Capacity',
-              url: '/kindergarten/capacity',
-              icon: Settings,
-            }
-          ] : [])
+        ];
+
+      case 'partner':
+        return [
+          {
+            title: 'Dashboard',
+            url: '/partner',
+            icon: Home,
+          },
+          {
+            title: 'Children',
+            url: '/kindergarten/children',
+            icon: Users,
+          },
+          {
+            title: 'Attendance',
+            url: '/kindergarten/attendance',
+            icon: Clock,
+          },
+          {
+            title: 'Reports',
+            url: '/kindergarten/reports',
+            icon: BarChart3,
+          },
+          {
+            title: 'Messages',
+            url: '/kindergarten/messages',
+            icon: MessageSquare,
+          },
+          {
+            title: 'Applications',
+            url: '/kindergarten/applications',
+            icon: FileText,
+          },
+          {
+            title: 'Capacity',
+            url: '/kindergarten/capacity',
+            icon: Settings,
+          }
         ];
 
       case 'district-admin':
