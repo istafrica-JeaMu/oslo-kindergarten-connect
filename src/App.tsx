@@ -64,7 +64,7 @@ import Communications from '@/pages/admin/Communications';
 import Settings from '@/pages/admin/Settings';
 import Logs from '@/pages/admin/Logs';
 import Applications from '@/pages/admin/Applications';
-import PlacementManagement from '@/pages/admin/PlacementManagement';
+import AdminPlacementManagement from '@/pages/admin/PlacementManagement';
 import UserTemplates from '@/pages/admin/UserTemplates';
 
 const queryClient = new QueryClient();
@@ -201,7 +201,7 @@ function App() {
                 } />
                 <Route path="/admin/placement-management" element={
                   <ProtectedRoute allowedRoles={['admin']}>
-                    <PlacementManagement />
+                    <AdminPlacementManagement />
                   </ProtectedRoute>
                 } />
                 <Route path="/admin/childcare-member" element={
@@ -358,3 +358,4 @@ function App() {
 }
 
 export default App;
+
