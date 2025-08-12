@@ -20,10 +20,19 @@ import {
   Check,
   Upload,
   Heart,
-  AlertCircle
+  AlertCircle,
+  GraduationCap,
+  RefreshCw,
+  Clock,
+  Star,
+  ArrowUpDown,
+  Home
 } from 'lucide-react';
 
 interface ApplicationData {
+  // Application Type
+  applicationType: string;
+  
   // Child Information
   childFirstName: string;
   childLastName: string;
@@ -58,6 +67,7 @@ const PublicApplication = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [applicationData, setApplicationData] = useState<ApplicationData>({
+    applicationType: '',
     childFirstName: '',
     childLastName: '',
     childBirthDate: '',
@@ -124,9 +134,47 @@ const PublicApplication = () => {
   };
 
   const steps = [
-    { number: 1, title: 'Child Information', icon: User },
-    { number: 2, title: 'Guardian Details', icon: Users },
-    { number: 3, title: 'Preferences & Submit', icon: FileText }
+    { number: 1, title: 'Application Type', icon: Calendar, description: 'Choose your application intent' },
+    { number: 2, title: 'Child Information', icon: User, description: 'Personal details' },
+    { number: 3, title: 'Guardian Information', icon: Users, description: 'Contact information' },
+    { number: 4, title: 'Kindergarten Preferences', icon: Home, description: 'Selected kindergartens' },
+    { number: 5, title: 'Documents & Review', icon: FileText, description: 'Final submission' }
+  ];
+
+  const applicationTypes = [
+    {
+      id: 'new_admission',
+      title: 'New Admission',
+      subtitle: 'Most Common',
+      description: 'For children without a current kindergarten placement',
+      details: 'First-time application for kindergarten placement in Oslo',
+      icon: GraduationCap,
+      color: 'bg-blue-500',
+      bgColor: 'bg-blue-50',
+      borderColor: 'border-blue-200'
+    },
+    {
+      id: 'transfer_request',
+      title: 'Transfer Request',
+      subtitle: '',
+      description: 'For changing from one kindergarten to another',
+      details: 'Moving your child from their current kindergarten to a new one',
+      icon: ArrowUpDown,
+      color: 'bg-green-500',
+      bgColor: 'bg-green-50',
+      borderColor: 'border-green-200'
+    },
+    {
+      id: 'late_application',
+      title: 'Late/Ongoing Application',
+      subtitle: '',
+      description: 'For applying after main deadlines or under special circumstances',
+      details: 'Applications submitted outside standard deadlines or for immediate placement needs',
+      icon: Clock,
+      color: 'bg-orange-500',
+      bgColor: 'bg-orange-50',
+      borderColor: 'border-orange-200'
+    }
   ];
 
   if (selectedKindergartens.length === 0) {
@@ -227,7 +275,75 @@ const PublicApplication = () => {
           {/* Step Content */}
           <Card>
             <CardContent className="p-6">
+              {/* Step 1: Application Type */}
               {currentStep === 1 && (
+                <div className="space-y-6">
+                  <div className="mb-6">
+                    <h2 className="text-2xl font-bold text-slate-900 mb-2">Application Type</h2>
+                    <p className="text-slate-600">Choose your application intent</p>
+                  </div>
+
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                    <div className="flex items-start gap-3">
+                      <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5" />
+                      <div>
+                        <h3 className="font-medium text-blue-900 mb-1">What type of application is this?</h3>
+                        <p className="text-sm text-blue-800">
+                          Choose the option that best describes your situation. The system will automatically determine the appropriate processing period based on your child's age and submission date.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    {applicationTypes.map((type) => (
+                      <div
+                        key={type.id}
+                        className={`relative rounded-lg border-2 cursor-pointer transition-all duration-200 hover:shadow-md ${
+                          applicationData.applicationType === type.id 
+                            ? `${type.borderColor} ${type.bgColor} shadow-md` 
+                            : 'border-slate-200 bg-white hover:border-slate-300'
+                        }`}
+                        onClick={() => setApplicationData(prev => ({ ...prev, applicationType: type.id }))}
+                      >
+                        <div className="p-4">
+                          <div className="flex items-start gap-4">
+                            <div className={`p-3 rounded-lg ${type.color} text-white flex-shrink-0`}>
+                              <type.icon className="h-6 w-6" />
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-1">
+                                <h3 className="text-lg font-semibold text-slate-900">{type.title}</h3>
+                                {type.subtitle && (
+                                  <Badge variant="secondary" className="bg-blue-100 text-blue-800 text-xs">
+                                    {type.subtitle}
+                                  </Badge>
+                                )}
+                              </div>
+                              <p className="text-slate-700 mb-2">{type.description}</p>
+                              <p className="text-sm text-slate-600">{type.details}</p>
+                            </div>
+                            <div className="flex-shrink-0">
+                              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                                applicationData.applicationType === type.id 
+                                  ? 'border-blue-600 bg-blue-600' 
+                                  : 'border-slate-300'
+                              }`}>
+                                {applicationData.applicationType === type.id && (
+                                  <Check className="h-3 w-3 text-white" />
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Step 2: Child Information */}
+              {currentStep === 2 && (
                 <div className="space-y-6">
                   <div className="mb-6">
                     <h2 className="text-2xl font-bold text-slate-900 mb-2">Child Information</h2>
@@ -305,7 +421,8 @@ const PublicApplication = () => {
                 </div>
               )}
 
-              {currentStep === 2 && (
+              {/* Step 3: Guardian Information */}
+              {currentStep === 3 && (
                 <div className="space-y-6">
                   <div className="mb-6">
                     <h2 className="text-2xl font-bold text-slate-900 mb-2">Guardian Information</h2>
@@ -452,11 +569,31 @@ const PublicApplication = () => {
                 </div>
               )}
 
-              {currentStep === 3 && (
+              {/* Step 4: Kindergarten Preferences */}
+              {currentStep === 4 && (
                 <div className="space-y-6">
                   <div className="mb-6">
-                    <h2 className="text-2xl font-bold text-slate-900 mb-2">Final Details</h2>
-                    <p className="text-slate-600">Complete your application</p>
+                    <h2 className="text-2xl font-bold text-slate-900 mb-2">Kindergarten Preferences</h2>
+                    <p className="text-slate-600">Review your selected kindergartens</p>
+                  </div>
+
+                  <div className="space-y-4">
+                    {selectedKindergartens.map((kindergarten, index) => (
+                      <div key={kindergarten.id} className="p-4 border border-slate-200 rounded-lg bg-slate-50">
+                        <div className="flex items-center gap-4">
+                          <Badge className="bg-blue-100 text-blue-800">
+                            Priority {index + 1}
+                          </Badge>
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-slate-900">{kindergarten.name}</h3>
+                            <p className="text-sm text-slate-600 flex items-center gap-1">
+                              <MapPin className="h-3 w-3" />
+                              {kindergarten.municipality}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
 
                   <div>
@@ -479,8 +616,18 @@ const PublicApplication = () => {
                       rows={4}
                     />
                   </div>
+                </div>
+              )}
 
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              {/* Step 5: Documents & Review */}
+              {currentStep === 5 && (
+                <div className="space-y-6">
+                  <div className="mb-6">
+                    <h2 className="text-2xl font-bold text-slate-900 mb-2">Documents & Review</h2>
+                    <p className="text-slate-600">Review your application and required documents</p>
+                  </div>
+
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
                     <div className="flex items-start gap-3">
                       <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5" />
                       <div>
@@ -494,6 +641,31 @@ const PublicApplication = () => {
                           <li>• Medical certificates (if applicable)</li>
                           <li>• Income documentation</li>
                         </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Application Summary */}
+                  <div className="border border-slate-200 rounded-lg p-4 bg-slate-50">
+                    <h3 className="font-semibold text-slate-900 mb-4">Application Summary</h3>
+                    <div className="grid md:grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="text-slate-600">Application Type:</p>
+                        <p className="font-medium">
+                          {applicationTypes.find(t => t.id === applicationData.applicationType)?.title || 'Not selected'}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-slate-600">Child:</p>
+                        <p className="font-medium">{applicationData.childFirstName} {applicationData.childLastName}</p>
+                      </div>
+                      <div>
+                        <p className="text-slate-600">Guardian:</p>
+                        <p className="font-medium">{applicationData.guardianFirstName} {applicationData.guardianLastName}</p>
+                      </div>
+                      <div>
+                        <p className="text-slate-600">Preferred Start Date:</p>
+                        <p className="font-medium">{applicationData.preferredStartDate || 'Not specified'}</p>
                       </div>
                     </div>
                   </div>
@@ -511,9 +683,9 @@ const PublicApplication = () => {
                   Previous
                 </Button>
 
-                {currentStep < 3 ? (
+                {currentStep < 5 ? (
                   <Button
-                    onClick={() => setCurrentStep(prev => Math.min(3, prev + 1))}
+                    onClick={() => setCurrentStep(prev => Math.min(5, prev + 1))}
                   >
                     Next
                     <ArrowRight className="h-4 w-4 ml-2" />
