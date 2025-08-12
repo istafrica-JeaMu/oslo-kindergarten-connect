@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
+import { KindergartenCartProvider } from '@/contexts/KindergartenCartContext';
 import Layout from '@/components/layout/Layout';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 
@@ -28,6 +29,12 @@ import Documents from '@/pages/guardian/Documents';
 
 // Import ChildrenList component
 import ChildrenList from '@/pages/guardian/ChildrenList';
+
+// Public application pages
+import KindergartenBrowser from '@/pages/public/KindergartenBrowser';
+import PublicApplication from '@/pages/public/PublicApplication';
+import ApplicationSuccess from '@/pages/public/ApplicationSuccess';
+import Index from '@/pages/Index';
 
 // Caseworker pages
 import ReviewQueue from '@/pages/caseworker/ReviewQueue';
@@ -93,10 +100,16 @@ function App() {
   return (
     <AuthProvider>
       <LanguageProvider>
-        <QueryClientProvider client={queryClient}>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
+        <KindergartenCartProvider>
+          <QueryClientProvider client={queryClient}>
+            <BrowserRouter>
+              <Routes>
+                {/* Public routes - no auth required */}
+                <Route path="/" element={<Index />} />
+                <Route path="/kindergartens" element={<KindergartenBrowser />} />
+                <Route path="/apply" element={<PublicApplication />} />
+                <Route path="/application-success" element={<ApplicationSuccess />} />
+                <Route path="/login" element={<LoginPage />} />
               
               <Route path="/" element={<Layout />}>
                 {/* Guardian Routes */}
@@ -457,8 +470,9 @@ function App() {
             </Routes>
           </BrowserRouter>
         </QueryClientProvider>
-      </LanguageProvider>
-    </AuthProvider>
+      </KindergartenCartProvider>
+    </LanguageProvider>
+  </AuthProvider>
   );
 }
 

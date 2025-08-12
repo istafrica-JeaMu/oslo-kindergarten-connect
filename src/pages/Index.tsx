@@ -112,20 +112,22 @@ const Index = () => {
               communications, and institutional management across all educational levels.
             </p>
             <div className="flex items-center justify-center gap-4 flex-wrap">
-              <Link to="/login">
+              <Link to="/kindergartens">
                 <Button size="lg" className="bg-white text-blue-900 hover:bg-gray-100 h-14 px-8 text-lg font-medium">
-                  Access Platform
+                  Apply for Kindergarten
                   <ArrowRight className="h-5 w-5 ml-2" />
                 </Button>
               </Link>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="border-white text-white hover:bg-white hover:text-blue-900 h-14 px-8 text-lg"
-              >
-                View Demo
-                <Globe className="h-5 w-5 ml-2" />
-              </Button>
+              <Link to="/login">
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="border-white text-white hover:bg-white hover:text-blue-900 h-14 px-8 text-lg"
+                >
+                  Staff Login
+                  <Globe className="h-5 w-5 ml-2" />
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
