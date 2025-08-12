@@ -1,6 +1,4 @@
-
 import { useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -36,22 +34,7 @@ import {
 } from 'lucide-react';
 
 const Index = () => {
-  const { user, isLoading } = useAuth();
   const { t } = useTranslation();
-
-  // Redirect authenticated users to their respective dashboards
-  if (!isLoading && user) {
-    return <Navigate to={`/${user.role}`} replace />;
-  }
-
-  // Show loading while checking authentication
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-blue-900">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-      </div>
-    );
-  }
 
   const processSteps = [
     {

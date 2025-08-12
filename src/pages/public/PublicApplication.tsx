@@ -50,12 +50,13 @@ interface ApplicationData {
   guardianPostalCode: string;
   guardianCity: string;
   
-  // Secondary Guardian (optional)
+  // Co-applicant (optional)
   hasSecondGuardian: boolean;
   secondGuardianFirstName: string;
   secondGuardianLastName: string;
   secondGuardianEmail: string;
   secondGuardianPhone: string;
+  secondGuardianRelationship: string;
   
   // Preferences
   preferredStartDate: string;
@@ -86,6 +87,7 @@ const PublicApplication = () => {
     secondGuardianLastName: '',
     secondGuardianEmail: '',
     secondGuardianPhone: '',
+    secondGuardianRelationship: '',
     preferredStartDate: '',
     additionalInfo: ''
   });
@@ -515,45 +517,51 @@ const PublicApplication = () => {
                         className="rounded"
                       />
                       <Label htmlFor="hasSecondGuardian" className="font-medium">
-                        Add second guardian/parent
+                        Add co-applicant
                       </Label>
                     </div>
+                    <p className="text-sm text-slate-600 mt-2">
+                      Add a co-applicant such as a partner, spouse, or other guardian who will be involved in the application.
+                    </p>
 
                     {applicationData.hasSecondGuardian && (
-                      <div className="space-y-4 pl-6 border-l-2 border-slate-200">
+                      <div className="space-y-4 mt-4 p-4 bg-white border border-slate-200 rounded-lg">
+                        <h4 className="font-medium text-slate-900">Co-applicant Information</h4>
+                        
                         <div className="grid md:grid-cols-2 gap-4">
                           <div>
-                            <Label htmlFor="secondGuardianFirstName">First Name</Label>
+                            <Label htmlFor="secondGuardianFirstName">First Name *</Label>
                             <Input
                               id="secondGuardianFirstName"
                               value={applicationData.secondGuardianFirstName}
                               onChange={(e) => updateField('secondGuardianFirstName', e.target.value)}
-                              placeholder="Second guardian's first name"
+                              placeholder="Co-applicant's first name"
                             />
                           </div>
                           <div>
-                            <Label htmlFor="secondGuardianLastName">Last Name</Label>
+                            <Label htmlFor="secondGuardianLastName">Last Name *</Label>
                             <Input
                               id="secondGuardianLastName"
                               value={applicationData.secondGuardianLastName}
                               onChange={(e) => updateField('secondGuardianLastName', e.target.value)}
-                              placeholder="Second guardian's last name"
+                              placeholder="Co-applicant's last name"
                             />
                           </div>
                         </div>
+                        
                         <div className="grid md:grid-cols-2 gap-4">
                           <div>
-                            <Label htmlFor="secondGuardianEmail">Email</Label>
+                            <Label htmlFor="secondGuardianEmail">Email Address *</Label>
                             <Input
                               id="secondGuardianEmail"
                               type="email"
                               value={applicationData.secondGuardianEmail}
                               onChange={(e) => updateField('secondGuardianEmail', e.target.value)}
-                              placeholder="second.guardian@example.com"
+                              placeholder="co.applicant@example.com"
                             />
                           </div>
                           <div>
-                            <Label htmlFor="secondGuardianPhone">Phone Number</Label>
+                            <Label htmlFor="secondGuardianPhone">Phone Number *</Label>
                             <Input
                               id="secondGuardianPhone"
                               type="tel"
@@ -562,6 +570,23 @@ const PublicApplication = () => {
                               placeholder="+47 123 45 678"
                             />
                           </div>
+                        </div>
+                        
+                        <div>
+                          <Label htmlFor="secondGuardianRelationship">Relationship to Child *</Label>
+                          <select
+                            id="secondGuardianRelationship"
+                            value={applicationData.secondGuardianRelationship}
+                            onChange={(e) => updateField('secondGuardianRelationship', e.target.value)}
+                            className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          >
+                            <option value="">Select relationship</option>
+                            <option value="parent">Parent</option>
+                            <option value="stepparent">Step-parent</option>
+                            <option value="guardian">Legal Guardian</option>
+                            <option value="partner">Partner</option>
+                            <option value="other">Other</option>
+                          </select>
                         </div>
                       </div>
                     )}
