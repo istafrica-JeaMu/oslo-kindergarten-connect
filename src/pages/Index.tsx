@@ -8,8 +8,8 @@ import { Link } from 'react-router-dom';
 import { FloatingNavigation } from '@/components/FloatingNavigation';
 import { CreativeStatsSection } from '@/components/CreativeStatsSection';
 import { InteractiveMap } from '@/components/InteractiveMap';
+import { GoogleMapsKindergartens } from '@/components/GoogleMapsKindergartens';
 import { AIAssistant } from '@/components/AIAssistant';
-import { AnimeProcessSection } from '@/components/AnimeProcessSection';
 import { 
   CheckCircle,
   ArrowRight,
@@ -63,7 +63,7 @@ const Index = () => {
       <FloatingNavigation />
       <AIAssistant />
       
-      {/* Hero Section with Asymmetrical Design */}
+      {/* Hero Section - Minimal */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
         {/* Animated Background */}
         <div className="absolute inset-0 bg-gradient-to-br from-oslo-hero-bg via-background to-oslo-surface" />
@@ -80,103 +80,60 @@ const Index = () => {
         <div className="absolute bottom-40 left-20 w-12 h-12 bg-secondary/10 rounded-full animate-float" style={{ animationDelay: '2s' }} />
         
         <div className="container mx-auto px-6 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left Content - 60% */}
-            <div className="lg:pr-8 animate-slide-up">
-              <Badge className="mb-6 bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 transition-all duration-300">
-                <Award className="w-3 h-3 mr-1" />
-                Next-Generation Platform
-              </Badge>
-              
-              <h1 className="text-6xl lg:text-7xl font-bold mb-6 leading-none">
-                <span className="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-                  Smart
-                </span>
-                <br />
-                <span className="text-foreground">Kindergarten</span>
-                <br />
-                <span className="text-muted-foreground text-4xl lg:text-5xl">Discovery</span>
-              </h1>
-              
-              <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-                Experience the future of kindergarten applications with AI-powered matching, 
-                interactive maps, and real-time availability. Find your perfect match in minutes, not weeks.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <Button 
-                  size="lg" 
-                  className="h-14 px-8 text-lg font-medium bg-primary hover:bg-primary/90 group"
-                  onClick={() => document.getElementById('interactive-map')?.scrollIntoView({ behavior: 'smooth' })}
-                >
-                  <MapPin className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
-                  Explore Interactive Map
-                  <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                </Button>
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="h-14 px-8 text-lg border-border/20 bg-oslo-glass/30 hover:bg-oslo-glass/50 backdrop-blur-sm"
-                >
-                  <Sparkles className="h-5 w-5 mr-2" />
-                  Try AI Assistant
-                </Button>
-              </div>
-
-              <div className="flex items-center gap-6 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-accent" />
-                  <span>AI-Powered</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-accent" />
-                  <span>Real-Time Updates</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-accent" />
-                  <span>Instant Matching</span>
-                </div>
-              </div>
+          <div className="max-w-4xl mx-auto text-center">
+            <Badge className="mb-6 bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 transition-all duration-300">
+              <Award className="w-3 h-3 mr-1" />
+              Next-Generation Platform
+            </Badge>
+            
+            <h1 className="text-6xl lg:text-8xl font-bold mb-6 leading-none">
+              <span className="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+                Smart
+              </span>
+              <br />
+              <span className="text-foreground">Kindergarten</span>
+              <br />
+              <span className="text-muted-foreground text-4xl lg:text-6xl">Discovery</span>
+            </h1>
+            
+            <p className="text-xl text-muted-foreground mb-8 leading-relaxed max-w-3xl mx-auto">
+              Experience the future of kindergarten applications with AI-powered matching, 
+              interactive maps, and real-time availability across Oslo.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+              <Button 
+                size="lg" 
+                className="h-14 px-8 text-lg font-medium bg-primary hover:bg-primary/90 group"
+                onClick={() => document.getElementById('interactive-map')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                <MapPin className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
+                Explore Interactive Map
+                <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="h-14 px-8 text-lg border-border/20 bg-oslo-glass/30 hover:bg-oslo-glass/50 backdrop-blur-sm"
+              >
+                <Sparkles className="h-5 w-5 mr-2" />
+                Try AI Assistant
+              </Button>
             </div>
 
-            {/* Right Content - 40% */}
-            <div className="relative animate-scale-in" style={{ animationDelay: '0.3s' }}>
-              <div className="relative z-10 bg-oslo-glass/30 backdrop-blur-xl border border-border/20 rounded-3xl p-8 shadow-2xl">
-                <div className="text-center mb-6">
-                  <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <Target className="h-8 w-8 text-primary" />
-                  </div>
-                  <h3 className="text-lg font-semibold mb-2">Perfect Match Guarantee</h3>
-                  <p className="text-sm text-muted-foreground">AI finds your ideal kindergarten in under 2 minutes</p>
-                </div>
-                
-                <div className="space-y-4 mb-6">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">Success Rate</span>
-                    <span className="font-semibold">98.5%</span>
-                  </div>
-                  <div className="w-full bg-secondary/20 rounded-full h-2">
-                    <div className="bg-gradient-to-r from-secondary to-accent h-2 rounded-full w-[98.5%] animate-pulse" />
-                  </div>
-                </div>
-
-                <Input 
-                  placeholder="Enter your district or postal code..." 
-                  className="mb-4 h-12 bg-oslo-glass/50 border-border/20"
-                />
-                
-                <Button 
-                  className="w-full h-12 bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity"
-                  onClick={() => document.getElementById('interactive-map')?.scrollIntoView({ behavior: 'smooth' })}
-                >
-                  <MapPin className="h-4 w-4 mr-2" />
-                  Start Smart Search
-                </Button>
+            <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-4 w-4 text-accent" />
+                <span>AI-Powered Matching</span>
               </div>
-              
-              {/* Background decoration */}
-              <div className="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full blur-xl" />
-              <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-br from-accent/20 to-primary/20 rounded-full blur-xl" />
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-4 w-4 text-accent" />
+                <span>Real-Time Updates</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-4 w-4 text-accent" />
+                <span>Instant Application</span>
+              </div>
             </div>
           </div>
         </div>
@@ -185,13 +142,11 @@ const Index = () => {
       {/* Creative Stats Section */}
       <CreativeStatsSection />
 
-      {/* Interactive Map Section */}
+      {/* Google Maps Section */}
       <div id="interactive-map">
-        <InteractiveMap />
+        <GoogleMapsKindergartens />
       </div>
 
-      {/* Anime Process Section */}
-      <AnimeProcessSection />
 
       {/* FAQ */}
       <section className="py-20 bg-oslo-surface/50 dark:bg-oslo-surface">
