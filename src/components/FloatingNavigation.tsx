@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { SimpleThemeToggle } from '@/components/ui/simple-theme-toggle';
 import { 
   GraduationCap, 
   Globe, 
@@ -54,16 +54,6 @@ export function FloatingNavigation() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-2">
-            <Link to="/kindergartens">
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="hover:bg-oslo-glass/20 transition-all duration-300"
-              >
-                <Search className="h-4 w-4 mr-2" />
-                Browse
-              </Button>
-            </Link>
             <Button 
               variant="ghost" 
               size="sm"
@@ -72,7 +62,7 @@ export function FloatingNavigation() {
               <Globe className="h-4 w-4 mr-2" />
               English
             </Button>
-            <ThemeToggle />
+            <SimpleThemeToggle />
             <Link to="/login">
               <Button 
                 variant="outline" 
@@ -85,9 +75,8 @@ export function FloatingNavigation() {
             </Link>
           </div>
 
-          {/* Mobile Menu Toggle */}
           <div className="md:hidden flex items-center gap-2">
-            <ThemeToggle />
+            <SimpleThemeToggle />
             <Button
               variant="ghost"
               size="sm"
@@ -103,16 +92,8 @@ export function FloatingNavigation() {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
-        {mobileMenuOpen && (
           <div className="md:hidden absolute top-full left-0 right-0 mt-2 bg-oslo-glass backdrop-blur-md border border-border/20 rounded-2xl shadow-lg">
             <div className="p-4 space-y-2">
-              <Link to="/kindergartens" onClick={() => setMobileMenuOpen(false)}>
-                <Button variant="ghost" size="sm" className="w-full justify-start">
-                  <Search className="h-4 w-4 mr-2" />
-                  Browse Kindergartens
-                </Button>
-              </Link>
               <Button variant="ghost" size="sm" className="w-full justify-start">
                 <Globe className="h-4 w-4 mr-2" />
                 English

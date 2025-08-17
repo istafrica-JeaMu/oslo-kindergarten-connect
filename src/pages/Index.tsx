@@ -7,32 +7,22 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { FloatingNavigation } from '@/components/FloatingNavigation';
 import { CreativeStatsSection } from '@/components/CreativeStatsSection';
-import { AnimatedCounter } from '@/components/AnimatedCounter';
+import { InteractiveMap } from '@/components/InteractiveMap';
+import { AIAssistant } from '@/components/AIAssistant';
+import { AnimeProcessSection } from '@/components/AnimeProcessSection';
 import { 
-  Search,
-  Calendar,
   CheckCircle,
-  FileText,
-  Heart,
-  Clock,
-  Building,
-  Users,
-  MessageSquare,
-  Shield,
-  Star,
-  User,
-  MapPin,
+  ArrowRight,
+  ChevronDown,
+  Sparkles,
+  Zap,
+  Target,
+  Globe,
   Phone,
   Mail,
   GraduationCap,
   Award,
-  ArrowRight,
-  ChevronDown,
-  Sparkles,
-  Map,
-  Zap,
-  Target,
-  Globe
+  MapPin
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -48,74 +38,6 @@ const Index = () => {
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
-
-  const processSteps = [
-    {
-      step: '1',
-      title: 'Interactive Map Search',
-      description: 'Explore kindergartens on our interactive map. Click locations to see availability, photos, and add to cart instantly.',
-      icon: Map,
-      color: 'bg-primary/10 text-primary'
-    },
-    {
-      step: '2', 
-      title: 'Smart Application',
-      description: 'AI-powered form that pre-fills your information and suggests the best matches based on your preferences.',
-      icon: Sparkles,
-      color: 'bg-accent/10 text-accent'
-    }
-  ];
-
-  const benefits = [
-    {
-      title: 'AI-Powered Matching',
-      description: 'Our intelligent system suggests the best kindergartens based on your location, preferences, and child\'s needs.',
-      icon: Sparkles,
-      color: 'text-primary'
-    },
-    {
-      title: 'Real-Time Availability',
-      description: 'See live availability updates, processing times, and get instant notifications when spots open.',
-      icon: Zap,
-      color: 'text-accent'
-    },
-    {
-      title: 'Virtual Tours',
-      description: 'Explore kindergartens with 360° virtual tours, street view integration, and detailed facility photos.',
-      icon: Target,
-      color: 'text-secondary'
-    },
-    {
-      title: 'Multilingual Support',
-      description: 'Full support for Norwegian, English, and 8+ other languages with cultural integration guidance.',
-      icon: Globe,
-      color: 'text-orange-500'
-    }
-  ];
-
-  const testimonials = [
-    {
-      name: 'Maria Hansen',
-      location: 'Grünerløkka, Oslo',
-      text: 'The AI chatbot helped me complete the entire application in 10 minutes. Found the perfect kindergarten on the first try!',
-      rating: 5,
-      avatar: '👩🏼‍💼'
-    },
-    {
-      name: 'Ahmed Al-Rashid', 
-      location: 'Frogner, Oslo',
-      text: 'The virtual tours saved us so much time. We could see everything before visiting, and the multilingual support was excellent.',
-      rating: 5,
-      avatar: '👨🏽‍💻'
-    },
-    {
-      name: 'Lin Zhang',
-      location: 'Sagene, Oslo', 
-      text: 'Real-time notifications kept us updated instantly. Our daughter started kindergarten within 2 weeks of applying!',
-      rating: 5,
-      avatar: '👩🏻‍🔬'
-    }
-  ];
 
   const faqs = [
     {
@@ -139,6 +61,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <FloatingNavigation />
+      <AIAssistant />
       
       {/* Hero Section with Asymmetrical Design */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
@@ -181,16 +104,15 @@ const Index = () => {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <Link to="/kindergartens">
-                  <Button 
-                    size="lg" 
-                    className="h-14 px-8 text-lg font-medium bg-primary hover:bg-primary/90 group"
-                  >
-                    <Map className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
-                    Explore Interactive Map
-                    <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </Link>
+                <Button 
+                  size="lg" 
+                  className="h-14 px-8 text-lg font-medium bg-primary hover:bg-primary/90 group"
+                  onClick={() => document.getElementById('interactive-map')?.scrollIntoView({ behavior: 'smooth' })}
+                >
+                  <MapPin className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
+                  Explore Interactive Map
+                  <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                </Button>
                 <Button 
                   size="lg" 
                   variant="outline" 
@@ -243,8 +165,11 @@ const Index = () => {
                   className="mb-4 h-12 bg-oslo-glass/50 border-border/20"
                 />
                 
-                <Button className="w-full h-12 bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity">
-                  <Search className="h-4 w-4 mr-2" />
+                <Button 
+                  className="w-full h-12 bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity"
+                  onClick={() => document.getElementById('interactive-map')?.scrollIntoView({ behavior: 'smooth' })}
+                >
+                  <MapPin className="h-4 w-4 mr-2" />
                   Start Smart Search
                 </Button>
               </div>
@@ -260,132 +185,23 @@ const Index = () => {
       {/* Creative Stats Section */}
       <CreativeStatsSection />
 
-      {/* How It Works - Simplified */}
-      <section className="py-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-primary/5" />
-        
-        <div className="container mx-auto px-6 relative">
-          <div className="text-center mb-16">
-            <Badge className="mb-4 bg-accent/10 text-accent border-accent/20">
-              <Zap className="w-3 h-3 mr-1" />
-              Simplified Process
-            </Badge>
-            <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              From Search to Enrollment in 2 Simple Steps
-            </h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              We've revolutionized kindergarten applications using AI and modern technology
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto">
-            {processSteps.map((step, index) => (
-              <Card 
-                key={index} 
-                className="relative hover:shadow-2xl transition-all duration-500 group border-border/20 bg-oslo-glass/30 backdrop-blur-sm overflow-hidden"
-              >
-                <CardContent className="pt-8 pb-6 text-center relative z-10">
-                  <div className={cn(
-                    "w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 transition-transform duration-300 group-hover:scale-110",
-                    step.color
-                  )}>
-                    <step.icon className="h-10 w-10" />
-                  </div>
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <div className="w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-lg font-bold shadow-lg">
-                      {step.step}
-                    </div>
-                  </div>
-                  <h3 className="text-xl font-semibold mb-4">{step.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{step.description}</p>
-                </CardContent>
-                
-                {/* Hover effect gradient */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Interactive Map Section */}
+      <div id="interactive-map">
+        <InteractiveMap />
+      </div>
 
-      {/* Benefits */}
-      <section className="py-20 bg-oslo-surface/50 dark:bg-oslo-surface relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 via-transparent to-accent/5" />
-        
-        <div className="container mx-auto px-6 relative">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Why Choose Our Platform?</h2>
-            <p className="text-muted-foreground text-lg">Experience the future of kindergarten applications</p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {benefits.map((benefit, index) => (
-              <Card 
-                key={index} 
-                className="hover:shadow-2xl transition-all duration-500 group border-border/20 bg-oslo-glass/30 backdrop-blur-sm"
-              >
-                <CardContent className="p-8">
-                  <div className="flex items-start gap-6">
-                    <div className="w-14 h-14 rounded-2xl bg-oslo-surface/50 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-                      <benefit.icon className={cn("h-7 w-7", benefit.color)} />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold mb-3">{benefit.title}</h3>
-                      <p className="text-muted-foreground leading-relaxed">{benefit.description}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-20">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">What Families Say</h2>
-            <p className="text-muted-foreground text-lg">Real experiences from parents across Oslo</p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <Card 
-                key={index} 
-                className="hover:shadow-2xl transition-all duration-500 group border-border/20 bg-oslo-glass/30 backdrop-blur-sm"
-              >
-                <CardContent className="p-8">
-                  <div className="flex items-center gap-1 mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                  <p className="text-muted-foreground mb-6 italic leading-relaxed">"{testimonial.text}"</p>
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-xl">
-                      {testimonial.avatar}
-                    </div>
-                    <div>
-                      <p className="font-semibold">{testimonial.name}</p>
-                      <p className="text-sm text-muted-foreground flex items-center gap-1">
-                        <MapPin className="h-3 w-3" />
-                        {testimonial.location}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Anime Process Section */}
+      <AnimeProcessSection />
 
       {/* FAQ */}
       <section className="py-20 bg-oslo-surface/50 dark:bg-oslo-surface">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-16">
+              <Badge className="mb-4 bg-accent/10 text-accent border-accent/20">
+                <Zap className="w-3 h-3 mr-1" />
+                Smart Help
+              </Badge>
               <h2 className="text-4xl font-bold mb-4">Frequently Asked Questions</h2>
               <p className="text-muted-foreground text-lg">Everything you need to know about our smart platform</p>
             </div>
@@ -424,16 +240,15 @@ const Index = () => {
               through our AI-powered platform.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link to="/kindergartens">
-                <Button 
-                  size="lg" 
-                  className="bg-white text-primary hover:bg-white/90 h-16 px-10 text-lg font-semibold group"
-                >
-                  <Map className="h-6 w-6 mr-2 group-hover:scale-110 transition-transform" />
-                  Start Smart Search
-                  <ArrowRight className="h-6 w-6 ml-2 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
+              <Button 
+                size="lg" 
+                className="bg-white text-primary hover:bg-white/90 h-16 px-10 text-lg font-semibold group"
+                onClick={() => document.getElementById('interactive-map')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                <MapPin className="h-6 w-6 mr-2 group-hover:scale-110 transition-transform" />
+                Start Smart Search
+                <ArrowRight className="h-6 w-6 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
               <Button 
                 size="lg" 
                 variant="outline" 
@@ -466,8 +281,13 @@ const Index = () => {
             <div>
               <h4 className="font-semibold mb-4">Platform</h4>
               <div className="space-y-2 text-sm">
-                <Link to="/kindergartens" className="text-muted-foreground hover:text-foreground block transition-colors">Interactive Map</Link>
-                <Link to="/apply" className="text-muted-foreground hover:text-foreground block transition-colors">AI Assistant</Link>
+                <button 
+                  onClick={() => document.getElementById('interactive-map')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="text-muted-foreground hover:text-foreground block transition-colors text-left"
+                >
+                  Interactive Map
+                </button>
+                <a href="#" className="text-muted-foreground hover:text-foreground block transition-colors">AI Assistant</a>
                 <Link to="/login" className="text-muted-foreground hover:text-foreground block transition-colors">Staff Portal</Link>
               </div>
             </div>
