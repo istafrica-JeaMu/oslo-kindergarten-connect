@@ -63,10 +63,14 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Oslo municipality brand colors
+				// Oslo municipality brand colors  
 				'oslo-blue': '#00457C',
 				'oslo-green': '#31A24C',
-				'oslo-gray': '#F5F7F9'
+				'oslo-gray': '#F5F7F9',
+				'oslo-hero-bg': 'hsl(var(--oslo-hero-bg))',
+				'oslo-surface': 'hsl(var(--oslo-surface))',
+				'oslo-glass': 'hsl(var(--oslo-glass))',
+				'oslo-shadow': 'hsl(var(--oslo-shadow))'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -75,25 +79,59 @@ export default {
 			},
 			keyframes: {
 				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' }
 				},
 				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' }
+				},
+				'float': {
+					'0%, 100%': { transform: 'translateY(0px)' },
+					'50%': { transform: 'translateY(-10px)' }
+				},
+				'slide-up': {
+					'0%': { 
+						opacity: '0', 
+						transform: 'translateY(30px)' 
 					},
-					to: {
-						height: '0'
+					'100%': { 
+						opacity: '1', 
+						transform: 'translateY(0)' 
 					}
+				},
+				'fade-in': {
+					'0%': { opacity: '0' },
+					'100%': { opacity: '1' }
+				},
+				'scale-in': {
+					'0%': { 
+						opacity: '0', 
+						transform: 'scale(0.95)' 
+					},
+					'100%': { 
+						opacity: '1', 
+						transform: 'scale(1)' 
+					}
+				},
+				'parallax': {
+					'0%': { transform: 'translateY(0px)' },
+					'100%': { transform: 'translateY(-50px)' }
+				},
+				'counter': {
+					from: { transform: 'translateY(20px)', opacity: '0' },
+					to: { transform: 'translateY(0)', opacity: '1' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'float': 'float 6s ease-in-out infinite',
+				'slide-up': 'slide-up 0.6s ease-out',
+				'fade-in': 'fade-in 0.8s ease-out',
+				'scale-in': 'scale-in 0.5s ease-out',
+				'parallax': 'parallax 20s linear infinite',
+				'counter': 'counter 0.8s ease-out 0.2s both'
 			}
 		}
 	},

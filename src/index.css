@@ -13,26 +13,33 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
+    /* Oslo Modern Design System */
+    --primary: 215 100% 26%; /* Deep Navy #1A365D */
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 213 94% 68%; /* Warm Blue #4299E1 */
+    --secondary-foreground: 215 100% 26%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 160 84% 39%; /* Soft Green #48BB78 */
+    --accent-foreground: 210 40% 98%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 213 94% 68%;
 
     --radius: 0.5rem;
+
+    /* Custom Oslo Brand Colors */
+    --oslo-hero-bg: 220 43% 98%; /* Soft Blue #F8FAFF */
+    --oslo-surface: 210 40% 99%; /* Light Gray #F7FAFC */
+    --oslo-glass: 0 0% 100% / 0.8; /* Glass morphism */
+    --oslo-shadow: 215 25% 27% / 0.08; /* Soft shadows */
 
     --sidebar-background: 0 0% 98%;
 
