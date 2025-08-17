@@ -9,6 +9,7 @@ import { FloatingNavigation } from '@/components/FloatingNavigation';
 import { CreativeStatsSection } from '@/components/CreativeStatsSection';
 import { InteractiveMap } from '@/components/InteractiveMap';
 import { GoogleMapsKindergartens } from '@/components/GoogleMapsKindergartens';
+import { AnimeProcessSection } from '@/components/AnimeProcessSection';
 import { AIAssistant } from '@/components/AIAssistant';
 import { 
   CheckCircle,
@@ -139,13 +140,16 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Creative Stats Section */}
-      <CreativeStatsSection />
-
-      {/* Google Maps Section */}
+      {/* Google Maps Section - Second Section */}
       <div id="interactive-map">
         <GoogleMapsKindergartens />
       </div>
+
+      {/* Application Process Section */}
+      <AnimeProcessSection />
+
+      {/* Creative Stats Section */}
+      <CreativeStatsSection />
 
 
       {/* FAQ */}
