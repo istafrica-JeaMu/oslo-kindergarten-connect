@@ -92,6 +92,8 @@ export function FloatingNavigation() {
           </div>
         </div>
 
+        {/* Mobile Navigation */}
+        {mobileMenuOpen && (
           <div className="md:hidden absolute top-full left-0 right-0 mt-2 bg-oslo-glass backdrop-blur-md border border-border/20 rounded-2xl shadow-lg">
             <div className="p-4 space-y-2">
               <Button variant="ghost" size="sm" className="w-full justify-start">
